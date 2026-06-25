@@ -1157,7 +1157,8 @@
       const contract = p.contract || {};
       const kind = contract.kind || (p.rosterStatus === "DEV" ? "육성계약" : "연봉계약");
       const bonus = p.signingBonus ? ` · 계약금 ${money(p.signingBonus)}` : "";
-      return `${kind} · ${contract.yearsLeft || p.years || 1}년 · 연 ${money(contract.annual || p.salary || 0)}${bonus}`;
+      const source = contract.source ? ` · ${contract.source}` : "";
+      return `${kind} · ${contract.yearsLeft || p.years || 1}년 · 연 ${money(contract.annual || p.salary || 0)}${bonus}${source}`;
     };
     const faTimeText = (p) => {
       if (p.foreignPlayer) return "외국인 FA 제외";

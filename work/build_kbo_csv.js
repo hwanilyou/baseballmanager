@@ -404,7 +404,9 @@ function contractShape(row, detail, ratings, age, foreignPlayer, rosterStatus) {
   let yearsLeft = 1;
   let kind = foreignPlayer ? "외국인 단년계약" : "연봉계약";
   let contractSource = realAnnual ? "KBO 공식 연봉 + 기간 추정" : "기간/연봉 추정";
-  if (!foreignPlayer) {
+  if (foreignPlayer) {
+    contractSource = realAnnual ? "KBO 공식 연봉 + 외국인 단년계약" : "외국인 단년계약 추정";
+  } else {
     const known = knownContractFor(row.teamId, row.name);
     if (known) {
       yearsLeft = known.yearsLeft;

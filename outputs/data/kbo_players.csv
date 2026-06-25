@@ -4,16 +4,16 @@ seoul-twin-stars,함덕형,11,SP,PIT,31,ACTIVE,8,0.6,12,1816,2,실계약 4년 38
 seoul-twin-stars,우강현,20,SP,PIT,24,ACTIVE,0.4,0.4,3,524,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,60,70,10,10,39,63,60,61,73,87,,KBO Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,배재호,25,SP,PIT,32,ACTIVE,0.6,1,11,1667,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,56,62,10,10,30,44,69,61,62,72,,KBO Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,손주진,29,SP,PIT,28,ACTIVE,2.9,1.5,10,1527,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,69,78,10,10,39,73,67,70,81,82,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,톨허스수,30,SP,PIT,27,ACTIVE,6,0,1,234,1,외국인 단년계약,기간/연봉 추정,B,SP,77,79,10,10,54,75,90,81,78,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+seoul-twin-stars,톨허스수,30,SP,PIT,27,ACTIVE,6,0,1,234,1,외국인 단년계약,외국인 단년계약 추정,B,SP,77,79,10,10,54,75,90,81,78,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,이정민,31,RP,PIT,30,ACTIVE,2.7,2,8,1234,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,69,71,10,10,32,68,80,76,79,53,,KBO Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,김진서,42,RP,PIT,41,ACTIVE,4.5,0,12,1829,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,MR,68,73,10,10,43,58,74,73,72,44,,KBO Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,김진준,45,RP,PIT,28,ACTIVE,0.4,1,6,945,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,MR,70,78,10,10,40,60,76,72,79,45,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,리오원,46,RP,PIT,33,ACTIVE,6,0,0,15,1,외국인 단년계약,기간/연봉 추정,B,MR,70,76,10,10,52,68,71,71,64,52,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+seoul-twin-stars,리오원,46,RP,PIT,33,ACTIVE,6,0,0,15,1,외국인 단년계약,외국인 단년계약 추정,B,MR,70,76,10,10,52,68,71,71,64,52,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,김윤영,47,RP,PIT,26,ACTIVE,1,2,7,1066,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,59,64,10,10,33,55,55,54,78,53,,KBO Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,장현수,50,RP,PIT,31,ACTIVE,15,1.5,12,1817,3,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,MR,66,74,10,10,52,69,69,67,62,54,,KBO Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,박시진,58,RP,PIT,20,ACTIVE,0.3,0,1,198,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,57,68,10,10,41,46,57,60,81,52,,KBO Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,김영빈,67,RP,PIT,21,ACTIVE,0.9,2,1,234,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,67,84,10,10,43,75,79,72,75,56,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,웰혁,68,RP,PIT,29,ACTIVE,6,0,1,221,1,외국인 단년계약,기간/연봉 추정,C,MR,67,73,10,10,42,57,75,71,74,40,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+seoul-twin-stars,웰혁,68,RP,PIT,29,ACTIVE,6,0,1,221,1,외국인 단년계약,외국인 단년계약 추정,C,MR,67,73,10,10,42,57,75,71,74,40,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,박동현,27,C,BAT,36,ACTIVE,5,0.6,12,1829,1,실계약 4년 65억,2023 FA 계약,B,,70,74,68,67,37,77,66,21,66,80,,KBO Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,이주수,63,C,BAT,23,ACTIVE,0.6,0.7,5,814,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,72,83,69,74,85,67,73,15,80,53,,KBO Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,문보성,2,3B,BAT,26,ACTIVE,4.8,0.8,6,959,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,B,,70,75,66,65,64,80,64,20,82,74,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -54,15 +54,15 @@ seoul-twin-stars,서영도,60,LF,BAT,20,FARM,0.3,0.7,1,234,1,퓨처스/최저연
 seoul-twin-stars,김현재,66,LF,BAT,22,FARM,0.3,1.5,2,314,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,52,71,46,51,60,58,50,11,79,72,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
 seoul-twin-stars,엄태율,104,RF,BAT,23,FARM,0.3,0.3,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,53,68,61,54,68,52,53,8,83,65,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,고영빈,1,SP,PIT,35,ACTIVE,26,1.3,12,1825,3,실계약 5년 107억,2024 비FA 다년계약,A,SP,79,82,10,10,41,77,93,85,78,96,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,스기모욱,11,SP,PIT,26,ACTIVE,6,0,0,75,1,외국인 단년계약,기간/연봉 추정,C,SP,63,71,10,10,34,61,59,59,73,71,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+suwon-wizpark,스기모욱,11,SP,PIT,26,ACTIVE,6,0,0,75,1,외국인 단년계약,외국인 단년계약 추정,C,SP,63,71,10,10,34,61,59,59,73,71,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,우규훈,12,SP,PIT,41,ACTIVE,2,1.2,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,60,60,10,10,38,55,60,60,79,81,,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,김민원,26,SP,PIT,34,ACTIVE,2,1.1,12,1818,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,SP,71,77,10,10,40,69,73,73,61,74,,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,소형진,30,SP,PIT,25,ACTIVE,3.3,3.6,7,1081,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,SP,73,87,10,10,31,68,82,79,78,82,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,사우준,32,SP,PIT,27,ACTIVE,6,0,0,89,1,외국인 단년계약,기간/연봉 추정,B,SP,71,74,10,10,42,79,83,76,74,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+suwon-wizpark,사우준,32,SP,PIT,27,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,B,SP,71,74,10,10,42,79,83,76,74,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,이상혁,37,RP,PIT,31,ACTIVE,1,0.8,8,1182,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,67,73,10,10,54,66,74,70,74,49,,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,주서,38,RP,PIT,31,ACTIVE,1.5,3,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,62,64,10,10,52,55,67,63,81,40,,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,손동빈,41,RP,PIT,25,ACTIVE,1.5,0.9,8,1249,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,MR,71,81,10,10,31,70,84,77,70,65,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,로준,43,RP,PIT,29,ACTIVE,6,0,1,149,1,외국인 단년계약,기간/연봉 추정,C,MR,59,61,10,10,38,59,67,59,66,50,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+suwon-wizpark,로준,43,RP,PIT,29,ACTIVE,6,0,1,149,1,외국인 단년계약,외국인 단년계약 추정,C,MR,59,61,10,10,38,59,67,59,66,50,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,오원빈,47,RP,PIT,25,ACTIVE,2.3,2,7,1089,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,61,69,10,10,51,64,66,61,77,40,,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,박영빈,60,RP,PIT,23,ACTIVE,3,3,5,814,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,69,76,10,10,30,65,78,74,74,55,,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,조대빈,42,C,BAT,27,ACTIVE,0.6,0.4,6,884,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,71,70,73,57,54,72,9,65,77,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -72,7 +72,7 @@ suwon-wizpark,이강준,6,3B,BAT,19,ACTIVE,0.3,1.3,0,79,1,연봉계약,KBO 공�
 suwon-wizpark,김상율,7,SS,BAT,36,ACTIVE,4,2.8,12,1829,1,실계약 4년 29억,2023 FA 계약,B,,71,75,89,51,66,71,73,24,66,60,,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,류현현,9,3B,BAT,26,ACTIVE,0.3,0.5,3,515,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,64,72,69,53,79,74,75,13,71,48,,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,허경재,13,3B,BAT,36,ACTIVE,7,1.3,12,1823,5,실계약 4+3년 85억,2025 FA 계약,C,,62,69,65,51,44,70,73,14,59,72,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,힐리어서,34,1B,BAT,32,ACTIVE,12,0,0,89,1,외국인 단년계약,기간/연봉 추정,A,,84,85,94,96,78,65,60,16,72,60,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+suwon-wizpark,힐리어서,34,1B,BAT,32,ACTIVE,12,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,A,,84,85,94,96,78,65,60,16,72,60,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,안인재,50,3B,BAT,25,ACTIVE,0.3,1,7,1018,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,68,75,65,58,77,76,80,13,61,58,,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,권동안,52,SS,BAT,28,ACTIVE,0.7,1.5,6,959,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,74,63,55,40,55,54,22,69,84,,KBO Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,최원태,3,LF,BAT,29,ACTIVE,6,1.5,11,1684,3,핵심전력 계약,KBO 공식 연봉 + 기간 추정,A,,81,82,96,77,83,65,65,11,79,77,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -107,7 +107,7 @@ suwon-wizpark,박민호,104,CF,BAT,20,FARM,0.3,0.7,1,145,1,퓨처스/최저연�
 suwon-wizpark,정영민,108,RF,BAT,27,FARM,0.3,0.3,5,725,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,49,63,46,53,78,49,52,21,60,60,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
 suwon-wizpark,김경재,109,RF,BAT,19,FARM,0.3,0.5,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,56,68,55,50,58,54,49,21,74,65,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
 daegu-blue-lions,최지호,11,SP,PIT,28,ACTIVE,1.5,1.3,10,1539,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,68,77,10,10,39,57,66,69,70,70,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,미야겸,15,SP,PIT,27,ACTIVE,6,0,0,89,1,외국인 단년계약,기간/연봉 추정,C,SP,68,76,10,10,44,58,78,74,75,77,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+daegu-blue-lions,미야겸,15,SP,PIT,27,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,C,SP,68,76,10,10,44,58,78,74,75,77,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 daegu-blue-lions,최원윤,20,SP,PIT,29,ACTIVE,16,3.5,12,1828,4,실계약 4년 70억,2026 FA 계약,C,SP,61,63,10,10,48,61,66,58,61,73,,KBO Register Official Salary/Stat Rating 2026-06-23
 daegu-blue-lions,이승우,26,SP,PIT,35,ACTIVE,1.5,1,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,SP,70,77,10,10,35,68,70,67,72,81,,KBO Register Official Salary/Stat Rating 2026-06-23
 daegu-blue-lions,김태태,27,SP,PIT,34,ACTIVE,3,0.2,12,1802,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,60,66,10,10,38,57,68,60,72,89,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -118,12 +118,12 @@ daegu-blue-lions,양창현,42,RP,PIT,27,ACTIVE,0.9,2.6,9,1388,1,연봉계약,KBO
 daegu-blue-lions,배찬호,55,RP,PIT,20,ACTIVE,0.9,4,1,234,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,68,83,10,10,55,70,73,72,82,57,,KBO Register Official Salary/Stat Rating 2026-06-23
 daegu-blue-lions,장찬현,60,RP,PIT,19,ACTIVE,0.3,1.1,0,79,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,68,83,10,10,39,57,66,69,62,62,,KBO Register Official Salary/Stat Rating 2026-06-23
 daegu-blue-lions,김재원,62,RP,PIT,36,ACTIVE,8,0,12,1829,2,실계약 4년 58억,2024 FA 계약,C,MR,59,59,10,10,44,64,69,65,58,60,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,오러클영,64,SP,PIT,26,ACTIVE,6,0,0,89,1,외국인 단년계약,기간/연봉 추정,B,SP,75,83,10,10,50,68,94,81,79,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,후라안,75,SP,PIT,30,ACTIVE,6,0,3,514,1,외국인 단년계약,기간/연봉 추정,A,SP,79,83,10,10,42,74,78,82,81,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+daegu-blue-lions,오러클영,64,SP,PIT,26,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,B,SP,75,83,10,10,50,68,94,81,79,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+daegu-blue-lions,후라안,75,SP,PIT,30,ACTIVE,6,0,3,514,1,외국인 단년계약,외국인 단년계약 추정,A,SP,79,83,10,10,42,74,78,82,81,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 daegu-blue-lions,김도찬,24,C,BAT,26,ACTIVE,0.5,1.1,8,1198,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,69,77,71,68,57,75,67,18,70,48,,KBO Register Official Salary/Stat Rating 2026-06-23
 daegu-blue-lions,장승진,46,C,BAT,32,ACTIVE,0.5,0.7,12,1793,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,73,75,79,62,63,82,84,12,69,47,,KBO Register Official Salary/Stat Rating 2026-06-23
 daegu-blue-lions,강민원,47,C,BAT,41,ACTIVE,3,0.9,12,1819,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,64,64,59,70,55,58,14,64,50,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,디아윤,0,1B,BAT,30,ACTIVE,8,0,2,379,1,외국인 단년계약,기간/연봉 추정,A,,80,85,94,94,61,57,59,16,71,71,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+daegu-blue-lions,디아윤,0,1B,BAT,30,ACTIVE,8,0,2,379,1,외국인 단년계약,외국인 단년계약 추정,A,,80,85,94,94,61,57,59,16,71,71,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 daegu-blue-lions,류지찬,16,2B,BAT,32,ACTIVE,7,0.7,12,1829,3,핵심전력 계약,KBO 공식 연봉 + 기간 추정,B,,77,81,92,71,77,65,61,22,68,76,,KBO Register Official Salary/Stat Rating 2026-06-23
 daegu-blue-lions,김영성,30,3B,BAT,23,ACTIVE,2.2,1.7,5,771,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,73,66,53,85,72,52,24,60,63,,KBO Register Official Salary/Stat Rating 2026-06-23
 daegu-blue-lions,양우우,53,3B,BAT,26,ACTIVE,0.4,0.8,8,1234,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,64,73,56,68,68,69,67,16,84,64,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -164,16 +164,16 @@ daegu-blue-lions,이진민,117,CF,BAT,20,FARM,0.3,0.6,0,0,1,퓨처스/최저연�
 gwangju-tiger-kings,곽도원,0,SP,PIT,22,ACTIVE,0.9,0.6,3,472,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,SP,73,88,10,10,39,70,79,74,59,85,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,김태훈,10,SP,PIT,20,ACTIVE,0.6,3,1,209,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,66,77,10,10,41,61,66,69,69,91,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,조상욱,11,SP,PIT,32,ACTIVE,4,2.5,12,1829,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,SP,59,68,10,10,53,49,68,61,71,71,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,올수,33,SP,PIT,32,ACTIVE,12,0,1,234,1,외국인 단년계약,기간/연봉 추정,A,SP,86,90,10,10,54,82,94,91,87,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+gwangju-tiger-kings,올수,33,SP,PIT,32,ACTIVE,12,0,1,234,1,외국인 단년계약,외국인 단년계약 추정,A,SP,86,90,10,10,54,82,94,91,87,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,최지형,39,SP,PIT,23,ACTIVE,1,1.5,5,803,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,56,63,10,10,36,54,54,54,63,70,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,네도,40,SP,PIT,33,ACTIVE,6,0,2,379,1,외국인 단년계약,기간/연봉 추정,A,SP,79,81,10,10,34,73,80,83,79,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+gwangju-tiger-kings,네도,40,SP,PIT,33,ACTIVE,6,0,2,379,1,외국인 단년계약,외국인 단년계약 추정,A,SP,79,81,10,10,34,73,80,83,79,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,황동혁,41,RP,PIT,24,ACTIVE,0.8,0.4,3,514,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,69,76,10,10,48,57,74,66,74,60,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,김범겸,49,RP,PIT,31,ACTIVE,4,2,12,1829,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,MR,61,67,10,10,50,66,64,60,80,62,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,전상원,51,RP,PIT,30,ACTIVE,3.1,0.7,11,1635,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,57,66,10,10,49,53,62,55,76,66,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,양현민,54,RP,PIT,38,ACTIVE,8,2,12,1825,3,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,B,MR,73,75,10,10,36,81,69,71,62,57,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,한재찬,55,RP,PIT,25,ACTIVE,0.8,0.7,6,951,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,61,69,10,10,37,50,57,60,60,54,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,정해성,62,RP,PIT,25,ACTIVE,3,2,7,1093,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,66,75,10,10,38,65,64,66,81,65,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,시라카율,63,RP,PIT,25,ACTIVE,6,0,2,311,1,외국인 단년계약,기간/연봉 추정,C,MR,65,76,10,10,42,69,69,69,68,57,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+gwangju-tiger-kings,시라카율,63,RP,PIT,25,ACTIVE,6,0,2,311,1,외국인 단년계약,외국인 단년계약 추정,C,MR,65,76,10,10,42,69,69,69,68,57,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,성영형,65,RP,PIT,22,ACTIVE,1.2,0.3,1,234,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,64,75,10,10,41,66,68,67,62,60,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,한준빈,25,C,BAT,27,ACTIVE,1,1.6,9,1394,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,67,75,74,66,69,70,65,23,59,64,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,김태서,42,C,BAT,37,ACTIVE,6,0.8,12,1816,1,실계약 3년 25억,2024 비FA 다년계약,C,,60,64,56,61,55,67,60,15,68,66,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -186,7 +186,7 @@ gwangju-tiger-kings,윤도욱,16,2B,BAT,23,ACTIVE,0.6,1,5,771,2,유망주 장기
 gwangju-tiger-kings,변우훈,29,1B,BAT,26,ACTIVE,0.7,1.8,8,1178,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,72,77,75,80,68,71,79,20,78,49,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,박정욱,1,CF,BAT,28,ACTIVE,0.6,0.5,6,959,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,65,69,63,61,69,74,60,18,63,82,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,박재윤,15,LF,BAT,20,ACTIVE,0.5,1,1,234,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,78,71,63,72,60,62,19,68,80,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,카스트수,26,CF,BAT,33,ACTIVE,6,0,0,36,1,외국인 단년계약,기간/연봉 추정,C,,69,75,61,62,65,74,61,15,58,84,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+gwangju-tiger-kings,카스트수,26,CF,BAT,33,ACTIVE,6,0,0,36,1,외국인 단년계약,외국인 단년계약 추정,C,,69,75,61,62,65,74,61,15,58,84,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,김호우,27,CF,BAT,34,ACTIVE,2.5,0.3,12,1829,2,핵심전력 계약,KBO 공식 연봉 + 기간 추정,A,,82,86,94,85,77,65,69,22,70,53,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,김민도,37,RF,BAT,19,ACTIVE,0.3,1,0,36,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,72,65,65,65,52,64,10,67,57,,KBO Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,나성현,47,RF,BAT,37,ACTIVE,8,3,12,1829,2,실계약 6년 150억,2022 FA 계약,A,,82,86,92,96,70,59,63,22,72,75,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -214,10 +214,10 @@ gwangju-tiger-kings,고종형,57,RF,BAT,37,FARM,1,0.8,12,1780,1,연봉계약,KBO
 gwangju-tiger-kings,김민겸,104,CF,BAT,26,FARM,0.3,0,4,580,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,61,65,66,62,45,61,61,16,61,81,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,박태,113,RF,BAT,20,FARM,0.4,0.3,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,56,76,61,49,74,52,48,17,73,58,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
 gwangju-tiger-kings,곽동서,138,RF,BAT,24,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,54,66,55,52,37,52,51,13,82,83,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,에르난데재,12,SP,PIT,27,ACTIVE,6,0,0,78,1,외국인 단년계약,기간/연봉 추정,C,SP,60,68,10,10,48,50,61,57,83,71,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+daejeon-orange-eagles,에르난데재,12,SP,PIT,27,ACTIVE,6,0,0,78,1,외국인 단년계약,외국인 단년계약 추정,C,SP,60,68,10,10,48,50,61,57,83,71,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 daejeon-orange-eagles,이상영,18,SP,PIT,30,ACTIVE,0.4,0.4,8,1219,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,63,72,10,10,55,62,74,67,66,87,,KBO Register Official Salary/Stat Rating 2026-06-23
 daejeon-orange-eagles,왕옌원,19,SP,PIT,25,ACTIVE,1.8,0,0,89,1,연봉계약,기간/연봉 추정,B,SP,71,76,10,10,40,67,91,76,78,96,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,화이민,24,SP,PIT,27,ACTIVE,6,0,0,44,1,외국인 단년계약,기간/연봉 추정,C,SP,59,63,10,10,38,57,59,59,70,79,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+daejeon-orange-eagles,화이민,24,SP,PIT,27,ACTIVE,6,0,0,44,1,외국인 단년계약,외국인 단년계약 추정,C,SP,59,63,10,10,38,57,59,59,70,79,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 daejeon-orange-eagles,이민수,27,SP,PIT,33,ACTIVE,0.6,2.4,10,1524,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,58,60,10,10,44,63,68,64,68,92,,KBO Register Official Salary/Stat Rating 2026-06-23
 daejeon-orange-eagles,장유준,28,RP,PIT,26,ACTIVE,0.3,1,8,1180,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,60,69,10,10,47,51,61,56,84,56,,KBO Register Official Salary/Stat Rating 2026-06-23
 daejeon-orange-eagles,황준민,29,RP,PIT,21,ACTIVE,0.8,3.5,2,344,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,63,78,10,10,35,71,61,60,79,46,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -239,7 +239,7 @@ daejeon-orange-eagles,황영서,95,2B,BAT,27,ACTIVE,1,0.8,2,369,1,연봉계약,K
 daejeon-orange-eagles,이진겸,10,RF,BAT,29,ACTIVE,1.1,0.5,11,1668,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,61,64,65,64,78,70,63,24,80,79,,KBO Register Official Salary/Stat Rating 2026-06-23
 daejeon-orange-eagles,권광서,17,RF,BAT,29,ACTIVE,0.4,0,11,1600,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,72,81,79,60,86,77,82,18,63,60,,KBO Register Official Salary/Stat Rating 2026-06-23
 daejeon-orange-eagles,김태성,25,LF,BAT,29,ACTIVE,1.3,0.5,10,1539,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,68,60,71,61,54,70,20,73,51,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,페라준,30,RF,BAT,28,ACTIVE,12,0,2,379,1,외국인 단년계약,기간/연봉 추정,A,,86,94,96,96,78,62,73,18,76,64,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+daejeon-orange-eagles,페라준,30,RF,BAT,28,ACTIVE,12,0,2,379,1,외국인 단년계약,외국인 단년계약 추정,A,,86,94,96,96,78,62,73,18,76,64,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 daejeon-orange-eagles,이원호,37,CF,BAT,27,ACTIVE,0.7,0.8,8,1239,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,67,54,50,80,64,72,12,58,68,,KBO Register Official Salary/Stat Rating 2026-06-23
 daejeon-orange-eagles,문현영,51,2B,BAT,22,ACTIVE,2.3,1.5,3,524,3,핵심전력 계약,KBO 공식 연봉 + 기간 추정,A,,83,96,92,88,85,66,61,9,69,62,,KBO Register Official Salary/Stat Rating 2026-06-23
 daejeon-orange-eagles,유호,65,LF,BAT,23,ACTIVE,0.3,0.9,5,746,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,70,81,63,77,55,80,76,15,69,47,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -270,14 +270,14 @@ daejeon-orange-eagles,김동윤,113,LF,BAT,26,FARM,0.2,0,4,580,1,퓨처스/최�
 daejeon-orange-eagles,최윤겸,114,CF,BAT,26,FARM,0.2,0,4,580,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,72,60,46,63,66,68,10,69,62,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,박치혁,1,SP,PIT,28,ACTIVE,1.9,1.4,10,1534,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,57,63,10,10,50,56,54,56,74,83,,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,김동빈,4,SP,PIT,24,ACTIVE,0.5,1.2,6,891,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,SP,69,79,10,10,43,68,81,74,59,69,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,타카진,12,SP,PIT,24,ACTIVE,6,0,0,13,1,외국인 단년계약,기간/연봉 추정,C,SP,56,63,10,10,46,46,55,51,61,71,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+jamsil-bears,타카진,12,SP,PIT,24,ACTIVE,6,0,0,13,1,외국인 단년계약,외국인 단년계약 추정,C,SP,56,63,10,10,46,46,55,51,61,71,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,김정서,16,SP,PIT,27,ACTIVE,0.4,1.6,9,1382,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,60,67,10,10,41,59,70,63,68,78,,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,이병수,29,SP,PIT,23,ACTIVE,0.9,2.7,5,814,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,60,74,10,10,45,67,70,67,77,91,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,잭로율,39,SP,PIT,30,ACTIVE,6,0,1,224,1,외국인 단년계약,기간/연봉 추정,B,SP,73,75,10,10,47,72,85,78,75,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+jamsil-bears,잭로율,39,SP,PIT,30,ACTIVE,6,0,1,224,1,외국인 단년계약,외국인 단년계약 추정,B,SP,73,75,10,10,47,72,85,78,75,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,최지욱,42,RP,PIT,25,ACTIVE,0.9,0,5,764,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,65,73,10,10,47,54,58,61,78,45,,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,이용태,45,RP,PIT,37,ACTIVE,1,4.5,12,1790,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,MR,70,77,10,10,31,65,79,76,82,57,,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,곽현,47,SP,PIT,27,ACTIVE,3.1,3,9,1393,3,핵심전력 계약,KBO 공식 연봉 + 기간 추정,A,SP,80,82,10,10,47,73,98,86,86,96,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,벤자형,48,RP,PIT,33,ACTIVE,6,0,5,790,1,외국인 단년계약,기간/연봉 추정,C,MR,65,67,10,10,44,56,79,71,63,39,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+jamsil-bears,벤자형,48,RP,PIT,33,ACTIVE,6,0,5,790,1,외국인 단년계약,외국인 단년계약 추정,C,MR,65,67,10,10,44,56,79,71,63,39,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,박신준,49,RP,PIT,27,ACTIVE,0.7,1.4,9,1361,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,58,67,10,10,37,61,62,57,82,59,,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,이영재,50,RP,PIT,29,ACTIVE,6,3.5,10,1521,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,MR,64,69,10,10,53,68,69,66,64,47,,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,김택서,63,RP,PIT,21,ACTIVE,2.2,3.5,2,363,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,MR,70,83,10,10,47,58,65,66,65,66,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -293,7 +293,7 @@ jamsil-bears,박준수,52,3B,BAT,20,ACTIVE,0.7,2.6,1,226,2,유망주 장기보�
 jamsil-bears,안재윤,62,SS,BAT,24,ACTIVE,0.7,2,6,932,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,57,65,55,62,40,61,61,12,76,81,,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,김민빈,2,CF,BAT,22,ACTIVE,0.8,2.5,3,524,2,핵심전력 계약,KBO 공식 연봉 + 기간 추정,B,,77,87,91,69,74,69,71,17,69,81,,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,류승현,14,CF,BAT,22,ACTIVE,0.4,0.5,3,456,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,58,71,52,64,84,61,63,10,82,65,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,카메우,24,RF,BAT,29,ACTIVE,12,0,0,89,1,외국인 단년계약,기간/연봉 추정,A,,84,85,94,86,79,70,75,21,70,69,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+jamsil-bears,카메우,24,RF,BAT,29,ACTIVE,12,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,A,,84,85,94,86,79,70,75,21,70,69,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,정수혁,31,CF,BAT,36,ACTIVE,6,0.6,12,1829,1,실계약 6년 56억,2021 FA 계약,A,,78,82,92,69,88,65,68,24,68,53,,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,김인훈,33,CF,BAT,32,ACTIVE,0.9,2,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,70,76,70,59,43,74,81,22,64,79,,KBO Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,조수빈,51,RF,BAT,33,ACTIVE,2,1.4,11,1684,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,67,70,74,60,62,75,59,22,65,62,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -323,7 +323,7 @@ jamsil-bears,김주태,66,LF,BAT,19,FARM,0.3,2.5,0,89,1,퓨처스/최저연봉�
 jamsil-bears,김문욱,102,RF,BAT,22,FARM,0.3,0.3,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,63,76,64,57,49,64,56,17,74,82,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
 jamsil-bears,임현우,116,RF,BAT,19,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,54,66,50,45,65,50,44,8,64,71,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,라일욱,3,SP,PIT,30,ACTIVE,1.8,0,1,195,1,연봉계약,기간/연봉 추정,B,SP,73,79,10,10,48,70,78,70,58,88,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,토성,11,SP,PIT,26,ACTIVE,6,0,0,89,1,외국인 단년계약,기간/연봉 추정,C,SP,66,74,10,10,34,60,70,62,69,84,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+changwon-dino-force,토성,11,SP,PIT,26,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,C,SP,66,74,10,10,34,60,70,62,69,84,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,임지호,19,SP,PIT,23,ACTIVE,0.3,0.6,5,814,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,56,63,10,10,36,46,58,54,74,88,,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,최성훈,26,SP,PIT,29,ACTIVE,0.8,1,11,1610,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,SP,72,78,10,10,40,68,78,74,80,89,,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,이준원,40,SP,PIT,23,ACTIVE,0.5,1.2,1,202,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,SP,69,81,10,10,47,77,66,65,60,72,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -334,7 +334,7 @@ changwon-dino-force,김진욱,54,RP,PIT,28,ACTIVE,1.3,0.9,10,1539,1,연봉계약
 changwon-dino-force,전사준,57,RP,PIT,27,ACTIVE,1.3,1,8,1238,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,68,76,10,10,32,65,83,75,70,53,,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,김태윤,60,RP,PIT,25,ACTIVE,0.4,1.5,7,1060,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,MR,71,79,10,10,31,74,82,77,70,48,,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,최우안,64,RP,PIT,21,ACTIVE,0.4,0.6,2,306,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,61,72,10,10,39,49,67,62,82,38,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,테일태,66,SP,PIT,31,ACTIVE,6,0,0,89,1,외국인 단년계약,기간/연봉 추정,B,SP,71,72,10,10,30,64,82,75,74,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+changwon-dino-force,테일태,66,SP,PIT,31,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,B,SP,71,72,10,10,30,64,82,75,74,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,김태민,69,RP,PIT,20,ACTIVE,0.3,1.2,1,160,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,65,79,10,10,38,62,73,65,72,45,,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,안중안,22,C,BAT,31,ACTIVE,0.6,1.3,12,1810,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,68,66,57,58,55,56,16,66,63,,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,김형형,25,C,BAT,27,ACTIVE,2,1.5,9,1394,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,68,75,62,67,64,66,66,19,68,49,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -345,7 +345,7 @@ changwon-dino-force,김주호,7,SS,BAT,24,ACTIVE,3.5,1.5,6,959,5,FA/비FA 다년
 changwon-dino-force,김한수,13,2B,BAT,25,ACTIVE,0.5,0,5,797,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,58,65,60,57,73,65,56,13,65,59,,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,최정태,14,CF,BAT,26,ACTIVE,0.9,0.5,7,1104,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,64,75,68,57,46,65,56,24,74,63,,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,도태영,16,1B,BAT,33,ACTIVE,0.7,0,11,1664,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,61,63,61,63,57,52,62,19,59,64,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,데이비수,24,1B,BAT,35,ACTIVE,6,0,2,368,1,외국인 단년계약,기간/연봉 추정,C,,57,57,65,52,49,55,51,10,82,67,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+changwon-dino-force,데이비수,24,1B,BAT,35,ACTIVE,6,0,2,368,1,외국인 단년계약,외국인 단년계약 추정,C,,57,57,65,52,49,55,51,10,82,67,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,천재윤,23,RF,BAT,32,ACTIVE,1,0,5,791,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,65,67,73,70,41,58,69,23,82,84,,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,권희재,36,LF,BAT,36,ACTIVE,2.5,0.3,12,1820,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,64,65,67,58,38,66,57,9,62,84,,KBO Register Official Salary/Stat Rating 2026-06-23
 changwon-dino-force,박건욱,37,RF,BAT,36,ACTIVE,6,1,12,1829,2,실계약 6년 100억,2022 FA 계약,A,,82,86,92,93,67,61,73,18,71,66,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -378,8 +378,8 @@ changwon-dino-force,장창준,123,LF,BAT,26,FARM,0.3,0.3,1,145,1,퓨처스/최�
 busan-giant-waves,현도서,17,SP,PIT,33,ACTIVE,0.3,0,9,1377,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,66,68,10,10,42,60,78,70,60,83,,KBO Register Official Salary/Stat Rating 2026-06-23
 busan-giant-waves,김강혁,19,SP,PIT,31,ACTIVE,0.9,0,11,1627,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,69,78,10,10,47,69,64,65,61,89,,KBO Register Official Salary/Stat Rating 2026-06-23
 busan-giant-waves,박세율,21,SP,PIT,31,ACTIVE,21,2,12,1829,2,실계약 5년 90억,2023 비FA 다년계약,B,SP,70,71,10,10,50,64,90,76,75,96,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,비슬겸,23,SP,PIT,31,ACTIVE,6,0,0,89,1,외국인 단년계약,기간/연봉 추정,B,SP,74,78,10,10,44,67,97,81,78,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,로드리게형,31,SP,PIT,28,ACTIVE,6,0,0,78,1,외국인 단년계약,기간/연봉 추정,B,SP,74,77,10,10,50,71,98,81,76,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+busan-giant-waves,비슬겸,23,SP,PIT,31,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,B,SP,74,78,10,10,44,67,97,81,78,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+busan-giant-waves,로드리게형,31,SP,PIT,28,ACTIVE,6,0,0,78,1,외국인 단년계약,외국인 단년계약 추정,B,SP,74,77,10,10,50,71,98,81,76,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 busan-giant-waves,김원도,34,RP,PIT,33,ACTIVE,8,1.5,12,1829,3,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,B,MR,70,73,10,10,31,76,81,76,82,48,,KBO Register Official Salary/Stat Rating 2026-06-23
 busan-giant-waves,박정안,36,RP,PIT,23,ACTIVE,0.3,1.5,0,89,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,67,78,10,10,38,55,75,67,75,50,,KBO Register Official Salary/Stat Rating 2026-06-23
 busan-giant-waves,이민영,37,RP,PIT,23,ACTIVE,0.8,2,5,777,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,57,69,10,10,47,45,58,53,64,46,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -399,7 +399,7 @@ busan-giant-waves,노진우,52,SS,BAT,37,ACTIVE,6,0.8,12,1803,1,실계약 4년 5
 busan-giant-waves,박승민,53,SS,BAT,34,ACTIVE,1,0.8,12,1828,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,59,66,54,63,54,59,62,22,59,77,,KBO Register Official Salary/Stat Rating 2026-06-23
 busan-giant-waves,황성준,0,CF,BAT,29,ACTIVE,1.1,0.7,5,809,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,64,60,53,75,71,52,23,66,60,,KBO Register Official Salary/Stat Rating 2026-06-23
 busan-giant-waves,신윤윤,3,RF,BAT,30,ACTIVE,0.4,0.3,8,1208,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,59,61,52,52,65,55,51,19,68,66,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,레이예영,29,RF,BAT,32,ACTIVE,12,0,2,379,1,외국인 단년계약,기간/연봉 추정,A,,84,85,96,88,69,70,75,16,77,76,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+busan-giant-waves,레이예영,29,RF,BAT,32,ACTIVE,12,0,2,379,1,외국인 단년계약,외국인 단년계약 추정,A,,84,85,96,88,69,70,75,16,77,76,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 busan-giant-waves,손호진,33,3B,BAT,32,ACTIVE,1,0,12,1819,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,69,72,71,77,72,78,76,12,75,85,,KBO Register Official Salary/Stat Rating 2026-06-23
 busan-giant-waves,김동윤,50,RF,BAT,26,ACTIVE,0.5,0,3,458,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,67,70,63,45,57,62,10,69,78,,KBO Register Official Salary/Stat Rating 2026-06-23
 busan-giant-waves,김동윤,64,RF,BAT,22,ACTIVE,0.3,0.6,1,164,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,73,86,68,79,84,79,78,9,63,50,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -434,15 +434,15 @@ incheon-landing,신상안,00,SP,PIT,19,ACTIVE,0.3,0.4,0,13,2,유망주 장기보
 incheon-landing,김안,1,SP,PIT,27,ACTIVE,2.1,3,9,1394,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,59,67,10,10,54,60,62,62,72,86,,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,이건호,16,SP,PIT,31,ACTIVE,0.3,2,12,1780,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,68,71,10,10,55,69,69,72,62,83,,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,조병윤,19,SP,PIT,24,ACTIVE,2.5,0.7,6,959,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,59,69,10,10,31,61,72,65,79,79,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,타케찬,23,SP,PIT,33,ACTIVE,6,0,0,75,1,외국인 단년계약,기간/연봉 추정,C,SP,62,68,10,10,48,62,67,59,58,72,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+incheon-landing,타케찬,23,SP,PIT,33,ACTIVE,6,0,0,75,1,외국인 단년계약,외국인 단년계약 추정,C,SP,62,68,10,10,48,62,67,59,58,72,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,전영원,28,RP,PIT,24,ACTIVE,0.7,0.3,5,784,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,63,73,10,10,37,55,65,62,71,56,,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,최민윤,30,RP,PIT,27,ACTIVE,1.3,1,9,1379,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,63,67,10,10,38,71,67,63,79,58,,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,노경준,38,RP,PIT,42,ACTIVE,4,3.5,12,1828,2,비FA 다년계약,KBO 공식 연봉 + 기간 추정,B,MR,70,73,10,10,31,67,75,76,58,51,,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,김건준,39,RP,PIT,24,ACTIVE,0.7,2,6,959,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,60,71,10,10,52,54,69,61,67,61,,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,김민태,40,RP,PIT,20,ACTIVE,0.3,2.7,0,16,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,68,82,10,10,40,61,74,70,68,59,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,베니지아진,41,RP,PIT,29,ACTIVE,6,0,0,89,1,외국인 단년계약,기간/연봉 추정,C,MR,60,66,10,10,44,65,70,66,68,62,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+incheon-landing,베니지아진,41,RP,PIT,29,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,C,MR,60,66,10,10,44,65,70,66,68,62,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,문승욱,42,RP,PIT,37,ACTIVE,8,1.8,12,1829,3,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,MR,59,66,10,10,33,60,57,54,75,38,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,해훈,55,RP,PIT,32,ACTIVE,6,0,0,11,1,외국인 단년계약,기간/연봉 추정,B,MR,73,79,10,10,34,63,73,69,73,63,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+incheon-landing,해훈,55,RP,PIT,32,ACTIVE,6,0,0,11,1,외국인 단년계약,외국인 단년계약 추정,B,MR,73,79,10,10,34,63,73,69,73,63,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,박시윤,57,RP,PIT,25,ACTIVE,1,0.2,5,796,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,63,75,10,10,47,67,56,59,67,43,,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,조형혁,20,C,BAT,24,ACTIVE,1.3,1.3,6,956,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,57,67,53,59,66,48,58,11,79,77,,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,신범겸,25,C,BAT,28,ACTIVE,0.4,0.4,11,1613,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,59,67,62,68,59,58,67,22,73,79,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -454,7 +454,7 @@ incheon-landing,고명형,18,1B,BAT,24,ACTIVE,1.6,0.9,6,930,1,연봉계약,KBO �
 incheon-landing,전의겸,47,1B,BAT,26,ACTIVE,0.5,1.3,6,893,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,71,79,78,67,67,78,66,9,59,57,,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,홍대진,97,SS,BAT,25,ACTIVE,0.3,0.3,1,224,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,57,69,58,49,56,53,48,12,65,49,,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,채현형,15,LF,BAT,31,ACTIVE,0.4,0.3,8,1239,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,64,55,57,47,70,56,9,63,85,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,에레디윤,27,LF,BAT,35,ACTIVE,8,0,3,524,1,외국인 단년계약,기간/연봉 추정,A,,81,84,92,95,67,61,59,14,70,77,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+incheon-landing,에레디윤,27,LF,BAT,35,ACTIVE,8,0,3,524,1,외국인 단년계약,외국인 단년계약 추정,A,,81,84,92,95,67,61,59,14,70,77,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,김성재,31,LF,BAT,33,ACTIVE,1,0.7,12,1817,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,58,60,54,58,35,48,57,9,68,58,,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,김재원,32,LF,BAT,38,ACTIVE,5,1.5,12,1819,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,,59,63,64,65,79,69,64,22,72,63,,KBO Register Official Salary/Stat Rating 2026-06-23
 incheon-landing,오태성,37,1B,BAT,35,ACTIVE,5,0.9,12,1829,2,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,,60,64,57,66,69,63,65,8,62,63,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -490,7 +490,7 @@ gocheok-heroes,안우우,41,RP,PIT,27,ACTIVE,4.8,6,9,1378,3,보류권/군복무 
 gocheok-heroes,정다민,45,RP,PIT,20,ACTIVE,0.3,0.9,0,35,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,57,68,10,10,31,52,60,63,63,49,,KBO Register Official Salary/Stat Rating 2026-06-23
 gocheok-heroes,원종우,46,RP,PIT,39,ACTIVE,5,1.1,12,1817,1,실계약 4년 25억,2023 FA 계약,C,MR,66,73,10,10,35,73,66,63,69,45,,KBO Register Official Salary/Stat Rating 2026-06-23
 gocheok-heroes,유찬,48,RP,PIT,27,ACTIVE,0.8,0,0,89,1,연봉계약,기간/연봉 추정,C,MR,61,65,10,10,40,49,71,63,82,40,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,알칸타태,54,SP,PIT,34,ACTIVE,8,0,8,1239,1,외국인 단년계약,기간/연봉 추정,A,SP,83,84,10,10,38,75,89,87,83,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+gocheok-heroes,알칸타태,54,SP,PIT,34,ACTIVE,8,0,8,1239,1,외국인 단년계약,외국인 단년계약 추정,A,SP,83,84,10,10,38,75,89,87,83,96,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 gocheok-heroes,배동율,61,RP,PIT,28,ACTIVE,0.3,0.6,6,938,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,59,66,10,10,33,53,53,54,81,58,,KBO Register Official Salary/Stat Rating 2026-06-23
 gocheok-heroes,전준찬,62,RP,PIT,21,ACTIVE,0.4,2.1,2,317,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,59,69,10,10,44,66,65,65,79,57,,KBO Register Official Salary/Stat Rating 2026-06-23
 gocheok-heroes,박정호,94,RP,PIT,20,ACTIVE,0.3,1,1,224,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,66,76,10,10,38,64,66,66,58,61,,KBO Register Official Salary/Stat Rating 2026-06-23
@@ -500,10 +500,10 @@ gocheok-heroes,권혁형,00,1B,BAT,21,ACTIVE,0.3,0.5,1,200,2,유망주 장기보
 gocheok-heroes,안치율,9,2B,BAT,36,ACTIVE,2,1.8,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,57,62,50,52,74,65,51,24,81,71,,KBO Register Official Salary/Stat Rating 2026-06-23
 gocheok-heroes,김웅혁,10,2B,BAT,30,ACTIVE,0.4,0.8,11,1638,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,67,72,64,55,42,61,77,21,79,69,,KBO Register Official Salary/Stat Rating 2026-06-23
 gocheok-heroes,서건안,14,SS,BAT,37,ACTIVE,1.2,0,12,1817,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,73,78,65,78,78,79,77,17,60,51,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,히우찬,22,2B,BAT,30,ACTIVE,6,0,0,26,1,외국인 단년계약,기간/연봉 추정,C,,64,70,59,60,63,58,59,24,63,54,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+gocheok-heroes,히우찬,22,2B,BAT,30,ACTIVE,6,0,0,26,1,외국인 단년계약,외국인 단년계약 추정,C,,64,70,59,60,63,58,59,24,63,54,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 gocheok-heroes,최재욱,38,2B,BAT,19,ACTIVE,0.3,0.8,0,47,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,73,84,70,65,76,65,64,18,79,49,,KBO Register Official Salary/Stat Rating 2026-06-23
 gocheok-heroes,최주욱,53,1B,BAT,38,ACTIVE,3,0.6,12,1829,1,실계약 4년 42억,2021 FA 계약,B,,73,73,66,63,41,69,85,10,67,49,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,어준준,92,1B,BAT,20,ACTIVE,0.5,1.1,1,201,1,외국인 단년계약,KBO 공식 연봉 + 기간 추정,B,,73,83,73,77,61,77,76,13,61,54,Y,KBO Register Official Salary/Stat Rating 2026-06-23
+gocheok-heroes,어준준,92,1B,BAT,20,ACTIVE,0.5,1.1,1,201,1,외국인 단년계약,KBO 공식 연봉 + 외국인 단년계약,B,,73,83,73,77,61,77,76,13,61,54,Y,KBO Register Official Salary/Stat Rating 2026-06-23
 gocheok-heroes,여동겸,93,SS,BAT,21,ACTIVE,0.3,1,1,181,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,77,67,55,37,70,54,16,65,72,,KBO Register Official Salary/Stat Rating 2026-06-23
 gocheok-heroes,임병혁,17,CF,BAT,31,ACTIVE,0.6,2,12,1802,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,71,77,72,78,79,72,77,19,65,73,,KBO Register Official Salary/Stat Rating 2026-06-23
 gocheok-heroes,추재준,27,CF,BAT,27,ACTIVE,0.6,0.8,9,1357,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,70,78,71,58,55,65,80,11,65,76,,KBO Register Official Salary/Stat Rating 2026-06-23
