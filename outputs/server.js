@@ -1090,6 +1090,22 @@ function basesLabel(bases) {
   return `${bases[0] ? "1" : "-"}${bases[1] ? "2" : "-"}${bases[2] ? "3" : "-"}`;
 }
 
+function resolveGroundDoublePlay(game) {
+  const [first, second, third] = game.bases;
+  const outsBefore = game.outs;
+  let runs = 0;
+  const nextBases = [null, null, null];
+
+  if (outsBefore === 0) {
+    if (third) runs += 1;
+    if (second) nextBases[2] = second;
+  }
+
+  game.bases = nextBases;
+  game.outs = Math.min(3, outsBefore + 2);
+  return { runs, bases: basesLabel(game.bases), first, second, third };
+}
+
 function createActiveGame(state, lineup, starterId, lineupPositions) {
   const rawLineup = Array.isArray(lineup) ? lineup.map(Number).slice(0, 9) : [];
   if (rawLineup.length !== 9 || new Set(rawLineup).size !== 9) {
@@ -1535,9 +1551,9 @@ function resolveUserAtBat(state, tactic) {
         const touchText = event.bases < 4 ? `, ${fielding.name} 처리 시도` : "";
         text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 인플레이, ${result.text}${errorText}${touchText}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
       } else if (game.bases[0] && game.outs <= 1 && rnd(1, 100) < Math.max(5, Math.min(24, 28 - (batter.spd || 55) * 0.2 + (opponentPitcher.command || 60) * 0.05))) {
-        game.bases[0] = null;
-        game.outs = Math.min(3, game.outs + 2);
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 인플레이, ${batter.name} 병살타. 상대 유격수-2루수-1루수 처리, ${game.outs}아웃`;
+        const result = resolveGroundDoublePlay(game);
+        game.score.user += result.runs;
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 인플레이, ${batter.name} 병살타. 상대 유격수-2루수-1루수 처리, ${game.outs}아웃${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${result.bases}`;
       } else {
         game.outs += 1;
         const great = rnd(1, 100) < fielding.greatChance;
@@ -1852,12 +1868,12 @@ function resolveOpponentPlateAppearance(state) {
         game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${fielding.pos} ${fielding.name} ${fielding.errorType}${result.runs ? `, ${result.runs}실점` : ""}. 주자 ${basesLabel(game.bases)}`);
       } else {
         if (game.bases[0] && game.outs <= 1 && rnd(1, 100) < Math.max(10, Math.min(38, defense.def * 0.28 + defense.infieldArm * 0.12 - batter.contact * 0.12))) {
-          game.bases[0] = null;
-          game.outs = Math.min(3, game.outs + 2);
+          const result = resolveGroundDoublePlay(game);
+          game.score.opp += result.runs;
           const ss = fielderByPos(defense, "SS");
           const second = fielderByPos(defense, "2B");
           const first = fielderByPos(defense, "1B");
-          game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${ss?.name || "유격수"}-${second?.name || "2루수"}-${first?.name || "1루수"} 병살 처리. ${game.outs}아웃`);
+          game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${ss?.name || "유격수"}-${second?.name || "2루수"}-${first?.name || "1루수"} 병살 처리. ${game.outs}아웃${result.runs ? `, ${result.runs}실점` : ""}, 주자 ${result.bases}`);
         } else {
           game.outs += 1;
           const great = rnd(1, 100) < fielding.greatChance;
