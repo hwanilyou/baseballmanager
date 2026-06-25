@@ -355,6 +355,7 @@ function enforceActiveRosterLimit(state, limit = 28) {
 function migrateState(state) {
   if (!state) return state;
   if (Array.isArray(state.players)) {
+    state.players = state.players.filter((p) => p && typeof p === "object");
     for (const [index, p] of state.players.entries()) {
       if (!String(p.dataSource || "").startsWith("KBO") && nameMigration[p.name]) p.name = nameMigration[p.name];
       if (!p.jerseyNumber) p.jerseyNumber = defaultJerseyNumber(index);
@@ -427,6 +428,7 @@ function ensureActiveGameDetails(state) {
   if (!game) return state;
   const opp = state.teams?.find((t) => t.id === game.opponentId) || currentOpponent(state);
   if (!game.count) game.count = { balls: 0, strikes: 0 };
+  if (!Number.isFinite(game.paPitchCount)) game.paPitchCount = 0;
   if (!Array.isArray(game.opponentLineup) || game.opponentLineup.length < 9) game.opponentLineup = makeOpponentLineup(opp);
   if (!game.opponentPitcher) game.opponentPitcher = makeOpponentPitcher(opp);
   if (!Number.isFinite(game.opponentLineupIndex)) game.opponentLineupIndex = 0;
@@ -1034,6 +1036,7 @@ function nextHalfInning(state) {
   game.outs = 0;
   game.bases = [null, null, null];
   game.count = { balls: 0, strikes: 0 };
+  game.paPitchCount = 0;
   game.pendingSteal = null;
   if (game.half === "top") {
     game.half = "bottom";
@@ -1054,6 +1057,7 @@ function nextHalfInning(state) {
   game.outs = 0;
   game.bases = [null, null, null];
   game.count = { balls: 0, strikes: 0 };
+  game.paPitchCount = 0;
   game.pendingSteal = null;
   if (shouldFinishAfterHalf(game)) {
     finishManualGame(state);
@@ -1391,31 +1395,12 @@ function resolveUserAtBat(state, tactic) {
 function resolveOpponentHalf(state) {
   const game = state.activeGame;
   if (!game || game.complete || !isOpponentBattingHalf(game)) return state;
-  const opp = state.teams.find((t) => t.id === game.opponentId) || currentOpponent(state);
-  const pitcher = state.players.find((p) => p.id === game.pitcherId);
-  const pitchPower = pitcher ? pitcher.pit * 0.72 + pitcher.form * 0.2 + pitcher.happy * 0.08 : teamPower(state);
-  while (isOpponentBattingHalf(game) && !game.complete) {
-    const attack = opponentBatterPower(opp, game.inning);
-    const batter = { contact: attack, power: attack };
-    const event = opponentBattedBallEvent(batter, pitchPower, { def: 60, arm: 60 });
-    const walkRoll = rnd(1, 100) + attack * 0.08 - (pitcher?.command || 60) * 0.1;
-    if (event.bases > 0) {
-      const result = advanceRunners(game, `${opp.short} 타자`, event.bases);
-      game.score.opp += result.runs;
-      game.log.unshift(`${game.inning}회말 ${result.text}${result.runs ? `, ${result.runs}실점` : ""}`);
-    } else if (walkRoll > 93) {
-      const result = walkBatter(game, `${opp.short} 주자`);
-      game.score.opp += result.runs;
-      game.log.unshift(`${game.inning}회말 볼넷 허용${result.runs ? `, ${result.runs}실점` : ""}. 주자 ${basesLabel(game.bases)}`);
-    } else if (game.bases[0] && game.outs <= 1 && rnd(1, 100) < 28) {
-      game.bases[0] = null;
-      game.outs = Math.min(3, game.outs + 2);
-      game.log.unshift(`${game.inning}회말 병살 처리. ${game.outs}아웃`);
-    } else {
-      game.outs += 1;
-      game.log.unshift(`${game.inning}회말 아웃카운트 추가. ${game.outs}아웃`);
-    }
-    if (game.outs >= 3) nextHalfInning(state);
+  const inning = game.inning;
+  const half = game.half;
+  let guard = 0;
+  while (!game.complete && game.inning === inning && game.half === half && guard < 120) {
+    resolveOpponentPlateAppearance(state);
+    guard += 1;
   }
   return state;
 }
@@ -1524,6 +1509,7 @@ function resolveOpponentPlateAppearance(state) {
   let strikeoutAdded = 0;
   const pitch = 1;
   game.pitchCount = (game.pitchCount || 0) + pitch;
+  game.paPitchCount = (Number(game.paPitchCount) || 0) + pitch;
   if (pitcher) {
     if (!game.pitcherUsage) game.pitcherUsage = {};
     game.pitcherUsage[pitcher.id] = (game.pitcherUsage[pitcher.id] || 0) + pitch;
@@ -1540,6 +1526,7 @@ function resolveOpponentPlateAppearance(state) {
       game.score.opp += result.runs;
       game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 폭투 뒤 볼넷 허용${result.runs ? `, ${result.runs}실점` : ""}. 주자 ${basesLabel(game.bases)}`);
       game.count = { balls: 0, strikes: 0 };
+      game.paPitchCount = 0;
       game.opponentLineupIndex += 1;
     }
     updatePitcherMood(game, pitcher, 1);
@@ -1565,7 +1552,9 @@ function resolveOpponentPlateAppearance(state) {
     }
   }
   const fatiguePenalty = Math.max(0, game.pitchCount - (pitcher?.stamina || 65)) * 0.35;
-  const pitchRoll = rnd(1, 100) + attack * 0.2 + batter.contact * 0.12 - pitchPower * 0.25 + fatiguePenalty;
+  const earlyCountDrag = game.paPitchCount <= 1 ? -11 : game.paPitchCount === 2 ? -5 : 0;
+  const deepCountFinish = Math.max(0, game.paPitchCount - 5) * 3.5;
+  const pitchRoll = rnd(1, 100) + attack * 0.2 + batter.contact * 0.12 - pitchPower * 0.25 + fatiguePenalty + earlyCountDrag + deepCountFinish;
   let hardContact = 0;
   if (pitchRoll < 27 && game.count.strikes < 2) {
     game.count.strikes += 1;
@@ -1577,6 +1566,7 @@ function resolveOpponentPlateAppearance(state) {
       strikeoutAdded += 1;
       game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 삼진. ${game.outs}아웃`);
       game.count = { balls: 0, strikes: 0 };
+      game.paPitchCount = 0;
       game.opponentLineupIndex += 1;
     } else {
       game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 파울. ${game.count.balls}-${game.count.strikes}`);
@@ -1588,6 +1578,7 @@ function resolveOpponentPlateAppearance(state) {
       game.score.opp += result.runs;
       game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 볼넷 허용${result.runs ? `, ${result.runs}실점` : ""}. 주자 ${basesLabel(game.bases)}`);
       game.count = { balls: 0, strikes: 0 };
+      game.paPitchCount = 0;
       game.opponentLineupIndex += 1;
     } else {
       game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 볼. ${game.count.balls}-${game.count.strikes}`);
@@ -1609,6 +1600,7 @@ function resolveOpponentPlateAppearance(state) {
       }
       game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${result.text}${result.runs ? `, ${result.runs}실점` : ""}${throwText}`);
       game.count = { balls: 0, strikes: 0 };
+      game.paPitchCount = 0;
       game.opponentLineupIndex += 1;
     } else {
       if (rnd(1, 100) + defense.infieldArm < 36) {
@@ -1626,6 +1618,7 @@ function resolveOpponentPlateAppearance(state) {
         }
       }
       game.count = { balls: 0, strikes: 0 };
+      game.paPitchCount = 0;
       game.opponentLineupIndex += 1;
     }
   }
@@ -1813,8 +1806,9 @@ function pinchRun(state, baseIndex, inId) {
 }
 
 function teamPower(state) {
-  const hitters = state.players.filter((p) => p.type === "BAT");
-  const pitchers = state.players.filter((p) => p.type === "PIT");
+  const players = (state.players || []).filter((p) => p && typeof p === "object");
+  const hitters = players.filter((p) => p.type === "BAT");
+  const pitchers = players.filter((p) => p.type === "PIT");
   return Math.round(
     avg(hitters.map((p) => p.ovr * 0.72 + p.form * 0.18 + p.happy * 0.1)) * 0.55 +
     avg(pitchers.map((p) => p.ovr * 0.78 + p.form * 0.17 + p.happy * 0.05)) * 0.45
