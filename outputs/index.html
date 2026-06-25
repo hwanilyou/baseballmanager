@@ -516,6 +516,56 @@
       margin-top: 18px;
     }
 
+    .auth-panel {
+      width: min(440px, 100%);
+      margin-top: 24px;
+      padding: 18px;
+      background: rgba(255,255,255,0.96);
+      color: var(--ink);
+      border: 1px solid rgba(255,255,255,0.28);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .auth-panel input {
+      width: 100%;
+      min-height: 42px;
+      margin-top: 8px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0 10px;
+    }
+
+    .auth-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .auth-error {
+      min-height: 18px;
+      margin-top: 10px;
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .user-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.24);
+    }
+
+    .user-box button {
+      min-height: 28px;
+      padding: 4px 8px;
+    }
+
     .team-card {
       min-height: 148px;
       display: grid;
@@ -806,6 +856,26 @@
   </style>
 </head>
 <body>
+  <div class="team-select active" id="authSelect">
+    <div class="select-inner">
+      <h2>로그인</h2>
+      <div class="subtitle">회원별로 시즌 기록과 선수단 저장이 분리됩니다.</div>
+      <div class="auth-panel">
+        <label>아이디
+          <input id="authUsername" autocomplete="username" placeholder="2~20자" />
+        </label>
+        <label style="display:block; margin-top:10px;">비밀번호
+          <input id="authPassword" type="password" autocomplete="current-password" placeholder="4자 이상" />
+        </label>
+        <div class="auth-actions">
+          <button class="primary" id="loginBtn">로그인</button>
+          <button class="secondary" id="signupBtn">회원가입</button>
+        </div>
+        <div class="auth-error" id="authError"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="team-select" id="teamSelect">
     <div class="select-inner">
       <h2>구단을 선택하세요</h2>
@@ -823,6 +893,7 @@
         <div class="subtitle" id="subtitle">팀을 골라 시즌을 시작하세요.</div>
       </div>
       <div class="season-strip">
+        <div class="pill user-box">👤 <span id="userLabel">-</span><button class="secondary" id="logoutBtn">로그아웃</button></div>
         <div class="pill">📅 <span id="dateLabel">-</span></div>
         <div class="pill">💰 <span id="budgetLabel">-</span></div>
         <div class="pill">🎯 <span id="ownerGoal">목표 플레이오프</span></div>
@@ -1239,6 +1310,7 @@
   <script>
     let state = null;
     let teams = [];
+    let currentUser = null;
 
     const $ = (id) => document.getElementById(id);
     const pct = (v) => `${Math.max(0, Math.min(100, Math.round(v)))}%`;
@@ -1272,15 +1344,36 @@
       const res = await fetch(path, body ? {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
-      } : undefined);
-      if (!res.ok) throw new Error(`API ${path} failed`);
+        body: JSON.stringify(body),
+        credentials: "same-origin"
+      } : { credentials: "same-origin" });
+      if (!res.ok) {
+        let message = `API ${path} failed`;
+        try {
+          const data = await res.json();
+          message = data.error || message;
+        } catch {}
+        throw new Error(message);
+      }
       return res.json();
     };
 
     async function init() {
+      const auth = await api("/api/auth/me");
+      if (!auth.authenticated) {
+        currentUser = null;
+        teams = (await api("/api/meta")).teams;
+        $("authSelect").classList.add("active");
+        $("teamSelect").classList.remove("active");
+        renderTeamSelect();
+        return;
+      }
+      currentUser = auth.user;
+      $("authSelect").classList.remove("active");
       const data = await api("/api/state");
       teams = data.teams;
+      currentUser = data.user || currentUser;
+      $("userLabel").textContent = currentUser?.username || "-";
       renderTeamSelect();
       if (data.hasSave) {
         state = data.state;
@@ -1288,6 +1381,32 @@
       } else {
         $("teamSelect").classList.add("active");
       }
+    }
+
+    async function authSubmit(mode) {
+      $("authError").textContent = "";
+      try {
+        const username = $("authUsername").value.trim();
+        const password = $("authPassword").value;
+        const data = await api(`/api/auth/${mode}`, { username, password });
+        currentUser = data.user;
+        $("userLabel").textContent = currentUser.username;
+        $("authSelect").classList.remove("active");
+        await init();
+        showToast(mode === "signup" ? "회원가입 완료" : "로그인 완료");
+      } catch (err) {
+        $("authError").textContent = err.message;
+      }
+    }
+
+    async function logout() {
+      await api("/api/auth/logout", {});
+      currentUser = null;
+      state = null;
+      $("userLabel").textContent = "-";
+      $("teamSelect").classList.remove("active");
+      $("authSelect").classList.add("active");
+      showToast("로그아웃 완료");
     }
 
     function renderTeamSelect() {
@@ -1305,6 +1424,7 @@
     async function newGame(teamId) {
       state = await api("/api/new-game", { teamId });
       $("teamSelect").classList.remove("active");
+      $("authSelect").classList.remove("active");
       render();
     }
 
@@ -2550,6 +2670,13 @@
 
     document.querySelectorAll("#tabs button").forEach((btn) => {
       btn.addEventListener("click", () => openView(btn.dataset.view));
+    });
+
+    $("loginBtn").addEventListener("click", () => authSubmit("login"));
+    $("signupBtn").addEventListener("click", () => authSubmit("signup"));
+    $("logoutBtn").addEventListener("click", logout);
+    $("authPassword").addEventListener("keydown", (event) => {
+      if (event.key === "Enter") authSubmit("login");
     });
 
     $("playGame").addEventListener("click", () => openView("game"));

@@ -1,15 +1,20 @@
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
 const PORT = Number(process.env.PORT || 8766);
 const ROOT = __dirname;
 const SAVE_PATH = path.join(ROOT, "save.json");
+const USERS_PATH = path.join(ROOT, "users.json");
+const SAVES_DIR = path.join(ROOT, "saves");
 const DATA_IMPORT_PATH = path.join(ROOT, "data", "kbo_players.csv");
 const DATA_SOURCE_URL_PATH = path.join(ROOT, "data", "source-url.txt");
 const DRAFT_DAY = 120;
 const DRAFT_ROUNDS = 11;
 const HS_DRAFT_POOL_SIZE = 60;
+
+fs.mkdirSync(SAVES_DIR, { recursive: true });
 
 const teamTemplates = [
   { id: "daejeon-orange-eagles", city: "대전", name: "오렌지이글스", short: "오렌지", primary: "#f37321", secondary: "#1f2933", power: 68 },
@@ -90,6 +95,61 @@ function publicAliasName(name, salt = "") {
   };
   replaceAt(chars.length - 1, 0);
   return chars.join("");
+}
+
+function readUsers() {
+  try {
+    const users = JSON.parse(fs.readFileSync(USERS_PATH, "utf8"));
+    users.accounts ||= [];
+    users.sessions ||= {};
+    return users;
+  } catch {
+    return { accounts: [], sessions: {} };
+  }
+}
+
+function writeUsers(users) {
+  fs.writeFileSync(USERS_PATH, JSON.stringify(users, null, 2), "utf8");
+}
+
+function safeUserId(username) {
+  const raw = String(username || "").trim();
+  const base = raw.toLowerCase().replace(/[^a-z0-9_-]/g, "_").replace(/^_+|_+$/g, "").slice(0, 18) || "user";
+  return `${base}_${hashText(raw).toString(36)}`.slice(0, 32);
+}
+
+function hashPassword(password, salt = crypto.randomBytes(16).toString("hex")) {
+  const hash = crypto.pbkdf2Sync(String(password || ""), salt, 120000, 32, "sha256").toString("hex");
+  return { salt, hash };
+}
+
+function verifyPassword(password, account) {
+  if (!account?.salt || !account?.passwordHash) return false;
+  return hashPassword(password, account.salt).hash === account.passwordHash;
+}
+
+function parseCookies(req) {
+  return Object.fromEntries(String(req.headers.cookie || "").split(";").map((part) => {
+    const index = part.indexOf("=");
+    if (index < 0) return ["", ""];
+    return [part.slice(0, index).trim(), decodeURIComponent(part.slice(index + 1).trim())];
+  }).filter(([key]) => key));
+}
+
+function sessionUser(req) {
+  const token = parseCookies(req).bm_session;
+  if (!token) return null;
+  const users = readUsers();
+  const userId = users.sessions?.[token];
+  return users.accounts.find((account) => account.id === userId) || null;
+}
+
+function setSessionCookie(res, token) {
+  res.setHeader("Set-Cookie", `bm_session=${encodeURIComponent(token)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=2592000`);
+}
+
+function clearSessionCookie(res) {
+  res.setHeader("Set-Cookie", "bm_session=; Path=/; HttpOnly; SameSite=Lax; Max-Age=0");
 }
 
 function isLikelyForeignName(name) {
@@ -853,16 +913,20 @@ function createState(teamId) {
   return ensureRosterDepth(state);
 }
 
-function readState() {
+function userSavePath(user) {
+  return user ? path.join(SAVES_DIR, `${user.id}.json`) : SAVE_PATH;
+}
+
+function readState(user) {
   try {
-    return ensureRosterDepth(migrateState(JSON.parse(fs.readFileSync(SAVE_PATH, "utf8"))));
+    return ensureRosterDepth(migrateState(JSON.parse(fs.readFileSync(userSavePath(user), "utf8"))));
   } catch {
     return null;
   }
 }
 
-function saveState(state) {
-  fs.writeFileSync(SAVE_PATH, JSON.stringify(state, null, 2), "utf8");
+function saveState(state, user) {
+  fs.writeFileSync(userSavePath(user), JSON.stringify(state, null, 2), "utf8");
 }
 
 function currentTeam(state) {
@@ -4128,21 +4192,80 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (req.method === "GET" && url.pathname === "/api/auth/me") {
+    const user = sessionUser(req);
+    sendJson(res, 200, { authenticated: Boolean(user), user: user ? { id: user.id, username: user.username } : null });
+    return;
+  }
+
+  if (req.method === "POST" && (url.pathname === "/api/auth/signup" || url.pathname === "/api/auth/login")) {
+    const body = await parseBody(req);
+    const username = String(body.username || "").trim();
+    const password = String(body.password || "");
+    if (!/^[A-Za-z0-9가-힣_-]{2,20}$/.test(username) || password.length < 4) {
+      sendJson(res, 400, { error: "아이디는 2~20자, 비밀번호는 4자 이상이어야 합니다." });
+      return;
+    }
+    const users = readUsers();
+    const id = safeUserId(username);
+    let account = users.accounts.find((item) => item.id === id);
+    if (url.pathname === "/api/auth/signup") {
+      if (account) {
+        sendJson(res, 409, { error: "이미 있는 아이디입니다." });
+        return;
+      }
+      const isFirstAccount = users.accounts.length === 0;
+      const passwordData = hashPassword(password);
+      account = { id, username, passwordHash: passwordData.hash, salt: passwordData.salt, createdAt: new Date().toISOString() };
+      users.accounts.push(account);
+      if (isFirstAccount && !fs.existsSync(userSavePath(account)) && fs.existsSync(SAVE_PATH)) {
+        fs.copyFileSync(SAVE_PATH, userSavePath(account));
+      }
+    } else if (!account || !verifyPassword(password, account)) {
+      sendJson(res, 401, { error: "아이디나 비밀번호가 맞지 않습니다." });
+      return;
+    }
+    const token = crypto.randomBytes(32).toString("hex");
+    users.sessions[token] = account.id;
+    writeUsers(users);
+    setSessionCookie(res, token);
+    sendJson(res, 200, { user: { id: account.id, username: account.username } });
+    return;
+  }
+
+  if (req.method === "POST" && url.pathname === "/api/auth/logout") {
+    const token = parseCookies(req).bm_session;
+    if (token) {
+      const users = readUsers();
+      delete users.sessions[token];
+      writeUsers(users);
+    }
+    clearSessionCookie(res);
+    sendJson(res, 200, { ok: true });
+    return;
+  }
+
+  const user = sessionUser(req);
+  if (!user) {
+    sendJson(res, 401, { error: "로그인이 필요합니다.", authRequired: true, teams: teamTemplates });
+    return;
+  }
+
   if (req.method === "GET" && url.pathname === "/api/state") {
-    const state = readState();
+    const state = readState(user);
     const visibleState = state ? publicState(state) : null;
-    if (state) saveState(state);
-    sendJson(res, 200, { hasSave: Boolean(state), state: visibleState, teams: teamTemplates });
+    if (state) saveState(state, user);
+    sendJson(res, 200, { hasSave: Boolean(state), state: visibleState, teams: teamTemplates, user: { id: user.id, username: user.username } });
     return;
   }
 
   const body = await parseBody(req);
-  let state = readState();
+  let state = readState(user);
 
   if (req.method === "POST" && url.pathname === "/api/new-game") {
     state = createState(body.teamId);
     await syncExternalPlayerData(state);
-    saveState(state);
+    saveState(state, user);
     sendJson(res, 200, publicState(state));
     return;
   }
@@ -4194,7 +4317,7 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "POST" && routes[url.pathname]) {
     await routes[url.pathname]();
-    saveState(state);
+    saveState(state, user);
     sendJson(res, 200, publicState(state));
     return;
   }
