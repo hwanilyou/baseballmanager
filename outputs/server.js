@@ -1,0 +1,3353 @@
+const http = require("http");
+const fs = require("fs");
+const path = require("path");
+
+const PORT = Number(process.env.PORT || 8766);
+const ROOT = __dirname;
+const SAVE_PATH = path.join(ROOT, "save.json");
+const DATA_IMPORT_PATH = path.join(ROOT, "data", "kbo_players.csv");
+const DATA_SOURCE_URL_PATH = path.join(ROOT, "data", "source-url.txt");
+
+const teamTemplates = [
+  { id: "daejeon-orange-eagles", city: "대전", name: "오렌지이글스", short: "오렌지", primary: "#f37321", secondary: "#1f2933", power: 68 },
+  { id: "seoul-twin-stars", city: "서울", name: "트윈스타즈", short: "트윈", primary: "#c9162f", secondary: "#111827", power: 71 },
+  { id: "busan-giant-waves", city: "부산", name: "자이언트웨이브스", short: "자이언트", primary: "#0f3b78", secondary: "#d43d2a", power: 69 },
+  { id: "daegu-blue-lions", city: "대구", name: "블루라이온즈", short: "블루", primary: "#1e62ad", secondary: "#c8a24a", power: 67 },
+  { id: "gwangju-tiger-kings", city: "광주", name: "타이거킹즈", short: "타이거", primary: "#d71920", secondary: "#101820", power: 72 },
+  { id: "incheon-landing", city: "인천", name: "랜더스카이", short: "랜더", primary: "#c8102e", secondary: "#f4c430", power: 70 },
+  { id: "changwon-dino-force", city: "창원", name: "다이노포스", short: "다이노", primary: "#2454a6", secondary: "#b5a36a", power: 66 },
+  { id: "suwon-wizpark", city: "수원", name: "위즈파크", short: "위즈", primary: "#111111", secondary: "#e31b23", power: 65 },
+  { id: "gocheok-heroes", city: "고척", name: "히어로즈나인", short: "히어로", primary: "#6f263d", secondary: "#c5a46d", power: 62 },
+  { id: "jamsil-bears", city: "잠실", name: "베어스클럽", short: "베어스", primary: "#14213d", secondary: "#ffffff", power: 73 }
+];
+
+const playerSeeds = {
+  "daejeon-orange-eagles": [
+    ["노시훈", "3B", "BAT", 25, 80, 91, "거포 코어", 8], ["문동진", "SP", "PIT", 23, 79, 93, "파이어볼러", 1], ["김서훈", "RP", "PIT", 22, 68, 88, "강속구 원석", 54],
+    ["채은준", "1B", "BAT", 36, 74, 74, "베테랑 해결사", 22], ["페라준", "RF", "BAT", 27, 76, 82, "외인 장타", 30], ["문현준", "2B", "BAT", 23, 69, 84, "내야 유망주", 64],
+    ["하주민", "SS", "BAT", 32, 67, 70, "수비 경험", 16], ["최재민", "C", "BAT", 36, 66, 66, "안방 리더", 13], ["황영준", "LF", "BAT", 26, 64, 78, "근성형 타자", 95],
+    ["류현민", "SP", "PIT", 37, 76, 76, "관록의 좌완", 99], ["장시준", "RP", "PIT", 38, 63, 63, "베테랑 불펜", 28], ["주현준", "CL", "PIT", 34, 75, 76, "마무리 카드", 55]
+  ],
+  "seoul-twin-stars": [
+    ["김한수", "LF", "BAT", 38, 75, 75, "프랜차이즈 리더"], ["오지훈", "SS", "BAT", 36, 77, 77, "수비 사령관"], ["문보윤", "3B", "BAT", 26, 76, 85, "핫코너 코어"],
+    ["홍찬기", "RF", "BAT", 33, 78, 80, "출루 장인"], ["박해준", "CF", "BAT", 36, 70, 70, "외야 수비"], ["임찬우", "SP", "PIT", 34, 74, 75, "토종 선발"],
+    ["손주완", "SP", "PIT", 28, 72, 82, "좌완 성장주"], ["유영준", "CL", "PIT", 29, 76, 81, "끝판 불펜"], ["신민우", "2B", "BAT", 30, 68, 73, "기동력"],
+    ["박도원", "C", "BAT", 36, 71, 71, "장타 포수"], ["오스먼", "1B", "BAT", 33, 81, 82, "외인 중심타자"], ["정우진", "RP", "PIT", 27, 69, 78, "사이드암"]
+  ],
+  "busan-giant-waves": [
+    ["전준호", "LF", "BAT", 40, 74, 74, "주장"], ["윤도희", "RF", "BAT", 23, 71, 86, "차세대 외야수"], ["고승우", "2B", "BAT", 26, 70, 82, "좌타 코어"],
+    ["나승윤", "1B", "BAT", 24, 68, 84, "장신 유망주"], ["손호준", "3B", "BAT", 31, 72, 76, "공격형 내야"], ["박세민", "SP", "PIT", 31, 78, 80, "안경 에이스"],
+    ["나균호", "SP", "PIT", 28, 70, 78, "전환 선발"], ["김원준", "CL", "PIT", 33, 77, 78, "마무리"], ["유강준", "C", "BAT", 34, 66, 66, "프레이밍"],
+    ["황성윤", "CF", "BAT", 29, 65, 73, "스피드"], ["정도훈", "DH", "BAT", 39, 67, 67, "대타 카드"], ["최준서", "RP", "PIT", 25, 71, 83, "강한 어깨"]
+  ],
+  "daegu-blue-lions": [
+    ["구자민", "RF", "BAT", 33, 82, 84, "프랜차이즈 스타"], ["원태준", "SP", "PIT", 26, 81, 88, "국대 에이스"], ["강민재", "C", "BAT", 40, 72, 72, "베테랑 포수"],
+    ["김지완", "2B", "BAT", 25, 72, 82, "출루와 주루"], ["이재윤", "SS", "BAT", 23, 70, 85, "차세대 유격수"], ["김영준", "3B", "BAT", 23, 68, 86, "좌타 장타"],
+    ["오승준", "RP", "PIT", 43, 68, 68, "전설의 돌직구"], ["백정우", "SP", "PIT", 38, 68, 68, "좌완 베테랑"], ["맥키언", "1B", "BAT", 32, 73, 75, "외인 컨택"],
+    ["이성준", "LF", "BAT", 32, 67, 72, "파워 백업"], ["김헌재", "CF", "BAT", 37, 64, 64, "수비 백업"], ["최지윤", "RP", "PIT", 28, 67, 76, "불펜 재건"]
+  ],
+  default: [
+    ["강도윤", "CF", "BAT", 24, 73, 91, "5툴 유망주"], ["한서준", "SS", "BAT", 29, 79, 82, "수비 리더"], ["박민재", "1B", "BAT", 31, 76, 78, "장타 카드"],
+    ["이준호", "RF", "BAT", 22, 66, 88, "고잠재 외야수"], ["최우진", "C", "BAT", 27, 71, 76, "투수 조련"], ["장현수", "3B", "BAT", 26, 70, 80, "꾸준함"],
+    ["문시온", "LF", "BAT", 20, 58, 86, "원석"], ["윤태하", "2B", "BAT", 33, 68, 68, "베테랑"], ["서지후", "SP", "PIT", 25, 81, 90, "에이스 후보"],
+    ["권라온", "SP", "PIT", 28, 75, 79, "땅볼 유도"], ["오지완", "RP", "PIT", 23, 69, 84, "강속구"], ["백태민", "CL", "PIT", 30, 77, 78, "마무리 경험"]
+  ]
+};
+
+const nameMigration = {
+  "노시환": "노시우", "문동주": "문도준", "김서현": "김서율", "채은성": "채윤성", "페라자": "페르난", "문현빈": "문하빈",
+  "하주석": "하준석", "최재훈": "최재윤", "황영묵": "황영민", "류현준": "류현민", "장시환": "장시윤", "주현상": "주현민",
+  "김현수": "김한수", "오지환": "오지훈", "문보경": "문보윤", "홍창기": "홍찬기", "박해민": "박해준", "임찬규": "임찬우",
+  "손주영": "손주완", "유영찬": "유영준", "신민재": "신민우", "박동원": "박도원", "오스틴": "오스먼", "정우영": "정우진",
+  "전준우": "전준호", "윤동희": "윤도희", "고승민": "고승우", "나승엽": "나승윤", "손호영": "손호준", "박세웅": "박세민",
+  "나균안": "나균호", "김원중": "김원준", "유강남": "유강준", "황성빈": "황성윤", "정훈": "정도훈", "최준용": "최준서",
+  "구자욱": "구자민", "원태인": "원태준", "강민호": "강민재", "김지찬": "김지완", "이재현": "이재윤", "김영웅": "김영준",
+  "오승환": "오승준", "백정현": "백정우", "맥키넌": "맥키언", "이성규": "이성준", "김헌곤": "김헌재", "최지광": "최지윤"
+};
+
+const FIELD_POSITIONS = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
+
+const publicAliasSyllables = ["준","민","훈","윤","현","율","성","진","우","원","호","빈","재","겸","서","안","도","혁","형","찬","수","욱","태","영"];
+const koreanSurnames = new Set([... "김이박최정강조윤장임한오서신권황안송전홍유고문양손배조백허남심노하곽성차주우구민류나진지엄채원천방공현함변염여추도소석선설마길연위표명기반라왕금옥육인맹제모탁국"]);
+
+function hashText(text) {
+  let h = 0;
+  for (const ch of String(text || "")) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return h;
+}
+
+function publicAliasName(name, salt = "") {
+  const chars = [...String(name || "").trim()];
+  if (!chars.length) return name;
+  const h = hashText(`${name}-${salt}`);
+  const replaceAt = (index, offset) => {
+    let next = publicAliasSyllables[(h + offset) % publicAliasSyllables.length];
+    if (next === chars[index]) next = publicAliasSyllables[(h + offset + 1) % publicAliasSyllables.length];
+    chars[index] = next;
+  };
+  replaceAt(chars.length - 1, 0);
+  return chars.join("");
+}
+
+function isLikelyForeignName(name) {
+  const chars = [...String(name || "").trim().replace(/\s+/g, "")];
+  if (!chars.length) return false;
+  if (chars.length >= 4) return true;
+  return !koreanSurnames.has(chars[0]);
+}
+
+function isForeignPlayer(p) {
+  return Boolean(p?.foreignPlayer);
+}
+
+function isPitcherPos(pos) {
+  return ["SP", "RP", "CL"].includes(pos);
+}
+
+function fieldPositionForPlayer(p) {
+  if (!p) return "DH";
+  if (FIELD_POSITIONS.includes(p.pos)) return p.pos;
+  if (p.pos === "OF") return "CF";
+  if (p.pos === "IF") return "SS";
+  return "DH";
+}
+
+function defaultFieldPositions(lineup, state) {
+  const used = new Set();
+  const ids = lineup || [];
+  const positions = ids.map((id) => {
+    const p = state?.players?.find((player) => player.id === id);
+    const preferred = fieldPositionForPlayer(p);
+    if (preferred !== "DH" && !used.has(preferred)) {
+      used.add(preferred);
+      return preferred;
+    }
+    return null;
+  });
+  return positions.map((pos, index) => {
+    if (pos) return pos;
+    const p = state?.players?.find((player) => player.id === ids[index]);
+    const candidates = [
+      ...(p?.secondaryPositions || []),
+      fieldPositionForPlayer(p),
+      "DH",
+      ...FIELD_POSITIONS
+    ].filter((value) => FIELD_POSITIONS.includes(value));
+    const chosen = candidates.find((value) => !used.has(value)) || FIELD_POSITIONS.find((value) => !used.has(value)) || "DH";
+    used.add(chosen);
+    return chosen;
+  });
+}
+
+function normalizeLineupPositions(lineup, positions, state) {
+  const defaults = defaultFieldPositions(lineup, state);
+  const clean = Array.isArray(positions) ? positions : [];
+  return (lineup || []).map((_, i) => FIELD_POSITIONS.includes(clean[i]) ? clean[i] : defaults[i]);
+}
+
+function hasCompleteFieldPositions(positions) {
+  return Array.isArray(positions)
+    && positions.length === FIELD_POSITIONS.length
+    && FIELD_POSITIONS.every((pos) => positions.includes(pos))
+    && new Set(positions).size === FIELD_POSITIONS.length;
+}
+
+function ensurePositionData(p) {
+  if (!p.secondaryPositions) p.secondaryPositions = [];
+  if (!p.positionTraining) p.positionTraining = {};
+  if (p.type === "BAT" && p.pos && !p.secondaryPositions.includes(p.pos)) p.secondaryPositions.unshift(p.pos);
+  p.secondaryPositions = [...new Set(p.secondaryPositions)].filter((pos) => FIELD_POSITIONS.includes(pos) || isPitcherPos(pos));
+}
+
+const PITCH_CATALOG = [
+  { type: "포심", speed: [142, 154], weight: 100 },
+  { type: "투심", speed: [139, 151], weight: 42 },
+  { type: "슬라이더", speed: [128, 141], weight: 82 },
+  { type: "커브", speed: [112, 128], weight: 54 },
+  { type: "체인지업", speed: [122, 136], weight: 58 },
+  { type: "스플리터", speed: [130, 143], weight: 42 },
+  { type: "커터", speed: [136, 148], weight: 34 },
+  { type: "싱커", speed: [137, 149], weight: 30 }
+];
+
+const KBO_SERVICE_DAYS_PER_YEAR = 145;
+
+function buildPitchArsenal(p) {
+  if (!p || p.type !== "PIT") return [];
+  const base = Math.max(50, Math.min(95, p.pit || p.ovr || 62));
+  const count = base >= 78 ? rnd(4, 5) : rnd(3, 4);
+  const pool = PITCH_CATALOG
+    .map((pitch) => ({ ...pitch, score: pitch.weight + rnd(-18, 18) + (pitch.type === "포심" ? 40 : 0) }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, count);
+  const rawUsage = pool.map((pitch, index) => Math.max(8, pitch.weight + rnd(-12, 16) - index * 8));
+  const total = rawUsage.reduce((sum, value) => sum + value, 0);
+  return pool.map((pitch, index) => ({
+    type: pitch.type,
+    grade: Math.max(35, Math.min(99, base + rnd(-10, 12) - index * 2)),
+    velo: rnd(pitch.speed[0], pitch.speed[1]),
+    usage: Math.max(5, Math.round(rawUsage[index] / total * 100))
+  }));
+}
+
+function ensurePitchArsenal(p) {
+  if (!p || p.type !== "PIT") return;
+  if (!Array.isArray(p.pitchArsenal) || !p.pitchArsenal.length) p.pitchArsenal = buildPitchArsenal(p);
+  p.pitchArsenal = p.pitchArsenal
+    .filter((pitch) => pitch && pitch.type)
+    .map((pitch) => ({
+      type: pitch.type,
+      grade: Math.max(20, Math.min(99, Number(pitch.grade) || Math.max(45, p.pit || p.ovr || 60))),
+      velo: Math.max(80, Math.min(165, Number(pitch.velo) || 135)),
+      usage: Math.max(1, Math.min(70, Number(pitch.usage) || 10))
+    }));
+}
+
+function estimateContractForPlayer(p, index = 0) {
+  const ovr = Number(p.ovr) || 60;
+  const pot = Number(p.pot) || ovr;
+  const age = Number(p.age) || 24;
+  const service = Number.isFinite(Number(p.serviceYears)) ? Number(p.serviceYears) : Math.max(0, Math.min(12, age - 21));
+  const isActive = p.rosterStatus === "ACTIVE" || index < 28;
+  const isForeign = p.foreignPlayer === true || isLikelyForeignName(p.name || "");
+  const grade = p.faGrade || (ovr >= 78 ? "A" : ovr >= 70 ? "B" : "C");
+  let annual = 0.35;
+  let yearsLeft = 1;
+  let kind = "연봉계약";
+  let signingBonus = Number(p.signingBonus) || 0;
+  if (p.rosterStatus === "DEV" || p.development) {
+    return { yearsLeft: 1, annual: 0.3, kind: "육성계약", signingBonus };
+  }
+  if (isForeign) {
+    annual = Math.max(5.5, Math.min(18, (ovr - 55) * 0.42 + rnd(0, 35) / 10));
+    yearsLeft = 1;
+    kind = "외국인계약";
+  } else if (service >= 8 && ovr >= 74) {
+    annual = Math.max(5, Math.min(25, (ovr - 58) * 0.62 + (pot - ovr) * 0.12 + rnd(0, 45) / 10));
+    yearsLeft = ovr >= 82 ? rnd(3, 6) : rnd(2, 4);
+    kind = grade === "A" ? "FA/장기계약" : "다년계약";
+  } else if (service >= 5 || ovr >= 72) {
+    annual = Math.max(1.4, Math.min(12, (ovr - 55) * 0.32 + service * 0.32 + rnd(0, 25) / 10));
+    yearsLeft = ovr >= 78 && age <= 30 ? rnd(2, 4) : rnd(1, 2);
+    kind = yearsLeft >= 2 ? "비FA다년계약" : "연봉계약";
+  } else if (isActive) {
+    annual = Math.max(0.6, Math.min(4.2, (ovr - 50) * 0.13 + service * 0.18 + rnd(0, 12) / 10));
+    yearsLeft = 1;
+    kind = "연봉계약";
+  } else {
+    annual = Math.max(0.35, Math.min(1.6, (ovr - 48) * 0.055 + rnd(0, 8) / 10));
+    yearsLeft = 1;
+    kind = "퓨처스계약";
+  }
+  if (age <= 22 && pot >= 80 && !signingBonus) signingBonus = Math.round((0.5 + (pot - 75) * 0.08 + rnd(0, 8) / 10) * 10) / 10;
+  annual = Math.round(annual * 10) / 10;
+  return { yearsLeft, annual, kind, signingBonus };
+}
+
+function hasPlaceholderContract(p) {
+  const years = Number(p.contract?.yearsLeft);
+  const annual = Number(p.contract?.annual || p.salary);
+  return !p.contract || !Number.isFinite(years) || !Number.isFinite(annual) || (years === 1 && annual <= 1.2 && (p.ovr || 0) >= 68) || (years === 1 && annual <= 3.5 && (p.ovr || 0) >= 78);
+}
+
+function faServiceRequired(p) {
+  return p.age <= 27 ? 9 : 8;
+}
+
+function faServiceRequiredDays(p) {
+  return faServiceRequired(p) * KBO_SERVICE_DAYS_PER_YEAR;
+}
+
+function ensureServiceTime(p) {
+  if (!p || p.rosterStatus === "DEV") {
+    if (p) {
+      p.serviceDays = 0;
+      p.serviceYears = 0;
+    }
+    return;
+  }
+  if (!Number.isFinite(Number(p.serviceDays))) {
+    const years = Number.isFinite(Number(p.serviceYears)) ? Number(p.serviceYears) : Math.max(0, Math.min(12, (p.age || 24) - 21));
+    p.serviceDays = Math.max(0, Math.round(years * KBO_SERVICE_DAYS_PER_YEAR + rnd(0, KBO_SERVICE_DAYS_PER_YEAR - 1)));
+  }
+  p.serviceYears = Math.floor((Number(p.serviceDays) || 0) / KBO_SERVICE_DAYS_PER_YEAR);
+  p.faRemainingDays = Math.max(0, faServiceRequiredDays(p) - (Number(p.serviceDays) || 0));
+  p.faEligibleSeason = p.faRemainingDays <= 0 ? "자격 충족" : `${Math.ceil(p.faRemainingDays / KBO_SERVICE_DAYS_PER_YEAR)}시즌 후`;
+}
+
+function accrueServiceDays(state) {
+  for (const p of state.players || []) {
+    ensureServiceTime(p);
+    if (p.rosterStatus === "ACTIVE" && p.rosterStatus !== "DEV" && !isForeignPlayer(p)) {
+      p.serviceDays = (Number(p.serviceDays) || 0) + 1;
+      ensureServiceTime(p);
+    }
+  }
+}
+
+function pitchCatalogByType(type) {
+  return PITCH_CATALOG.find((pitch) => pitch.type === type);
+}
+
+function availableNewPitchTypes(p) {
+  ensurePitchArsenal(p);
+  const known = new Set((p.pitchArsenal || []).map((pitch) => pitch.type));
+  return PITCH_CATALOG.map((pitch) => pitch.type).filter((type) => !known.has(type));
+}
+
+function progressPitchTraining(state) {
+  const reports = [];
+  for (const p of state.players || []) {
+    if (p.type !== "PIT" || !p.pitchTraining) continue;
+    ensurePitchArsenal(p);
+    if (p.health?.status === "INJURED") continue;
+    const training = p.pitchTraining;
+    const growth = rnd(9, 16) + Math.max(0, (p.pot || p.ovr || 65) - (p.ovr || 60)) * 0.35 + ((p.form || 65) - 65) * 0.08;
+    training.days = (training.days || 0) + 1;
+    training.progress = Math.min(100, Math.round((training.progress || 0) + growth));
+    if (training.mode === "new") {
+      if (training.progress >= 100) {
+        const catalog = pitchCatalogByType(training.type);
+        if (catalog && !p.pitchArsenal.some((pitch) => pitch.type === training.type)) {
+          p.pitchArsenal.push({
+            type: training.type,
+            grade: Math.max(34, Math.min(48, Math.round((p.pit || 60) * 0.55 + rnd(0, 10)))),
+            velo: rnd(catalog.speed[0], catalog.speed[1]),
+            usage: 5
+          });
+          p.pitchTraining = null;
+          reports.push(`${p.name} ${training.type} 습득`);
+        }
+      }
+    } else {
+      const pitch = p.pitchArsenal.find((item) => item.type === training.type);
+      if (!pitch) {
+        p.pitchTraining = null;
+        continue;
+      }
+      if (training.progress >= 100) {
+        pitch.grade = Math.min(99, pitch.grade + rnd(2, 5));
+        if (rnd(1, 100) <= 25) pitch.velo = Math.min(165, pitch.velo + 1);
+        p.pit = Math.min(99, p.pit + (pitch.grade >= 82 ? 1 : 0));
+        p.ovr = recalcOvr(p);
+        training.progress = 0;
+        training.days = 0;
+        reports.push(`${p.name} ${pitch.type} 숙련도 ${pitch.grade}`);
+      }
+    }
+  }
+  if (reports.length) addNews(state, "구종 훈련 리포트", reports.slice(0, 4).join(" · "), "육성");
+}
+
+function enforceActiveRosterLimit(state, limit = 28) {
+  const active = state.players.filter((p) => p.rosterStatus === "ACTIVE");
+  if (active.length <= limit) return;
+  active
+    .slice()
+    .sort((a, b) => a.ovr - b.ovr || a.form - b.form || b.age - a.age)
+    .slice(0, active.length - limit)
+    .forEach((p) => {
+      p.rosterStatus = "FARM";
+      p.options = Math.max(0, (p.options || 0) - 1);
+    });
+}
+
+function migrateState(state) {
+  if (!state) return state;
+  if (Array.isArray(state.players)) {
+    for (const [index, p] of state.players.entries()) {
+      if (!String(p.dataSource || "").startsWith("KBO") && nameMigration[p.name]) p.name = nameMigration[p.name];
+      if (!p.jerseyNumber) p.jerseyNumber = defaultJerseyNumber(index);
+      if (!p.serviceYears && p.serviceYears !== 0) p.serviceYears = Math.max(0, Math.min(12, (p.age || 24) - 21));
+      ensureServiceTime(p);
+      if (!p.rosterStatus) p.rosterStatus = index < 10 ? "ACTIVE" : "FARM";
+      if (!p.options && p.options !== 0) p.options = 2;
+      if (!p.arm && p.arm !== 0) p.arm = playerArmFallback(p);
+      if (!p.durability && p.durability !== 0) p.durability = defaultDurability(p);
+      if (p.development !== true) p.development = false;
+      if (p.trait === "실데이터 import") p.trait = "";
+      if (p.foreignPlayer === undefined) p.foreignPlayer = isLikelyForeignName(p.name);
+      if (!p.faGrade) p.faGrade = p.ovr >= 78 ? "A" : p.ovr >= 70 ? "B" : "C";
+      if (hasPlaceholderContract(p) || !p.contract?.kind) {
+        const estimated = estimateContractForPlayer(p, index);
+        p.contract = { yearsLeft: estimated.yearsLeft, annual: estimated.annual, kind: estimated.kind };
+        p.salary = estimated.annual;
+        p.signingBonus = estimated.signingBonus;
+      }
+      if (!p.pitcherRole && p.type === "PIT") p.pitcherRole = p.pos === "SP" ? "SP" : p.pos === "CL" ? "CL" : "MR";
+      if (!p.stamina && p.stamina !== 0) p.stamina = p.type === "PIT" ? rnd(p.pos === "SP" ? 68 : 38, p.pos === "SP" ? 92 : 66) : rnd(45, 85);
+      if (p.type === "PIT") ensurePitchArsenal(p);
+      if (!p.health) p.health = { status: "OK", injury: null, days: 0, rehab: 0 };
+      if (p.type === "BAT" && p.stats) {
+        ["hr","rbi","avg","sb","h","r","pa","obp","slg"].forEach((key) => {
+          if (!Number.isFinite(p.stats[key])) p.stats[key] = key === "avg" ? 0 : 0;
+        });
+      }
+      if (p.type === "PIT" && p.stats) {
+        ["era","win","so","sv","hold","ip"].forEach((key) => {
+          if (!Number.isFinite(p.stats[key])) p.stats[key] = 0;
+        });
+      }
+      if (!p.complaint) p.complaint = complaintFor(p);
+      ensurePositionData(p);
+    }
+  }
+  if (!state.seasonGames || state.seasonGames < 144) state.seasonGames = 144;
+  state.seasonGames = 144;
+  if (!Array.isArray(state.schedule) || state.schedule.length !== state.seasonGames) {
+    state.schedule = buildSeasonSchedule(state.teams || teamTemplates, state.selectedTeamId, state.seasonGames);
+  }
+  state.schedule.forEach((entry, index) => {
+    if (entry.isHome === undefined) entry.isHome = Math.floor(index / 3) % 2 === 1;
+  });
+  if (state.activeGame && state.activeGame.isHome === undefined) {
+    const activeEntry = state.schedule[Math.max(0, Math.min((state.day || 1) - 1, state.schedule.length - 1))];
+    state.activeGame.isHome = Boolean(activeEntry?.isHome);
+  }
+  if (!state.seasonGoal) state.seasonGoal = { level: "playoff", label: "포스트시즌 진출", reward: 8, penalty: 4 };
+  if (!state.lastLineup) state.lastLineup = null;
+  if (!Array.isArray(state.tradeOffers)) state.tradeOffers = [];
+  if (!Array.isArray(state.tradeTargets)) state.tradeTargets = [];
+  if (!Array.isArray(state.awards)) state.awards = [];
+  ensureLeaguePlayers(state);
+  backfillStandingsGames(state);
+  if (state.seasonAwarded !== true && state.day > state.seasonGames) finalizeSeasonAwards(state);
+  if (!Array.isArray(state.freeAgents)) state.freeAgents = [];
+  pruneInvalidOffers(state);
+  if (state.activeGame?.lineup) {
+    state.activeGame.lineup = state.activeGame.lineup.filter((id) => state.players.some((p) => p.id === id));
+    state.activeGame.lineupPositions = normalizeLineupPositions(state.activeGame.lineup, state.activeGame.lineupPositions, state);
+  }
+  ensureActiveGameDetails(state);
+  return state;
+}
+
+function ensureActiveGameDetails(state) {
+  const game = state?.activeGame;
+  if (!game) return state;
+  const opp = state.teams?.find((t) => t.id === game.opponentId) || currentOpponent(state);
+  if (!game.count) game.count = { balls: 0, strikes: 0 };
+  if (!Array.isArray(game.opponentLineup) || game.opponentLineup.length < 9) game.opponentLineup = makeOpponentLineup(opp);
+  if (!game.opponentPitcher) game.opponentPitcher = makeOpponentPitcher(opp);
+  if (!Number.isFinite(game.opponentLineupIndex)) game.opponentLineupIndex = 0;
+  if (!Number.isFinite(game.pitchCount)) game.pitchCount = 0;
+  if (!game.pitcherMood) game.pitcherMood = "정상";
+  if (!Array.isArray(game.usedPitchers)) game.usedPitchers = [game.pitcherId].filter(Boolean);
+  if (!Array.isArray(game.usedPositionPlayers)) game.usedPositionPlayers = [...(game.lineup || [])];
+  if (!Array.isArray(game.removedPositionPlayers)) game.removedPositionPlayers = [];
+  if (!game.pitcherUsage) game.pitcherUsage = {};
+  if (!game.pitcherOuts) game.pitcherOuts = {};
+  if (!game.pitcherRuns) game.pitcherRuns = {};
+  if (!game.pitcherStrikeouts) game.pitcherStrikeouts = {};
+  if (game.pitcherId && !Number.isFinite(game.pitcherUsage[game.pitcherId])) game.pitcherUsage[game.pitcherId] = 0;
+  if (game.pitcherId && !Number.isFinite(game.pitcherOuts[game.pitcherId])) game.pitcherOuts[game.pitcherId] = 0;
+  if (game.pitcherId && !Number.isFinite(game.pitcherRuns[game.pitcherId])) game.pitcherRuns[game.pitcherId] = 0;
+  if (game.pitcherId && !Number.isFinite(game.pitcherStrikeouts[game.pitcherId])) game.pitcherStrikeouts[game.pitcherId] = 0;
+  if (game.complete && !game.pitchingStatsApplied) {
+    updateManualPitchingStats(state, game, (Number(game.score?.user) || 0) > (Number(game.score?.opp) || 0));
+    game.pitchingStatsApplied = true;
+  }
+  return state;
+}
+
+function rnd(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function clampValue(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function weightedChoice(entries) {
+  const total = entries.reduce((sum, entry) => sum + Math.max(0, entry.weight), 0);
+  let roll = Math.random() * Math.max(1, total);
+  for (const entry of entries) {
+    roll -= Math.max(0, entry.weight);
+    if (roll <= 0) return entry.value;
+  }
+  return entries[entries.length - 1]?.value;
+}
+
+function userBattedBallEvent(batter, opponentPitcher, tactic) {
+  const hit = batter.hit || batter.ovr || 60;
+  const pow = batter.pow || 55;
+  const spd = batter.spd || 55;
+  const form = batter.form || 65;
+  const pitcherPower = opponentPitcher.power || 64;
+  const command = opponentPitcher.command || 62;
+  const contactEdge = (hit - 64) * 0.35 + (form - 65) * 0.22 - (pitcherPower - 64) * 0.3 - (command - 62) * 0.16;
+  const powerEdge = (pow - 62) * 0.18 - (pitcherPower - 64) * 0.12;
+  const speedEdge = (spd - 60) * 0.04;
+  const buntOutBoost = tactic === "bunt" ? 12 : 0;
+  return weightedChoice([
+    { value: { bases: 0, label: "범타" }, weight: clampValue(62 - contactEdge + buntOutBoost, 42, 82) },
+    { value: { bases: 1, label: "안타" }, weight: clampValue(23 + contactEdge * 0.45, 12, 38) },
+    { value: { bases: 2, label: "2루타" }, weight: clampValue(7 + powerEdge, 2, 16) },
+    { value: { bases: 3, label: "3루타" }, weight: clampValue(1 + speedEdge, 0.4, 4) },
+    { value: { bases: 4, label: "홈런" }, weight: clampValue(3 + powerEdge * 0.7, 0.6, 11) },
+    { value: { bases: 1, label: "실책 출루", error: true }, weight: 2.4 }
+  ]);
+}
+
+function opponentBattedBallEvent(batter, pitchPower, defense) {
+  const contact = batter.contact || 62;
+  const power = batter.power || 60;
+  const defenseEdge = ((defense.def || 60) - 62) * 0.22 + ((defense.arm || 60) - 62) * 0.08;
+  const contactEdge = (contact - 63) * 0.28 - (pitchPower - 64) * 0.28 - defenseEdge;
+  const powerEdge = (power - 62) * 0.18 - (pitchPower - 64) * 0.12;
+  return weightedChoice([
+    { value: { bases: 0, label: "범타" }, weight: clampValue(63 - contactEdge, 43, 84) },
+    { value: { bases: 1, label: "안타" }, weight: clampValue(22 + contactEdge * 0.42, 12, 37) },
+    { value: { bases: 2, label: "2루타" }, weight: clampValue(7 + powerEdge, 2, 16) },
+    { value: { bases: 3, label: "3루타" }, weight: 1.0 },
+    { value: { bases: 4, label: "홈런" }, weight: clampValue(3 + powerEdge * 0.7, 0.6, 11) },
+    { value: { bases: 1, label: "송구 실책", error: true }, weight: clampValue(2.8 - defenseEdge * 0.15, 0.8, 5) }
+  ]);
+}
+
+function money(v) {
+  return `${Number(v).toFixed(1)}억`;
+}
+
+function avg(values) {
+  return values.reduce((sum, v) => sum + v, 0) / Math.max(1, values.length);
+}
+
+function playerArmFallback(p) {
+  const base = Number(p?.ovr) || 60;
+  if (p?.type === "PIT") return rnd(Math.max(45, base - 8), Math.min(96, base + 12));
+  return rnd(Math.max(42, base - 14), Math.min(96, base + 14));
+}
+
+function recalcOvr(p) {
+  if (!p) return 0;
+  const arm = Number.isFinite(Number(p.arm)) ? Number(p.arm) : playerArmFallback(p);
+  p.arm = arm;
+  const raw = p.type === "PIT"
+    ? p.pit * 0.68 + p.def * 0.08 + arm * 0.08 + p.form * 0.16
+    : p.hit * 0.32 + p.pow * 0.23 + p.spd * 0.13 + p.def * 0.14 + arm * 0.1 + p.form * 0.08;
+  return Math.min(p.pot, Math.round(raw));
+}
+
+function defaultDurability(p) {
+  const age = Number(p?.age) || 25;
+  const form = Number(p?.form) || 70;
+  const stamina = Number(p?.stamina) || 65;
+  let value = rnd(48, 88);
+  if (p?.type === "PIT") value -= 3;
+  if (p?.pitcherRole === "SP" || p?.pos === "SP") value -= 2;
+  if (age >= 34) value -= rnd(4, 10);
+  if (form < 55) value -= rnd(3, 8);
+  if (stamina >= 78) value += rnd(2, 6);
+  return Math.max(25, Math.min(96, value));
+}
+
+function makePlayer(seed, i) {
+  const [name, pos, type, age, ovr, pot, trait, jerseyNumber] = seed;
+  const isPitcher = type === "PIT";
+  const player = {
+    id: i + 1,
+    name,
+    jerseyNumber: jerseyNumber || defaultJerseyNumber(i),
+    pos,
+    type,
+    age,
+    ovr,
+    pot,
+    hit: isPitcher ? rnd(7, 18) : rnd(Math.max(45, ovr - 12), Math.min(95, ovr + 8)),
+    pow: isPitcher ? rnd(8, 18) : rnd(Math.max(40, ovr - 14), Math.min(96, ovr + 10)),
+    spd: isPitcher ? rnd(30, 55) : rnd(30, 90),
+    def: rnd(Math.max(42, ovr - 16), Math.min(92, ovr + 12)),
+    arm: isPitcher ? rnd(Math.max(48, ovr - 8), Math.min(96, ovr + 12)) : rnd(Math.max(42, ovr - 14), Math.min(96, ovr + 14)),
+    pit: isPitcher ? rnd(Math.max(55, ovr - 6), Math.min(98, ovr + 10)) : rnd(8, 24),
+    form: rnd(58, 86),
+    durability: defaultDurability({ type, pos, age, form: ovr, stamina: isPitcher ? ovr : 65 }),
+    serviceYears: Math.max(0, Math.min(12, age - 21 + rnd(-2, 2))),
+    rosterStatus: i < 10 ? "ACTIVE" : "FARM",
+    options: rnd(1, 3),
+    development: false,
+    faGrade: ovr >= 78 ? "A" : ovr >= 70 ? "B" : "C",
+    pitcherRole: isPitcher ? (pos === "SP" ? "SP" : pos === "CL" ? "CL" : "MR") : null,
+    stamina: isPitcher ? rnd(pos === "SP" ? 68 : 38, pos === "SP" ? 92 : 66) : rnd(45, 85),
+    health: { status: "OK", injury: null, days: 0, rehab: 0 },
+    secondaryPositions: isPitcher ? [pos] : [pos],
+    positionTraining: {},
+    complaint: null,
+    happy: rnd(58, 88),
+    trait,
+    stats: isPitcher ? { era: 0, win: 0, so: 0, sv: 0, hold: 0, ip: 0 } : { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, obp: 0, slg: 0 }
+  };
+  player.serviceDays = player.serviceYears * KBO_SERVICE_DAYS_PER_YEAR + rnd(0, KBO_SERVICE_DAYS_PER_YEAR - 1);
+  ensureServiceTime(player);
+  const estimated = estimateContractForPlayer(player, i);
+  player.years = estimated.yearsLeft;
+  player.salary = estimated.annual;
+  player.contract = { yearsLeft: estimated.yearsLeft, annual: estimated.annual, kind: estimated.kind };
+  player.signingBonus = estimated.signingBonus;
+  if (isPitcher) player.pitchArsenal = buildPitchArsenal(player);
+  return player;
+}
+
+function cloneLeaguePlayer(seed, team, index) {
+  const p = makePlayer(seed, index);
+  p.id = `L-${team.id}-${index + 1}`;
+  p.teamId = team.id;
+  p.teamName = `${team.city} ${team.name}`;
+  p.rosterStatus = "ACTIVE";
+  p.dataSource = "league-rival";
+  return p;
+}
+
+function buildLeaguePlayers(selectedTeamId) {
+  const players = [];
+  for (const team of teamTemplates) {
+    if (team.id === selectedTeamId) continue;
+    const seeds = playerSeeds[team.id] || playerSeeds.default;
+    seeds.forEach((seed, index) => players.push(cloneLeaguePlayer(seed, team, index)));
+  }
+  return players;
+}
+
+function ensureLeaguePlayers(state) {
+  if (!state) return state;
+  if (!Array.isArray(state.leaguePlayers) || state.leaguePlayers.length < 70) {
+    state.leaguePlayers = buildLeaguePlayers(state.selectedTeamId);
+  }
+  for (const p of state.leaguePlayers) {
+    const team = state.teams?.find((t) => t.id === p.teamId) || teamTemplates.find((t) => t.id === p.teamId);
+    if (team && !p.teamName) p.teamName = `${team.city} ${team.name}`;
+    if (p.type === "BAT" && !p.stats) p.stats = { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, obp: 0, slg: 0 };
+    if (p.type === "PIT" && !p.stats) p.stats = { era: 0, win: 0, so: 0, sv: 0, hold: 0, ip: 0 };
+    ensurePositionData(p);
+  }
+  backfillLeaguePlayerStats(state);
+  return state;
+}
+
+function leagueRecordPlayers(state) {
+  ensureLeaguePlayers(state);
+  return [...(state.players || []), ...(state.leaguePlayers || [])];
+}
+
+function backfillLeaguePlayerStats(state) {
+  const playedDays = Math.max(0, (state.day || 1) - 1);
+  const completed = Math.max(0, state.leagueStatsBackfilledForDay || 0);
+  if (playedDays <= completed) return;
+  const teams = (state.teams || teamTemplates).filter((team) => team.id !== state.selectedTeamId);
+  for (let day = completed; day < playedDays; day += 1) {
+    teams.forEach((team) => simulateTeamPlayerStats(state, team));
+  }
+  state.leagueStatsBackfilledForDay = playedDays;
+}
+
+function defaultJerseyNumber(i) {
+  const pool = [1, 3, 5, 7, 8, 10, 11, 13, 15, 16, 17, 18, 19, 21, 22, 25, 27, 28, 30, 31, 33, 34, 37, 41, 47, 51, 54, 55, 61, 64, 66, 68, 77, 88, 95, 99];
+  return pool[i % pool.length];
+}
+
+function ensureRosterDepth(state) {
+  if (!state?.players) return state;
+  if (state.realDataMode) {
+    state.players.forEach(ensurePositionData);
+    enforceActiveRosterLimit(state);
+    return state;
+  }
+  const benchNames = ["강태율", "서민규", "이로운", "백도하", "윤지성", "차현우", "도하준", "민시우", "오서율", "한재겸", "유건우", "정라온"];
+  const pitcherNames = ["남지완", "홍태민", "신도윤", "안서준", "배로운", "송지혁", "권하람", "임태오", "조이현", "마준서", "서하늘", "문재겸"];
+  let nextId = Math.max(0, ...state.players.map((p) => p.id || 0)) + 1;
+  while (state.players.filter((p) => p.type === "BAT").length < 22) {
+    const name = benchNames[(nextId - 1) % benchNames.length] + (nextId > 30 ? nextId : "");
+    state.players.push(makePlayer([name, ["LF", "CF", "2B", "C", "DH", "SS", "3B", "1B"][rnd(0, 7)], "BAT", rnd(21, 31), rnd(54, 68), rnd(68, 84), "2군/백업 야수"], nextId - 1));
+    state.players[state.players.length - 1].id = nextId;
+    nextId += 1;
+  }
+  while (state.players.filter((p) => p.type === "PIT").length < 20) {
+    const isStarter = state.players.filter((p) => p.type === "PIT" && p.pitcherRole === "SP").length < 7;
+    const pos = isStarter ? "SP" : (rnd(0, 5) === 0 ? "CL" : "RP");
+    const role = pos === "SP" ? "SP" : pos === "CL" ? "CL" : ["LR", "MR", "SU"][rnd(0, 2)];
+    const name = pitcherNames[(nextId - 1) % pitcherNames.length] + (nextId > 30 ? nextId : "");
+    const p = makePlayer([name, pos, "PIT", rnd(21, 33), rnd(52, 69), rnd(66, 84), isStarter ? "2군 선발 후보" : "2군 불펜"], nextId - 1);
+    p.id = nextId;
+    p.pitcherRole = role;
+    p.rosterStatus = "FARM";
+    state.players.push(p);
+    nextId += 1;
+  }
+  if (!state.rosterInitialized) {
+    assignDefaultRoster(state);
+    state.rosterInitialized = true;
+  }
+  return state;
+}
+
+function assignDefaultRoster(state) {
+  const protectedStatuses = new Set(["DEV"]);
+  const hitters = state.players.filter((p) => p.type === "BAT" && !protectedStatuses.has(p.rosterStatus)).sort((a, b) => b.ovr - a.ovr);
+  const pitchers = state.players.filter((p) => p.type === "PIT" && !protectedStatuses.has(p.rosterStatus)).sort((a, b) => {
+    const roleDiff = (a.pitcherRole === "SP" ? 0 : 1) - (b.pitcherRole === "SP" ? 0 : 1);
+    return roleDiff || b.ovr - a.ovr;
+  });
+  state.players.forEach((p) => {
+    if (p.rosterStatus !== "DEV") p.rosterStatus = "FARM";
+  });
+  const activeHitters = hitters.slice(0, 15);
+  const activePitchers = pitchers.slice(0, 13);
+  [...activeHitters, ...activePitchers].slice(0, 28).forEach((p) => { p.rosterStatus = "ACTIVE"; });
+}
+
+function complaintFor(p) {
+  if (!p) return null;
+  if (p.health?.status === "INJURED") return { topic: "부상", text: "복귀 일정과 재활 방향을 알고 싶어합니다.", heat: 36 };
+  if (p.rosterStatus === "FARM" && p.ovr >= 70) return { topic: "2군 강등", text: "1군 기회를 원하고 있습니다.", heat: 62 };
+  if (p.type === "PIT" && p.pos === "SP" && p.pitcherRole && p.pitcherRole !== "SP") return { topic: "보직", text: "선발 보직을 원하고 있습니다.", heat: 58 };
+  if ((p.contract?.yearsLeft || 0) <= 1 && p.ovr >= 72) return { topic: "계약", text: "장기 계약 논의를 기대하고 있습니다.", heat: 46 };
+  if (p.happy < 55) return { topic: "불만", text: "최근 팀 내 역할에 불만이 있습니다.", heat: 55 };
+  return { topic: "안정", text: "현재 특별한 불만은 없습니다.", heat: 12 };
+}
+
+function updateComplaints(state) {
+  for (const p of state.players) p.complaint = complaintFor(p);
+  return state;
+}
+
+function createState(teamId) {
+  const selected = teamTemplates.find((t) => t.id === teamId) || teamTemplates[0];
+  const teams = teamTemplates.map((t) => ({ ...t, w: 0, l: 0 }));
+  const seeds = playerSeeds[selected.id] || playerSeeds.default;
+  const state = {
+    selectedTeamId: selected.id,
+    day: 1,
+    seasonGames: 144,
+    budget: 82,
+    morale: 66,
+    fanInterest: 61,
+    trainingPts: 8,
+    selectedId: 1,
+    lastGame: null,
+    news: [
+      { day: 1, kind: "구단", title: "새 시즌 준비 완료", body: `${selected.city} ${selected.name} 프런트가 플레이오프와 유망주 육성을 동시에 목표로 잡았다.` },
+      { day: 1, kind: "스카우트", title: "해외 스카우트 파견", body: "북미와 일본 시장에서 주전급 선수들에게 관심이 붙을 수 있다는 보고가 올라왔다." }
+    ],
+    games: [],
+    offers: [],
+    tradeOffers: [],
+    tradeTargets: [],
+    scout: [],
+    freeAgents: [],
+    awards: [],
+    seasonAwarded: false,
+    schedule: buildSeasonSchedule(teams, selected.id, 144),
+    seasonGoal: { level: "playoff", label: "포스트시즌 진출", reward: 8, penalty: 4 },
+    rules: {
+      activeLimit: 28,
+      registeredLimit: 65,
+      faEligibility: "고졸 9시즌/대졸 8시즌을 게임식 서비스타임으로 단순화",
+      compensation: "A: 보상선수+전년도 연봉 200% 또는 연봉 300%, B: 보상선수+100% 또는 200%, C: 150% 현금 보상"
+    },
+    teams,
+    players: seeds.map(makePlayer),
+    leaguePlayers: buildLeaguePlayers(selected.id)
+  };
+  return ensureRosterDepth(state);
+}
+
+function readState() {
+  try {
+    return ensureRosterDepth(migrateState(JSON.parse(fs.readFileSync(SAVE_PATH, "utf8"))));
+  } catch {
+    return null;
+  }
+}
+
+function saveState(state) {
+  fs.writeFileSync(SAVE_PATH, JSON.stringify(state, null, 2), "utf8");
+}
+
+function currentTeam(state) {
+  return state.teams.find((t) => t.id === state.selectedTeamId);
+}
+
+function opponents(state) {
+  return state.teams.filter((t) => t.id !== state.selectedTeamId);
+}
+
+function buildSeasonSchedule(teams, selectedTeamId, totalGames = 144) {
+  const rivals = teams.filter((t) => t.id !== selectedTeamId);
+  const schedule = [];
+  let seriesNo = 1;
+  for (let series = 0; schedule.length < totalGames; series += 1) {
+    const opponent = rivals[series % rivals.length];
+    for (let game = 1; game <= 3 && schedule.length < totalGames; game += 1) {
+      schedule.push({
+        day: schedule.length + 1,
+        opponentId: opponent.id,
+        seriesNo,
+        seriesGame: game,
+        isHome: series % 2 === 1
+      });
+    }
+    seriesNo += 1;
+  }
+  return schedule;
+}
+
+function currentScheduleEntry(state) {
+  if (!Array.isArray(state.schedule) || state.schedule.length !== state.seasonGames) {
+    state.schedule = buildSeasonSchedule(state.teams || teamTemplates, state.selectedTeamId, state.seasonGames || 144);
+  }
+  state.schedule.forEach((entry, index) => {
+    if (entry.isHome === undefined) entry.isHome = Math.floor(index / 3) % 2 === 1;
+  });
+  return state.schedule[Math.max(0, Math.min((state.day || 1) - 1, state.schedule.length - 1))];
+}
+
+function currentOpponent(state) {
+  const entry = currentScheduleEntry(state);
+  return state.teams.find((t) => t.id === entry?.opponentId) || opponents(state)[0];
+}
+
+function currentScheduleInfo(state) {
+  const entry = currentScheduleEntry(state);
+  const opp = currentOpponent(state);
+  const scheduleEntry = currentScheduleEntry(state);
+  return {
+    day: Math.min(state.day || 1, state.seasonGames || 144),
+    totalGames: state.seasonGames || 144,
+    seriesNo: entry?.seriesNo || 1,
+    seriesGame: entry?.seriesGame || 1,
+    isHome: Boolean(entry?.isHome),
+    venue: entry?.isHome ? "홈" : "원정",
+    opponentId: opp?.id,
+    opponentName: opp ? `${opp.city} ${opp.name}` : "-"
+  };
+}
+
+function isUserBattingHalf(game) {
+  return Boolean(game?.isHome) ? game?.half === "bottom" : game?.half === "top";
+}
+
+function isOpponentBattingHalf(game) {
+  return Boolean(game?.isHome) ? game?.half === "top" : game?.half === "bottom";
+}
+
+function halfLabel(game) {
+  return `${game.inning}회${game.half === "top" ? "초" : "말"}`;
+}
+
+function halfOffenseName(state, game) {
+  return isUserBattingHalf(game) ? currentTeam(state).short : currentOpponent(state).short;
+}
+
+function shouldFinishAfterHalf(game) {
+  if (!game || game.inning < 9) return false;
+  if (game.half === "top" && game.isHome && game.score.user > game.score.opp) return true;
+  if (game.half === "bottom" && game.score.user !== game.score.opp) return true;
+  if (game.half === "bottom" && game.inning >= 12) return true;
+  return false;
+}
+
+function isWalkoffState(game) {
+  return Boolean(game?.isHome) && game.half === "bottom" && game.inning >= 9 && game.score.user > game.score.opp;
+}
+
+function makeOpponentLineup(opp) {
+  const surnames = ["김", "이", "박", "최", "정", "강", "윤", "조", "한"];
+  const names = ["도윤", "서준", "민재", "지후", "태오", "현우", "준서", "시온", "라온"];
+  const positions = ["CF", "SS", "RF", "1B", "LF", "3B", "DH", "C", "2B"];
+  return positions.map((pos, i) => ({
+    order: i + 1,
+    name: `${opp.short}${surnames[i]}${names[i]}`,
+    pos,
+    hand: i % 3 === 0 ? "좌" : "우",
+    contact: Math.max(45, Math.min(88, opp.power + rnd(-10, 10))),
+    power: Math.max(40, Math.min(90, opp.power + rnd(-14, 12)))
+  }));
+}
+
+function defaultLineup(state) {
+  return state.players
+    .filter((p) => p.type === "BAT" && p.rosterStatus === "ACTIVE")
+    .sort((a, b) => b.ovr - a.ovr)
+    .slice(0, 9)
+    .map((p) => p.id);
+}
+
+function startingPitcher(state, starterId) {
+  const selected = state.players.find((p) => p.id === Number(starterId) && p.type === "PIT" && p.rosterStatus === "ACTIVE" && p.health?.status !== "INJURED");
+  if (selected) return selected.id;
+  return state.players
+    .filter((p) => p.type === "PIT" && p.rosterStatus === "ACTIVE" && p.health?.status !== "INJURED")
+    .sort((a, b) => b.ovr - a.ovr)[0]?.id || null;
+}
+
+function opponentBatterPower(opp, inning) {
+  return Math.max(44, Math.min(88, opp.power + rnd(-12, 8) + (inning > 6 ? 2 : 0)));
+}
+
+function seededRndFactory(seed) {
+  let h = hashText(seed || "seed");
+  return (min, max) => {
+    h = (h * 1664525 + 1013904223) >>> 0;
+    return min + (h % (max - min + 1));
+  };
+}
+
+function makeOpponentPitcher(opp, seed = "") {
+  const roll = seed ? seededRndFactory(`${opp.id}-${seed}`) : rnd;
+  const names = ["김도현", "이준서", "박민준", "최시온", "정태오"];
+  const power = Math.max(48, Math.min(90, opp.power + roll(-8, 10)));
+  const command = Math.max(45, Math.min(90, power + roll(-10, 10)));
+  const stamina = roll(72, 98);
+  return {
+    name: `${opp.short}${names[roll(0, names.length - 1)]}`,
+    role: "SP",
+    power,
+    command,
+    pickoff: Math.max(35, Math.min(90, power + roll(-16, 12))),
+    stamina,
+    hand: roll(1, 100) <= 28 ? "좌" : "우",
+    style: power >= 78 ? "파워형" : command >= 75 ? "제구형" : stamina >= 88 ? "이닝이터" : "밸런스형",
+    pitchCount: 0,
+    mood: "정상"
+  };
+}
+
+function ensureProbableOpponentPitcher(state) {
+  if (!state.opponentProbables || typeof state.opponentProbables !== "object") state.opponentProbables = {};
+  const opp = currentOpponent(state);
+  const key = `${state.day}-${opp.id}`;
+  if (!state.opponentProbables[key]) state.opponentProbables[key] = makeOpponentPitcher(opp, key);
+  return state.opponentProbables[key];
+}
+
+function basesLabel(bases) {
+  return `${bases[0] ? "1" : "-"}${bases[1] ? "2" : "-"}${bases[2] ? "3" : "-"}`;
+}
+
+function createActiveGame(state, lineup, starterId, lineupPositions) {
+  const rawLineup = Array.isArray(lineup) ? lineup.map(Number).slice(0, 9) : [];
+  if (rawLineup.length !== 9 || new Set(rawLineup).size !== 9) {
+    addNews(state, "라인업 제출 실패", "타순에는 1군 야수 9명이 중복 없이 들어가야 한다.", "경기");
+    return state;
+  }
+  const cleanLineup = Array.isArray(lineup)
+    ? lineup.map(Number).filter((id, index, arr) => arr.indexOf(id) === index && state.players.some((p) => p.id === id && p.type === "BAT" && p.rosterStatus === "ACTIVE")).slice(0, 9)
+    : defaultLineup(state);
+  if (cleanLineup.length !== 9) {
+    addNews(state, "라인업 제출 실패", "라인업에는 현재 1군에 등록된 야수만 넣을 수 있다.", "경기");
+    return state;
+  }
+  const cleanPositions = normalizeLineupPositions(cleanLineup, lineupPositions, state);
+  if (!hasCompleteFieldPositions(cleanPositions)) {
+    addNews(state, "라인업 제출 실패", "수비 포지션은 C, 1B, 2B, 3B, SS, LF, CF, RF, DH가 각각 한 번씩 필요하다.", "경기");
+    return state;
+  }
+  const opp = currentOpponent(state);
+  const scheduleEntry = currentScheduleEntry(state);
+  const pitcherId = startingPitcher(state, starterId);
+  state.lastLineup = {
+    lineup: cleanLineup,
+    lineupPositions: cleanPositions,
+    starterId: pitcherId,
+    day: state.day
+  };
+  state.activeGame = {
+    opponentId: opp.id,
+    isHome: Boolean(scheduleEntry?.isHome),
+    lineup: cleanLineup,
+    lineupPositions: cleanPositions,
+    usedPositionPlayers: [...cleanLineup],
+    removedPositionPlayers: [],
+    pitcherId,
+    usedPitchers: [pitcherId].filter(Boolean),
+    pitcherUsage: pitcherId ? { [pitcherId]: 0 } : {},
+    pitcherOuts: pitcherId ? { [pitcherId]: 0 } : {},
+    pitcherRuns: pitcherId ? { [pitcherId]: 0 } : {},
+    pitcherStrikeouts: pitcherId ? { [pitcherId]: 0 } : {},
+    pitchCount: 0,
+    pitcherMood: "정상",
+    opponentPitcher: { ...ensureProbableOpponentPitcher(state), pitchCount: 0, mood: "정상" },
+    tactic: "swing",
+    pendingSteal: null,
+    count: { balls: 0, strikes: 0 },
+    opponentLineup: makeOpponentLineup(opp),
+    opponentLineupIndex: 0,
+    inning: 1,
+    half: "top",
+    outs: 0,
+    bases: [null, null, null],
+    lineupIndex: 0,
+    score: { user: 0, opp: 0 },
+    complete: false,
+    log: [`1회초 ${currentTeam(state).short} 공격 시작. 감독은 작전과 교체 타이밍만 지시한다.`]
+  };
+  state.activeGame.log = [`1회초 ${state.activeGame.isHome ? opp.short : currentTeam(state).short} 공격 시작. ${state.activeGame.isHome ? "홈경기라 먼저 수비합니다." : "원정경기라 먼저 공격합니다."}`];
+  return state;
+}
+
+function resetActiveGame(state) {
+  state.activeGame = null;
+  addNews(state, "라인업 재작성", "진행 중인 수동 경기 상태를 초기화하고 새 라인업을 작성할 수 있게 했다.", "경기");
+  return state;
+}
+
+function advanceRunners(game, batterName, bases) {
+  let runs = 0;
+  if (bases >= 4) {
+    runs += 1 + game.bases.filter(Boolean).length;
+    game.bases = [null, null, null];
+    return { runs, text: `${batterName} 홈런` };
+  }
+  const moved = [null, null, null];
+  for (let i = 2; i >= 0; i--) {
+    const runner = game.bases[i];
+    if (!runner) continue;
+    const target = i + bases;
+    if (target >= 3) runs += 1;
+    else moved[target] = runner;
+  }
+  moved[bases - 1] = batterName;
+  game.bases = moved;
+  return { runs, text: `${batterName} ${bases === 1 ? "안타" : bases === 2 ? "2루타" : "3루타"}` };
+}
+
+function walkBatter(game, batterName) {
+  let runs = 0;
+  const [first, second, third] = game.bases;
+  if (first && second && third) runs += 1;
+  const newThird = second && first ? second : third;
+  const newSecond = first ? first : second;
+  game.bases = [batterName, newSecond, newThird];
+  return { runs, text: `${batterName} 볼넷` };
+}
+
+function advanceOnPassedBall(game) {
+  let runs = 0;
+  const [first, second, third] = game.bases;
+  if (third) runs += 1;
+  game.bases = [null, first || null, second || null];
+  return { runs, bases: basesLabel(game.bases) };
+}
+
+function nextHalfInning(state) {
+  const game = state.activeGame;
+  game.outs = 0;
+  game.bases = [null, null, null];
+  game.count = { balls: 0, strikes: 0 };
+  game.pendingSteal = null;
+  if (game.half === "top") {
+    game.half = "bottom";
+    game.log.unshift(`${game.inning}회말 ${currentOpponent(state).short} 공격`);
+  } else {
+    game.inning += 1;
+    game.half = "top";
+    if (game.inning > 9 && game.score.user !== game.score.opp) {
+      finishManualGame(state);
+      return;
+    }
+    game.log.unshift(`${game.inning}회초 ${currentTeam(state).short} 공격`);
+  }
+}
+
+function nextHalfInning(state) {
+  const game = state.activeGame;
+  game.outs = 0;
+  game.bases = [null, null, null];
+  game.count = { balls: 0, strikes: 0 };
+  game.pendingSteal = null;
+  if (shouldFinishAfterHalf(game)) {
+    finishManualGame(state);
+    return;
+  }
+  if (game.half === "top") {
+    game.half = "bottom";
+  } else {
+    game.inning += 1;
+    game.half = "top";
+  }
+  game.log.unshift(`${halfLabel(game)} ${halfOffenseName(state, game)} 공격`);
+}
+
+function finishManualGame(state) {
+  const game = state.activeGame;
+  if (!game || game.complete) return;
+  const me = currentTeam(state);
+  const opp = state.teams.find((t) => t.id === game.opponentId) || currentOpponent(state);
+  const won = game.score.user > game.score.opp;
+  const tied = game.score.user === game.score.opp;
+  if (won) {
+    me.w += 1;
+    opp.l += 1;
+    state.morale += 4;
+    state.fanInterest += 3;
+    state.trainingPts += 3;
+  } else if (tied) {
+    me.t = (me.t || 0) + 1;
+    opp.t = (opp.t || 0) + 1;
+    state.morale += 1;
+    state.fanInterest += 1;
+    state.trainingPts += 2;
+  } else {
+    me.l += 1;
+    opp.w += 1;
+    state.morale -= 2;
+    state.fanInterest -= 1;
+    state.trainingPts += 1;
+  }
+  state.morale = Math.max(20, Math.min(95, state.morale));
+  state.fanInterest = Math.max(25, Math.min(98, state.fanInterest));
+  state.budget += won ? 0.5 : tied ? 0.25 : 0.15;
+  state.lastGame = { opp: `${opp.city} ${opp.name}`, me: game.score.user, them: game.score.opp, won, tied };
+  state.games.unshift({ day: state.day, text: `${won ? "승" : tied ? "무" : "패"} · ${me.city} ${me.name} ${game.score.user}-${game.score.opp} ${opp.city} ${opp.name}` });
+  state.games = state.games.slice(0, 12);
+  addNews(state, won ? `${me.short}, 벤치 작전으로 승리` : `${me.short}, 수동 운영 경기 패배`, `${opp.city} ${opp.name}전 ${game.score.user}-${game.score.opp}. 작전 로그가 경기 리포트에 저장됐다.`, "경기");
+  updateManualPitchingStats(state, game, won);
+  game.pitchingStatsApplied = true;
+  applyPostGameFatigue(state, game.pitcherUsage, game.lineup, game.lineupPositions);
+  const playedIds = [...(game.lineup || []), ...(game.usedPitchers || []), game.pitcherId].filter(Boolean);
+  maybeAutomaticInjury(state, playedIds.map((id) => state.players.find((p) => p.id === id)), "manual-game");
+  if (state.day % 6 === 0 || Math.random() < 0.18) generateOffer(state);
+  progressPitchTraining(state);
+  accrueServiceDays(state);
+  simulateOtherTeams(state);
+  state.day += 1;
+  game.complete = true;
+  game.log.unshift(`경기 종료: ${me.short} ${game.score.user}-${game.score.opp} ${opp.short}`);
+}
+
+function isBuntTactic(tactic) {
+  return ["bunt", "sacBunt", "safetyBunt", "squeezeBunt", "dragBunt"].includes(tactic);
+}
+
+function advanceSacrificeBunt(game) {
+  const thirdScores = Boolean(game.bases[2]);
+  game.bases = [null, game.bases[0], game.bases[1]];
+  return thirdScores ? 1 : 0;
+}
+
+function resolveBuntAttempt(state, game, batter, opponentPitcher, pitcherEdge, tactic) {
+  const hasRunner = game.bases.some(Boolean);
+  const hasRunnerOnThird = Boolean(game.bases[2]);
+  const roll = rnd(1, 100);
+  const baseSkill = batter.hit * 0.32 + batter.spd * 0.22 + batter.form * 0.24 - pitcherEdge * 0.12;
+  const buntSkill = Math.max(24, Math.min(88, baseSkill + (tactic === "sacBunt" ? 12 : tactic === "squeezeBunt" ? 4 : tactic === "dragBunt" ? -2 : 0)));
+  const label = tacticLabel(tactic);
+  if (roll < 14) {
+    game.count.balls += 1;
+    if (game.count.balls >= 4) {
+      const result = walkBatter(game, batter.name);
+      game.score.user += result.runs;
+      game.count = { balls: 0, strikes: 0 };
+      game.lineupIndex += 1;
+      return `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${label} 지시였지만 볼넷. ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
+    }
+    return `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${label} 지시였지만 볼. 카운트 ${game.count.balls}-${game.count.strikes}`;
+  }
+  if (roll < 32 && game.count.strikes < 2) {
+    game.count.strikes += 1;
+    return `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${label} 파울. 카운트 ${game.count.balls}-${game.count.strikes}`;
+  }
+  if (tactic === "safetyBunt" || tactic === "dragBunt") {
+    const hitChance = Math.max(12, Math.min(58, buntSkill - 26 + (batter.spd || 55) * 0.18));
+    if (roll < hitChance + 32) {
+      const result = advanceRunners(game, batter.name, 1);
+      game.score.user += result.runs;
+      game.count = { balls: 0, strikes: 0 };
+      game.lineupIndex += 1;
+      return `${batter.name} ${label} 성공, ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
+    }
+    game.outs += 1;
+    game.count = { balls: 0, strikes: 0 };
+    game.lineupIndex += 1;
+    return `${batter.name} ${label} 실패. 타자 아웃, 주자 ${basesLabel(game.bases)}`;
+  }
+  if (tactic === "squeezeBunt") {
+    if (!hasRunnerOnThird) {
+      game.outs += 1;
+      game.count = { balls: 0, strikes: 0 };
+      game.lineupIndex += 1;
+      return `${batter.name} 스퀴즈 지시였지만 3루 주자가 없어 번트 아웃. ${game.outs}아웃`;
+    }
+    if (roll < buntSkill) {
+      game.bases[2] = null;
+      const extraRun = advanceSacrificeBunt(game);
+      game.score.user += 1 + extraRun;
+      game.outs += 1;
+      game.count = { balls: 0, strikes: 0 };
+      game.lineupIndex += 1;
+      return `${batter.name} 스퀴즈 번트 성공. 3루 주자 홈인, ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`;
+    }
+    game.bases[2] = null;
+    game.outs += 1;
+    game.count = { balls: 0, strikes: 0 };
+    game.lineupIndex += 1;
+    return `${batter.name} 스퀴즈 실패. 3루 주자 홈에서 아웃, ${game.outs}아웃`;
+  }
+  if (hasRunner && roll < buntSkill) {
+    const runs = advanceSacrificeBunt(game);
+    game.score.user += runs;
+    game.outs += 1;
+    game.count = { balls: 0, strikes: 0 };
+    game.lineupIndex += 1;
+    return `${batter.name} 희생번트 성공${runs ? `, ${runs}득점` : ""}. ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`;
+  }
+  game.outs += 1;
+  game.count = { balls: 0, strikes: 0 };
+  game.lineupIndex += 1;
+  return `${batter.name} 희생번트 실패. ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`;
+}
+
+function resolveUserAtBat(state, tactic) {
+  const game = state.activeGame;
+  if (!game || game.complete || !isUserBattingHalf(game)) return state;
+  const batterId = game.lineup[game.lineupIndex % game.lineup.length];
+  const batter = state.players.find((p) => p.id === batterId);
+  if (!batter) return state;
+  const opp = state.teams.find((t) => t.id === game.opponentId) || currentOpponent(state);
+  if (!game.count) game.count = { balls: 0, strikes: 0 };
+  if (!game.opponentPitcher) game.opponentPitcher = makeOpponentPitcher(opp);
+  const opponentPitcher = game.opponentPitcher;
+  const pitcherEdge = Math.max(42, opponentPitcher.power || opp.power);
+  const runnerIndexes = game.bases.map((runner, index) => runner ? index : -1).filter((index) => index >= 0);
+  const stealAttempts = stealCommandToBases(game.pendingSteal).filter((index) => game.bases[index]);
+  let text = "";
+  let stealText = "";
+  let pitchThrown = false;
+
+  if (runnerIndexes.length && !stealAttempts.length && rnd(1, 100) < Math.max(5, Math.min(22, (opponentPitcher.pickoff || 55) * 0.16))) {
+    const baseIndex = runnerIndexes[rnd(0, runnerIndexes.length - 1)];
+    const runnerName = game.bases[baseIndex];
+    const runner = state.players.find((p) => p.name === runnerName);
+    const safeChance = Math.max(58, Math.min(94, (runner?.spd || 60) + (runner?.form || 60) * 0.2 - (opponentPitcher.pickoff || 55) * 0.22));
+    if (rnd(1, 100) > safeChance) {
+      game.bases[baseIndex] = null;
+      game.outs += 1;
+      text = `${opponentPitcher.name} 견제구, ${baseIndex + 1}루 주자 아웃. ${game.outs}아웃`;
+    } else {
+      text = `${opponentPitcher.name} 견제구, ${baseIndex + 1}루 주자 귀루. 카운트 ${game.count.balls}-${game.count.strikes}`;
+    }
+    game.tactic = "swing";
+    game.log.unshift(`${game.inning}회초 ${text}`);
+    if (game.outs >= 3) nextHalfInning(state);
+    return state;
+  }
+
+  if (stealAttempts.length) {
+    if (!pitchThrown) opponentPitcher.pitchCount = (opponentPitcher.pitchCount || 0) + 1;
+    pitchThrown = true;
+    const results = [];
+    for (const stealFrom of stealAttempts) {
+      if (game.outs >= 3 || !game.bases[stealFrom]) continue;
+      const targetBase = stealFrom + 1;
+      const runnerName = game.bases[stealFrom];
+      const runner = state.players.find((p) => p.name === runnerName);
+      const targetOccupiedByStayingRunner = targetBase < 3 && game.bases[targetBase] && !stealAttempts.includes(targetBase);
+      if (targetOccupiedByStayingRunner) {
+        results.push(`${stealFrom + 1}루 ${runnerName} 대기`);
+        continue;
+      }
+      const speedEdge = stealFrom === 2 ? -18 : stealFrom === 1 ? -8 : 0;
+      const multiPenalty = stealAttempts.length > 1 ? 5 : 0;
+      const successChance = Math.max(10, Math.min(84, (runner?.spd || batter.spd || 55) + (runner?.form || batter.form || 60) / 3 - 20 + speedEdge - multiPenalty - (opponentPitcher.pickoff || 55) * 0.08));
+      const success = rnd(1, 100) < successChance;
+      if (success) {
+        game.bases[stealFrom] = null;
+        if (runner?.stats) runner.stats.sb = (runner.stats.sb || 0) + 1;
+        if (targetBase >= 3) {
+          game.score.user += 1;
+          results.push(`${stealFrom + 1}루 ${runnerName} 홈스틸 성공, 1득점`);
+        } else {
+          game.bases[targetBase] = runnerName;
+          results.push(`${stealFrom + 1}루 ${runnerName} ${targetBase + 1}루 도루 성공`);
+        }
+      } else {
+        game.outs += 1;
+        game.bases[stealFrom] = null;
+        results.push(`${stealFrom + 1}루 ${runnerName} 도루 실패`);
+      }
+    }
+    text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 스타트, ${results.join(" / ")}. ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`;
+    stealText = text;
+    if (game.outs >= 3) game.count = { balls: 0, strikes: 0 };
+    game.pendingSteal = null;
+  }
+  if (game.outs >= 3) {
+    // 도루 실패로 이닝이 끝난 경우 타격 결과는 진행하지 않는다.
+  } else if (isBuntTactic(tactic)) {
+    if (!pitchThrown) opponentPitcher.pitchCount = (opponentPitcher.pitchCount || 0) + 1;
+    pitchThrown = true;
+    text = resolveBuntAttempt(state, game, batter, opponentPitcher, pitcherEdge, tactic);
+  } else if (false && tactic === "bunt" && game.bases.some(Boolean)) {
+    if (!pitchThrown) opponentPitcher.pitchCount = (opponentPitcher.pitchCount || 0) + 1;
+    pitchThrown = true;
+    const roll = rnd(1, 100);
+    const buntSkill = Math.max(28, Math.min(82, batter.hit * 0.35 + batter.spd * 0.18 + batter.form * 0.22 - pitcherEdge * 0.12));
+    if (roll < 18) {
+      game.count.balls += 1;
+      if (game.count.balls >= 4) {
+        const result = walkBatter(game, batter.name);
+        game.score.user += result.runs;
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, 번트 지시였지만 볼넷. ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
+        game.count = { balls: 0, strikes: 0 };
+        game.lineupIndex += 1;
+      } else {
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, 번트 지시였지만 볼. 카운트 ${game.count.balls}-${game.count.strikes}`;
+      }
+    } else if (roll < 36 && game.count.strikes < 2) {
+      game.count.strikes += 1;
+      text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, 번트 파울. 카운트 ${game.count.balls}-${game.count.strikes}`;
+    } else if (roll < buntSkill) {
+      const runnerNames = [...game.bases];
+      game.bases = [null, game.bases[0], game.bases[1]];
+      if (runnerNames[2]) game.score.user += 1;
+      game.outs += 1;
+      text = `${batter.name} 희생번트 성공. ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`;
+      game.count = { balls: 0, strikes: 0 };
+      game.lineupIndex += 1;
+    } else {
+      game.outs += 1;
+      text = `${batter.name} 번트 실패. ${game.outs}아웃`;
+      game.count = { balls: 0, strikes: 0 };
+      game.lineupIndex += 1;
+    }
+  } else {
+    if (!pitchThrown) opponentPitcher.pitchCount = (opponentPitcher.pitchCount || 0) + 1;
+    pitchThrown = true;
+    const wildChance = Math.max(1, Math.min(7, 5.2 - (opponentPitcher.command || 60) * 0.045 + game.count.balls * 0.45));
+    if (game.bases.some(Boolean) && rnd(1, 100) <= wildChance) {
+      game.count.balls += 1;
+      const passed = advanceOnPassedBall(game);
+      game.score.user += passed.runs;
+      text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 폭투. 주자 ${passed.bases}${passed.runs ? `, ${passed.runs}득점` : ""}. 카운트 ${game.count.balls}-${game.count.strikes}`;
+      if (game.count.balls >= 4) {
+        const result = walkBatter(game, batter.name);
+        game.score.user += result.runs;
+        text += ` / ${result.text}${result.runs ? `, ${result.runs}득점` : ""}`;
+        game.count = { balls: 0, strikes: 0 };
+        game.lineupIndex += 1;
+      }
+    } else {
+    const contact = batter.hit * 0.5 + batter.pow * 0.2 + batter.form * 0.16 + batter.happy * 0.08 - pitcherEdge * 0.22;
+    const pitchRoll = rnd(1, 100) + (opponentPitcher.command || 60) * 0.12 - batter.hit * 0.1 - batter.form * 0.04;
+    if (pitchRoll < 34) {
+      game.count.balls += 1;
+      if (game.count.balls >= 4) {
+        const result = walkBatter(game, batter.name);
+        game.score.user += result.runs;
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 볼넷. ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
+        game.count = { balls: 0, strikes: 0 };
+        game.lineupIndex += 1;
+      } else {
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 볼. 카운트 ${game.count.balls}-${game.count.strikes}`;
+      }
+    } else if (pitchRoll < 49) {
+      game.count.strikes += 1;
+      if (game.count.strikes >= 3) {
+        game.outs += 1;
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${batter.name} 삼진. ${game.outs}아웃`;
+        game.count = { balls: 0, strikes: 0 };
+        game.lineupIndex += 1;
+      } else {
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 스트라이크. 카운트 ${game.count.balls}-${game.count.strikes}`;
+      }
+    } else if ((game.count.strikes >= 2 && pitchRoll < 73 + Math.max(0, batter.hit - 65) * 0.18) || (pitchRoll < 59 && game.count.strikes < 2)) {
+      const wasTwoStrike = game.count.strikes >= 2;
+      game.count.strikes = wasTwoStrike ? 2 : game.count.strikes + 1;
+      text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 파울. 카운트 ${game.count.balls}-${game.count.strikes}`;
+    } else {
+      const event = userBattedBallEvent(batter, opponentPitcher, tactic);
+      if (event.bases > 0) {
+        const result = advanceRunners(game, batter.name, event.bases);
+        game.score.user += result.runs;
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 인플레이, ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
+      } else if (game.bases[0] && game.outs <= 1 && rnd(1, 100) < Math.max(5, Math.min(24, 28 - (batter.spd || 55) * 0.2 + (opponentPitcher.command || 60) * 0.05))) {
+        game.bases[0] = null;
+        game.outs = Math.min(3, game.outs + 2);
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 인플레이, ${batter.name} 병살타. ${game.outs}아웃`;
+      } else {
+        game.outs += 1;
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 인플레이, ${batter.name} 범타. ${game.outs}아웃`;
+      }
+      game.count = { balls: 0, strikes: 0 };
+      game.lineupIndex += 1;
+    }
+    }
+  }
+  if (opponentPitcher.pitchCount > opponentPitcher.stamina + 18) opponentPitcher.mood = "난조";
+  else if (opponentPitcher.pitchCount > opponentPitcher.stamina) opponentPitcher.mood = "피로";
+  else opponentPitcher.mood = "정상";
+  if (stealText && !text.includes(stealText)) text = `${stealText} / ${text}`;
+  game.tactic = "swing";
+  if (isWalkoffState(game)) {
+    game.log.unshift(`${halfLabel(game)} ${text}`);
+    finishManualGame(state);
+    return state;
+  }
+  game.log.unshift(`${game.inning}회초 ${text}`);
+  if (game.outs >= 3) nextHalfInning(state);
+  return state;
+}
+
+function resolveOpponentHalf(state) {
+  const game = state.activeGame;
+  if (!game || game.complete || !isOpponentBattingHalf(game)) return state;
+  const opp = state.teams.find((t) => t.id === game.opponentId) || currentOpponent(state);
+  const pitcher = state.players.find((p) => p.id === game.pitcherId);
+  const pitchPower = pitcher ? pitcher.pit * 0.72 + pitcher.form * 0.2 + pitcher.happy * 0.08 : teamPower(state);
+  while (isOpponentBattingHalf(game) && !game.complete) {
+    const attack = opponentBatterPower(opp, game.inning);
+    const batter = { contact: attack, power: attack };
+    const event = opponentBattedBallEvent(batter, pitchPower, { def: 60, arm: 60 });
+    const walkRoll = rnd(1, 100) + attack * 0.08 - (pitcher?.command || 60) * 0.1;
+    if (event.bases > 0) {
+      const result = advanceRunners(game, `${opp.short} 타자`, event.bases);
+      game.score.opp += result.runs;
+      game.log.unshift(`${game.inning}회말 ${result.text}${result.runs ? `, ${result.runs}실점` : ""}`);
+    } else if (walkRoll > 93) {
+      const result = walkBatter(game, `${opp.short} 주자`);
+      game.score.opp += result.runs;
+      game.log.unshift(`${game.inning}회말 볼넷 허용${result.runs ? `, ${result.runs}실점` : ""}. 주자 ${basesLabel(game.bases)}`);
+    } else if (game.bases[0] && game.outs <= 1 && rnd(1, 100) < 28) {
+      game.bases[0] = null;
+      game.outs = Math.min(3, game.outs + 2);
+      game.log.unshift(`${game.inning}회말 병살 처리. ${game.outs}아웃`);
+    } else {
+      game.outs += 1;
+      game.log.unshift(`${game.inning}회말 아웃카운트 추가. ${game.outs}아웃`);
+    }
+    if (game.outs >= 3) nextHalfInning(state);
+  }
+  return state;
+}
+
+function updatePitcherMood(game, pitcher, hardContact) {
+  if (!pitcher) {
+    game.pitcherMood = "불명";
+    return;
+  }
+  const fatigue = game.pitchCount - Math.max(45, pitcher.stamina || 60);
+  if (hardContact >= 2 || fatigue > 28) game.pitcherMood = "난조";
+  else if (fatigue > 12) game.pitcherMood = "피로";
+  else if ((pitcher.form || 60) >= 78) game.pitcherMood = "좋음";
+  else game.pitcherMood = "정상";
+}
+
+function recordPitcherGameLine(game, pitcher, outsAdded, runsAdded, strikeoutsAdded = 0) {
+  if (!game || !pitcher) return;
+  const id = pitcher.id;
+  if (!game.pitcherOuts) game.pitcherOuts = {};
+  if (!game.pitcherRuns) game.pitcherRuns = {};
+  if (!game.pitcherStrikeouts) game.pitcherStrikeouts = {};
+  game.pitcherOuts[id] = (game.pitcherOuts[id] || 0) + Math.max(0, outsAdded || 0);
+  game.pitcherRuns[id] = (game.pitcherRuns[id] || 0) + Math.max(0, runsAdded || 0);
+  game.pitcherStrikeouts[id] = (game.pitcherStrikeouts[id] || 0) + Math.max(0, strikeoutsAdded || 0);
+}
+
+function ensurePitchingStats(player) {
+  if (!player.stats) player.stats = {};
+  player.stats.era = Number.isFinite(Number(player.stats.era)) ? Number(player.stats.era) : 0;
+  player.stats.win = Number(player.stats.win) || 0;
+  player.stats.so = Number(player.stats.so) || 0;
+  player.stats.sv = Number(player.stats.sv) || 0;
+  player.stats.hold = Number(player.stats.hold) || 0;
+  player.stats.ip = Number(player.stats.ip) || 0;
+  return player.stats;
+}
+
+function updateManualPitchingStats(state, game, won) {
+  if (!game) return;
+  const outsMap = { ...(game.pitcherOuts || {}) };
+  const runsMap = { ...(game.pitcherRuns || {}) };
+  const soMap = { ...(game.pitcherStrikeouts || {}) };
+  const trackedOuts = Object.values(outsMap).reduce((sum, value) => sum + (Number(value) || 0), 0);
+  if (trackedOuts < 18) {
+    const starterId = (game.usedPitchers || [])[0] || game.pitcherId;
+    const starter = state.players.find((p) => p.id === Number(starterId));
+    if (starter) {
+      const inferredOuts = game.inning >= 9 ? 27 : Math.max(0, (game.inning - 1) * 3 + (game.outs || 0));
+      outsMap[starterId] = Math.max(Number(outsMap[starterId]) || 0, inferredOuts);
+      runsMap[starterId] = Math.max(Number(runsMap[starterId]) || 0, Number(game.score?.opp) || 0);
+      const pitches = Number(game.pitcherUsage?.[starterId]) || Number(game.pitchCount) || 0;
+      const estimatedKs = Math.max(Number(soMap[starterId]) || 0, Math.round((pitches * (starter.pit || 65)) / 720));
+      soMap[starterId] = estimatedKs;
+    }
+  }
+  Object.entries(outsMap).forEach(([id, rawOuts]) => {
+    const outs = Number(rawOuts) || 0;
+    const pitcher = state.players.find((p) => p.id === Number(id));
+    if (!pitcher || pitcher.type !== "PIT" || outs <= 0) return;
+    const stats = ensurePitchingStats(pitcher);
+    const oldIp = Number(stats.ip) || 0;
+    const oldEarnedRuns = (Number(stats.era) || 0) * oldIp / 9;
+    const runs = Number(runsMap[id]) || 0;
+    const newIp = oldIp + outs / 3;
+    const newEarnedRuns = oldEarnedRuns + runs;
+    stats.ip = Math.round(newIp * 10) / 10;
+    stats.era = newIp > 0 ? Math.round((newEarnedRuns * 9 / newIp) * 100) / 100 : 0;
+    stats.so += Number(soMap[id]) || 0;
+  });
+  const starterId = (game.usedPitchers || [])[0] || game.pitcherId;
+  const starter = state.players.find((p) => p.id === Number(starterId));
+  if (starter?.type === "PIT" && won) ensurePitchingStats(starter).win += 1;
+}
+
+function defensiveUnit(state, game) {
+  const fielders = (game.lineup || [])
+    .map((id, index) => ({ player: state.players.find((p) => p.id === id), pos: game.lineupPositions?.[index] || FIELD_POSITIONS[index] || "DH" }))
+    .filter((entry) => entry.player && entry.pos !== "DH");
+  const byPos = (positions) => fielders.filter((entry) => positions.includes(entry.pos)).map((entry) => entry.player);
+  const all = fielders.map((entry) => entry.player);
+  const infield = byPos(["C", "1B", "2B", "3B", "SS"]);
+  const outfield = byPos(["LF", "CF", "RF"]);
+  const catcher = fielders.find((entry) => entry.pos === "C")?.player;
+  return {
+    def: avg(all.map((p) => p.def || 55)),
+    arm: avg(all.map((p) => p.arm || 55)),
+    infieldArm: avg(infield.map((p) => p.arm || 55)),
+    outfieldArm: avg(outfield.map((p) => p.arm || 55)),
+    catcherArm: catcher?.arm || avg(all.map((p) => p.arm || 55))
+  };
+}
+
+function resolveOpponentPlateAppearance(state) {
+  const game = state.activeGame;
+  if (!game || game.complete || !isOpponentBattingHalf(game)) return state;
+  const opp = state.teams.find((t) => t.id === game.opponentId) || currentOpponent(state);
+  const pitcher = state.players.find((p) => p.id === game.pitcherId);
+  const defense = defensiveUnit(state, game);
+  const orderIndex = Number.isFinite(game.opponentLineupIndex) ? game.opponentLineupIndex : 0;
+  const batter = game.opponentLineup?.[orderIndex % 9] || { name: `${opp.short} 타자`, contact: opp.power, power: opp.power, order: (orderIndex % 9) + 1, pos: "?" };
+  const pitchPower = pitcher ? pitcher.pit * 0.72 + pitcher.form * 0.2 + pitcher.happy * 0.08 : teamPower(state);
+  const attack = opponentBatterPower(opp, game.inning);
+  const outsBefore = game.outs || 0;
+  const runsBefore = Number(game.score?.opp) || 0;
+  let strikeoutAdded = 0;
+  const pitch = 1;
+  game.pitchCount = (game.pitchCount || 0) + pitch;
+  if (pitcher) {
+    if (!game.pitcherUsage) game.pitcherUsage = {};
+    game.pitcherUsage[pitcher.id] = (game.pitcherUsage[pitcher.id] || 0) + pitch;
+  }
+  if (!game.count) game.count = { balls: 0, strikes: 0 };
+  const pitchSummary = () => `${pitcher?.name || "우리 투수"} ${game.pitchCount}구, ${batter.order}번 ${batter.name}`;
+  if (game.bases.some(Boolean) && rnd(1, 100) <= Math.max(1, Math.min(7, 5.4 - (pitcher?.pit || 60) * 0.035 + game.count.balls * 0.45))) {
+    game.count.balls += 1;
+    const passed = advanceOnPassedBall(game);
+    game.score.opp += passed.runs;
+    game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 폭투${passed.runs ? `, ${passed.runs}실점` : ""}. 주자 ${passed.bases}, 카운트 ${game.count.balls}-${game.count.strikes}`);
+    if (game.count.balls >= 4) {
+      const result = walkBatter(game, `${opp.short} 주자`);
+      game.score.opp += result.runs;
+      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 폭투 뒤 볼넷 허용${result.runs ? `, ${result.runs}실점` : ""}. 주자 ${basesLabel(game.bases)}`);
+      game.count = { balls: 0, strikes: 0 };
+      game.opponentLineupIndex += 1;
+    }
+    updatePitcherMood(game, pitcher, 1);
+    if (pitcher) pitcher.form = Math.max(30, pitcher.form - 0.4);
+    recordPitcherGameLine(game, pitcher, 0, Math.max(0, (Number(game.score?.opp) || 0) - runsBefore), 0);
+    return state;
+  }
+  if (game.bases[0] && !game.bases[1] && rnd(1, 100) < Math.max(4, 16 + attack * 0.04 - defense.catcherArm * 0.1)) {
+    if (rnd(1, 100) + defense.catcherArm > 116) {
+      game.bases[0] = null;
+      game.outs += 1;
+      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 포수 송구로 2루 도루 저지. ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`);
+      if (game.outs >= 3) {
+        updatePitcherMood(game, pitcher, 0);
+        recordPitcherGameLine(game, pitcher, Math.max(0, Math.min(3, game.outs) - outsBefore), Math.max(0, (Number(game.score?.opp) || 0) - runsBefore), strikeoutAdded);
+        nextHalfInning(state);
+        return state;
+      }
+    } else {
+      game.bases[1] = game.bases[0];
+      game.bases[0] = null;
+      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 상대 주자 2루 도루 성공. 포수 송구 ${Math.round(defense.catcherArm)}, 주자 ${basesLabel(game.bases)}`);
+    }
+  }
+  const fatiguePenalty = Math.max(0, game.pitchCount - (pitcher?.stamina || 65)) * 0.35;
+  const pitchRoll = rnd(1, 100) + attack * 0.2 + batter.contact * 0.12 - pitchPower * 0.25 + fatiguePenalty;
+  let hardContact = 0;
+  if (pitchRoll < 27 && game.count.strikes < 2) {
+    game.count.strikes += 1;
+    game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 스트라이크. ${game.count.balls}-${game.count.strikes}`);
+  } else if (pitchRoll < 44) {
+    game.count.strikes += 1;
+    if (game.count.strikes >= 3) {
+      game.outs += 1;
+      strikeoutAdded += 1;
+      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 삼진. ${game.outs}아웃`);
+      game.count = { balls: 0, strikes: 0 };
+      game.opponentLineupIndex += 1;
+    } else {
+      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 파울. ${game.count.balls}-${game.count.strikes}`);
+    }
+  } else if (pitchRoll < 66) {
+    game.count.balls += 1;
+    if (game.count.balls >= 4) {
+      const result = walkBatter(game, `${opp.short} 주자`);
+      game.score.opp += result.runs;
+      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 볼넷 허용${result.runs ? `, ${result.runs}실점` : ""}. 주자 ${basesLabel(game.bases)}`);
+      game.count = { balls: 0, strikes: 0 };
+      game.opponentLineupIndex += 1;
+    } else {
+      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 볼. ${game.count.balls}-${game.count.strikes}`);
+    }
+  } else if ((game.count.strikes >= 2 && pitchRoll < 91 + Math.max(0, batter.contact - 65) * 0.1) || (pitchRoll < 82 && game.count.strikes < 2)) {
+    const wasTwoStrike = game.count.strikes >= 2;
+    game.count.strikes = wasTwoStrike ? 2 : game.count.strikes + 1;
+    game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 파울. ${game.count.balls}-${game.count.strikes}`);
+  } else {
+    const event = opponentBattedBallEvent(batter, pitchPower, defense);
+    if (event.bases > 0) {
+      hardContact = event.bases >= 2 || event.error ? 2 : 1;
+      const result = advanceRunners(game, `${opp.short} 타자`, event.bases);
+      game.score.opp += result.runs;
+      let throwText = "";
+      if (event.bases < 4 && game.outs < 3 && rnd(1, 100) + defense.outfieldArm > 134) {
+        game.outs += 1;
+        throwText = `, 외야 송구로 추가 주자 아웃`;
+      }
+      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${result.text}${result.runs ? `, ${result.runs}실점` : ""}${throwText}`);
+      game.count = { balls: 0, strikes: 0 };
+      game.opponentLineupIndex += 1;
+    } else {
+      if (rnd(1, 100) + defense.infieldArm < 36) {
+        const result = advanceRunners(game, `${opp.short} 타자`, 1);
+        game.score.opp += result.runs;
+        game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 내야 송구 실책${result.runs ? `, ${result.runs}실점` : ""}. 주자 ${basesLabel(game.bases)}`);
+      } else {
+        if (game.bases[0] && game.outs <= 1 && rnd(1, 100) < Math.max(10, Math.min(38, defense.def * 0.28 + defense.infieldArm * 0.12 - batter.contact * 0.12))) {
+          game.bases[0] = null;
+          game.outs = Math.min(3, game.outs + 2);
+          game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 유격수-2루수-1루수 병살 처리. ${game.outs}아웃`);
+        } else {
+          game.outs += 1;
+          game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 인플레이 아웃. ${game.outs}아웃`);
+        }
+      }
+      game.count = { balls: 0, strikes: 0 };
+      game.opponentLineupIndex += 1;
+    }
+  }
+  updatePitcherMood(game, pitcher, hardContact);
+  if (pitcher) {
+    pitcher.form = Math.max(30, pitcher.form - Math.max(0, game.pitchCount - (pitcher.stamina || 65)) / 45);
+  }
+  recordPitcherGameLine(game, pitcher, Math.max(0, Math.min(3, game.outs) - outsBefore), Math.max(0, (Number(game.score?.opp) || 0) - runsBefore), strikeoutAdded);
+  if (game.outs >= 3) nextHalfInning(state);
+  return state;
+}
+
+function setGameTactic(state, tactic) {
+  const game = state.activeGame;
+  if (!game || game.complete) return state;
+  if (isUserBattingHalf(game)) return resolveUserAtBat(state, tactic || "swing");
+  game.tactic = tactic || "swing";
+  game.log.unshift(`벤치 지시: ${tacticLabel(game.tactic)}`);
+  return state;
+}
+
+function commandSteal(state, steal) {
+  const game = state.activeGame;
+  if (!game || game.complete || !isUserBattingHalf(game)) return state;
+  if (steal === "cancel") {
+    if (game.pendingSteal) {
+      game.log.unshift(`도루 지시 취소: ${tacticLabel(game.pendingSteal)} 대기를 해제했다.`);
+      game.pendingSteal = null;
+    }
+    return state;
+  }
+  const valid = new Set(["steal1", "steal2", "steal3", "steal12", "steal13", "steal23", "steal123", "stealAll"]);
+  if (!valid.has(steal)) return state;
+  const requestedBases = stealCommandToBases(steal);
+  const currentBases = new Set(stealCommandToBases(game.pendingSteal));
+  const singleBaseCommand = requestedBases.length === 1;
+  const nextBases = singleBaseCommand ? new Set(currentBases) : new Set(requestedBases);
+  if (singleBaseCommand) {
+    const base = requestedBases[0];
+    if (nextBases.has(base)) nextBases.delete(base);
+    else nextBases.add(base);
+  }
+  const orderedBases = [...nextBases].sort((a, b) => a - b);
+  if (!orderedBases.length) {
+    game.pendingSteal = null;
+    game.log.unshift("도루 지시 취소: 대기 중인 도루 작전을 해제했다.");
+    return state;
+  }
+  const ready = orderedBases.length && orderedBases.every((index) => game.bases[index]);
+  if (!ready) {
+    game.log.unshift("도루 지시 실패: 해당 루에 주자가 없습니다.");
+    return state;
+  }
+  game.pendingSteal = basesToStealCommand(orderedBases);
+  game.log.unshift(`도루 지시 대기: ${tacticLabel(game.pendingSteal)}. 이제 강공/번트/다음 플레이를 선택하세요.`);
+  return state;
+}
+
+function stealCommandToBases(command) {
+  const map = {
+    steal: [0],
+    steal1: [0],
+    steal2: [1],
+    steal3: [2],
+    stealHome: [2],
+    steal12: [1, 0],
+    steal13: [2, 0],
+    steal23: [2, 1],
+    steal123: [2, 1, 0],
+    stealAll: [2, 1, 0]
+  };
+  return [...(map[command] || [])];
+}
+
+function basesToStealCommand(bases) {
+  const key = [...new Set(bases)].sort((a, b) => a - b).join("");
+  return { "0": "steal1", "1": "steal2", "2": "steal3", "01": "steal12", "02": "steal13", "12": "steal23", "012": "steal123" }[key] || null;
+}
+
+function tacticLabel(tactic) {
+  if (tactic === "steal13") return "1·3루 더블스틸";
+  const labels = {
+    swing: "강공",
+    bunt: "번트",
+    sacBunt: "희생번트",
+    safetyBunt: "세이프티 번트",
+    squeezeBunt: "스퀴즈",
+    dragBunt: "기습번트",
+    steal: "도루",
+    steal1: "1루 주자 도루",
+    steal2: "2루 주자 도루",
+    steal3: "홈스틸",
+    stealHome: "홈스틸",
+    steal12: "더블스틸",
+    steal23: "더블스틸",
+    steal123: "만루 스타트",
+    stealAll: "만루 스타트"
+  };
+  if (labels[tactic]) return labels[tactic];
+  return { swing: "강공", bunt: "번트", steal: "도루" }[tactic] || "강공";
+}
+
+function advanceOnePlay(state) {
+  const game = state.activeGame;
+  if (!game || game.complete) return state;
+  if (isUserBattingHalf(game)) return resolveUserAtBat(state, game.tactic || "swing");
+  return resolveOpponentPlateAppearance(state);
+}
+
+function skipCurrentHalfInning(state) {
+  const game = state.activeGame;
+  if (!game || game.complete) return state;
+  const inning = game.inning;
+  const half = game.half;
+  let guard = 0;
+  while (!game.complete && game.inning === inning && game.half === half && guard < 90) {
+    if (isUserBattingHalf(game)) resolveUserAtBat(state, "swing");
+    else resolveOpponentPlateAppearance(state);
+    guard += 1;
+  }
+  game.log.unshift(`${inning}회${half === "top" ? "초" : "말"} 반이닝 스킵 완료`);
+  return state;
+}
+
+function changePitcher(state, inId) {
+  const game = state.activeGame;
+  if (!game || game.complete) return state;
+  inId = Number(inId);
+  const incoming = state.players.find((p) => p.id === inId && p.type === "PIT" && p.rosterStatus === "ACTIVE");
+  if (!incoming || game.usedPitchers?.includes(inId) || incoming.health?.status === "INJURED") return state;
+  const outgoing = state.players.find((p) => p.id === game.pitcherId);
+  game.pitcherId = inId;
+  game.usedPitchers = [...(game.usedPitchers || []), inId];
+  game.pitchCount = 0;
+  if (!game.pitcherUsage) game.pitcherUsage = {};
+  if (!game.pitcherOuts) game.pitcherOuts = {};
+  if (!game.pitcherRuns) game.pitcherRuns = {};
+  if (!game.pitcherStrikeouts) game.pitcherStrikeouts = {};
+  if (!Number.isFinite(game.pitcherUsage[inId])) game.pitcherUsage[inId] = 0;
+  if (!Number.isFinite(game.pitcherOuts[inId])) game.pitcherOuts[inId] = 0;
+  if (!Number.isFinite(game.pitcherRuns[inId])) game.pitcherRuns[inId] = 0;
+  if (!Number.isFinite(game.pitcherStrikeouts[inId])) game.pitcherStrikeouts[inId] = 0;
+  game.pitcherMood = incoming.form >= 78 ? "좋음" : "정상";
+  game.log.unshift(`투수 교체: ${outgoing?.name || "기존 투수"} 내려가고 ${incoming.name} 등판`);
+  return state;
+}
+
+function substituteBatter(state, outId, inId) {
+  const game = state.activeGame;
+  if (!game || game.complete) return state;
+  outId = Number(outId);
+  inId = Number(inId);
+  const idx = game.lineup.indexOf(outId);
+  const incoming = state.players.find((p) => p.id === inId && p.type === "BAT" && p.rosterStatus === "ACTIVE" && p.health?.status !== "INJURED");
+  if (idx < 0 || !incoming || game.lineup.includes(inId) || game.usedPositionPlayers?.includes(inId) || game.removedPositionPlayers?.includes(inId)) return state;
+  const outgoing = state.players.find((p) => p.id === outId);
+  game.lineup[idx] = inId;
+  game.usedPositionPlayers = [...new Set([...(game.usedPositionPlayers || []), inId])];
+  game.removedPositionPlayers = [...new Set([...(game.removedPositionPlayers || []), outId])];
+  game.lineupPositions = normalizeLineupPositions(game.lineup, game.lineupPositions, state);
+  game.log.unshift(`대타/수비 교체: ${outgoing?.name || "선수"} 대신 ${incoming.name} ${game.lineupPositions[idx] || incoming.pos}`);
+  return state;
+}
+
+function pinchRun(state, baseIndex, inId) {
+  const game = state.activeGame;
+  if (!game || game.complete) return state;
+  baseIndex = Number(baseIndex);
+  inId = Number(inId);
+  if (!Number.isInteger(baseIndex) || baseIndex < 0 || baseIndex > 2) return state;
+  const runnerName = game.bases?.[baseIndex];
+  if (!runnerName) return state;
+  const incoming = state.players.find((p) => p.id === inId && p.type === "BAT" && p.rosterStatus === "ACTIVE" && p.health?.status !== "INJURED");
+  if (!incoming || game.lineup.includes(inId) || game.usedPositionPlayers?.includes(inId) || game.removedPositionPlayers?.includes(inId)) return state;
+  const idx = game.lineup.findIndex((id) => state.players.find((p) => p.id === id)?.name === runnerName);
+  if (idx < 0) return state;
+  const outId = game.lineup[idx];
+  const outgoing = state.players.find((p) => p.id === outId);
+  game.lineup[idx] = inId;
+  game.bases[baseIndex] = incoming.name;
+  game.usedPositionPlayers = [...new Set([...(game.usedPositionPlayers || []), inId])];
+  game.removedPositionPlayers = [...new Set([...(game.removedPositionPlayers || []), outId])];
+  game.log.unshift(`대주자 투입: ${baseIndex + 1}루 ${outgoing?.name || runnerName} 대신 ${incoming.name}. ${idx + 1}번 타순을 이어받습니다.`);
+  return state;
+}
+
+function teamPower(state) {
+  const hitters = state.players.filter((p) => p.type === "BAT");
+  const pitchers = state.players.filter((p) => p.type === "PIT");
+  return Math.round(
+    avg(hitters.map((p) => p.ovr * 0.72 + p.form * 0.18 + p.happy * 0.1)) * 0.55 +
+    avg(pitchers.map((p) => p.ovr * 0.78 + p.form * 0.17 + p.happy * 0.05)) * 0.45
+  );
+}
+
+function addNews(state, title, body, kind = "일반") {
+  state.news.unshift({ day: state.day, title, body, kind });
+  state.news = state.news.slice(0, 50);
+}
+
+function clampTeamPulse(state) {
+  state.morale = Math.max(20, Math.min(98, Math.round(state.morale)));
+  state.fanInterest = Math.max(20, Math.min(98, Math.round(state.fanInterest)));
+}
+
+function playerIconLevel(p) {
+  if (!p) return 0;
+  const trait = String(p.trait || "");
+  let level = 0;
+  if (/프랜차이즈|프렌차이즈|주장|리더|상징|에이스|국대|MVP|스타/.test(trait)) level += 3;
+  if (/유망주|차세대|코어|원석/.test(trait) && (p.pot || 0) >= 82) level += 1.5;
+  if ((p.ovr || 0) >= 82) level += 3;
+  else if ((p.ovr || 0) >= 78) level += 2;
+  else if ((p.ovr || 0) >= 73) level += 1;
+  if ((p.serviceYears || 0) >= 10) level += 1.5;
+  else if ((p.serviceYears || 0) >= 7) level += 1;
+  if ((p.contract?.annual || p.salary || 0) >= 10) level += 1;
+  return level;
+}
+
+function playerStatusTags(p) {
+  const tags = [];
+  const icon = playerIconLevel(p);
+  if (icon >= 6) tags.push("프랜차이즈 스타");
+  else if (icon >= 4) tags.push("팬 선호 선수");
+  if ((p.ovr || 0) >= 80) tags.push("핵심전력");
+  if ((p.pot || 0) - (p.ovr || 0) >= 12) tags.push("대형 유망주");
+  if ((p.serviceYears || 0) >= 10) tags.push("장기 근속");
+  if ((p.contract?.annual || p.salary || 0) >= 10) tags.push("고연봉");
+  return tags;
+}
+
+function transactionReaction(state, playersOut = [], playersIn = [], context = "트레이드") {
+  const outIcon = playersOut.reduce((sum, p) => sum + playerIconLevel(p), 0);
+  const inIcon = playersIn.reduce((sum, p) => sum + playerIconLevel(p), 0);
+  const valueGap = sumTradeValue(playersIn) - sumTradeValue(playersOut);
+  const fanDelta = Math.round(inIcon * 1.2 - outIcon * 1.6 + valueGap / 18);
+  const moraleDelta = Math.round(inIcon * 0.7 - outIcon * 1.1 + valueGap / 24);
+  state.fanInterest += fanDelta;
+  state.morale += moraleDelta;
+  clampTeamPulse(state);
+  const outTags = playersOut.flatMap(playerStatusTags);
+  const inTags = playersIn.flatMap(playerStatusTags);
+  const outNames = playersOut.map((p) => p.name).join(", ") || "없음";
+  const inNames = playersIn.map((p) => p.name).join(", ") || "없음";
+  let tone = "팬 여론은 대체로 중립적이다.";
+  if (fanDelta <= -8) tone = "팬 커뮤니티가 강하게 반발하고 있다.";
+  else if (fanDelta <= -3) tone = "팬들 사이에서 아쉬움과 우려가 나온다.";
+  else if (fanDelta >= 8) tone = "팬들이 전력 보강에 크게 환호하고 있다.";
+  else if (fanDelta >= 3) tone = "팬 반응은 긍정적으로 기울었다.";
+  addNews(state, `${context} 팬 반응`, `${outNames} 이탈 / ${inNames} 합류. ${tone} ${outTags.length ? `이탈 태그: ${[...new Set(outTags)].join(", ")}. ` : ""}${inTags.length ? `영입 태그: ${[...new Set(inTags)].join(", ")}. ` : ""}팬 관심도 ${fanDelta >= 0 ? "+" : ""}${fanDelta}, 팀 분위기 ${moraleDelta >= 0 ? "+" : ""}${moraleDelta}.`, "팬 반응");
+}
+
+function reducePlayerCondition(p, amount) {
+  if (!p || p.health?.status === "INJURED") return 0;
+  const before = Number(p.form) || 70;
+  p.form = Math.max(25, Math.min(96, Math.round(before - amount)));
+  if (amount >= 6) p.happy = Math.max(25, (Number(p.happy) || 70) - 1);
+  return before - p.form;
+}
+
+function applyPostGameFatigue(state, pitcherUsage = {}, lineupIds = [], lineupPositions = []) {
+  const notes = [];
+  for (const [id, rawPitches] of Object.entries(pitcherUsage || {})) {
+    const pitches = Number(rawPitches) || 0;
+    const p = state.players.find((x) => x.id === Number(id));
+    if (!p || p.type !== "PIT" || pitches <= 0) continue;
+    const starterLike = p.pitcherRole === "SP" || p.pos === "SP";
+    const staminaLine = Number(p.stamina) || (starterLike ? 78 : 42);
+    const base = starterLike ? Math.max(2, Math.ceil(pitches / 18)) : Math.max(1, Math.ceil(pitches / 10));
+    const overload = Math.max(0, pitches - staminaLine);
+    const amount = Math.min(20, base + Math.ceil(overload / (starterLike ? 8 : 5)));
+    const drop = reducePlayerCondition(p, amount);
+    if (drop >= 4) notes.push(`${p.name} ${pitches}구 -${drop}`);
+  }
+
+  (lineupIds || []).forEach((id, index) => {
+    const p = state.players.find((x) => x.id === Number(id));
+    if (!p || p.type !== "BAT" || p.health?.status === "INJURED") return;
+    const pos = lineupPositions?.[index] || p.pos;
+    const amount = pos === "C" ? rnd(2, 4) : pos === "DH" ? rnd(0, 1) : rnd(1, 3);
+    reducePlayerCondition(p, amount);
+  });
+
+  if (notes.length) {
+    addNews(state, "컨디션 리포트", `등판 부담 반영: ${notes.slice(0, 6).join(", ")}.`, "의료");
+  }
+}
+
+function playerScoreForMvp(p) {
+  if (p.type === "PIT") return (p.stats.win || 0) * 5 + (p.stats.so || 0) * 0.9 + Math.max(0, 6 - (p.stats.era || 4.5)) * 14 + p.ovr * 0.25;
+  return (p.stats.hr || 0) * 4 + (p.stats.rbi || 0) * 1.2 + (p.stats.sb || 0) * 1.1 + (p.stats.avg || 0.25) * 180 + p.ovr * 0.2;
+}
+
+function topPlayer(players, scoreFn) {
+  return players.slice().sort((a, b) => scoreFn(b) - scoreFn(a))[0] || null;
+}
+
+function goalMet(state) {
+  const me = currentTeam(state);
+  const rank = state.teams.findIndex((t) => t.id === state.selectedTeamId) + 1;
+  if (state.seasonGoal?.level === "champion") return rank === 1;
+  if (state.seasonGoal?.level === "top3") return rank <= 3;
+  if (state.seasonGoal?.level === "rebuild") return state.players.filter((p) => p.age <= 25 && p.ovr > 70).length >= 5 || (state.trainingPts || 0) >= 18;
+  return rank <= 5 || (me?.w || 0) >= 72;
+}
+
+function finalizeSeasonAwards(state) {
+  if (state.seasonAwarded) return state;
+  updateRanks(state);
+  const recordPlayers = leagueRecordPlayers(state);
+  const hitters = recordPlayers.filter((p) => p.type === "BAT");
+  const pitchers = recordPlayers.filter((p) => p.type === "PIT");
+  const mvp = topPlayer(recordPlayers, playerScoreForMvp);
+  const rookie = topPlayer(recordPlayers.filter((p) => (p.age || 99) <= 24 && (p.serviceYears || 0) <= 2), playerScoreForMvp);
+  const goldGloves = FIELD_POSITIONS
+    .filter((pos) => pos !== "DH")
+    .map((pos) => topPlayer(hitters.filter((p) => p.pos === pos || p.secondaryPositions?.includes(pos)), (p) => (p.def || 0) * 1.2 + (p.arm || 0) * 0.4 + (p.ovr || 0) * 0.35))
+    .filter(Boolean);
+  const pitcherGold = topPlayer(pitchers, (p) => (p.pit || 0) + (p.stats.so || 0) * 0.35 + Math.max(0, 6 - (p.stats.era || 4.5)) * 8);
+  if (pitcherGold) goldGloves.unshift(pitcherGold);
+  const awardDefs = [
+    ["MVP", recordPlayers, playerScoreForMvp, (p) => `${p.pos} · 종합 기여도 ${Math.round(playerScoreForMvp(p))}`],
+    ["신인상", rookie ? [rookie] : [], playerScoreForMvp, (p) => `${p.age}세 · 현재 ${p.ovr} · 잠재 ${p.pot}`],
+    ["타격왕", hitters, (p) => p.stats.avg || 0, (p) => `타율 ${(p.stats.avg || 0).toFixed(3)}`],
+    ["홈런왕", hitters, (p) => p.stats.hr || 0, (p) => `${p.stats.hr || 0}홈런`],
+    ["타점왕", hitters, (p) => p.stats.rbi || 0, (p) => `${p.stats.rbi || 0}타점`],
+    ["안타왕", hitters, (p) => p.stats.h || 0, (p) => `${p.stats.h || 0}안타`],
+    ["득점왕", hitters, (p) => p.stats.r || 0, (p) => `${p.stats.r || 0}득점`],
+    ["도루왕", hitters, (p) => p.stats.sb || 0, (p) => `${p.stats.sb || 0}도루`],
+    ["출루율왕", hitters, (p) => p.stats.obp || 0, (p) => `출루율 ${(p.stats.obp || 0).toFixed(3)}`],
+    ["장타율왕", hitters, (p) => p.stats.slg || 0, (p) => `장타율 ${(p.stats.slg || 0).toFixed(3)}`],
+    ["평균자책점왕", pitchers, (p) => -(p.stats.era || 9), (p) => `ERA ${(p.stats.era || 0).toFixed(2)}`],
+    ["다승왕", pitchers, (p) => p.stats.win || 0, (p) => `${p.stats.win || 0}승`],
+    ["탈삼진왕", pitchers, (p) => p.stats.so || 0, (p) => `${p.stats.so || 0}K`],
+    ["세이브왕", pitchers, (p) => p.stats.sv || 0, (p) => `${p.stats.sv || 0}세이브`],
+    ["홀드왕", pitchers, (p) => p.stats.hold || 0, (p) => `${p.stats.hold || 0}홀드`]
+  ];
+  state.awards = awardDefs
+    .map(([title, pool, scoreFn, detailFn]) => {
+      const winner = topPlayer(pool, scoreFn);
+      return winner ? { title, name: winner.name, detail: detailFn(winner), playerId: winner.id } : null;
+    })
+    .filter(Boolean);
+  state.awards.push(...goldGloves.map((p) => ({ title: `골든글러브 ${p.pos}`, name: p.name, detail: `수비 ${p.def} · 송구 ${p.arm}`, playerId: p.id })));
+  const met = goalMet(state);
+  state.morale = Math.max(20, Math.min(98, state.morale + (met ? state.seasonGoal.reward : -state.seasonGoal.penalty)));
+  state.fanInterest = Math.max(20, Math.min(98, state.fanInterest + (met ? 6 : -5)));
+  addNews(state, "시즌 종료 시상식", state.awards.slice(0, 10).map((a) => `${a.title}: ${a.name} (${a.detail})`).join(" / "), "시상");
+  addNews(state, met ? "구단 목표 달성" : "구단 목표 미달", `${state.seasonGoal.label} 목표를 ${met ? "달성했다" : "달성하지 못했다"}.`, "구단");
+  state.seasonAwarded = true;
+  return state;
+}
+
+function isFaEligiblePlayer(p) {
+  return p
+    && p.rosterStatus !== "DEV"
+    && !isForeignPlayer(p)
+    && p.health?.status !== "INJURED"
+    && (Number(p.serviceDays) || 0) >= faServiceRequiredDays(p)
+    && (p.contract?.yearsLeft || 0) <= 1;
+}
+
+function pruneInvalidOffers(state) {
+  if (!Array.isArray(state.offers)) state.offers = [];
+  state.offers = state.offers.filter((offer) => {
+    const p = state.players.find((x) => x.id === offer.playerId);
+    return isFaEligiblePlayer(p);
+  });
+}
+
+function updateRanks(state) {
+  const mine = currentTeam(state);
+  if (mine) mine.power = teamPower(state);
+  state.teams.sort((a, b) => {
+    const ap = a.w / Math.max(1, a.w + a.l);
+    const bp = b.w / Math.max(1, b.w + b.l);
+    return bp - ap || b.power - a.power;
+  });
+}
+
+function simulateOtherTeams(state) {
+  ensureLeaguePlayers(state);
+  const gameOpponent = currentOpponent(state);
+  const list = opponents(state).filter((team) => team.id !== gameOpponent?.id);
+  for (let i = 0; i < list.length - 1; i += 2) {
+    const a = list[i];
+    const b = list[i + 1];
+    simulateTeamResult(a, b);
+    simulateTeamPlayerStats(state, a);
+    simulateTeamPlayerStats(state, b);
+  }
+  state.leagueStatsBackfilledForDay = Math.max(state.leagueStatsBackfilledForDay || 0, state.day || 1);
+}
+
+function simulateTeamResult(a, b) {
+  const chance = a.power / Math.max(1, a.power + b.power);
+  if (Math.random() < chance) {
+    a.w += 1;
+    b.l += 1;
+  } else {
+    b.w += 1;
+    a.l += 1;
+  }
+}
+
+function backfillStandingsGames(state) {
+  if (!Array.isArray(state?.teams)) return state;
+  const targetGames = Math.max(0, Math.min((state.day || 1) - 1, state.seasonGames || 144));
+  if (!targetGames) return state;
+  let guard = 0;
+  while (guard < 500) {
+    const shortTeams = state.teams
+      .filter((team) => (team.w || 0) + (team.l || 0) < targetGames)
+      .sort((a, b) => ((a.w || 0) + (a.l || 0)) - ((b.w || 0) + (b.l || 0)));
+    if (!shortTeams.length) break;
+    if (shortTeams.length === 1) {
+      const team = shortTeams[0];
+      if (Math.random() < Math.max(0.32, Math.min(0.68, (team.power || 65) / 105))) team.w += 1;
+      else team.l += 1;
+    } else {
+      simulateTeamResult(shortTeams[0], shortTeams[1]);
+    }
+    guard += 1;
+  }
+  state.teams.forEach((team) => {
+    const games = (team.w || 0) + (team.l || 0);
+    if (games === targetGames) return;
+    const rate = games > 0 ? (team.w || 0) / games : Math.max(0.28, Math.min(0.72, (team.power || 65) / 120));
+    team.w = Math.max(0, Math.min(targetGames, Math.round(rate * targetGames)));
+    team.l = targetGames - team.w;
+  });
+  return state;
+}
+
+function simulateTeamPlayerStats(state, team) {
+  const roster = (state.leaguePlayers || []).filter((p) => p.teamId === team.id);
+  const hitters = roster.filter((p) => p.type === "BAT").sort((a, b) => b.ovr - a.ovr).slice(0, 9);
+  const pitchers = roster.filter((p) => p.type === "PIT").sort((a, b) => {
+    const roleDiff = (a.pitcherRole === "SP" ? 0 : 1) - (b.pitcherRole === "SP" ? 0 : 1);
+    return roleDiff || b.ovr - a.ovr;
+  });
+  const starter = pitchers.find((p) => p.pitcherRole === "SP" || p.pos === "SP") || pitchers[0];
+  const closer = pitchers.find((p) => p.pitcherRole === "CL" || p.pos === "CL");
+  for (const p of hitters) {
+    const pa = rnd(3, 5);
+    const contact = Math.max(0.18, Math.min(0.36, 0.19 + (p.hit || p.ovr || 62) / 620 + rnd(-2, 2) / 100));
+    const hits = Math.max(0, Math.min(pa, Math.round(contact * pa + rnd(-1, 1))));
+    p.stats.pa = (p.stats.pa || 0) + pa;
+    p.stats.h = (p.stats.h || 0) + hits;
+    p.stats.hr = (p.stats.hr || 0) + (Math.random() < Math.max(0.015, (p.pow || 60) / 1500) ? 1 : 0);
+    p.stats.rbi = (p.stats.rbi || 0) + rnd(0, Math.max(1, Math.round((p.hit || 60) / 42)));
+    p.stats.r = (p.stats.r || 0) + rnd(0, hits + ((p.spd || 55) > 72 ? 1 : 0));
+    p.stats.sb = (p.stats.sb || 0) + (Math.random() < Math.max(0.005, (p.spd || 55) / 1600) ? 1 : 0);
+    const atBats = Math.max(1, p.stats.pa);
+    p.stats.avg = Math.min(0.39, Math.max(0.17, p.stats.h / atBats));
+    p.stats.obp = Math.min(0.48, Math.max(p.stats.avg, p.stats.avg + 0.035 + (p.hit || 60) / 1200));
+    p.stats.slg = Math.min(0.7, Math.max(0.25, p.stats.avg + (p.pow || 60) / 290));
+  }
+  if (starter) {
+    starter.stats.ip = (starter.stats.ip || 0) + rnd(45, 68) / 10;
+    starter.stats.so = (starter.stats.so || 0) + Math.max(1, Math.round((starter.pit || 62) / 16) + rnd(-1, 2));
+    starter.stats.era = Math.min(7.2, Math.max(1.6, (starter.stats.era || 3.9) + rnd(-8, 8) / 100));
+    if (Math.random() < Math.max(0.28, (team.power || 65) / 160)) starter.stats.win = (starter.stats.win || 0) + 1;
+  }
+  const bullpen = pitchers.filter((p) => p.id !== starter?.id).slice(0, 3);
+  bullpen.forEach((p) => {
+    p.stats.ip = (p.stats.ip || 0) + rnd(6, 16) / 10;
+    p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round((p.pit || 58) / 28) + rnd(0, 1));
+    p.stats.era = Math.min(7.5, Math.max(1.7, (p.stats.era || 3.8) + rnd(-10, 10) / 100));
+    if (["MR", "SU"].includes(p.pitcherRole) && Math.random() < 0.17) p.stats.hold = (p.stats.hold || 0) + 1;
+  });
+  if (closer && Math.random() < Math.max(0.16, (team.power || 65) / 360)) closer.stats.sv = (closer.stats.sv || 0) + 1;
+}
+
+function ageAndDevelop(state) {
+  const grown = [];
+  for (const p of state.players) {
+    const room = p.pot - p.ovr;
+    if (room > 0 && p.age <= 27 && Math.random() < 0.45) {
+      p.ovr += 1;
+      grown.push(`${p.name} +1`);
+    }
+    if (p.age >= 35 && Math.random() < 0.28) p.ovr = Math.max(45, p.ovr - 1);
+  }
+  if (grown.length) addNews(state, "월간 성장 업데이트", `${grown.join(", ")} 성장.`, "육성");
+}
+
+function generateOffer(state, forceLeague, playerId) {
+  const requested = playerId ? state.players.find((p) => p.id === Number(playerId)) : null;
+  if (requested) state.selectedId = requested.id;
+  if (requested && !isFaEligiblePlayer(requested)) {
+    addNews(state, "시장 반응 없음", `${requested.name}은 FA/계약만료/외국인/육성/부상 규칙 때문에 해외 구단이 공식 제안을 넣을 수 없다.`, "이적");
+    return null;
+  }
+  const candidates = requested
+    ? [requested].filter((p) => p.ovr >= 68 || p.pot >= 84)
+    : state.players
+      .filter((p) => isFaEligiblePlayer(p) && (p.ovr >= 68 || p.pot >= 84))
+      .sort(() => Math.random() - 0.5);
+  const p = candidates[0];
+  if (!p) {
+    addNews(state, "시장 반응 없음", requested ? `${requested.name}은 현재 능력/잠재력 기준에서 즉시 오퍼가 들어올 정도의 시장 반응은 없다.` : "FA 자격과 계약 만료 조건을 동시에 충족한 선수가 없어 해외 구단 제안이 들어오지 않았다.", "이적");
+    return null;
+  }
+  const league = forceLeague || (Math.random() > 0.52 ? "North American Majors" : "Japan Premier Baseball");
+  const club = league.includes("North")
+    ? ["Seattle Mariners", "Texas Rangers", "San Diego Suns", "Toronto Royals"][rnd(0, 3)]
+    : ["Tokyo Giants", "Osaka Buffaloes", "Fukuoka Hawks", "Yokohama Stars"][rnd(0, 3)];
+  const comp = faCompensation({ grade: p.faGrade || "C", previousSalary: p.salary || p.contract?.annual || 1 }, false);
+  const fee = Math.round((comp.cash + p.ovr * 0.12 + rnd(0, 8)) * 10) / 10;
+  const salary = Math.round((p.salary * (league.includes("North") ? 1.8 : 1.35) + rnd(1, 9)) * 10) / 10;
+  const offer = { id: Date.now() + Math.random(), playerId: p.id, league, club, fee, salary, years: rnd(2, 5), faGrade: p.faGrade || "C", serviceYears: p.serviceYears || 0 };
+  state.offers.unshift(offer);
+  state.offers = state.offers.slice(0, 6);
+  addNews(state, "해외 구단 오퍼 도착", `${club}가 ${p.name}에게 ${offer.years}년 ${money(salary)} 규모의 관심을 보냈다. 포스팅 보상금은 ${money(fee)}로 예상된다.`, "이적");
+  return offer;
+}
+
+function tradeDeadlineDay(state) {
+  return Math.floor((state.seasonGames || 144) * 0.68);
+}
+
+function tradeValue(p) {
+  return (p.ovr || 50) * 1.35 + (p.pot || p.ovr || 50) * 0.55 - Math.max(0, (p.age || 25) - 29) * 1.8 + (p.type === "PIT" ? 4 : 0);
+}
+
+function uniqueNumbers(value) {
+  const list = Array.isArray(value) ? value : [value];
+  return [...new Set(list.map(Number).filter((n) => Number.isFinite(n) && n > 0))];
+}
+
+function sumTradeValue(players) {
+  return players.reduce((sum, p) => sum + tradeValue(p), 0);
+}
+
+function tradePlayerLabel(p) {
+  return `${p.name} ${p.pos} ${p.ovr}/${p.pot}`;
+}
+
+function tradeFailureReasons(outgoingPlayers, targetPlayers, cashOffer, outgoingValue, targetValue) {
+  const reasons = [];
+  const gap = outgoingValue - targetValue;
+  const bestOutgoing = outgoingPlayers.slice().sort((a, b) => tradeValue(b) - tradeValue(a))[0];
+  const bestTarget = targetPlayers.slice().sort((a, b) => tradeValue(b) - tradeValue(a))[0];
+  const activeTargets = targetPlayers.filter((p) => p.rosterStatus === "ACTIVE").length;
+  const farmOutgoing = outgoingPlayers.filter((p) => p.rosterStatus === "FARM").length;
+  if (gap < -2) reasons.push(`가치 평가가 ${Math.abs(Math.round(gap))}점 부족`);
+  if (bestTarget && bestOutgoing && tradeValue(bestTarget) - tradeValue(bestOutgoing) > 18) reasons.push(`${bestTarget.name}을 내주기엔 핵심 전력 손실이 큼`);
+  if (activeTargets && farmOutgoing === outgoingPlayers.length) reasons.push("상대는 1군 전력을 내주는데 우리 제안은 2군 카드 중심");
+  if (targetPlayers.some((p) => playerIconLevel(p) >= 2)) reasons.push("프랜차이즈/팬 선호 선수라 팬 반발 위험");
+  if (cashOffer <= 0 && gap < -8) reasons.push("현금 보전이 없어 협상 유인이 낮음");
+  if (!reasons.length) reasons.push("상대 내부 평가에서 포지션 보강 효과가 부족");
+  return reasons;
+}
+
+function makeFictionalKoreanName(seed) {
+  const surnames = ["김","이","박","최","정","강","조","윤","장","임","한","오","서","신","권","황","안","송","전","홍","유","고","문"];
+  const syllables = ["준","민","현","우","성","진","호","윤","원","서","율","재","겸","도","찬","태","영","수","혁","빈","하","건","시","온"];
+  const h = hashText(seed);
+  return `${surnames[h % surnames.length]}${syllables[Math.floor(h / 8) % syllables.length]}${syllables[Math.floor(h / 128) % syllables.length]}`;
+}
+
+function makeTradeTarget(team, baseValue, needType) {
+  const type = needType || (Math.random() > 0.52 ? "BAT" : "PIT");
+  const pos = type === "PIT" ? (Math.random() > 0.45 ? "SP" : "RP") : FIELD_POSITIONS[rnd(0, FIELD_POSITIONS.length - 1)];
+  const ovr = Math.max(52, Math.min(86, Math.round(baseValue / 1.85 + rnd(-5, 6))));
+  const pot = Math.max(ovr, Math.min(92, ovr + rnd(0, 12)));
+  const age = rnd(20, 34);
+  const name = makeFictionalKoreanName(`${team.id}-${pos}-${Date.now()}-${rnd(10, 99)}`);
+  const p = makePlayer([name, pos, type, age, ovr, pot, `${team.short} 트레이드 카드`, rnd(0, 99)], rnd(1000, 9999));
+  p.id = Date.now() + rnd(1, 99999);
+  p.rosterStatus = "FARM";
+  p.dataSource = "trade-market";
+  p.teamId = team.id;
+  p.teamName = `${team.city} ${team.name}`;
+  p.foreignPlayer = false;
+  return p;
+}
+
+function refreshTradeTargets(state, silent = false) {
+  if (state.day > tradeDeadlineDay(state)) {
+    state.tradeTargets = [];
+    if (!silent) addNews(state, "트레이드 마감", "트레이드 마감일이 지나 상대팀 매물을 더 조회할 수 없다.", "트레이드");
+    return state;
+  }
+  if (fs.existsSync(DATA_IMPORT_PATH)) {
+    const rows = parseCsv(fs.readFileSync(DATA_IMPORT_PATH, "utf8"));
+    const headers = rows[0]?.map((h) => h.trim()) || [];
+    const idx = (name) => headers.indexOf(name);
+    const teamIdIndex = idx("teamId");
+    const nameIndex = idx("name");
+    const posIndex = idx("pos");
+    const typeIndex = idx("type");
+    const cards = [];
+    const idBase = Date.now() * 1000;
+    const teamMap = new Map((state.teams || teamTemplates).map((team) => [team.id, team]));
+    if (teamIdIndex >= 0 && nameIndex >= 0 && posIndex >= 0) {
+      rows.slice(1).forEach((row) => {
+        const rowTeamId = row[teamIdIndex];
+        if (!rowTeamId || rowTeamId === state.selectedTeamId) return;
+        const team = teamMap.get(rowTeamId);
+        if (!team) return;
+        const rawName = row[nameIndex];
+        const rowSource = (idx("source") >= 0 && row[idx("source")]) || DATA_IMPORT_PATH;
+        const jersey = idx("jerseyNumber") >= 0 ? row[idx("jerseyNumber")] : "";
+        const shouldAlias = String(rowSource).startsWith("KBO") && !String(rowSource).includes("Public Alias");
+        const name = shouldAlias ? publicAliasName(rawName, `${rowTeamId}-${jersey}`) : rawName;
+        const pos = row[posIndex] || "CF";
+        if (!name) return;
+        const type = typeIndex >= 0 && row[typeIndex] ? row[typeIndex] : (["SP", "RP", "CL"].includes(pos) ? "PIT" : "BAT");
+        const age = Number(row[idx("age")]) || 24;
+        const ovr = Number(row[idx("ovr")]) || rnd(52, 76);
+        const pot = Number(row[idx("pot")]) || Math.max(ovr, rnd(65, 88));
+        const p = makePlayer([name, pos, type, age, ovr, pot, ""], cards.length);
+        p.id = idBase + cards.length + 1;
+        p.teamId = rowTeamId;
+        p.teamName = `${team.city} ${team.name}`;
+        p.rosterStatus = row[idx("rosterStatus")] || "FARM";
+        p.pitcherRole = type === "PIT" ? (row[idx("pitcherRole")] || (pos === "SP" ? "SP" : pos === "CL" ? "CL" : "MR")) : null;
+        const estimated = estimateContractForPlayer(p, cards.length);
+        const importedYears = idx("yearsLeft") >= 0 ? Number(row[idx("yearsLeft")]) : null;
+        const importedAnnual = idx("annualSalary") >= 0 ? Number(row[idx("annualSalary")]) : idx("salary") >= 0 ? Number(row[idx("salary")]) : null;
+        p.contract = {
+          yearsLeft: Number.isFinite(importedYears) && importedYears > 0 ? importedYears : estimated.yearsLeft,
+          annual: Number.isFinite(importedAnnual) && importedAnnual > 0 ? importedAnnual : estimated.annual,
+          kind: idx("contractKind") >= 0 && row[idx("contractKind")] ? row[idx("contractKind")] : estimated.kind
+        };
+        p.jerseyNumber = Number(jersey) || p.jerseyNumber;
+        ["hit","pow","spd","def","arm","pit","form","stamina","durability"].forEach((key) => {
+          if (idx(key) >= 0 && row[idx(key)]) p[key] = Number(row[idx(key)]) || p[key];
+        });
+        p.salary = p.contract.annual;
+        p.signingBonus = idx("signingBonus") >= 0 && Number(row[idx("signingBonus")]) ? Number(row[idx("signingBonus")]) : estimated.signingBonus;
+        p.serviceYears = Number(row[idx("serviceYears")]) || p.serviceYears;
+        p.serviceDays = idx("serviceDays") >= 0 && Number(row[idx("serviceDays")]) ? Number(row[idx("serviceDays")]) : p.serviceYears * KBO_SERVICE_DAYS_PER_YEAR + rnd(0, KBO_SERVICE_DAYS_PER_YEAR - 1);
+        ensureServiceTime(p);
+        p.faGrade = row[idx("faGrade")] || p.faGrade;
+        p.development = false;
+        p.foreignPlayer = idx("foreignPlayer") >= 0 ? ["Y","TRUE","1","외국인"].includes(String(row[idx("foreignPlayer")]).toUpperCase()) : isLikelyForeignName(name);
+        p.dataSource = "trade-target-import";
+        p.trait = `${p.rosterStatus === "ACTIVE" ? "1군" : "2군"} 등록 선수`;
+        ensurePositionData(p);
+        cards.push(p);
+      });
+    }
+    if (cards.length) {
+      state.tradeTargets = cards.sort((a, b) => a.teamId.localeCompare(b.teamId) || (a.rosterStatus === "ACTIVE" ? -1 : 1) || tradeValue(b) - tradeValue(a));
+      if (!silent) addNews(state, "트레이드 로스터 갱신", "선택팀 선수단과 같은 CSV 기준으로 상대 9개 구단 1군/2군 명단을 다시 불러왔다.", "트레이드");
+      return state;
+    }
+  }
+  const cards = [];
+  const idBase = Date.now() * 1000;
+  opponents(state).forEach((team) => {
+    const teamBase = (team.power || 72) * 1.75;
+    const rosterPlan = [
+      ...Array.from({ length: 15 }, (_, i) => ({ type: "BAT", status: "ACTIVE", bump: i < 9 ? 10 : 0 })),
+      ...Array.from({ length: 13 }, (_, i) => ({ type: "PIT", status: "ACTIVE", bump: i < 5 ? 10 : 0 })),
+      ...Array.from({ length: 14 }, (_, i) => ({ type: "BAT", status: "FARM", bump: i < 4 ? -4 : -12 })),
+      ...Array.from({ length: 10 }, (_, i) => ({ type: "PIT", status: "FARM", bump: i < 4 ? -4 : -12 }))
+    ];
+    rosterPlan.forEach((slot, idx) => {
+      const p = makeTradeTarget(team, teamBase + slot.bump + rnd(-18, 20) + (idx % 5) * 2, slot.type);
+      p.id = idBase + cards.length + 1;
+      p.dataSource = "trade-target";
+      p.rosterStatus = slot.status;
+      p.trait = `${slot.status === "ACTIVE" ? "1군" : "2군"} 트레이드 후보`;
+      cards.push(p);
+    });
+  });
+  state.tradeTargets = cards.sort((a, b) => a.teamId.localeCompare(b.teamId) || (a.rosterStatus === "ACTIVE" ? -1 : 1) || tradeValue(b) - tradeValue(a));
+  if (!silent) addNews(state, "트레이드 로스터 갱신", "상대 9개 구단의 1군/2군 트레이드 후보 전체를 다시 확인했다.", "트레이드");
+  return state;
+}
+
+function ensureTradeTargets(state) {
+  if (!Array.isArray(state.tradeTargets)) state.tradeTargets = [];
+  const ids = new Set(state.tradeTargets.map((p) => Number(p.id)));
+  const usesImportedTargets = state.tradeTargets.every((p) => p.dataSource === "trade-target-import");
+  if (state.day <= tradeDeadlineDay(state) && (state.tradeTargets.length < 200 || ids.size !== state.tradeTargets.length || !usesImportedTargets)) refreshTradeTargets(state, true);
+  if (state.day > tradeDeadlineDay(state)) state.tradeTargets = [];
+  return state;
+}
+
+function proposeTrade(state, outgoingId, targetId, cash) {
+  if (state.day > tradeDeadlineDay(state)) {
+    addNews(state, "트레이드 마감", "트레이드 마감일이 지나 직접 제안을 넣을 수 없다.", "트레이드");
+    return state;
+  }
+  ensureTradeTargets(state);
+  const outgoingIds = uniqueNumbers(outgoingId);
+  const targetIds = uniqueNumbers(targetId);
+  const outgoingPlayers = outgoingIds.map((id) => state.players.find((p) => p.id === id)).filter(Boolean);
+  const targetPlayers = targetIds.map((id) => state.tradeTargets.find((p) => p.id === id)).filter(Boolean);
+  const cashOffer = Math.max(0, Math.round((Number(cash) || 0) * 10) / 10);
+  if (!outgoingPlayers.length || outgoingPlayers.length !== outgoingIds.length || outgoingPlayers.some((p) => p.rosterStatus === "DEV" || isForeignPlayer(p) || p.health?.status === "INJURED")) {
+    addNews(state, "트레이드 제안 실패", "외국인 선수, 육성선수, 부상자는 트레이드 카드로 쓸 수 없다.", "규칙");
+    return state;
+  }
+  if (!targetPlayers.length || targetPlayers.length !== targetIds.length || targetPlayers.some(isForeignPlayer)) {
+    addNews(state, "트레이드 제안 실패", "상대팀 매물을 다시 선택해야 한다.", "트레이드");
+    return state;
+  }
+  const targetTeamId = targetPlayers[0].teamId;
+  if (targetPlayers.some((p) => p.teamId !== targetTeamId)) {
+    addNews(state, "트레이드 제안 실패", "한 번의 트레이드는 같은 상대팀 선수들끼리만 제안할 수 있다.", "트레이드");
+    return state;
+  }
+  if (cashOffer > state.budget) {
+    addNews(state, "트레이드 제안 보류", `현금 보전 ${money(cashOffer)}를 감당할 예산이 부족하다.`, "트레이드");
+    return state;
+  }
+
+  const outgoingValue = sumTradeValue(outgoingPlayers) + cashOffer * 7.5;
+  const targetValue = sumTradeValue(targetPlayers);
+  const gap = outgoingValue - targetValue;
+  const partnerName = targetPlayers[0].teamName;
+  const myNames = outgoingPlayers.map(tradePlayerLabel).join(", ");
+  const targetNames = targetPlayers.map(tradePlayerLabel).join(", ");
+  const accepted = gap >= -2 || (gap >= -8 && Math.random() < 0.28);
+  const need = Math.max(0, Math.round(((targetValue - outgoingValue) / 7.5) * 10) / 10);
+  const reasons = tradeFailureReasons(outgoingPlayers, targetPlayers, cashOffer, outgoingValue, targetValue);
+  if (!accepted && need > 35) {
+    addNews(state, "트레이드 거절", `${partnerName}가 ${myNames} ↔ ${targetNames} 제안을 거절했다. 이유: ${reasons.join(" · ")}. 부족분이 커서 단순 현금 보전으로는 어렵다.`, "트레이드");
+    state.morale -= 1;
+    return state;
+  }
+  if (!accepted) {
+    const already = new Set(outgoingPlayers.map((p) => p.id));
+    const shortage = targetValue - outgoingValue;
+    const extras = state.players
+      .filter((p) => !already.has(p.id) && p.rosterStatus !== "DEV" && !isForeignPlayer(p) && p.health?.status !== "INJURED")
+      .sort((a, b) => Math.abs(tradeValue(a) - shortage) - Math.abs(tradeValue(b) - shortage))
+      .slice(0, shortage > 45 ? 2 : 1);
+    const counterOutgoing = extras.length ? [...outgoingPlayers, ...extras] : outgoingPlayers;
+    const requestedCash = Math.min(state.budget, Math.max(cashOffer, Math.ceil(need * 2) / 2));
+    const counter = {
+      id: Date.now() + Math.random(),
+      fromTeamId: targetTeamId,
+      fromTeam: partnerName,
+      outgoingIds: counterOutgoing.map((p) => p.id),
+      incoming: targetPlayers,
+      cash: requestedCash,
+      deadlineDay: tradeDeadlineDay(state),
+      note: extras.length ? `거절 이유: ${reasons.join(" · ")}. ${extras.map((p) => p.name).join(", ")}까지 포함하면 검토 가능` : `거절 이유: ${reasons.join(" · ")}. 현금 보전 ${money(requestedCash)} 요구`,
+      counter: true
+    };
+    state.tradeOffers.unshift(counter);
+    state.tradeOffers = state.tradeOffers.slice(0, 6);
+    addNews(state, "트레이드 역제안", `${partnerName}가 ${targetNames}을 내주는 조건으로 역제안했다. 이유: ${reasons.join(" · ")}. 요구 카드: ${counterOutgoing.map((p) => p.name).join(", ")} / 현금 ${money(requestedCash)}.`, "트레이드");
+    return state;
+  }
+
+  state.players = state.players.filter((p) => !outgoingIds.includes(p.id));
+  const nextId = Math.max(0, ...state.players.map((p) => Number(p.id) || 0)) + 1;
+  targetPlayers.forEach((target, index) => {
+    target.id = nextId + index;
+    target.rosterStatus = rosterCounts(state).active < 28 ? "ACTIVE" : "FARM";
+    target.trait = target.trait || `${target.teamName} 출신 트레이드 영입`;
+    state.players.push(target);
+  });
+  state.tradeTargets = state.tradeTargets.filter((p) => !targetIds.includes(Number(p.id)));
+  state.tradeOffers = state.tradeOffers.filter((o) => !(o.outgoingIds || [o.outgoingId]).some((id) => outgoingIds.includes(Number(id))));
+  state.budget -= cashOffer;
+  state.morale += gap >= 0 ? 2 : 1;
+  transactionReaction(state, outgoingPlayers, targetPlayers, "트레이드");
+  ensureRosterDepth(state);
+  addNews(state, "트레이드 성사", `${partnerName}에 ${outgoingPlayers.map((p) => p.name).join(", ")}을 보내고 ${targetPlayers.map((p) => p.name).join(", ")}을 영입했다. 현금 보전 ${money(cashOffer)}.`, "트레이드");
+  return state;
+}
+
+function generateTradeOffer(state, playerId) {
+  if (state.day > tradeDeadlineDay(state)) {
+    addNews(state, "트레이드 마감", "트레이드 마감일이 지나 더 이상 새 제안을 만들 수 없다.", "트레이드");
+    return state;
+  }
+  const requested = playerId ? state.players.find((p) => p.id === Number(playerId)) : null;
+  if (requested && (requested.rosterStatus === "DEV" || isForeignPlayer(requested) || requested.health?.status === "INJURED")) {
+    addNews(state, "트레이드 불가", `${requested.name}은 외국인/육성/부상자 제한에 걸려 트레이드 카드로 쓸 수 없다.`, "규칙");
+    return state;
+  }
+  const pool = state.players.filter((p) => p.rosterStatus !== "DEV" && !isForeignPlayer(p) && p.health?.status !== "INJURED").sort((a, b) => b.ovr - a.ovr);
+  const outgoing = requested || pool[rnd(0, Math.max(0, Math.min(8, pool.length - 1)))];
+  if (!outgoing) {
+    addNews(state, "트레이드 불가", "외국인 선수, 육성선수, 부상자는 트레이드 카드로 사용할 수 없다.", "규칙");
+    return state;
+  }
+  const partner = opponents(state).slice().sort(() => Math.random() - 0.5)[0];
+  const incoming = makeTradeTarget(partner, tradeValue(outgoing), outgoing.type === "PIT" ? "BAT" : "PIT");
+  const gap = tradeValue(incoming) - tradeValue(outgoing);
+  const cash = Math.max(0, Math.round(gap * 0.12 * 10) / 10);
+  const offer = {
+    id: Date.now() + Math.random(),
+    fromTeamId: partner.id,
+    fromTeam: `${partner.city} ${partner.name}`,
+    outgoingId: outgoing.id,
+    outgoingIds: [outgoing.id],
+    incoming,
+    cash,
+    deadlineDay: tradeDeadlineDay(state),
+    note: Math.abs(gap) <= 8 ? "가치 균형" : gap > 8 ? "현금 보전 필요" : "상대가 즉전감을 원함"
+  };
+  state.tradeOffers.unshift(offer);
+  state.tradeOffers = state.tradeOffers.slice(0, 5);
+  addNews(state, "트레이드 제안", `${offer.fromTeam}가 ${outgoing.name} ↔ ${incoming.name} 딜을 문의했다. ${offer.note}.`, "트레이드");
+  return state;
+}
+
+function acceptTradeOffer(state, id) {
+  const offer = state.tradeOffers.find((o) => o.id === Number(id));
+  if (!offer) return state;
+  if (state.day > tradeDeadlineDay(state)) {
+    state.tradeOffers = state.tradeOffers.filter((o) => o.id !== offer.id);
+    addNews(state, "트레이드 무효", "마감일이 지나 제안을 진행할 수 없다.", "트레이드");
+    return state;
+  }
+  const outgoingIds = uniqueNumbers(offer.outgoingIds || offer.outgoingId);
+  const outgoingPlayers = outgoingIds.map((pid) => state.players.find((p) => p.id === pid)).filter(Boolean);
+  const incomingPlayers = Array.isArray(offer.incoming) ? offer.incoming : [offer.incoming].filter(Boolean);
+  if (!outgoingPlayers.length || outgoingPlayers.length !== outgoingIds.length || outgoingPlayers.some((p) => p.rosterStatus === "DEV" || isForeignPlayer(p) || p.health?.status === "INJURED")) {
+    addNews(state, "트레이드 무효", "외국인 선수, 육성선수, 부상자는 트레이드할 수 없다.", "규칙");
+    return state;
+  }
+  if (offer.cash > state.budget) {
+    addNews(state, "트레이드 보류", `현금 보전 ${money(offer.cash)}를 감당할 예산이 부족하다.`, "트레이드");
+    return state;
+  }
+  state.players = state.players.filter((p) => !outgoingIds.includes(p.id));
+  const nextId = Math.max(0, ...state.players.map((p) => Number(p.id) || 0)) + 1;
+  incomingPlayers.forEach((incoming, index) => {
+    incoming.id = nextId + index;
+    incoming.rosterStatus = rosterCounts(state).active < 28 ? "ACTIVE" : "FARM";
+    state.players.push(incoming);
+  });
+  state.budget -= offer.cash;
+  state.morale += sumTradeValue(incomingPlayers) >= sumTradeValue(outgoingPlayers) ? 2 : -3;
+  transactionReaction(state, outgoingPlayers, incomingPlayers, offer.counter ? "역제안 수락" : "트레이드");
+  state.tradeOffers = state.tradeOffers.filter((o) => o.id !== offer.id);
+  ensureRosterDepth(state);
+  addNews(state, "트레이드 성사", `${outgoingPlayers.map((p) => p.name).join(", ")}을 보내고 ${offer.fromTeam}에서 ${incomingPlayers.map((p) => p.name).join(", ")}을 영입했다.`, "트레이드");
+  return state;
+}
+
+function rejectTradeOffer(state, id) {
+  const offer = state.tradeOffers.find((o) => o.id === Number(id));
+  if (offer) addNews(state, "트레이드 거절", `${offer.fromTeam}의 제안을 거절했다.`, "트레이드");
+  state.tradeOffers = state.tradeOffers.filter((o) => o.id !== Number(id));
+  return state;
+}
+
+function publicState(state) {
+  ensureActiveGameDetails(state);
+  ensureLeaguePlayers(state);
+  backfillStandingsGames(state);
+  ensureTradeTargets(state);
+  pruneInvalidOffers(state);
+  updateComplaints(state);
+  updateRanks(state);
+  return {
+    ...state,
+    selectedTeam: currentTeam(state),
+    opponent: currentOpponent(state),
+    opponentProbablePitcher: state.activeGame?.opponentPitcher || ensureProbableOpponentPitcher(state),
+    scheduleInfo: currentScheduleInfo(state),
+    rank: state.teams.findIndex((t) => t.id === state.selectedTeamId) + 1,
+    teamPower: teamPower(state),
+    rosterCounts: rosterCounts(state)
+  };
+}
+
+function playGame(state) {
+  if (state.day > state.seasonGames) return state;
+  const me = currentTeam(state);
+  const opp = currentOpponent(state);
+  const myPower = teamPower(state) + rnd(-8, 8);
+  const oppPower = opp.power + rnd(-8, 8);
+  const scoringEnvironment = rnd(1, 100);
+  const runNoise = scoringEnvironment > 92 ? rnd(4, 7) : scoringEnvironment < 12 ? rnd(0, 1) : rnd(1, 5);
+  const myRuns = Math.max(0, Math.min(13, Math.round((myPower - 60) / 14 + runNoise + rnd(-1, 2))));
+  const oppRuns = Math.max(0, Math.min(13, Math.round((oppPower - 60) / 15 + runNoise + rnd(-2, 2))));
+  const finalMe = myRuns === oppRuns ? myRuns + (Math.random() > 0.5 ? 1 : 0) : myRuns;
+  const finalOpp = myRuns === oppRuns && finalMe === myRuns ? oppRuns + 1 : oppRuns;
+  const won = finalMe > finalOpp;
+
+  if (won) {
+    me.w += 1;
+    opp.l += 1;
+    state.morale += 3;
+    state.fanInterest += 2;
+    state.trainingPts += 2;
+  } else {
+    me.l += 1;
+    opp.w += 1;
+    state.morale -= 2;
+    state.fanInterest -= 1;
+    state.trainingPts += 1;
+  }
+
+  state.morale = Math.max(20, Math.min(95, state.morale));
+  state.fanInterest = Math.max(25, Math.min(98, state.fanInterest));
+  state.budget += won ? 0.4 : 0.1;
+
+  const activeBatters = state.players
+    .filter((p) => p.rosterStatus === "ACTIVE" && p.type === "BAT" && p.health?.status !== "INJURED")
+    .sort((a, b) => b.ovr - a.ovr)
+    .slice(0, 9);
+  const autoPositions = FIELD_POSITIONS.slice(0, activeBatters.length);
+  const activePitchers = state.players
+    .filter((p) => p.rosterStatus === "ACTIVE" && p.type === "PIT" && p.health?.status !== "INJURED")
+    .sort((a, b) => b.ovr - a.ovr);
+  const starter = activePitchers.find((p) => p.pitcherRole === "SP" || p.pos === "SP") || activePitchers[0];
+  const relievers = activePitchers.filter((p) => p.id !== starter?.id);
+  const pitcherUsage = {};
+  if (starter) pitcherUsage[starter.id] = rnd(78, 108);
+  const maxRelievers = Math.min(relievers.length, Math.abs(finalMe - finalOpp) <= 3 ? 3 : 4);
+  const relieverCount = maxRelievers > 0 ? rnd(1, maxRelievers) : 0;
+  relievers.slice(0, relieverCount).forEach((p) => {
+    pitcherUsage[p.id] = rnd(p.pitcherRole === "CL" ? 8 : 12, p.pitcherRole === "CL" ? 22 : 31);
+  });
+  const lineupSet = new Set(activeBatters.map((p) => p.id));
+  const usedPitcherSet = new Set(Object.keys(pitcherUsage).map(Number));
+
+  for (const p of state.players) {
+    if (p.rosterStatus !== "ACTIVE") continue;
+    const played = lineupSet.has(p.id) || usedPitcherSet.has(p.id);
+    p.happy = Math.max(30, Math.min(96, p.happy + (won ? 1 : -1) + (played ? 0 : -0.2)));
+    if (p.type === "BAT") {
+      if (!lineupSet.has(p.id)) continue;
+      p.stats.hr += Math.random() < p.pow / 900 ? 1 : 0;
+      p.stats.rbi += rnd(0, Math.max(1, Math.round(p.hit / 35)));
+      p.stats.sb = (p.stats.sb || 0) + (Math.random() < p.spd / 1200 ? 1 : 0);
+      const pa = rnd(2, 5);
+      const hits = Math.max(0, Math.min(pa, Math.round((p.hit / 100) * pa + rnd(-1, 1))));
+      p.stats.pa = (p.stats.pa || 0) + pa;
+      p.stats.h = (p.stats.h || 0) + hits;
+      p.stats.r = (p.stats.r || 0) + rnd(0, hits + (p.spd > 70 ? 1 : 0));
+      const atBats = Math.max(1, p.stats.pa);
+      p.stats.avg = Math.min(0.38, Math.max(0.18, p.stats.h / atBats));
+      p.stats.obp = Math.min(0.46, Math.max(p.stats.avg, p.stats.avg + 0.04 + (p.hit / 1000)));
+      p.stats.slg = Math.min(0.68, Math.max(0.25, p.stats.avg + (p.pow / 260)));
+    } else {
+      const pitches = pitcherUsage[p.id] || 0;
+      if (!pitches) continue;
+      p.stats.so += Math.max(0, Math.round((pitches * (p.pit || 60)) / 650) + rnd(0, 2));
+      p.stats.ip = (p.stats.ip || 0) + Math.round((pitches / 15) * 10) / 10;
+      p.stats.era = Math.min(7.5, Math.max(1.8, (p.stats.era || 3.8) + (Math.random() - 0.52) / 3));
+      if (won && p.id === starter?.id) p.stats.win += 1;
+      if (p.pitcherRole === "CL" && won && Math.random() < 0.28) p.stats.sv = (p.stats.sv || 0) + 1;
+      if (["MR","SU"].includes(p.pitcherRole) && won && Math.random() < 0.18) p.stats.hold = (p.stats.hold || 0) + 1;
+    }
+  }
+  applyPostGameFatigue(state, pitcherUsage, activeBatters.map((p) => p.id), autoPositions);
+
+  state.lastGame = { opp: `${opp.city} ${opp.name}`, me: finalMe, them: finalOpp, won };
+  state.games.unshift({ day: state.day, text: `${won ? "승" : "패"} · ${me.city} ${me.name} ${finalMe}-${finalOpp} ${opp.city} ${opp.name}` });
+  state.games = state.games.slice(0, 12);
+  addNews(state, won ? `${me.short}, 접전 끝 승리` : `${me.short}, 아쉬운 패배`, `${opp.city} ${opp.name}전 ${finalMe}-${finalOpp}. ${won ? "젊은 코어의 성장세가 눈에 띄었다." : "불펜 피로와 타선 기복이 다음 과제로 남았다."}`, "경기");
+
+  const playedPlayers = state.players.filter((p) => lineupSet.has(p.id) || usedPitcherSet.has(p.id));
+  maybeAutomaticInjury(state, playedPlayers, "game");
+  if (state.day % 6 === 0 || Math.random() < 0.18) generateOffer(state);
+  if (state.day % 12 === 0) ageAndDevelop(state);
+  progressPitchTraining(state);
+  accrueServiceDays(state);
+  simulateOtherTeams(state);
+  state.day += 1;
+  if (state.day > state.seasonGames) finalizeSeasonAwards(state);
+  return state;
+}
+
+function trainPlayer(state, id, focus) {
+  const p = state.players.find((x) => x.id === id);
+  if (!p) {
+    addNews(state, "훈련 실패", "선수를 다시 선택해야 한다.", "육성");
+    return state;
+  }
+  ensurePositionData(p);
+  const room = Math.max(0, p.pot - p.ovr);
+  const gain = room > 16 ? rnd(2, 4) : rnd(1, 2);
+  if (String(focus || "").startsWith("pos:") && p.type === "BAT") {
+    const pos = String(focus).split(":")[1];
+    if (FIELD_POSITIONS.includes(pos)) {
+      p.positionTraining[pos] = Math.min(100, (p.positionTraining[pos] || (p.secondaryPositions.includes(pos) ? 70 : 0)) + rnd(12, 20));
+      p.def = Math.min(99, p.def + 1);
+      p.form = Math.max(35, Math.min(96, p.form + rnd(-1, 2)));
+      p.happy = Math.max(25, Math.min(98, p.happy + (pos === p.pos ? 1 : -1)));
+      if (p.positionTraining[pos] >= 60 && !p.secondaryPositions.includes(pos)) p.secondaryPositions.push(pos);
+      if (p.positionTraining[pos] >= 85) p.pos = pos;
+      p.ovr = recalcOvr(p);
+      state.selectedId = id;
+      addNews(state, "포지션 훈련", `${p.name}이 ${pos} 수비 훈련을 진행했다. 숙련도 ${p.positionTraining[pos]}%, 현재 포지션 ${p.pos}.`, "육성");
+      return state;
+    }
+  }
+  if (String(focus || "").startsWith("pitch:") && p.type === "PIT") {
+    ensurePitchArsenal(p);
+    const pitchType = String(focus).split(":")[1];
+    const pitch = p.pitchArsenal.find((item) => item.type === pitchType);
+    state.selectedId = id;
+    if (!pitch) {
+      addNews(state, "구종 훈련 실패", `${p.name}은 아직 ${pitchType}을 실전 구종으로 쓰지 않는다.`, "육성");
+      return state;
+    }
+    p.pitchTraining = { mode: "refine", type: pitchType, progress: 0, days: 0 };
+    p.happy = Math.min(98, p.happy + 1);
+    addNews(state, "구종 훈련 지시", `${p.name}에게 ${pitchType} 집중 훈련을 지시했다. 경기 일정을 진행하면 숙련도가 오른다.`, "육성");
+    return state;
+  }
+  if (String(focus || "").startsWith("pitchnew:") && p.type === "PIT") {
+    ensurePitchArsenal(p);
+    const pitchType = String(focus).split(":")[1];
+    state.selectedId = id;
+    if (!pitchCatalogByType(pitchType)) return state;
+    if (p.pitchArsenal.some((item) => item.type === pitchType)) {
+      addNews(state, "신구종 훈련 보류", `${p.name}은 이미 ${pitchType}을 던진다. 기존 구종 훈련으로 전환하세요.`, "육성");
+      return state;
+    }
+    if ((p.pitchArsenal || []).length >= 6) {
+      addNews(state, "신구종 훈련 보류", `${p.name}은 이미 구종이 많아 새 구종보다 기존 결정구 완성도가 우선이다.`, "육성");
+      return state;
+    }
+    p.pitchTraining = { mode: "new", type: pitchType, progress: 0, days: 0 };
+    p.happy = Math.max(25, p.happy - 1);
+    addNews(state, "신구종 훈련 지시", `${p.name}이 ${pitchType} 습득 훈련을 시작했다. 며칠 일정이 지나 진행률 100%가 되면 실전 구종에 추가된다.`, "육성");
+    return state;
+  }
+  if (state.trainingPts < 2) {
+    state.selectedId = p.id;
+    addNews(state, "훈련 포인트 부족", `${p.name} 집중 훈련에는 포인트 2가 필요하다. 포지션 훈련은 포인트 없이 지시할 수 있다.`, "육성");
+    return state;
+  }
+  state.trainingPts -= 2;
+  p.form = Math.min(96, p.form + rnd(2, 5));
+  p.happy = Math.min(96, p.happy + 1);
+  if (p.health?.status === "OK" && Math.random() < injuryRisk(p, "training")) randomInjury(state, p.id, "training");
+  if (focus === "hit") p.hit = Math.min(99, p.hit + gain);
+  if (focus === "pow") p.pow = Math.min(99, p.pow + gain);
+  if (focus === "def") p.def = Math.min(99, p.def + gain);
+  if (focus === "arm") p.arm = Math.min(99, (p.arm || playerArmFallback(p)) + gain);
+  if (focus === "pit") p.pit = Math.min(99, p.pit + gain);
+  p.ovr = recalcOvr(p);
+  state.selectedId = id;
+  addNews(state, "훈련 리포트", `${p.name}의 집중 훈련이 완료됐다. 현재 능력치가 ${p.ovr}까지 조정됐다.`, "육성");
+  return state;
+}
+
+function scout(state, league) {
+  const names = league === "MLB"
+    ? ["도미닉 헤일", "마테오 크루즈", "잭 밀러", "노아 벤튼"]
+    : ["사토 렌", "나카무라 하루", "모리 켄타", "야마다 슌"];
+  const pos = ["SP", "SS", "CF", "1B", "RP"][rnd(0, 4)];
+  const ovr = rnd(58, 78);
+  const player = {
+    name: names[rnd(0, names.length - 1)],
+    pos,
+    age: rnd(19, 30),
+    ovr,
+    pot: rnd(Math.max(ovr, 70), 91),
+    price: rnd(18, 54) / 10,
+    league
+  };
+  state.scout.unshift(player);
+  addNews(state, "스카우팅 보고서", `${league} 시장에서 ${player.name}(${player.pos}) 리포트가 도착했다. 추정 현재 ${player.ovr}, 잠재 ${player.pot}.`, "스카우트");
+  return state;
+}
+
+function signScout(state, index) {
+  const s = state.scout[index];
+  if (!s || state.budget < s.price) return state;
+  const id = Math.max(0, ...state.players.map((p) => p.id)) + 1;
+  const isPitcher = ["SP", "RP", "CL"].includes(s.pos);
+  state.budget -= s.price;
+  state.players.push({
+    id,
+    name: s.name,
+    pos: s.pos,
+    type: isPitcher ? "PIT" : "BAT",
+    age: s.age,
+    ovr: s.ovr,
+    pot: s.pot,
+    hit: rnd(45, 75),
+    pow: rnd(40, 78),
+    spd: rnd(35, 82),
+    def: rnd(42, 80),
+    arm: isPitcher ? rnd(55, 88) : rnd(42, 86),
+    pit: isPitcher ? s.ovr + rnd(-3, 7) : rnd(10, 25),
+    form: rnd(58, 82),
+    years: rnd(1, 4),
+    salary: s.price,
+    happy: rnd(62, 84),
+    trait: `${s.league} 영입`,
+    foreignPlayer: true,
+    stats: isPitcher ? { era: 0, win: 0, so: 0, sv: 0, hold: 0, ip: 0 } : { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, obp: 0, slg: 0 }
+  });
+  addNews(state, "신규 영입", `${s.name} 영입 완료. ${s.league} 스카우팅 라인이 첫 성과를 냈다.`, "이적");
+  state.scout.splice(index, 1);
+  state.selectedId = id;
+  return state;
+}
+
+function rosterCounts(state) {
+  return {
+    active: state.players.filter((p) => p.rosterStatus === "ACTIVE").length,
+    farm: state.players.filter((p) => p.rosterStatus === "FARM").length,
+    development: state.players.filter((p) => p.rosterStatus === "DEV").length,
+    registered: state.players.filter((p) => p.rosterStatus !== "DEV").length
+  };
+}
+
+function setRosterStatus(state, id, status) {
+  const p = state.players.find((x) => x.id === Number(id));
+  if (!p) return state;
+  state.selectedId = p.id;
+  const counts = rosterCounts(state);
+  if (status === "ACTIVE") {
+    if (p.rosterStatus === "DEV") return state;
+    if (p.options <= 0 && p.rosterStatus === "FARM") {
+      addNews(state, "승격 보류", `${p.name}은 옵션이 없어 1군 등록 전 웨이버/등록 규칙 검토가 필요하다.`, "규칙");
+      return state;
+    }
+    if (counts.active >= 28 && p.rosterStatus !== "ACTIVE") {
+      const demotion = state.players
+        .filter((x) => x.id !== p.id && x.rosterStatus === "ACTIVE" && x.rosterStatus !== "DEV")
+        .sort((a, b) => {
+          const sameType = (b.type === p.type ? 1 : 0) - (a.type === p.type ? 1 : 0);
+          return sameType || a.ovr - b.ovr || a.form - b.form;
+        })[0];
+      if (!demotion) return state;
+      demotion.rosterStatus = "FARM";
+      demotion.options = Math.max(0, (demotion.options || 0) - 1);
+      addNews(state, "엔트리 자동 말소", `1군 정원 28명 제한으로 ${demotion.name}을 2군 말소하고 ${p.name}을 콜업한다.`, "프런트");
+    }
+  }
+  if (status === "FARM" && p.rosterStatus === "ACTIVE") p.options = Math.max(0, p.options - 1);
+  if (status === "FARM" && p.rosterStatus === "DEV") return state;
+  p.rosterStatus = status;
+  addNews(state, "엔트리 변동", `${p.name}의 소속이 ${status === "ACTIVE" ? "1군" : status === "FARM" ? "2군" : "육성"}으로 변경됐다.`, "프런트");
+  return state;
+}
+
+function createDevelopmentPlayer(state, body) {
+  const id = Math.max(0, ...state.players.map((p) => p.id)) + 1;
+  const pos = body.pos || ["SP", "C", "SS", "CF", "1B"][rnd(0, 4)];
+  const name = String(body.name || ["한도겸", "류서안", "강이준", "백시온", "오태겸"][rnd(0, 4)]).trim().slice(0, 12);
+  const isPitcher = ["SP", "RP", "CL"].includes(pos);
+  const clamp = (value, min, max, fallback) => {
+    const n = Number(value);
+    if (!Number.isFinite(n)) return fallback;
+    return Math.max(min, Math.min(max, Math.round(n)));
+  };
+  const ovr = clamp(body.ovr, 35, 75, rnd(44, 58));
+  const pot = Math.max(ovr, clamp(body.pot, 45, 95, rnd(Math.max(62, ovr + 10), 86)));
+  const age = clamp(body.age, 16, 45, rnd(18, 23));
+  const p = makePlayer([name, pos, isPitcher ? "PIT" : "BAT", age, ovr, pot, "육성선수"], id - 1);
+  p.id = id;
+  p.hit = clamp(body.hit, 20, 90, p.hit);
+  p.pow = clamp(body.pow, 20, 90, p.pow);
+  p.spd = clamp(body.spd, 20, 90, p.spd);
+    p.def = clamp(body.def, 20, 90, p.def);
+  p.arm = clamp(body.arm, 20, 95, p.arm);
+  p.pit = clamp(body.pit, 20, 90, p.pit);
+  p.stamina = clamp(body.stamina, 20, 95, p.stamina);
+  p.durability = clamp(body.durability, 20, 95, p.durability);
+  p.ovr = ovr;
+  p.pot = pot;
+  p.rosterStatus = "DEV";
+  p.development = true;
+  p.contract = { yearsLeft: 1, annual: 0.3, kind: "육성계약" };
+  p.salary = 0.3;
+  p.serviceYears = 0;
+  p.options = 0;
+  state.players.push(p);
+  state.budget = Math.max(0, state.budget - 0.3);
+  addNews(state, "육성선수 등록", `${p.name}(${p.pos})을 육성선수로 등록했다. 정식 전환 전까지 1군 출전은 불가하다.`, "육성");
+  return state;
+}
+
+function convertDevelopmentPlayer(state, id) {
+  const p = state.players.find((x) => x.id === Number(id));
+  const counts = rosterCounts(state);
+  if (p) state.selectedId = p.id;
+  if (!p || p.rosterStatus !== "DEV" || counts.registered >= 65 || state.budget < 0.8) return state;
+  p.rosterStatus = "FARM";
+  p.development = false;
+  p.options = 3;
+  p.contract = { yearsLeft: 1, annual: 0.8, kind: "최저연봉계약" };
+  p.salary = 0.8;
+  state.budget -= 0.8;
+  addNews(state, "정식선수 전환", `${p.name}을 정식 선수로 전환했다. 2군 등록 후 콜업 가능하다.`, "육성");
+  return state;
+}
+
+function generateFreeAgents(state) {
+  const names = ["권도윤", "서재호", "민태준", "이강률", "정세완", "한주혁", "박태민"];
+  state.freeAgents = Array.from({ length: 7 }, (_, i) => {
+    const ovr = rnd(62, 84);
+    const grade = ovr >= 78 ? "A" : ovr >= 70 ? "B" : "C";
+    const annual = Math.round((ovr * 0.11 + rnd(0, 35) / 10) * 10) / 10;
+    return {
+      id: Date.now() + i,
+      name: names[i],
+      pos: ["SP", "SS", "CF", "1B", "RP", "C", "LF"][i],
+      type: ["SP", "RP"].includes(["SP", "SS", "CF", "1B", "RP", "C", "LF"][i]) ? "PIT" : "BAT",
+      age: rnd(28, 36),
+      ovr,
+      pot: Math.max(ovr, ovr + rnd(0, 4)),
+      grade,
+      previousSalary: annual,
+      askYears: rnd(2, 5),
+      askAnnual: Math.round(annual * (1.05 + Math.random() * 0.35) * 10) / 10
+    };
+  });
+  addNews(state, "FA 시장 개장", "등급제 보상 규칙이 적용되는 FA 후보 명단이 업데이트됐다.", "FA");
+  return state;
+}
+
+function faCompensation(fa, includePlayer) {
+  if (fa.grade === "A") return includePlayer ? { cash: fa.previousSalary * 2, protected: 20 } : { cash: fa.previousSalary * 3, protected: 0 };
+  if (fa.grade === "B") return includePlayer ? { cash: fa.previousSalary, protected: 25 } : { cash: fa.previousSalary * 2, protected: 0 };
+  return { cash: fa.previousSalary * 1.5, protected: 0 };
+}
+
+function signFreeAgent(state, id, includePlayer) {
+  const fa = state.freeAgents.find((x) => x.id === Number(id));
+  if (!fa) return state;
+  const comp = faCompensation(fa, includePlayer && fa.grade !== "C");
+  const total = fa.askAnnual * fa.askYears + comp.cash;
+  const counts = rosterCounts(state);
+  if (counts.registered >= 65 || state.budget < total) return state;
+  const newId = Math.max(0, ...state.players.map((p) => p.id)) + 1;
+  const p = makePlayer([fa.name, fa.pos, fa.type, fa.age, fa.ovr, fa.pot, `FA ${fa.grade}등급`], newId - 1);
+  p.id = newId;
+  p.rosterStatus = counts.active < 28 ? "ACTIVE" : "FARM";
+  p.contract = { yearsLeft: fa.askYears, annual: fa.askAnnual };
+  p.salary = fa.askAnnual;
+  p.serviceYears = 8;
+  p.faGrade = fa.grade;
+  p.foreignPlayer = false;
+  state.players.push(p);
+  state.budget -= total;
+  if (includePlayer && fa.grade !== "C") {
+    const protectCount = comp.protected;
+    const protectedIds = state.players.slice().filter((x) => x.id !== p.id && x.rosterStatus !== "DEV").sort((a, b) => b.ovr - a.ovr).slice(0, protectCount).map((x) => x.id);
+    const compensation = state.players.filter((x) => x.id !== p.id && x.rosterStatus !== "DEV" && !protectedIds.includes(x.id)).sort((a, b) => b.ovr - a.ovr)[0];
+    if (compensation) {
+      state.players = state.players.filter((x) => x.id !== compensation.id);
+      addNews(state, "FA 보상선수 이탈", `${fa.name} 영입 보상으로 ${compensation.name}이 원소속 구단에 지명됐다.`, "FA");
+      transactionReaction(state, [compensation], [p], "FA 보상 포함 계약");
+    } else {
+      transactionReaction(state, [], [p], "FA 계약");
+    }
+  } else {
+    transactionReaction(state, [], [p], "FA 계약");
+  }
+  state.freeAgents = state.freeAgents.filter((x) => x.id !== fa.id);
+  addNews(state, "FA 계약 완료", `${fa.name}과 ${fa.askYears}년 ${money(fa.askAnnual)} 계약. 보상금 ${money(comp.cash)}이 반영됐다.`, "FA");
+  return state;
+}
+
+function setPitcherRole(state, id, role) {
+  const p = state.players.find((x) => x.id === Number(id) && x.type === "PIT");
+  if (!p) return state;
+  state.selectedId = p.id;
+  p.pitcherRole = role;
+  if (role === "SP") p.pos = "SP";
+  if (role === "CL") p.pos = "CL";
+  if (role === "SU" || role === "MR" || role === "LR") p.pos = "RP";
+  p.happy = Math.min(96, p.happy + (p.pos === "SP" && role !== "SP" ? -3 : 2));
+  addNews(state, "투수 보직 변경", `${p.name}의 보직을 ${pitcherRoleLabel(role)}로 조정했다.`, "선수단");
+  updateComplaints(state);
+  return state;
+}
+
+function pitcherRoleLabel(role) {
+  return { SP: "선발", LR: "롱릴리프", MR: "중간계투", SU: "셋업맨", CL: "마무리" }[role] || role;
+}
+
+function injuryRisk(p, context = "game") {
+  if (!p || p.health?.status !== "OK") return 0;
+  let risk = context === "training" ? 0.006 : 0.01;
+  if (p.type === "PIT") risk += 0.004;
+  if (p.pitcherRole === "SP") risk += 0.004;
+  if ((p.form || 70) < 55) risk += 0.012;
+  if ((p.stamina || 70) < 55) risk += 0.008;
+  if ((p.age || 25) >= 35) risk += 0.006;
+  const durability = Number(p.durability) || 65;
+  risk += Math.max(-0.008, Math.min(0.022, (65 - durability) / 1800));
+  if (context === "manual-game") risk += 0.004;
+  return Math.min(0.055, Math.max(0, risk));
+}
+
+function maybeAutomaticInjury(state, candidates, context = "game") {
+  const pool = [...new Set((candidates || []).filter(Boolean))]
+    .filter((p) => p.health?.status === "OK" && p.rosterStatus !== "DEV")
+    .sort(() => Math.random() - 0.5);
+  for (const p of pool) {
+    if (Math.random() < injuryRisk(p, context)) return randomInjury(state, p.id, context);
+  }
+  return state;
+}
+
+function randomInjury(state, id, context = "game") {
+  const p = state.players.find((x) => x.id === Number(id)) || state.players.filter((x) => x.health?.status !== "INJURED").sort(() => Math.random() - 0.5)[0];
+  if (!p) return state;
+  const pool = p.type === "PIT"
+    ? [["어깨 염증", 18], ["팔꿈치 통증", 28], ["등 근육 긴장", 12], ["손가락 물집", 7]]
+    : [["햄스트링", 16], ["손목 염좌", 14], ["허리 담 증세", 10], ["발목 염좌", 12]];
+  const picked = pool[rnd(0, pool.length - 1)];
+  p.health = { status: "INJURED", injury: picked[0], days: picked[1] + rnd(-3, 8), rehab: 0 };
+  p.rosterStatus = "FARM";
+  p.form = Math.max(30, p.form - 12);
+  p.happy = Math.max(30, p.happy - 5);
+  const prefix = context === "training" ? "훈련 중" : "경기 중";
+  addNews(state, "부상 발생", `${p.name}이 ${prefix} ${picked[0]}으로 이탈했다. 예상 공백은 ${p.health.days}일.`, "의료");
+  updateComplaints(state);
+  return state;
+}
+
+function advanceRehab(state, id) {
+  const p = state.players.find((x) => x.id === Number(id));
+  if (!p || p.health?.status === "OK") return state;
+  state.selectedId = p.id;
+  const gain = rnd(5, 11);
+  p.health.rehab = Math.min(100, (p.health.rehab || 0) + gain);
+  p.health.days = Math.max(0, (p.health.days || 0) - rnd(2, 5));
+  if (p.health.rehab >= 100 || p.health.days <= 0) {
+    p.health = { status: "REHAB", injury: null, days: 0, rehab: 100 };
+    p.form = Math.min(72, p.form + 8);
+    addNews(state, "재활 경기 가능", `${p.name}이 재활 경기 단계에 들어갔다. 2군에서 실전 감각을 확인하세요.`, "의료");
+  } else {
+    addNews(state, "재활 리포트", `${p.name} 재활 진행률 ${p.health.rehab}%.`, "의료");
+  }
+  updateComplaints(state);
+  return state;
+}
+
+function clearRehab(state, id) {
+  const p = state.players.find((x) => x.id === Number(id));
+  if (!p || p.health?.status === "OK") return state;
+  state.selectedId = p.id;
+  if ((p.health.rehab || 0) < 80) {
+    addNews(state, "복귀 보류", `${p.name}의 재활 진행률이 낮아 복귀를 보류했다.`, "의료");
+    return state;
+  }
+  p.health = { status: "OK", injury: null, days: 0, rehab: 0 };
+  p.form = Math.min(88, p.form + 6);
+  addNews(state, "부상 복귀", `${p.name}이 정상 훈련에 복귀했다.`, "의료");
+  updateComplaints(state);
+  return state;
+}
+
+function talkToPlayer(state, id, tone) {
+  const p = state.players.find((x) => x.id === Number(id));
+  if (!p) {
+    addNews(state, "면담 실패", "선수를 다시 선택해야 한다.", "면담");
+    return state;
+  }
+  state.selectedId = p.id;
+  const topic = complaintFor(p).topic;
+  let delta = 0;
+  let text = "";
+  if (tone === "promise") {
+    delta = topic === "안정" ? 1 : 8;
+    text = `${p.name}에게 역할 개선을 약속했다. 단기간 내 지키지 못하면 불만이 다시 커질 수 있다.`;
+  } else if (tone === "honest") {
+    delta = topic === "안정" ? 2 : 4;
+    text = `${p.name}과 현실적인 팀 계획을 공유했다.`;
+  } else if (tone === "strict") {
+    delta = topic === "안정" ? -1 : -6;
+    text = `${p.name}에게 경쟁 원칙을 분명히 전달했다.`;
+  } else {
+    delta = 2;
+    text = `${p.name}의 이야기를 들었다.`;
+  }
+  p.happy = Math.max(20, Math.min(98, p.happy + delta));
+  p.complaint = complaintFor(p);
+  addNews(state, "1:1 면담", text, "면담");
+  return state;
+}
+
+function acceptOffer(state, id) {
+  const offer = state.offers.find((o) => o.id === id);
+  if (!offer) return state;
+  const p = state.players.find((x) => x.id === offer.playerId);
+  if (!p) return state;
+  if (!isFaEligiblePlayer(p)) {
+    state.offers = state.offers.filter((o) => o.id !== id);
+    addNews(state, "해외 오퍼 무효", `${p.name}은 현재 FA/계약 만료 조건을 충족하지 않아 해외 이적 제안을 진행할 수 없다.`, "규칙");
+    return state;
+  }
+  state.players = state.players.filter((x) => x.id !== offer.playerId);
+  state.budget += offer.fee;
+  state.morale -= p.ovr >= 76 ? 8 : 3;
+  state.fanInterest += offer.league.includes("North") ? 4 : 2;
+  transactionReaction(state, [p], [], "해외 진출");
+  state.offers = state.offers.filter((o) => o.id !== id);
+  state.selectedId = state.players[0]?.id || null;
+  addNews(state, "해외 진출 확정", `${p.name}이 ${offer.club}로 향한다. 구단은 보상금 ${money(offer.fee)}를 확보했다.`, "이적");
+  return state;
+}
+
+function adjustPlayerContract(state, id, mode) {
+  const p = state.players.find((x) => x.id === Number(id));
+  if (!p || p.rosterStatus === "DEV") return state;
+  state.selectedId = p.id;
+  if (!p.contract) p.contract = { yearsLeft: p.years || 1, annual: p.salary || 1 };
+  const oldAnnual = Number(p.contract.annual || p.salary || 1);
+  if (mode === "extend") {
+    const newAnnual = Math.round(oldAnnual * (1.08 + Math.max(0, (p.ovr || 65) - 72) * 0.012) * 10) / 10;
+    if (state.budget < Math.max(0, newAnnual - oldAnnual)) {
+      addNews(state, "계약 협상 보류", `${p.name} 장기계약 인상분을 감당할 예산이 부족하다.`, "계약");
+      return state;
+    }
+    p.contract = { yearsLeft: Math.max(2, Math.min(5, (p.contract.yearsLeft || 1) + 2)), annual: newAnnual, kind: "장기계약" };
+    p.salary = newAnnual;
+    p.happy = Math.min(98, (p.happy || 70) + 8);
+    state.budget -= Math.max(0, newAnnual - oldAnnual);
+    const fanBoost = playerIconLevel(p) >= 4 ? 5 : 2;
+    state.fanInterest += fanBoost;
+    state.morale += 3;
+    clampTeamPulse(state);
+    addNews(state, "연봉 조정 완료", `${p.name}과 ${p.contract.yearsLeft}년 ${money(newAnnual)} 조건으로 조정했다. ${playerStatusTags(p).includes("프랜차이즈 스타") ? "프랜차이즈 스타 잔류에 팬 반응이 뜨겁다." : "선수단은 구단이 핵심 전력 관리에 나섰다고 받아들인다."}`, "계약");
+    return state;
+  }
+  if (mode === "cut") {
+    const cutAnnual = Math.max(0.3, Math.round(oldAnnual * 0.88 * 10) / 10);
+    p.contract.annual = cutAnnual;
+    p.contract.kind = p.contract.kind || "연봉계약";
+    p.salary = cutAnnual;
+    p.happy = Math.max(20, (p.happy || 70) - (playerIconLevel(p) >= 4 ? 14 : 8));
+    state.budget += Math.max(0, oldAnnual - cutAnnual);
+    state.morale -= playerIconLevel(p) >= 4 ? 5 : 2;
+    state.fanInterest -= playerIconLevel(p) >= 4 ? 4 : 1;
+    clampTeamPulse(state);
+    addNews(state, "연봉 삭감 반응", `${p.name}의 연봉을 ${money(oldAnnual)}에서 ${money(cutAnnual)}로 낮췄다. ${playerIconLevel(p) >= 4 ? "상징성 있는 선수라 팬과 선수단 반응이 좋지 않다." : "구단 재정 관리 차원의 조정으로 받아들여진다."}`, "계약");
+    return state;
+  }
+  return state;
+}
+
+function rejectOffer(state, id) {
+  const offer = state.offers.find((o) => o.id === id);
+  if (!offer) return state;
+  const p = state.players.find((x) => x.id === offer.playerId);
+  if (p) {
+    p.happy = Math.max(30, p.happy - 7);
+    addNews(state, "오퍼 거절", `${p.name}의 ${offer.club}행 제안을 보류했다. 선수 측은 출전 시간과 비전을 요구하고 있다.`, "이적");
+  }
+  state.offers = state.offers.filter((o) => o.id !== id);
+  return state;
+}
+
+function setSeasonGoal(state, level) {
+  const goals = {
+    rebuild: { level: "rebuild", label: "리빌딩과 유망주 성장", reward: 5, penalty: 2 },
+    playoff: { level: "playoff", label: "포스트시즌 진출", reward: 8, penalty: 4 },
+    top3: { level: "top3", label: "정규시즌 3위권", reward: 11, penalty: 6 },
+    champion: { level: "champion", label: "정규시즌 우승", reward: 15, penalty: 9 }
+  };
+  state.seasonGoal = goals[level] || goals.playoff;
+  addNews(state, "시즌 목표 설정", `구단 목표를 '${state.seasonGoal.label}'로 설정했다.`, "구단");
+  return state;
+}
+
+function parseBody(req) {
+  return new Promise((resolve) => {
+    let body = "";
+    req.on("data", (chunk) => { body += chunk; });
+    req.on("end", () => {
+      try {
+        resolve(body ? JSON.parse(body) : {});
+      } catch {
+        resolve({});
+      }
+    });
+  });
+}
+
+function sendJson(res, status, data) {
+  res.writeHead(status, { "Content-Type": "application/json; charset=utf-8" });
+  res.end(JSON.stringify(data));
+}
+
+function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    const next = text[i + 1];
+    if (quoted && ch === '"' && next === '"') {
+      cell += '"';
+      i += 1;
+    } else if (ch === '"') {
+      quoted = !quoted;
+    } else if (!quoted && ch === ",") {
+      row.push(cell.trim());
+      cell = "";
+    } else if (!quoted && (ch === "\n" || ch === "\r")) {
+      if (cell || row.length) {
+        row.push(cell.trim());
+        rows.push(row);
+        row = [];
+        cell = "";
+      }
+      if (ch === "\r" && next === "\n") i += 1;
+    } else {
+      cell += ch;
+    }
+  }
+  if (cell || row.length) {
+    row.push(cell.trim());
+    rows.push(row);
+  }
+  return rows;
+}
+
+function importPlayersFromCsv(state, csv, source) {
+  const rows = parseCsv(String(csv || ""));
+  if (rows.length < 2) return state;
+  const headers = rows[0].map((h) => h.trim());
+  const idx = (name) => headers.indexOf(name);
+  const teamIdIndex = idx("teamId");
+  const nameIndex = idx("name");
+  const posIndex = idx("pos");
+  const typeIndex = idx("type");
+  if (nameIndex < 0 || posIndex < 0) return state;
+
+  const targetTeamId = state.selectedTeamId;
+  const imported = [];
+  let nextId = 1;
+  for (const row of rows.slice(1)) {
+    const rowTeamId = teamIdIndex >= 0 ? row[teamIdIndex] : targetTeamId;
+    if (rowTeamId && rowTeamId !== targetTeamId) continue;
+    const rawName = row[nameIndex];
+    const rowSource = (idx("source") >= 0 && row[idx("source")]) || source || "user-import";
+    const shouldAlias = String(rowSource).startsWith("KBO") && !String(rowSource).includes("Public Alias");
+    const name = shouldAlias ? publicAliasName(rawName, `${rowTeamId}-${idx("jerseyNumber") >= 0 ? row[idx("jerseyNumber")] : ""}`) : rawName;
+    const pos = row[posIndex] || "CF";
+    if (!name) continue;
+    const type = typeIndex >= 0 && row[typeIndex] ? row[typeIndex] : (["SP", "RP", "CL"].includes(pos) ? "PIT" : "BAT");
+    const age = Number(row[idx("age")]) || 24;
+    const ovr = Number(row[idx("ovr")]) || rnd(52, 76);
+    const pot = Number(row[idx("pot")]) || Math.max(ovr, rnd(65, 88));
+    const seed = [name, pos, type, age, ovr, pot, row[idx("trait")] || ""];
+    const p = makePlayer(seed, nextId - 1);
+    p.id = nextId++;
+    p.rosterStatus = row[idx("rosterStatus")] || "FARM";
+    p.pitcherRole = type === "PIT" ? (row[idx("pitcherRole")] || (pos === "SP" ? "SP" : pos === "CL" ? "CL" : "MR")) : null;
+    const estimated = estimateContractForPlayer(p, state.players.length);
+    const importedYears = idx("yearsLeft") >= 0 ? Number(row[idx("yearsLeft")]) : null;
+    const importedAnnual = idx("annualSalary") >= 0 ? Number(row[idx("annualSalary")]) : idx("salary") >= 0 ? Number(row[idx("salary")]) : null;
+    p.contract = {
+      yearsLeft: Number.isFinite(importedYears) && importedYears > 0 ? importedYears : estimated.yearsLeft,
+      annual: Number.isFinite(importedAnnual) && importedAnnual > 0 ? importedAnnual : estimated.annual,
+      kind: idx("contractKind") >= 0 && row[idx("contractKind")] ? row[idx("contractKind")] : estimated.kind
+    };
+    p.jerseyNumber = Number(row[idx("jerseyNumber")]) || p.jerseyNumber;
+    ["hit","pow","spd","def","arm","pit","form","stamina","durability"].forEach((key) => {
+      if (idx(key) >= 0 && row[idx(key)]) p[key] = Number(row[idx(key)]) || p[key];
+    });
+    if (idx("arm") >= 0 && row[idx("arm")]) p.arm = Number(row[idx("arm")]) || p.arm;
+    p.salary = p.contract.annual;
+    p.signingBonus = idx("signingBonus") >= 0 && Number(row[idx("signingBonus")]) ? Number(row[idx("signingBonus")]) : estimated.signingBonus;
+    p.serviceYears = Number(row[idx("serviceYears")]) || p.serviceYears;
+    p.serviceDays = idx("serviceDays") >= 0 && Number(row[idx("serviceDays")]) ? Number(row[idx("serviceDays")]) : p.serviceYears * KBO_SERVICE_DAYS_PER_YEAR + rnd(0, KBO_SERVICE_DAYS_PER_YEAR - 1);
+    ensureServiceTime(p);
+    p.faGrade = row[idx("faGrade")] || p.faGrade;
+    p.development = p.rosterStatus === "DEV";
+    p.foreignPlayer = idx("foreignPlayer") >= 0 ? ["Y","TRUE","1","외국인"].includes(String(row[idx("foreignPlayer")]).toUpperCase()) : isLikelyForeignName(name);
+    p.dataSource = rowSource;
+    imported.push(p);
+  }
+  if (!imported.length) return state;
+
+  const keepOtherTeamsOrDev = state.players.filter((p) => p.dataSource === "system-locked");
+  state.players = [...keepOtherTeamsOrDev, ...imported];
+  state.realDataMode = true;
+  state.rosterInitialized = true;
+  state.activeGame = null;
+  state.selectedId = state.players[0]?.id || null;
+  ensureRosterDepth(state);
+  addNews(state, "선수 데이터 import", `${imported.length}명의 선수 데이터를 반영했다. 출처: ${source || "user-import"}`, "데이터");
+  return state;
+}
+
+function readDataSourceUrl() {
+  try {
+    const url = fs.readFileSync(DATA_SOURCE_URL_PATH, "utf8").trim();
+    return url || null;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchText(url) {
+  if (!/^https?:\/\//i.test(url)) throw new Error("Only http/https URLs are supported");
+  const res = await fetch(url, { headers: { "User-Agent": "K-Baseball-Manager-Local-Importer" } });
+  if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+  return res.text();
+}
+
+async function syncExternalPlayerData(state) {
+  if (fs.existsSync(DATA_IMPORT_PATH)) {
+    const csv = fs.readFileSync(DATA_IMPORT_PATH, "utf8");
+    return importPlayersFromCsv(state, csv, DATA_IMPORT_PATH);
+  }
+  const sourceUrl = readDataSourceUrl();
+  if (sourceUrl) {
+    const csv = await fetchText(sourceUrl);
+    return importPlayersFromCsv(state, csv, sourceUrl);
+  }
+  addNews(state, "선수 데이터 동기화 대기", `데이터 파일이 없습니다. ${DATA_IMPORT_PATH} 파일을 넣거나 data/source-url.txt에 CSV URL을 저장하세요.`, "데이터");
+  return state;
+}
+
+function serveStatic(req, res) {
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const pathname = url.pathname === "/" ? "/index.html" : url.pathname;
+  const filePath = path.normalize(path.join(ROOT, pathname));
+  if (!filePath.startsWith(ROOT)) {
+    res.writeHead(403);
+    res.end("Forbidden");
+    return;
+  }
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      res.writeHead(404);
+      res.end("Not found");
+      return;
+    }
+    const ext = path.extname(filePath);
+    const type = ext === ".html" ? "text/html; charset=utf-8" : ext === ".js" ? "text/javascript; charset=utf-8" : "text/plain; charset=utf-8";
+    res.writeHead(200, { "Content-Type": type });
+    res.end(data);
+  });
+}
+
+const server = http.createServer(async (req, res) => {
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  if (!url.pathname.startsWith("/api/")) {
+    serveStatic(req, res);
+    return;
+  }
+
+  if (req.method === "GET" && url.pathname === "/api/meta") {
+    sendJson(res, 200, { teams: teamTemplates });
+    return;
+  }
+
+  if (req.method === "GET" && url.pathname === "/api/state") {
+    const state = readState();
+    const visibleState = state ? publicState(state) : null;
+    if (state) saveState(state);
+    sendJson(res, 200, { hasSave: Boolean(state), state: visibleState, teams: teamTemplates });
+    return;
+  }
+
+  const body = await parseBody(req);
+  let state = readState();
+
+  if (req.method === "POST" && url.pathname === "/api/new-game") {
+    state = createState(body.teamId);
+    await syncExternalPlayerData(state);
+    saveState(state);
+    sendJson(res, 200, publicState(state));
+    return;
+  }
+
+  if (!state) state = createState(teamTemplates[0].id);
+
+  const routes = {
+    "/api/play": () => playGame(state),
+    "/api/game/start": () => createActiveGame(state, body.lineup, body.starterId, body.lineupPositions),
+    "/api/game/reset": () => resetActiveGame(state),
+    "/api/game/next": () => advanceOnePlay(state),
+    "/api/game/skip-half": () => skipCurrentHalfInning(state),
+    "/api/game/tactic": () => setGameTactic(state, body.tactic || "swing"),
+    "/api/game/steal": () => commandSteal(state, body.steal),
+    "/api/game/change-pitcher": () => changePitcher(state, body.inId),
+    "/api/game/at-bat": () => resolveUserAtBat(state, body.tactic || "swing"),
+    "/api/game/defense": () => resolveOpponentHalf(state),
+    "/api/game/substitute": () => substituteBatter(state, body.outId, body.inId),
+    "/api/game/pinch-run": () => pinchRun(state, body.baseIndex, body.inId),
+    "/api/roster/status": () => setRosterStatus(state, body.id, body.status),
+    "/api/player/create-dev": () => createDevelopmentPlayer(state, body),
+    "/api/player/convert-dev": () => convertDevelopmentPlayer(state, body.id),
+    "/api/player/pitcher-role": () => setPitcherRole(state, body.id, body.role),
+    "/api/player/contract": () => adjustPlayerContract(state, body.id, body.mode),
+    "/api/player/rehab": () => advanceRehab(state, body.id),
+    "/api/player/clear-rehab": () => clearRehab(state, body.id),
+    "/api/player/talk": () => talkToPlayer(state, body.id, body.tone),
+    "/api/import/players": () => importPlayersFromCsv(state, body.csv, body.source),
+    "/api/import/sync": () => syncExternalPlayerData(state),
+    "/api/fa/generate": () => generateFreeAgents(state),
+    "/api/fa/sign": () => signFreeAgent(state, body.id, body.includePlayer),
+    "/api/offer": () => { generateOffer(state, body.league, body.id); return state; },
+    "/api/train": () => trainPlayer(state, Number(body.id), body.focus),
+    "/api/scout": () => scout(state, body.league || "MLB"),
+    "/api/sign": () => signScout(state, Number(body.index)),
+    "/api/accept-offer": () => acceptOffer(state, Number(body.id)),
+    "/api/reject-offer": () => rejectOffer(state, Number(body.id)),
+    "/api/season/goal": () => setSeasonGoal(state, body.level),
+    "/api/trade/targets": () => refreshTradeTargets(state),
+    "/api/trade/propose": () => proposeTrade(state, body.outgoingId, body.targetId, body.cash),
+    "/api/trade/generate": () => generateTradeOffer(state, body.playerId),
+    "/api/trade/accept": () => acceptTradeOffer(state, Number(body.id)),
+    "/api/trade/reject": () => rejectTradeOffer(state, Number(body.id))
+  };
+
+  if (req.method === "POST" && routes[url.pathname]) {
+    await routes[url.pathname]();
+    saveState(state);
+    sendJson(res, 200, publicState(state));
+    return;
+  }
+
+  sendJson(res, 404, { error: "Not found" });
+});
+
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`Diamond Office Manager backend running on port ${PORT}`);
+});

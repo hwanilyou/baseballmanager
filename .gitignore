@@ -1,0 +1,5 @@
+outputs/*.log
+outputs/*.out
+outputs/*.err
+node_modules/
+.env

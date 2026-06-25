@@ -1,0 +1,6 @@
+teamId,name,jerseyNumber,pos,type,age,rosterStatus,annualSalary,signingBonus,serviceYears,faGrade,pitcherRole,ovr,pot,source
+daejeon-orange-eagles,샘플선발,11,SP,PIT,27,ACTIVE,3.2,1.0,5,B,SP,74,82,official-or-user-source
+daejeon-orange-eagles,샘플마무리,55,CL,PIT,30,ACTIVE,4.1,0.0,7,A,CL,78,80,official-or-user-source
+daejeon-orange-eagles,샘플내야수,8,SS,BAT,25,ACTIVE,2.4,0.5,4,B,,72,84,official-or-user-source
+daejeon-orange-eagles,샘플2군외야수,64,CF,BAT,22,FARM,0.8,0.2,1,C,,58,76,official-or-user-source
+daejeon-orange-eagles,샘플육성투수,98,RP,PIT,19,DEV,0.3,0.0,0,C,MR,48,78,official-or-user-source
