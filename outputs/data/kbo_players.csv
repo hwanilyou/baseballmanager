@@ -1,535 +1,535 @@
-teamId,name,jerseyNumber,pos,type,age,rosterStatus,annualSalary,signingBonus,serviceYears,serviceDays,yearsLeft,contractKind,contractSource,faGrade,pitcherRole,ovr,pot,hit,pow,spd,def,arm,pit,form,stamina,durability,trait,foreignPlayer,source
-seoul-twin-stars,임찬훈,1,SP,PIT,34,ACTIVE,2,3,12,1829,2,실계약 4년 50억,2024 FA 계약,B,SP,70,74,10,10,50,78,71,73,76,96,88,이닝이터 · 베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,함덕형,11,SP,PIT,31,ACTIVE,8,0.6,12,1816,2,실계약 4년 38억,2024 FA 계약,C,SP,60,69,10,10,35,68,64,57,84,86,71,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,우강현,20,SP,PIT,24,ACTIVE,0.4,0.4,3,524,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,60,70,10,10,39,63,60,61,73,87,73,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,배재호,25,SP,PIT,32,ACTIVE,0.6,1,11,1667,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,56,62,10,10,30,44,69,61,62,72,57,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,손주진,29,SP,PIT,28,ACTIVE,2.9,1.5,10,1527,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,69,78,10,10,39,73,67,70,81,82,75,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,톨허스수,30,SP,PIT,27,ACTIVE,6,0,1,234,1,외국인 단년계약,외국인 단년계약 추정,A,SP,78,80,10,10,54,76,90,82,78,96,94,외국인 · 핵심전력 · 이닝이터 · 탈삼진형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,이정민,31,RP,PIT,30,ACTIVE,2.7,2,8,1234,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,69,71,10,10,32,68,80,76,79,53,69,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,김진서,42,RP,PIT,41,ACTIVE,4.5,0,12,1829,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,MR,68,73,10,10,43,58,74,73,72,44,59,베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,김진준,45,RP,PIT,28,ACTIVE,0.4,1,6,945,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,MR,70,78,10,10,40,60,76,72,79,45,60,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,리오원,46,RP,PIT,33,ACTIVE,6,0,0,15,1,외국인 단년계약,외국인 단년계약 추정,B,MR,70,76,10,10,52,68,71,71,64,52,55,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,김윤영,47,RP,PIT,26,ACTIVE,1,2,7,1066,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,59,64,10,10,33,55,55,54,78,53,70,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,장현수,50,RP,PIT,31,ACTIVE,15,1.5,12,1817,3,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,MR,66,74,10,10,52,69,69,67,62,54,69,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,박시진,58,RP,PIT,20,ACTIVE,0.3,0,1,198,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,57,68,10,10,41,46,57,60,81,52,72,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,김영빈,67,RP,PIT,21,ACTIVE,0.9,2,1,234,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,67,84,10,10,43,75,79,72,75,56,65,상위 유망주,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,웰혁,68,RP,PIT,29,ACTIVE,6,0,1,221,1,외국인 단년계약,외국인 단년계약 추정,C,MR,67,73,10,10,42,57,75,71,74,40,64,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,박동현,27,C,BAT,36,ACTIVE,5,0.6,12,1829,1,실계약 4년 65억,2023 FA 계약,B,,70,74,68,67,37,77,66,21,66,80,57,베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,이주수,63,C,BAT,23,ACTIVE,0.6,0.7,5,814,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,72,83,69,74,85,67,73,15,80,53,69,성장형 · 주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,문보성,2,3B,BAT,26,ACTIVE,4.8,0.8,6,959,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,B,,70,75,66,65,64,80,64,20,82,74,66,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,신민혁,4,2B,BAT,30,ACTIVE,3.8,0,8,1249,2,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,,57,59,56,65,49,49,64,11,78,63,71,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,구본서,6,SS,BAT,29,ACTIVE,2.3,0.5,8,1249,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,69,66,65,36,53,64,13,74,52,70,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,이영혁,7,1B,BAT,24,ACTIVE,0.6,1.3,6,949,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,,69,79,70,68,82,67,67,20,67,61,70,성장형 · 주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,오지태,10,SS,BAT,36,ACTIVE,14,2.8,12,1829,4,실계약 6년 124억,2024 비FA 다년계약,C,,62,66,58,66,81,56,65,14,76,56,56,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,오스도,23,1B,BAT,33,ACTIVE,12,0,3,524,4,핵심전력 계약,기간/연봉 추정,A,,86,89,97,98,79,61,63,8,81,57,90,프랜차이즈급 · 교타자 · 장타형,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,천성현,53,2B,BAT,29,ACTIVE,0.9,1,7,1104,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,68,73,61,70,80,61,69,12,61,82,64,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,문정진,56,3B,BAT,23,ACTIVE,0.4,0.4,1,186,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,67,77,66,62,64,62,61,14,77,45,62,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,문성호,8,LF,BAT,29,ACTIVE,2.8,0.3,9,1379,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,70,75,65,62,88,65,61,12,62,45,71,주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,박해태,17,CF,BAT,36,ACTIVE,8,0,12,1829,3,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,B,,73,77,90,61,72,65,64,20,67,53,80,교타자 · 베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,홍창영,51,RF,BAT,33,ACTIVE,5.2,0.8,11,1684,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,,67,69,69,57,57,61,79,23,73,53,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,송찬도,55,RF,BAT,27,ACTIVE,0.6,0.5,5,794,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,72,81,66,80,78,72,79,12,63,65,71,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,이우훈,21,SP,PIT,34,FARM,0.8,1.1,12,1787,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,60,71,10,10,40,62,66,62,58,72,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,조원수,38,SP,PIT,23,FARM,0.3,2.5,5,814,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,46,63,10,10,30,40,59,51,75,71,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,김동겸,43,SP,PIT,21,FARM,0.3,0.3,0,7,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,49,70,10,10,55,53,56,53,63,85,71,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,조건진,48,SP,PIT,24,FARM,0.3,0.7,6,884,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,45,61,10,10,34,40,45,42,71,79,69,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,권우재,49,RP,PIT,19,FARM,0.3,0.8,0,4,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,62,83,10,10,38,57,62,62,62,52,64,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,김주혁,57,RP,PIT,30,FARM,0.3,0.5,7,1104,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,47,59,10,10,50,44,54,46,77,66,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,양우영,65,RP,PIT,19,FARM,0.3,2.5,0,89,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,51,64,10,10,53,47,54,53,68,41,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,하현태,119,RP,PIT,25,FARM,0.3,0.6,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,52,63,10,10,44,53,58,58,77,64,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,오승우,123,RP,PIT,25,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,44,63,10,10,49,46,49,42,71,58,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,김준안,44,C,BAT,32,FARM,0.6,0,12,1829,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,61,75,53,53,57,67,52,21,60,77,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,강민안,102,C,BAT,19,FARM,0.3,0.7,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,47,69,55,41,54,47,40,8,78,66,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,전경욱,128,C,BAT,27,FARM,0.3,0.6,9,1305,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,45,56,51,35,44,50,57,15,65,81,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,강민재,00,3B,BAT,26,FARM,0.3,0.3,0,6,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,52,66,57,47,40,47,46,23,71,59,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,김정혁,14,2B,BAT,28,FARM,0.5,1.1,10,1539,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,61,65,65,66,58,59,65,24,76,45,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,손용성,15,1B,BAT,26,FARM,0.3,1,2,300,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,46,56,40,42,86,42,41,10,71,64,56,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,추세욱,35,SS,BAT,20,FARM,0.3,1.5,1,234,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,47,66,40,47,37,51,46,18,69,85,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,김성원,36,2B,BAT,26,FARM,0.3,0.5,7,1024,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,53,59,46,63,60,62,62,12,63,60,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,이지혁,111,2B,BAT,20,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,53,74,45,63,68,43,62,23,78,60,68,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,곽민진,124,SS,BAT,22,FARM,0.3,0.3,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,47,63,46,45,74,37,44,19,70,71,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,김주욱,5,LF,BAT,28,FARM,0.4,1,11,1597,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,61,49,48,54,54,47,15,63,60,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,함창수,24,RF,BAT,25,FARM,0.3,0.5,2,379,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,44,63,49,45,40,48,44,15,75,73,61,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,이재준,52,LF,BAT,27,FARM,0.7,1,7,1068,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,58,67,65,66,41,51,65,18,83,55,70,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,서영도,60,LF,BAT,20,FARM,0.3,0.7,1,234,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,52,70,55,62,64,53,61,13,76,78,56,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,김현재,66,LF,BAT,22,FARM,0.3,1.5,2,314,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,52,71,46,51,60,58,50,11,79,72,67,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-seoul-twin-stars,엄태율,104,RF,BAT,23,FARM,0.3,0.3,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,53,68,61,54,68,52,53,8,83,65,66,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,고영빈,1,SP,PIT,35,ACTIVE,26,1.3,12,1825,3,실계약 5년 107억,2024 비FA 다년계약,A,SP,79,82,10,10,41,77,93,85,78,96,76,핵심전력 · 이닝이터 · 탈삼진형 · 제구형,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,스기모욱,11,SP,PIT,26,ACTIVE,6,0,0,75,1,외국인 단년계약,외국인 단년계약 추정,C,SP,63,71,10,10,34,61,59,59,73,71,65,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,우규훈,12,SP,PIT,41,ACTIVE,2,1.2,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,60,60,10,10,38,55,60,60,79,81,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,김민원,26,SP,PIT,34,ACTIVE,2,1.1,12,1818,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,SP,71,77,10,10,40,69,73,73,61,74,68,베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,소형진,30,SP,PIT,25,ACTIVE,3.3,3.6,7,1081,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,SP,73,87,10,10,31,68,82,79,78,82,69,상위 유망주,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,사우준,32,SP,PIT,27,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,B,SP,71,74,10,10,42,79,83,76,74,96,85,외국인 · 이닝이터,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,이상혁,37,RP,PIT,31,ACTIVE,1,0.8,8,1182,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,67,73,10,10,54,66,74,70,74,49,67,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,주서,38,RP,PIT,31,ACTIVE,1.5,3,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,62,64,10,10,52,55,67,63,81,40,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,손동빈,41,RP,PIT,25,ACTIVE,1.5,0.9,8,1249,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,MR,71,81,10,10,31,70,84,77,70,65,68,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,로준,43,RP,PIT,29,ACTIVE,6,0,1,149,1,외국인 단년계약,외국인 단년계약 추정,C,MR,59,61,10,10,38,59,67,59,66,50,64,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,오원빈,47,RP,PIT,25,ACTIVE,2.3,2,7,1089,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,61,69,10,10,51,64,66,61,77,40,65,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,박영빈,60,RP,PIT,23,ACTIVE,3,3,5,814,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,69,76,10,10,30,65,78,74,74,55,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,조대빈,42,C,BAT,27,ACTIVE,0.6,0.4,6,884,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,71,70,73,57,54,72,9,65,77,71,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,한승훈,45,C,BAT,32,ACTIVE,1.5,0.9,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,68,70,68,69,87,74,68,20,65,51,63,주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,오윤도,4,2B,BAT,34,ACTIVE,1.4,0,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,66,73,73,66,68,71,65,15,84,74,62,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,이강준,6,3B,BAT,19,ACTIVE,0.3,1.3,0,79,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,64,77,61,63,58,74,62,9,66,85,65,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,김상율,7,SS,BAT,36,ACTIVE,4,2.8,12,1829,1,실계약 4년 29억,2023 FA 계약,B,,70,74,88,48,65,71,73,24,66,60,82,교타자 · 베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,류현현,9,3B,BAT,26,ACTIVE,0.3,0.5,3,515,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,64,72,69,53,79,74,75,13,71,48,60,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,허경재,13,3B,BAT,36,ACTIVE,7,1.3,12,1823,5,실계약 4+3년 85억,2025 FA 계약,C,,62,69,65,51,44,70,73,14,59,72,56,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,힐리어서,34,1B,BAT,32,ACTIVE,12,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,A,,84,85,92,98,77,65,60,16,72,60,88,외국인 · 프랜차이즈급 · 교타자 · 장타형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,안인재,50,3B,BAT,25,ACTIVE,0.3,1,7,1018,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,68,75,65,58,77,76,80,13,61,58,72,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,권동안,52,SS,BAT,28,ACTIVE,0.7,1.5,6,959,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,74,63,55,40,55,54,22,69,84,72,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,최원태,3,LF,BAT,29,ACTIVE,6,1.5,11,1684,3,핵심전력 계약,KBO 공식 연봉 + 기간 추정,A,,81,82,97,77,82,65,65,11,79,77,94,핵심전력 · 교타자 · 주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,김현욱,10,RF,BAT,38,ACTIVE,8,0,12,1829,4,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,A,,79,80,94,73,64,70,82,21,69,55,86,핵심전력 · 교타자 · 베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,안현호,23,RF,BAT,23,ACTIVE,1.8,0.7,5,783,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,58,65,65,57,47,54,56,16,80,55,65,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,배정윤,27,CF,BAT,31,ACTIVE,2.6,1.5,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,69,74,74,74,76,64,73,18,65,47,65,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,이정윤,33,RF,BAT,32,ACTIVE,0.7,0.3,10,1539,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,56,65,48,52,38,55,51,14,60,45,66,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,장진윤,51,RF,BAT,33,ACTIVE,0.9,0.7,9,1331,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,69,73,70,75,69,66,74,11,71,47,59,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,김민호,53,LF,BAT,31,ACTIVE,2.9,0.6,12,1805,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,58,65,57,52,80,51,51,22,81,48,70,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,이정율,21,SP,PIT,29,FARM,0.4,1.6,10,1539,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,57,71,10,10,41,47,67,60,69,73,66,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,한승진,35,SP,PIT,33,FARM,3,1.8,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,59,61,10,10,36,56,65,57,70,78,61,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,박건호,46,SP,PIT,20,FARM,0.3,1.2,1,234,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,62,83,10,10,37,60,58,61,62,92,63,퓨처스 · 성장형 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,이상훈,48,SP,PIT,23,FARM,0.3,1.6,5,725,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,62,80,10,10,45,50,68,69,65,88,70,퓨처스 · 성장형 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,이원안,64,RP,PIT,23,FARM,0.3,1,5,814,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,55,63,10,10,36,47,53,53,76,63,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,고준훈,68,RP,PIT,21,FARM,0.3,0.7,0,89,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,46,63,10,10,31,50,49,52,79,49,54,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,정정호,92,RP,PIT,22,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,58,79,10,10,36,51,60,56,68,52,62,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,장민민,100,RP,PIT,24,FARM,0.3,0,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,53,68,10,10,37,49,53,52,78,65,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,김휘호,113,RP,PIT,19,FARM,0.3,0.3,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,58,78,10,10,54,50,61,61,79,45,57,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,권효호,117,RP,PIT,23,FARM,0.3,0,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,46,60,10,10,46,52,50,42,68,50,61,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,김민도,44,C,BAT,21,FARM,0.3,0.3,2,298,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,48,63,54,53,76,52,52,16,67,49,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,강현준,55,C,BAT,25,FARM,0.6,1.5,7,1077,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,44,54,44,43,74,49,42,12,69,62,61,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,강민태,5,1B,BAT,27,FARM,0.4,0.6,3,462,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,54,58,49,60,43,64,59,23,66,63,67,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,오서우,25,3B,BAT,20,FARM,0.3,0.6,1,157,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,48,59,46,53,73,46,52,8,60,85,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,장준율,56,2B,BAT,31,FARM,0.7,1,12,1796,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,53,58,51,48,60,56,47,9,69,66,68,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,손민훈,57,1B,BAT,22,FARM,0.3,0.9,3,435,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,58,76,52,57,54,61,56,18,74,49,61,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,임상혁,94,2B,BAT,23,FARM,0.3,0.8,0,89,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,49,58,56,44,56,39,43,22,68,77,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,이용율,106,2B,BAT,20,FARM,0.3,0.5,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,69,55,60,66,54,59,14,68,58,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,박성훈,120,1B,BAT,23,FARM,0.3,0,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,46,57,47,44,87,52,43,21,62,54,61,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,최성우,31,LF,BAT,24,FARM,0.3,0,3,524,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,56,68,56,51,40,63,50,14,76,57,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,이재준,65,LF,BAT,19,FARM,0.3,0.6,0,8,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,56,71,63,64,41,49,63,18,83,55,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,박민호,104,CF,BAT,20,FARM,0.3,0.7,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,54,72,50,60,81,45,59,13,62,74,67,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,정영민,108,RF,BAT,27,FARM,0.3,0.3,5,725,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,49,63,46,53,78,49,52,21,60,60,67,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-suwon-wizpark,김경재,109,RF,BAT,19,FARM,0.3,0.5,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,56,68,55,50,58,54,49,21,74,65,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,최지호,11,SP,PIT,28,ACTIVE,1.5,1.3,10,1539,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,68,77,10,10,39,57,66,69,70,70,71,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,미야겸,15,SP,PIT,27,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,C,SP,68,76,10,10,44,58,78,74,75,77,62,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,최원윤,20,SP,PIT,29,ACTIVE,16,3.5,12,1828,4,실계약 4년 70억,2026 FA 계약,C,SP,61,63,10,10,48,61,66,58,61,73,62,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,이승우,26,SP,PIT,35,ACTIVE,1.5,1,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,SP,70,77,10,10,35,68,70,67,72,81,62,베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김태태,27,SP,PIT,34,ACTIVE,3,0.2,12,1802,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,60,66,10,10,38,57,68,60,72,89,72,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,이승호,28,RP,PIT,26,ACTIVE,1.1,0.7,7,1104,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,62,73,10,10,45,61,76,69,80,63,68,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,백정재,29,RP,PIT,39,ACTIVE,2,1.5,12,1802,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,62,62,10,10,46,57,57,57,66,62,53,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,임기준,38,RP,PIT,33,ACTIVE,3,1.1,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,69,76,10,10,53,66,76,71,69,58,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,양창현,42,RP,PIT,27,ACTIVE,0.9,2.6,9,1388,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,62,67,10,10,55,60,63,66,82,61,64,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,배찬호,55,RP,PIT,20,ACTIVE,0.9,4,1,234,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,68,83,10,10,55,70,73,72,82,57,71,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,장찬현,60,RP,PIT,19,ACTIVE,0.3,1.1,0,79,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,68,83,10,10,39,57,66,69,62,62,63,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김재원,62,RP,PIT,36,ACTIVE,8,0,12,1829,2,실계약 4년 58억,2024 FA 계약,C,MR,59,59,10,10,44,64,69,65,58,60,52,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,오러클영,64,SP,PIT,26,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,B,SP,75,83,10,10,50,68,94,81,79,96,82,외국인 · 이닝이터 · 탈삼진형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,후라안,75,SP,PIT,30,ACTIVE,6,0,3,514,1,외국인 단년계약,외국인 단년계약 추정,A,SP,79,83,10,10,42,74,77,82,81,96,94,외국인 · 핵심전력 · 이닝이터 · 탈삼진형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김도찬,24,C,BAT,26,ACTIVE,0.5,1.1,8,1198,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,69,77,71,68,57,75,67,18,70,48,68,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,장승진,46,C,BAT,32,ACTIVE,0.5,0.7,12,1793,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,73,75,79,62,63,82,84,12,69,47,63,수비핵심,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,강민원,47,C,BAT,41,ACTIVE,3,0.9,12,1819,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,64,64,59,70,55,58,14,64,50,52,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,디아윤,0,1B,BAT,30,ACTIVE,8,0,2,379,1,외국인 단년계약,외국인 단년계약 추정,A,,80,85,92,96,59,57,59,16,71,71,89,외국인 · 핵심전력 · 교타자 · 장타형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,류지찬,16,2B,BAT,32,ACTIVE,7,0.7,12,1829,3,핵심전력 계약,KBO 공식 연봉 + 기간 추정,B,,76,80,90,71,76,65,61,22,68,76,90,교타자,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김영성,30,3B,BAT,23,ACTIVE,2.2,1.7,5,771,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,73,66,53,85,72,52,24,60,63,67,주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,양우우,53,3B,BAT,26,ACTIVE,0.4,0.8,8,1234,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,64,73,56,68,68,69,67,16,84,64,63,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김상욱,56,2B,BAT,24,ACTIVE,0.3,0,0,53,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,77,58,63,80,62,62,22,65,74,63,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,전병빈,61,3B,BAT,34,ACTIVE,0.9,0.9,9,1394,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,73,78,68,73,36,73,72,17,71,48,61,베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,구자윤,5,RF,BAT,33,ACTIVE,5,1.3,12,1828,1,실계약 5년 120억,2022 비FA 다년계약,A,,84,84,92,87,79,69,79,24,72,82,87,프랜차이즈급 · 교타자 · 장타형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김헌재,32,LF,BAT,38,ACTIVE,1,0.7,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,68,68,75,56,45,59,78,16,68,51,61,베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,최형율,34,CF,BAT,43,ACTIVE,4,0.5,12,1829,2,핵심전력 계약,KBO 공식 연봉 + 기간 추정,A,,81,81,95,84,67,67,68,19,73,88,89,핵심전력 · 교타자 · 장타형 · 베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김성성,39,CF,BAT,27,ACTIVE,2,0.7,10,1536,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,69,57,62,72,71,61,13,59,49,72,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김지수,58,2B,BAT,25,ACTIVE,2.3,1.1,7,1104,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,74,80,90,49,82,74,77,17,67,69,88,교타자 · 주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,박승율,66,LF,BAT,26,ACTIVE,0.8,0.3,8,1237,2,핵심전력 계약,KBO 공식 연봉 + 기간 추정,A,,81,89,88,93,87,57,61,15,70,62,85,핵심전력 · 교타자 · 장타형 · 주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,이재안,17,SP,PIT,25,FARM,0.5,1.5,6,900,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,45,64,10,10,54,51,56,48,67,80,66,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,양우,19,SP,PIT,34,FARM,0.7,0.3,12,1746,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,48,61,10,10,41,50,58,51,84,76,67,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,최하율,37,SP,PIT,27,FARM,0.6,0.5,8,1249,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,59,64,10,10,46,49,58,54,74,86,60,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,이재윤,45,SP,PIT,32,FARM,0.6,0.4,7,1104,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,59,69,10,10,45,59,71,66,82,91,70,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김무겸,48,RP,PIT,27,FARM,0.7,0.5,8,1168,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,47,61,10,10,38,40,55,47,62,46,56,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,홍원욱,65,RP,PIT,25,FARM,0.4,0.8,7,1104,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,57,71,10,10,53,48,64,59,62,49,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,박주찬,101,RP,PIT,25,FARM,0.4,0.6,5,725,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,49,66,10,10,40,41,57,51,58,50,56,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,진희영,115,RP,PIT,20,FARM,0.3,0.3,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,51,69,10,10,41,57,59,54,59,43,56,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김동호,123,RP,PIT,25,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,46,64,10,10,55,50,53,50,63,65,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,홍승태,131,RP,PIT,25,FARM,0.4,0.5,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,56,68,10,10,54,61,63,59,58,56,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,이병욱,23,C,BAT,27,FARM,0.6,0.8,8,1249,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,71,61,59,54,66,58,14,77,79,68,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,박세우,52,C,BAT,36,FARM,4,0.6,12,1801,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,,54,58,49,60,69,48,59,10,83,76,54,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,이서욱,134,C,BAT,19,FARM,0.3,0.5,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,47,59,54,49,69,56,48,14,77,51,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,심재원,6,SS,BAT,20,FARM,0.4,1.6,1,163,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,59,70,60,56,61,51,55,19,58,54,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김재율,14,2B,BAT,22,FARM,0.4,1,3,453,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,67,54,61,70,55,60,21,60,78,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,차승태,35,1B,BAT,20,FARM,0.3,1.2,1,150,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,50,69,58,60,78,59,59,22,70,60,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,이창도,50,1B,BAT,27,FARM,0.4,0.4,2,298,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,50,60,55,50,71,58,49,17,65,69,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,강민안,127,2B,BAT,20,FARM,0.3,0.3,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,49,59,44,55,43,59,54,23,66,63,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,조민진,132,1B,BAT,23,FARM,0.3,0.5,5,725,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,54,67,62,44,42,63,66,15,62,57,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,이한영,143,2B,BAT,24,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,74,52,54,69,48,53,8,79,55,56,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,이성성,13,LF,BAT,33,FARM,1.1,0.8,11,1635,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,58,60,60,59,40,62,58,19,68,60,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김태수,25,LF,BAT,30,FARM,0.6,0.6,12,1762,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,46,50,51,54,65,45,53,21,72,78,56,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,함수민,40,RF,BAT,20,FARM,0.3,0.9,1,161,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,63,78,67,63,83,62,62,22,58,64,67,퓨처스 · 성장형 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김현혁,44,CF,BAT,24,FARM,1,0.3,6,890,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,81,58,55,39,57,54,12,81,69,62,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,김상준,107,RF,BAT,23,FARM,0.4,0.4,3,435,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,48,65,44,43,40,58,42,14,58,71,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daegu-blue-lions,이진민,117,CF,BAT,20,FARM,0.3,0.6,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,49,66,44,43,48,58,42,24,73,50,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,곽도원,0,SP,PIT,22,ACTIVE,0.9,0.6,3,472,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,SP,73,88,10,10,39,70,79,74,59,85,75,상위 유망주,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김태훈,10,SP,PIT,20,ACTIVE,0.6,3,1,209,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,66,77,10,10,41,61,66,69,69,91,76,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,조상욱,11,SP,PIT,32,ACTIVE,4,2.5,12,1829,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,SP,59,68,10,10,53,49,68,61,71,71,67,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,올수,33,SP,PIT,32,ACTIVE,12,0,1,234,1,외국인 단년계약,외국인 단년계약 추정,A,SP,87,91,10,10,54,83,95,92,87,96,92,외국인 · 에이스 · 이닝이터 · 탈삼진형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,최지형,39,SP,PIT,23,ACTIVE,1,1.5,5,803,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,56,63,10,10,36,54,54,54,63,70,68,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,네도,40,SP,PIT,33,ACTIVE,8,0,2,379,1,외국인 단년계약,외국인 단년계약 추정,A,SP,80,82,10,10,34,74,80,84,79,96,79,외국인 · 핵심전력 · 이닝이터 · 탈삼진형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,황동혁,41,RP,PIT,24,ACTIVE,0.8,0.4,3,514,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,69,76,10,10,48,57,74,66,74,60,63,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김범겸,49,RP,PIT,31,ACTIVE,4,2,12,1829,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,MR,61,67,10,10,50,66,64,60,80,62,65,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,전상원,51,RP,PIT,30,ACTIVE,3.1,0.7,11,1635,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,57,66,10,10,49,53,62,55,76,66,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,양현민,54,RP,PIT,38,ACTIVE,8,2,12,1825,3,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,B,MR,73,75,10,10,36,81,69,71,62,57,54,베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,한재찬,55,RP,PIT,25,ACTIVE,0.8,0.7,6,951,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,61,69,10,10,37,50,57,60,60,54,67,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,정해성,62,RP,PIT,25,ACTIVE,3,2,7,1093,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,66,75,10,10,38,65,64,66,81,65,67,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,시라카율,63,RP,PIT,25,ACTIVE,6,0,2,311,1,외국인 단년계약,외국인 단년계약 추정,C,MR,65,76,10,10,42,69,69,69,68,57,64,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,성영형,65,RP,PIT,22,ACTIVE,1.2,0.3,1,234,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,64,75,10,10,41,66,68,67,62,60,70,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,한준빈,25,C,BAT,27,ACTIVE,1,1.6,9,1394,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,67,75,74,66,69,70,65,23,59,64,67,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김태서,42,C,BAT,37,ACTIVE,6,0.8,12,1816,1,실계약 3년 25억,2024 비FA 다년계약,C,,60,64,56,61,55,67,60,15,68,66,55,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,박율,2,SS,BAT,25,ACTIVE,0.6,1.5,7,1104,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,71,85,74,62,52,78,61,12,82,45,68,상위 유망주 · 수비핵심,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김선영,3,2B,BAT,37,ACTIVE,6,0.3,12,1829,1,실계약 3년 30억,2024 FA 계약,C,,61,61,68,49,47,66,71,8,73,53,54,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김도서,5,3B,BAT,23,ACTIVE,2.5,4,5,814,2,핵심전력 계약,KBO 공식 연봉 + 기간 추정,A,,86,91,91,98,70,69,81,20,73,82,88,프랜차이즈급 · 교타자 · 장타형,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,정현안,12,SS,BAT,20,ACTIVE,0.6,0.5,1,234,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,79,67,70,63,66,69,12,73,74,71,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김규형,14,2B,BAT,29,ACTIVE,0.9,0.4,10,1539,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,69,55,62,50,61,61,19,83,51,73,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,윤도욱,16,2B,BAT,23,ACTIVE,0.6,1,5,771,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,73,84,70,64,37,74,63,18,68,46,65,상위 유망주,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,변우훈,29,1B,BAT,26,ACTIVE,0.7,1.8,8,1178,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,72,77,75,80,68,71,79,20,78,49,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,박정욱,1,CF,BAT,28,ACTIVE,0.6,0.5,6,959,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,65,69,63,61,69,74,60,18,63,82,70,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,박재윤,15,LF,BAT,20,ACTIVE,0.5,1,1,234,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,78,71,63,72,60,62,19,68,80,71,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,카스트수,26,CF,BAT,33,ACTIVE,6,0,0,36,1,외국인 단년계약,외국인 단년계약 추정,C,,69,75,61,62,65,74,61,15,58,84,59,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김호우,27,CF,BAT,34,ACTIVE,2.5,0.3,12,1829,2,핵심전력 계약,KBO 공식 연봉 + 기간 추정,A,,82,86,92,87,75,65,69,22,70,53,88,핵심전력 · 교타자 · 장타형 · 베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김민도,37,RF,BAT,19,ACTIVE,0.3,1,0,36,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,72,65,65,65,52,64,10,67,57,67,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,나성현,47,RF,BAT,37,ACTIVE,8,3,12,1829,2,실계약 6년 150억,2022 FA 계약,A,,82,86,91,98,68,59,63,22,72,75,77,핵심전력 · 교타자 · 장타형 · 베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김현성,17,SP,PIT,26,FARM,0.6,0.9,8,1167,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,62,76,10,10,48,59,67,59,74,84,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,윤중겸,19,SP,PIT,31,FARM,0.6,0.4,6,959,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,53,63,10,10,47,44,48,49,68,92,63,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,지영,32,SP,PIT,19,FARM,0.3,0.6,0,9,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,57,73,10,10,46,48,60,52,73,75,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,장재영,38,SP,PIT,25,FARM,0.3,0.5,5,743,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,63,70,10,10,46,54,60,58,78,86,67,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김기형,53,RP,PIT,26,FARM,0.7,3.5,8,1173,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,58,71,10,10,38,46,66,58,75,60,55,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,강이민,102,RP,PIT,28,FARM,0.3,0.7,8,1160,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,60,73,10,10,49,54,63,58,61,44,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,조건빈,112,RP,PIT,24,FARM,0.3,0,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,46,61,10,10,38,48,50,46,83,58,67,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김경재,118,RP,PIT,27,FARM,0.3,0,4,580,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,48,56,10,10,52,47,53,49,76,61,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,권다도,103,C,BAT,24,FARM,0.3,0.7,6,870,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,52,67,48,40,79,44,62,22,77,80,61,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김선형,116,C,BAT,25,FARM,0.3,0.3,5,725,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,46,62,46,48,83,45,47,19,83,45,62,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,신명진,142,C,BAT,24,FARM,0.3,0.3,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,51,62,43,48,81,42,47,24,79,54,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,최정겸,23,2B,BAT,30,FARM,0.5,1.1,12,1742,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,49,56,56,56,79,41,55,23,66,70,66,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,이호찬,36,SS,BAT,31,FARM,0.7,0.6,9,1314,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,59,65,65,69,39,50,68,14,67,76,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,한준겸,119,2B,BAT,19,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,61,73,55,66,71,60,65,17,70,82,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,황석호,127,1B,BAT,24,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,46,61,48,36,85,53,58,20,66,75,62,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,엄준윤,131,SS,BAT,20,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,63,81,55,63,63,72,62,17,65,74,67,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,박종서,133,1B,BAT,19,FARM,0.3,0.5,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,46,59,50,38,68,51,37,10,75,80,61,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,차상민,134,2B,BAT,23,FARM,0.3,0,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,45,55,43,48,80,38,47,12,79,65,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,정해성,9,CF,BAT,22,FARM,0.5,1,3,524,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,50,67,58,47,82,60,46,24,82,47,59,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,한승진,31,LF,BAT,23,FARM,0.3,0.3,2,329,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,59,67,62,67,36,53,66,16,61,75,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,고종형,57,RF,BAT,37,FARM,1,0.8,12,1780,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,54,63,53,63,41,44,62,12,84,73,51,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,김민겸,104,CF,BAT,26,FARM,0.3,0,4,580,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,61,65,66,62,45,61,61,16,61,81,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,박태,113,RF,BAT,20,FARM,0.4,0.3,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,56,76,61,49,74,52,48,17,73,58,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gwangju-tiger-kings,곽동서,138,RF,BAT,24,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,54,66,55,52,37,52,51,13,82,83,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,에르난데재,12,SP,PIT,27,ACTIVE,6,0,0,78,1,외국인 단년계약,외국인 단년계약 추정,C,SP,60,68,10,10,48,50,61,57,83,71,68,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,이상영,18,SP,PIT,30,ACTIVE,0.4,0.4,8,1219,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,63,72,10,10,55,62,74,67,66,87,68,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,왕옌원,19,SP,PIT,25,ACTIVE,1.8,0,0,89,1,연봉계약,기간/연봉 추정,B,SP,71,76,10,10,40,67,91,76,78,96,89,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,화이민,24,SP,PIT,27,ACTIVE,6,0,0,44,1,외국인 단년계약,외국인 단년계약 추정,C,SP,59,63,10,10,38,57,59,59,70,79,63,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,이민수,27,SP,PIT,33,ACTIVE,0.6,2.4,10,1524,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,58,60,10,10,44,63,68,64,68,92,69,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,장유준,28,RP,PIT,26,ACTIVE,0.3,1,8,1180,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,60,69,10,10,47,51,61,56,84,56,68,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,황준민,29,RP,PIT,21,ACTIVE,0.8,3.5,2,344,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,63,78,10,10,35,71,61,60,79,46,68,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,조동원,57,RP,PIT,22,ACTIVE,0.9,1.5,2,379,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,MR,71,81,10,10,34,62,75,67,60,53,58,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,박상태,58,RP,PIT,32,ACTIVE,2.6,0.8,10,1519,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,66,72,10,10,38,74,70,66,80,55,69,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,정우혁,61,RP,PIT,20,ACTIVE,0.7,5,1,234,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,61,72,10,10,53,62,60,63,75,39,58,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,박준윤,68,RP,PIT,24,ACTIVE,0.3,0,0,46,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,57,70,10,10,42,62,59,61,64,66,67,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,강건혁,69,RP,PIT,19,ACTIVE,0.3,1.3,0,39,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,59,70,10,10,47,59,60,55,79,57,67,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,박준태,96,RP,PIT,23,ACTIVE,0.3,2,5,814,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,60,73,10,10,42,65,62,64,64,66,72,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,류현안,99,SP,PIT,39,ACTIVE,21,2.5,12,1815,6,실계약 8년 170억,2024 FA 복귀 계약,A,SP,83,85,10,10,52,80,87,86,83,96,76,핵심전력 · 이닝이터 · 탈삼진형 · 제구형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,최재원,13,C,BAT,37,ACTIVE,4,0,12,1829,2,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,,67,67,71,70,75,61,69,9,80,72,64,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,허인영,59,C,BAT,23,ACTIVE,0.4,1.1,5,814,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,,69,80,72,57,75,69,79,18,75,63,60,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,이도형,5,SS,BAT,30,ACTIVE,1.2,0.8,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,72,78,80,80,85,82,79,15,80,85,64,주루형 · 수비핵심,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,심우수,7,SS,BAT,31,ACTIVE,4,1.3,12,1829,3,실계약 4년 50억,2025 FA 계약,C,,60,66,67,56,51,60,55,14,83,64,64,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,노시율,8,3B,BAT,26,ACTIVE,10,2,8,1239,1,연봉계약,공개 다년계약 미확인,B,,73,81,76,83,55,77,82,10,67,56,60,장타형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,강백서,50,1B,BAT,27,ACTIVE,9,4.5,9,1394,4,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,A,,84,88,95,98,62,65,66,16,75,78,94,프랜차이즈급 · 교타자 · 장타형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,박정준,63,2B,BAT,25,ACTIVE,0.4,0.4,7,1068,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,,68,79,60,57,83,61,79,24,67,48,72,주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,황영서,95,2B,BAT,27,ACTIVE,1,0.8,2,369,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,60,69,64,61,56,53,60,8,76,50,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,이진겸,10,RF,BAT,29,ACTIVE,1.1,0.5,11,1668,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,61,64,65,64,78,70,63,24,80,79,74,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,권광서,17,RF,BAT,29,ACTIVE,0.4,0,11,1600,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,72,81,79,60,86,77,82,18,63,60,69,주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,김태성,25,LF,BAT,29,ACTIVE,1.3,0.5,10,1539,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,68,60,71,61,54,70,20,73,51,70,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,페라준,30,RF,BAT,28,ACTIVE,12,0,2,379,1,외국인 단년계약,외국인 단년계약 추정,A,,86,94,97,98,77,62,73,18,76,64,94,외국인 · 프랜차이즈급 · 교타자 · 장타형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,이원호,37,CF,BAT,27,ACTIVE,0.7,0.8,8,1239,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,67,54,50,80,64,72,12,58,68,72,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,문현영,51,2B,BAT,22,ACTIVE,2.3,1.5,3,524,3,핵심전력 계약,KBO 공식 연봉 + 기간 추정,A,,82,95,90,90,83,66,61,9,69,62,91,핵심전력 · 교타자 · 장타형 · 주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,유호,65,LF,BAT,23,ACTIVE,0.3,0.9,5,746,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,70,81,63,77,55,80,76,15,69,47,68,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,김승안,14,SP,PIT,25,FARM,0.3,0.3,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,59,75,10,10,53,67,68,61,73,69,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,이교원,31,SP,PIT,26,FARM,0.4,0.8,8,1165,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,53,60,10,10,30,59,66,58,68,89,65,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,김종혁,38,SP,PIT,32,FARM,1.2,0.3,12,1794,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,53,55,10,10,49,59,50,51,60,91,60,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,김범안,40,SP,PIT,26,FARM,0.3,0.3,0,3,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,59,73,10,10,50,59,66,58,60,76,70,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,김서진,44,RP,PIT,22,FARM,1.7,5,3,471,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,59,81,10,10,40,48,61,61,60,65,63,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,원종진,48,RP,PIT,21,FARM,0.3,0.3,1,169,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,47,60,10,10,32,42,54,54,75,55,54,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,윤산도,49,RP,PIT,27,FARM,0.4,0,6,932,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,48,64,10,10,40,44,54,50,71,62,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,강재형,55,RP,PIT,29,FARM,1.5,0.8,7,1024,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,58,65,10,10,39,52,64,59,71,66,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,주현태,66,RP,PIT,34,FARM,1.9,0.5,12,1746,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,50,60,10,10,51,52,51,50,83,50,52,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,엄요찬,108,RP,PIT,20,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,63,84,10,10,45,52,67,70,82,54,58,퓨처스 · 상위 유망주,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,김관찬,112,RP,PIT,23,FARM,0.3,0.9,3,435,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,47,56,10,10,54,51,50,50,64,51,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,박상원,42,C,BAT,29,FARM,0.4,0.4,10,1539,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,45,47,40,33,51,48,55,20,63,72,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,정우수,115,C,BAT,24,FARM,0.2,0,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,52,60,58,46,37,59,45,14,58,60,61,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,이지호,4,1B,BAT,21,FARM,0.3,0,0,48,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,54,75,60,48,76,61,47,13,74,46,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,한경태,6,1B,BAT,28,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,58,68,56,49,40,50,48,20,60,54,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,하주윤,16,SS,BAT,32,FARM,2,3,12,1782,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,51,60,54,42,54,45,41,18,68,80,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,채은형,22,1B,BAT,36,FARM,4,0,12,1809,3,실계약 6년 90억,2023 FA 계약,C,,50,57,48,48,72,53,47,19,83,73,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,정은혁,43,2B,BAT,26,FARM,1.4,0.9,9,1318,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,45,59,50,45,52,52,44,15,84,54,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,김재,56,3B,BAT,26,FARM,0.3,0.7,7,1015,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,44,58,38,35,87,44,35,14,59,69,58,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,최유율,93,2B,BAT,24,FARM,0.3,0.8,0,10,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,49,65,54,58,79,44,57,14,78,45,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,유로찬,33,LF,BAT,26,FARM,0.3,1.1,8,1249,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,47,57,39,43,35,40,42,20,74,66,68,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,한지형,36,LF,BAT,20,FARM,0.3,1.1,1,234,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,54,68,52,62,43,49,61,24,67,67,67,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,최인준,41,LF,BAT,26,FARM,0.6,0.6,7,1062,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,60,75,67,70,35,65,69,24,76,61,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,김동윤,113,LF,BAT,26,FARM,0.2,0,4,580,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,63,77,59,69,54,60,68,16,83,84,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-daejeon-orange-eagles,최윤겸,114,CF,BAT,26,FARM,0.2,0,4,580,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,72,60,46,63,66,68,10,69,62,67,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,박치혁,1,SP,PIT,28,ACTIVE,1.9,1.4,10,1534,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,57,63,10,10,50,56,54,56,74,83,75,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김동빈,4,SP,PIT,24,ACTIVE,0.5,1.2,6,891,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,SP,69,79,10,10,43,68,81,74,59,69,65,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,타카진,12,SP,PIT,24,ACTIVE,6,0,0,13,1,외국인 단년계약,외국인 단년계약 추정,C,SP,56,63,10,10,46,46,55,51,61,71,69,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김정서,16,SP,PIT,27,ACTIVE,0.4,1.6,9,1382,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,60,67,10,10,41,59,70,63,68,78,66,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,이병수,29,SP,PIT,23,ACTIVE,0.9,2.7,5,814,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,60,74,10,10,45,67,70,67,77,91,77,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,잭로율,39,SP,PIT,30,ACTIVE,6,0,1,224,1,외국인 단년계약,외국인 단년계약 추정,B,SP,73,75,10,10,47,72,84,78,75,96,84,외국인 · 이닝이터 · 제구형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,최지욱,42,RP,PIT,25,ACTIVE,0.9,0,5,764,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,65,73,10,10,47,54,58,61,78,45,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,이용태,45,RP,PIT,37,ACTIVE,1,4.5,12,1790,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,MR,70,77,10,10,31,65,79,76,82,57,59,베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,곽현,47,SP,PIT,27,ACTIVE,3.1,3,9,1393,3,핵심전력 계약,KBO 공식 연봉 + 기간 추정,A,SP,81,83,10,10,47,74,98,87,86,96,85,핵심전력 · 이닝이터 · 탈삼진형,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,벤자형,48,RP,PIT,33,ACTIVE,6,0,5,790,1,외국인 단년계약,외국인 단년계약 추정,C,MR,65,67,10,10,44,56,79,71,63,39,61,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,박신준,49,RP,PIT,27,ACTIVE,0.7,1.4,9,1361,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,58,67,10,10,37,61,62,57,82,59,63,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,이영재,50,RP,PIT,29,ACTIVE,6,3.5,10,1521,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,MR,64,69,10,10,53,68,69,66,64,47,68,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김택서,63,RP,PIT,21,ACTIVE,2.2,3.5,2,363,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,MR,70,83,10,10,47,58,65,66,65,66,60,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,최민겸,68,SP,PIT,20,ACTIVE,0.6,1.5,1,218,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,A,SP,81,92,10,10,37,84,89,86,85,96,86,핵심전력 · 이닝이터 · 탈삼진형,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,양의형,25,C,BAT,39,ACTIVE,42,0.3,12,1829,3,실계약 4+2년 152억,2023 FA 계약,B,,72,73,70,60,38,71,82,10,68,48,63,베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,윤준안,27,C,BAT,26,ACTIVE,0.3,0.7,3,524,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,73,81,66,82,43,77,81,24,80,79,63,장타형,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,류현빈,67,C,BAT,21,ACTIVE,0.3,0.3,2,294,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,,69,83,70,60,45,72,59,24,80,65,65,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,오명율,6,2B,BAT,25,ACTIVE,1.1,0.5,7,1090,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,61,71,57,59,66,58,58,13,66,65,66,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,박찬우,7,3B,BAT,31,ACTIVE,8,0.8,12,1829,3,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,,64,67,63,58,50,54,57,8,70,54,70,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,이유준,13,SS,BAT,28,ACTIVE,1.1,0.6,10,1527,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,68,72,65,63,35,58,62,16,65,54,67,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,박지안,37,SS,BAT,26,ACTIVE,0.5,0.6,7,1104,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,61,70,55,62,64,56,61,13,79,65,63,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,박준수,52,3B,BAT,20,ACTIVE,0.7,2.6,1,226,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,,68,79,75,76,60,77,75,20,79,49,66,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,안재윤,62,SS,BAT,24,ACTIVE,0.7,2,6,932,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,57,65,55,62,40,61,61,12,76,81,60,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김민빈,2,CF,BAT,22,ACTIVE,0.8,2.5,3,524,2,핵심전력 계약,KBO 공식 연봉 + 기간 추정,B,,77,87,90,69,73,69,71,17,69,81,89,상위 유망주 · 교타자,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,류승현,14,CF,BAT,22,ACTIVE,0.4,0.5,3,456,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,58,71,52,64,84,61,63,10,82,65,68,주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,카메우,24,RF,BAT,29,ACTIVE,12,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,A,,84,85,92,89,77,70,75,21,70,69,93,외국인 · 프랜차이즈급 · 교타자 · 장타형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,정수혁,31,CF,BAT,36,ACTIVE,6,0.6,12,1829,1,실계약 6년 56억,2021 FA 계약,A,,78,82,90,70,87,65,68,24,68,53,88,핵심전력 · 교타자 · 주루형 · 베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김인훈,33,CF,BAT,32,ACTIVE,0.9,2,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,70,76,70,59,43,74,81,22,64,79,66,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,조수빈,51,RF,BAT,33,ACTIVE,2,1.4,11,1684,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,67,70,74,60,62,75,59,22,65,62,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,최주영,15,SP,PIT,20,FARM,0.3,1.2,0,42,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,51,62,10,10,47,50,48,47,61,85,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,박정재,17,SP,PIT,30,FARM,0.6,0.5,12,1792,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,46,50,10,10,42,53,50,50,80,78,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김영영,20,SP,PIT,24,FARM,0.4,0,3,456,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,63,71,10,10,45,55,73,70,79,68,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,최승우,28,SP,PIT,25,FARM,1.6,0.8,6,938,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,50,57,10,10,48,48,47,47,69,89,71,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김명찬,46,RP,PIT,33,FARM,1.1,1,10,1456,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,55,57,10,10,43,61,59,60,67,56,61,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김호진,56,RP,PIT,28,FARM,0.4,0,8,1249,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,57,73,10,10,52,46,58,58,71,44,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,장우우,106,RP,PIT,22,FARM,0.3,1,3,435,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,48,65,10,10,39,52,46,49,84,52,66,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,백승현,112,RP,PIT,26,FARM,0.8,0.5,3,435,1,퓨처스/최저연봉권,기간/연봉 추정,C,MR,46,55,10,10,38,44,46,46,65,58,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,이기찬,123,RP,PIT,24,FARM,0.3,0,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,51,60,10,10,49,59,50,49,78,48,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김기성,22,C,BAT,29,FARM,1,0.7,10,1516,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,56,63,56,58,71,64,57,17,81,49,66,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,박민윤,26,C,BAT,24,FARM,0.3,0.4,2,379,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,55,66,49,62,62,54,61,10,63,79,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,이희혁,121,C,BAT,22,FARM,0.3,0,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,70,49,57,54,66,56,16,70,72,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,임종욱,3,SS,BAT,21,FARM,0.5,1,2,312,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,59,80,59,50,75,53,49,14,80,80,66,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,박성영,5,2B,BAT,24,FARM,0.3,0.3,6,879,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,61,77,62,69,41,51,68,23,84,66,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김동겸,11,2B,BAT,24,FARM,0.4,1.3,5,814,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,45,52,41,46,44,41,45,18,78,47,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,신민훈,103,3B,BAT,23,FARM,0.3,0.8,5,725,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,60,76,53,51,63,63,50,24,66,83,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,지강수,105,1B,BAT,26,FARM,0.3,0.4,4,580,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,54,58,56,62,77,50,61,12,78,79,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,심건겸,117,SS,BAT,23,FARM,0.3,0.4,0,89,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,63,80,64,55,53,62,54,16,73,56,62,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,남태혁,118,2B,BAT,19,FARM,0.3,0.3,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,70,54,53,76,64,52,17,75,78,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,전다안,9,CF,BAT,25,FARM,0.3,0.6,2,291,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,53,64,49,52,85,60,51,11,79,53,61,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김대원,32,CF,BAT,26,FARM,0.4,3.5,8,1162,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,47,63,50,41,79,54,40,19,69,70,68,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,천현겸,58,CF,BAT,27,FARM,0.3,0,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,47,62,45,48,63,50,47,16,81,57,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김주태,66,LF,BAT,19,FARM,0.3,2.5,0,89,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,48,69,55,43,55,52,42,11,58,51,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,김문욱,102,RF,BAT,22,FARM,0.3,0.3,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,63,76,64,57,49,64,56,17,74,82,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-jamsil-bears,임현우,116,RF,BAT,19,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,54,66,50,45,65,50,44,8,64,71,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,라일욱,3,SP,PIT,30,ACTIVE,1.8,0,1,195,1,연봉계약,기간/연봉 추정,B,SP,73,79,10,10,48,70,78,70,58,88,67,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,토성,11,SP,PIT,26,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,C,SP,66,74,10,10,34,60,70,62,69,84,64,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,임지호,19,SP,PIT,23,ACTIVE,0.3,0.6,5,814,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,56,63,10,10,36,46,58,54,74,88,71,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,최성훈,26,SP,PIT,29,ACTIVE,0.8,1,11,1610,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,SP,72,78,10,10,40,68,78,74,80,89,79,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,이준원,40,SP,PIT,23,ACTIVE,0.5,1.2,1,202,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,SP,69,81,10,10,47,77,66,65,60,72,64,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,류진훈,41,RP,PIT,30,ACTIVE,2,1,12,1819,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,56,63,10,10,49,59,59,54,59,47,59,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,신영형,43,RP,PIT,22,ACTIVE,0.3,2.5,3,477,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,64,81,10,10,37,64,62,63,63,51,68,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,송명안,45,RP,PIT,26,ACTIVE,1.2,1.6,8,1175,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,57,65,10,10,44,51,71,63,70,57,60,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,김진욱,54,RP,PIT,28,ACTIVE,1.3,0.9,10,1539,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,67,75,10,10,48,60,68,64,70,39,66,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,전사준,57,RP,PIT,27,ACTIVE,1.3,1,8,1238,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,68,76,10,10,32,65,83,75,70,53,58,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,김태윤,60,RP,PIT,25,ACTIVE,0.4,1.5,7,1060,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,MR,71,79,10,10,31,74,82,77,70,48,65,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,최우안,64,RP,PIT,21,ACTIVE,0.4,0.6,2,306,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,61,72,10,10,39,49,67,62,82,38,58,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,테일태,66,SP,PIT,31,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,B,SP,71,72,10,10,30,64,82,75,74,96,83,외국인 · 이닝이터,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,김태민,69,RP,PIT,20,ACTIVE,0.3,1.2,1,160,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,65,79,10,10,38,62,73,65,72,45,68,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,안중안,22,C,BAT,31,ACTIVE,0.6,1.3,12,1810,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,68,66,57,58,55,56,16,66,63,71,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,김형형,25,C,BAT,27,ACTIVE,2,1.5,9,1394,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,68,75,62,67,64,66,66,19,68,49,70,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,박민혁,2,2B,BAT,33,ACTIVE,8,1.6,12,1829,5,실계약 5+3년 140억,2023 FA 계약,A,,79,81,97,71,68,69,68,11,74,53,84,핵심전력 · 교타자,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,서호안,5,3B,BAT,30,ACTIVE,1.5,0.3,7,1103,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,59,65,64,63,51,62,62,18,58,81,69,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,오태율,6,2B,BAT,24,ACTIVE,0.3,0.6,6,897,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,67,75,74,68,88,71,67,11,58,63,72,주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,김주호,7,SS,BAT,24,ACTIVE,3.5,1.5,6,959,5,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,A,,84,92,96,90,68,70,74,19,73,66,87,프랜차이즈급 · 교타자 · 장타형,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,김한수,13,2B,BAT,25,ACTIVE,0.5,0,5,797,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,58,65,60,57,73,65,56,13,65,59,60,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,최정태,14,CF,BAT,26,ACTIVE,0.9,0.5,7,1104,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,64,75,68,57,46,65,56,24,74,63,60,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,도태영,16,1B,BAT,33,ACTIVE,0.7,0,11,1664,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,61,63,61,63,57,52,62,19,59,64,67,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,데이비수,24,1B,BAT,35,ACTIVE,6,0,2,368,1,외국인 단년계약,외국인 단년계약 추정,C,,57,57,65,52,49,55,51,10,82,67,58,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,천재윤,23,RF,BAT,32,ACTIVE,1,0,5,791,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,65,67,73,70,41,58,69,23,82,84,69,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,권희재,36,LF,BAT,36,ACTIVE,2.5,0.3,12,1820,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,64,65,67,58,38,66,57,9,62,84,54,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,박건욱,37,RF,BAT,36,ACTIVE,6,1,12,1829,2,실계약 6년 100억,2022 FA 계약,A,,82,86,90,96,65,61,73,18,71,66,80,핵심전력 · 교타자 · 장타형 · 베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,이우겸,55,CF,BAT,32,ACTIVE,1.6,1.2,12,1826,2,핵심전력 계약,KBO 공식 연봉 + 기간 추정,A,,78,80,97,71,66,69,65,8,75,69,87,핵심전력 · 교타자,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,오장성,65,CF,BAT,24,ACTIVE,0.3,0.8,6,882,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,72,82,69,81,50,68,80,12,61,50,63,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,김재혁,21,SP,PIT,30,FARM,0.9,0.3,7,1104,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,61,66,10,10,52,68,62,62,62,83,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,하준우,29,SP,PIT,27,FARM,1.1,1.1,9,1317,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,48,62,10,10,37,42,52,47,61,85,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,손주도,46,SP,PIT,24,FARM,0.8,0.6,2,315,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,52,61,10,10,40,47,54,54,58,88,68,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,조민재,47,SP,PIT,28,FARM,0.5,0.3,5,814,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,60,74,10,10,55,50,65,64,75,80,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,박지훈,56,RP,PIT,26,FARM,0.3,0.4,0,2,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,46,50,10,10,53,53,45,48,68,49,56,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,최요진,67,RP,PIT,19,FARM,0.3,1,0,12,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,47,58,10,10,38,54,47,47,75,59,66,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,홍재안,107,RP,PIT,22,FARM,0.3,0.8,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,55,67,10,10,47,49,56,51,65,38,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,노재형,110,RP,PIT,25,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,50,58,10,10,50,52,53,49,59,60,66,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,박동빈,111,RP,PIT,27,FARM,0.3,1,5,725,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,63,78,10,10,54,70,66,66,66,46,54,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,윤서율,145,RP,PIT,19,FARM,0.3,0.3,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,52,67,10,10,50,57,55,51,84,54,68,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,이희도,32,C,BAT,19,FARM,0.3,1.5,0,89,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,56,69,48,56,54,65,55,16,70,72,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,김정겸,42,C,BAT,28,FARM,0.3,0.4,1,168,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,61,70,60,50,74,69,72,23,76,56,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,신재윤,9,SS,BAT,19,FARM,0.3,2.5,0,52,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,47,60,47,42,77,46,41,17,72,73,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,홍종겸,10,2B,BAT,26,FARM,0.5,1.1,7,1104,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,53,66,54,56,79,63,55,9,72,63,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,윤준윤,31,SS,BAT,25,FARM,0.4,0.8,7,1018,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,59,68,51,50,84,53,49,13,82,78,71,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,한재재,35,3B,BAT,25,FARM,0.3,0.4,2,293,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,52,69,47,46,69,55,45,20,61,63,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,김휘민,44,2B,BAT,24,FARM,2.4,1,6,921,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,49,65,53,44,54,46,43,9,67,63,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,김윤,52,2B,BAT,19,FARM,0.3,0.8,0,89,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,77,51,48,87,57,47,14,59,69,59,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,이진,122,2B,BAT,23,FARM,0.3,0.7,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,49,60,54,39,51,58,61,11,75,77,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,한석안,33,LF,BAT,32,FARM,0.5,0.5,7,1092,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,51,57,51,44,88,58,43,9,73,50,63,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,고준안,49,CF,BAT,19,FARM,0.3,0.8,0,19,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,59,74,54,49,63,68,71,8,71,61,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,김범안,115,LF,BAT,26,FARM,0.3,0.6,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,47,61,39,47,77,49,46,22,60,63,68,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,박영재,119,CF,BAT,29,FARM,0.3,0,3,435,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,59,64,58,52,83,58,51,19,60,54,60,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-changwon-dino-force,장창준,123,LF,BAT,26,FARM,0.3,0.3,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,48,55,45,44,87,42,43,9,75,65,67,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,현도서,17,SP,PIT,33,ACTIVE,0.3,0,9,1377,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,66,68,10,10,42,60,78,70,60,83,68,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,김강혁,19,SP,PIT,31,ACTIVE,0.9,0,11,1627,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,69,78,10,10,47,69,64,65,61,89,72,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,박세율,21,SP,PIT,31,ACTIVE,21,2,12,1829,2,실계약 5년 90억,2023 비FA 다년계약,B,SP,70,71,10,10,50,64,90,76,75,96,84,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,비슬겸,23,SP,PIT,31,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,B,SP,74,78,10,10,44,67,98,81,78,96,92,외국인 · 이닝이터 · 탈삼진형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,로드리게형,31,SP,PIT,28,ACTIVE,6,0,0,78,1,외국인 단년계약,외국인 단년계약 추정,B,SP,74,77,10,10,50,71,98,81,76,96,81,외국인 · 이닝이터 · 탈삼진형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,김원도,34,RP,PIT,33,ACTIVE,8,1.5,12,1829,3,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,B,MR,70,73,10,10,31,76,81,76,82,48,57,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,박정안,36,RP,PIT,23,ACTIVE,0.3,1.5,0,89,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,67,78,10,10,38,55,75,67,75,50,62,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,이민영,37,RP,PIT,23,ACTIVE,0.8,2,5,777,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,57,69,10,10,47,45,58,53,64,46,63,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,나균도,43,SP,PIT,28,ACTIVE,1.8,1.5,10,1525,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,SP,73,76,10,10,50,66,87,78,78,96,82,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,이진민,45,RP,PIT,22,ACTIVE,0.3,1.5,3,457,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,69,79,10,10,30,76,74,74,78,39,61,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,김기윤,47,RP,PIT,22,ACTIVE,0.3,0.8,0,13,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,63,73,10,10,46,51,66,58,77,48,69,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,최준수,56,RP,PIT,25,ACTIVE,1.4,2.5,7,1104,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,58,70,10,10,41,53,58,61,78,58,62,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,정철형,65,RP,PIT,27,ACTIVE,1.8,1,9,1374,1,연봉계약,트레이드/연봉계약 추정,C,MR,60,69,10,10,39,49,58,61,59,59,63,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,손성진,28,C,BAT,24,ACTIVE,0.6,1.5,6,959,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,71,85,65,60,50,79,82,17,72,74,64,상위 유망주 · 수비핵심,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,박건형,69,C,BAT,23,ACTIVE,0.3,0,1,154,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,60,68,59,60,48,60,59,13,62,48,69,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,고승겸,2,2B,BAT,26,ACTIVE,1.9,1.5,8,1211,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,59,66,59,69,72,56,68,21,72,52,69,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,김세훈,5,2B,BAT,23,ACTIVE,0.3,0.8,5,776,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,74,58,64,77,62,63,13,63,62,66,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,전민태,13,1B,BAT,27,ACTIVE,1.1,0.7,9,1394,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,58,66,60,64,61,68,63,11,62,85,71,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,한동수,25,3B,BAT,27,ACTIVE,1.6,1.8,9,1383,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,56,67,63,57,56,46,56,14,76,47,60,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,나승도,51,1B,BAT,24,ACTIVE,1,5,6,921,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,72,83,69,82,85,82,81,11,61,50,63,성장형 · 장타형 · 주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,노진우,52,SS,BAT,37,ACTIVE,6,0.8,12,1803,1,실계약 4년 50억,2023 FA 계약,B,,72,77,71,61,38,71,83,24,67,60,52,베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,박승민,53,SS,BAT,34,ACTIVE,1,0.8,12,1828,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,59,66,54,63,54,59,62,22,59,77,57,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,황성준,0,CF,BAT,29,ACTIVE,1.1,0.7,5,809,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,64,60,53,75,71,52,23,66,60,70,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,신윤윤,3,RF,BAT,30,ACTIVE,0.4,0.3,8,1208,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,59,61,52,52,65,55,51,19,68,66,69,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,레이예영,29,RF,BAT,32,ACTIVE,12,0,2,379,1,외국인 단년계약,외국인 단년계약 추정,A,,84,85,97,89,67,70,75,16,77,76,88,외국인 · 프랜차이즈급 · 교타자 · 장타형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,손호진,33,3B,BAT,32,ACTIVE,1,0,12,1819,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,69,72,71,77,72,78,76,12,75,85,62,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,김동윤,50,RF,BAT,26,ACTIVE,0.5,0,3,458,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,67,70,63,45,57,62,10,69,78,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,김동윤,64,RF,BAT,22,ACTIVE,0.3,0.6,1,164,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,73,86,68,79,84,79,78,9,63,50,68,상위 유망주 · 주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,윤동원,91,RF,BAT,23,ACTIVE,1.8,0.8,5,774,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,77,61,63,36,72,62,16,79,53,66,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,정성태,18,SP,PIT,31,FARM,0.4,1,9,1307,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,54,60,10,10,35,60,56,51,70,77,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,구승혁,22,SP,PIT,36,FARM,3,0.5,12,1772,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,53,61,10,10,31,51,62,59,77,86,59,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,김태욱,24,SP,PIT,38,FARM,1.5,1.3,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,61,71,10,10,47,60,58,57,82,83,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,홍민현,38,SP,PIT,25,FARM,0.6,1.6,7,1037,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,56,69,10,10,49,61,55,54,63,90,66,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,이영율,40,RP,PIT,20,FARM,0.3,0.5,1,153,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,45,64,10,10,33,40,45,42,64,65,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,이승찬,46,RP,PIT,28,FARM,0.4,1.8,9,1316,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,63,72,10,10,53,51,64,65,71,40,54,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,최이율,49,RP,PIT,27,FARM,0.4,1.1,9,1349,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,57,69,10,10,52,60,66,58,65,63,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,정현민,57,RP,PIT,25,FARM,0.9,1.5,2,318,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,53,71,10,10,47,61,50,49,74,60,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,박준태,58,RP,PIT,21,FARM,0.3,0.8,2,339,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,46,58,10,10,35,40,48,43,70,62,56,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,박시형,62,RP,PIT,37,FARM,0.5,0,12,1829,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,50,56,10,10,42,51,60,54,80,61,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,석상율,133,RP,PIT,26,FARM,0.3,0.5,3,435,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,49,55,10,10,44,51,59,55,83,45,55,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,박재성,26,C,BAT,20,FARM,0.3,0.8,1,149,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,58,77,56,63,85,65,62,18,66,83,63,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,유강형,27,C,BAT,34,FARM,7,0.4,12,1809,1,실계약 4년 80억,2023 FA 계약,C,,50,56,52,43,38,40,42,10,72,50,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,정보혁,42,C,BAT,27,FARM,0.7,0.3,8,1182,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,45,49,49,33,64,52,55,19,61,82,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,강승도,110,C,BAT,23,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,48,64,41,47,51,54,46,12,82,49,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,최호,14,3B,BAT,32,FARM,0.5,0,10,1460,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,48,54,48,40,52,43,39,8,62,71,61,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,김민도,16,3B,BAT,38,FARM,1.5,1,12,1771,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,56,57,50,55,66,56,54,8,81,62,50,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,박찬수,60,3B,BAT,24,FARM,0.6,0.2,1,234,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,60,69,63,53,81,57,52,22,81,62,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,이서율,63,2B,BAT,19,FARM,0.3,1,0,25,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,53,65,60,55,69,62,54,14,77,51,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,이지도,114,3B,BAT,23,FARM,0.2,0,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,44,61,40,51,63,38,50,14,59,72,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,배인안,127,SS,BAT,22,FARM,0.3,0.2,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,63,74,62,56,86,71,55,22,58,54,65,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,전준재,8,LF,BAT,40,FARM,7,1,12,1813,2,실계약 4년 47억,2024 FA 계약,C,,44,52,46,39,59,43,38,19,79,52,52,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,김한도,95,LF,BAT,20,FARM,0.3,0.7,0,7,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,52,64,52,46,83,48,45,18,62,64,56,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,이인찬,102,LF,BAT,28,FARM,0.2,0.3,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,51,64,58,39,43,46,61,11,60,62,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,조민진,134,LF,BAT,21,FARM,0.3,0,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,59,80,52,52,74,61,51,8,68,60,63,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-busan-giant-waves,유제찬,142,CF,BAT,23,FARM,0.1,0.3,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,63,81,56,64,43,73,63,22,78,67,62,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,신상안,00,SP,PIT,19,ACTIVE,0.3,0.4,0,13,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,SP,71,88,10,10,31,74,76,77,84,91,78,상위 유망주 · 이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,김안,1,SP,PIT,27,ACTIVE,2.1,3,9,1394,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,59,67,10,10,54,60,62,62,72,86,64,이닝이터,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,이건호,16,SP,PIT,31,ACTIVE,0.3,2,12,1780,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,68,71,10,10,55,69,69,72,62,83,72,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,조병윤,19,SP,PIT,24,ACTIVE,2.5,0.7,6,959,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,59,69,10,10,31,61,72,65,79,79,68,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,타케찬,23,SP,PIT,33,ACTIVE,6,0,0,75,1,외국인 단년계약,외국인 단년계약 추정,C,SP,62,68,10,10,48,62,67,59,58,72,57,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,전영원,28,RP,PIT,24,ACTIVE,0.7,0.3,5,784,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,63,73,10,10,37,55,65,62,71,56,64,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,최민윤,30,RP,PIT,27,ACTIVE,1.3,1,9,1379,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,63,67,10,10,38,71,67,63,79,58,60,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,노경준,38,RP,PIT,42,ACTIVE,4,3.5,12,1828,2,비FA 다년계약,KBO 공식 연봉 + 기간 추정,B,MR,70,73,10,10,31,67,75,76,58,51,51,베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,김건준,39,RP,PIT,24,ACTIVE,0.7,2,6,959,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,60,71,10,10,52,54,69,61,67,61,68,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,김민태,40,RP,PIT,20,ACTIVE,0.3,2.7,0,16,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,MR,68,82,10,10,40,61,74,70,68,59,68,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,베니지아진,41,RP,PIT,29,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,C,MR,60,66,10,10,44,65,70,66,68,62,61,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,문승욱,42,RP,PIT,37,ACTIVE,8,1.8,12,1829,3,FA/비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,MR,59,66,10,10,33,60,57,54,75,38,49,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,해훈,55,RP,PIT,32,ACTIVE,6,0,0,11,1,외국인 단년계약,외국인 단년계약 추정,B,MR,73,79,10,10,34,63,73,69,73,63,57,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,박시윤,57,RP,PIT,25,ACTIVE,1,0.2,5,796,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,63,75,10,10,47,67,56,59,67,43,63,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,조형혁,20,C,BAT,24,ACTIVE,1.3,1.3,6,956,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,57,67,53,59,66,48,58,11,79,77,60,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,신범겸,25,C,BAT,28,ACTIVE,0.4,0.4,11,1613,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,59,67,62,68,59,58,67,22,73,79,67,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,박성현,2,SS,BAT,28,ACTIVE,4.2,0.9,10,1539,1,연봉계약,공개 다년계약 미확인,A,,80,84,97,66,74,74,81,24,74,84,94,핵심전력 · 교타자,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,정준서,3,1B,BAT,23,ACTIVE,1.3,0.6,2,379,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,72,79,90,59,80,60,62,23,67,79,92,성장형 · 교타자,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,김민빈,5,SS,BAT,22,ACTIVE,0.3,0.5,3,459,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,59,73,64,54,79,54,53,13,68,58,64,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,최도,14,3B,BAT,39,ACTIVE,22,3,12,1828,4,실계약 4년 110억,2025 FA 계약,A,,84,84,89,98,66,69,81,12,73,72,85,프랜차이즈급 · 교타자 · 장타형 · 베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,고명형,18,1B,BAT,24,ACTIVE,1.6,0.9,6,930,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,66,76,73,68,84,66,67,10,75,64,60,주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,전의겸,47,1B,BAT,26,ACTIVE,0.5,1.3,6,893,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,71,79,78,67,67,78,66,9,59,57,62,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,홍대진,97,SS,BAT,25,ACTIVE,0.3,0.3,1,224,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,57,69,58,49,56,53,48,12,65,49,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,채현형,15,LF,BAT,31,ACTIVE,0.4,0.3,8,1239,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,64,55,57,47,70,56,9,63,85,72,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,에레디윤,27,LF,BAT,35,ACTIVE,8,0,3,524,1,외국인 단년계약,외국인 단년계약 추정,A,,81,84,90,98,65,61,59,14,70,77,81,외국인 · 핵심전력 · 교타자 · 장타형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,김성재,31,LF,BAT,33,ACTIVE,1,0.7,12,1817,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,58,60,54,58,35,48,57,9,68,58,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,김재원,32,LF,BAT,38,ACTIVE,5,1.5,12,1819,3,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,,59,63,64,65,79,69,64,22,72,63,61,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,오태성,37,1B,BAT,35,ACTIVE,5,0.9,12,1829,2,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,,60,64,57,66,69,63,65,8,62,63,57,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,최지원,54,CF,BAT,29,ACTIVE,3.7,0.8,7,1104,2,비FA 다년계약,KBO 공식 연봉 + 기간 추정,C,,63,69,55,66,57,69,65,15,73,71,69,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,윤태윤,12,SP,PIT,23,FARM,0.3,2.5,5,814,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,55,73,10,10,38,57,59,55,73,78,66,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,한두영,34,SP,PIT,29,FARM,1,0,9,1372,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,63,73,10,10,48,66,68,60,64,76,70,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,김도원,61,SP,PIT,23,FARM,0.3,1,5,742,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,49,63,10,10,54,53,52,52,71,69,62,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,최수성,62,SP,PIT,26,FARM,0.3,0.8,8,1160,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,50,58,10,10,54,48,53,53,79,89,68,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,최용수,67,RP,PIT,25,FARM,0.3,0.3,6,896,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,56,64,10,10,47,49,59,52,75,48,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,이준민,90,RP,PIT,24,FARM,0.3,0,0,8,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,53,62,10,10,38,58,57,53,72,49,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,류현진,104,RP,PIT,22,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,51,63,10,10,52,42,60,52,84,43,57,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,김민영,24,C,BAT,37,FARM,1,1.4,12,1768,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,68,62,67,68,53,66,21,77,59,48,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,이지훈,56,C,BAT,40,FARM,2,0,12,1805,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,62,69,69,70,86,58,69,23,80,49,55,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,장현서,05,1B,BAT,22,FARM,0.3,0,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,50,61,45,49,40,42,48,16,71,72,56,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,박명혁,07,2B,BAT,25,FARM,0.3,0.9,7,1015,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,45,58,46,50,81,39,49,9,61,64,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,김태원,36,2B,BAT,23,FARM,0.3,0.4,1,234,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,49,64,56,53,69,55,52,14,61,64,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,석정윤,52,SS,BAT,27,FARM,0.4,0,5,735,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,47,54,42,48,59,49,47,22,70,68,56,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,최윤준,65,3B,BAT,20,FARM,0.3,0.6,1,161,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,48,68,40,53,46,58,52,9,84,66,67,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,안재안,111,SS,BAT,23,FARM,0.3,0.3,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,55,65,60,46,57,64,45,21,76,52,61,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,최준겸,7,2B,BAT,27,FARM,0.7,0.7,9,1359,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,71,49,65,61,61,64,22,64,60,68,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,이승호,9,RF,BAT,21,FARM,0.3,1.3,2,379,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,50,71,47,41,82,51,40,13,80,60,71,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,이정빈,33,LF,BAT,28,FARM,0.3,0.6,6,885,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,47,59,47,37,88,39,59,16,80,57,69,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,한유도,35,RF,BAT,37,FARM,9,0.3,12,1786,1,실계약 5년 60억,2022 비FA 다년계약,C,,60,65,66,51,47,53,50,19,59,66,51,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,김정찬,48,CF,BAT,22,FARM,0.3,1,3,469,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,55,71,59,56,52,62,55,11,58,62,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,이원진,100,CF,BAT,20,FARM,0.3,0.7,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,63,82,70,52,61,73,74,9,59,77,67,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-incheon-landing,이승재,106,CF,BAT,20,FARM,0.3,0.6,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,60,80,68,54,58,61,53,12,58,63,57,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,박준영,18,SP,PIT,19,ACTIVE,0.3,7,0,49,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,SP,73,84,10,10,37,69,73,72,74,75,70,상위 유망주,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,김윤찬,19,SP,PIT,21,ACTIVE,0.4,2,2,330,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,63,77,10,10,36,58,61,61,64,85,75,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,조영우,20,SP,PIT,27,ACTIVE,0.7,1,8,1241,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,58,65,10,10,37,53,60,57,82,69,65,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,김성혁,21,SP,PIT,29,ACTIVE,0.6,0.7,6,959,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,SP,57,62,10,10,47,64,56,53,63,75,71,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,박지혁,37,SP,PIT,19,ACTIVE,0.3,1.2,0,43,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,C,SP,69,85,10,10,34,71,63,65,72,79,66,상위 유망주,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,안우우,41,RP,PIT,27,ACTIVE,4.8,6,9,1378,3,보류권/군복무 반영,서비스타임 보정,C,MR,62,70,10,10,40,66,64,64,69,39,57,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,정다민,45,RP,PIT,20,ACTIVE,0.3,0.9,0,35,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,57,68,10,10,31,52,60,63,63,49,68,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,원종우,46,RP,PIT,39,ACTIVE,5,1.1,12,1817,1,실계약 4년 25억,2023 FA 계약,C,MR,66,73,10,10,35,73,66,63,69,45,59,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,유찬,48,RP,PIT,27,ACTIVE,0.8,0,0,89,1,연봉계약,기간/연봉 추정,C,MR,61,65,10,10,40,49,71,63,82,40,62,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,알칸타태,54,SP,PIT,34,ACTIVE,12,0,8,1239,1,외국인 단년계약,외국인 단년계약 추정,A,SP,84,85,10,10,38,76,89,88,83,96,89,외국인 · 에이스 · 이닝이터 · 탈삼진형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,배동율,61,RP,PIT,28,ACTIVE,0.3,0.6,6,938,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,59,66,10,10,33,53,53,54,81,58,72,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,전준찬,62,RP,PIT,21,ACTIVE,0.4,2.1,2,317,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,59,69,10,10,44,66,65,65,79,57,69,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,박정호,94,RP,PIT,20,ACTIVE,0.3,1,1,224,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,MR,66,76,10,10,38,64,66,66,58,61,70,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,김건준,12,C,BAT,22,ACTIVE,0.6,2.2,3,524,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,64,74,56,52,61,56,74,11,68,76,68,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,김동형,44,C,BAT,22,ACTIVE,0.4,1.5,3,468,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,70,83,68,79,58,62,78,15,62,57,67,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,권혁형,00,1B,BAT,21,ACTIVE,0.3,0.5,1,200,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,70,83,63,59,80,66,81,23,66,77,70,성장형,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,안치율,9,2B,BAT,36,ACTIVE,2,1.8,12,1829,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,57,62,50,52,74,65,51,24,81,71,55,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,김웅혁,10,2B,BAT,30,ACTIVE,0.4,0.8,11,1638,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,67,72,64,55,42,61,77,21,79,69,70,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,서건안,14,SS,BAT,37,ACTIVE,1.2,0,12,1817,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,73,78,65,78,78,79,77,17,60,51,51,수비핵심 · 베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,히우찬,22,2B,BAT,30,ACTIVE,6,0,0,26,1,외국인 단년계약,외국인 단년계약 추정,C,,64,70,59,60,63,58,59,24,63,54,60,외국인,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,최재욱,38,2B,BAT,19,ACTIVE,0.3,0.8,0,47,2,유망주 장기보유,KBO 공식 연봉 + 기간 추정,B,,73,84,70,65,76,65,64,18,79,49,65,상위 유망주,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,최주욱,53,1B,BAT,38,ACTIVE,3,0.6,12,1829,1,실계약 4년 42억,2021 FA 계약,B,,73,73,66,63,41,69,85,10,67,49,52,베테랑,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,어준준,92,1B,BAT,20,ACTIVE,0.5,1.1,1,201,1,외국인 단년계약,KBO 공식 연봉 + 외국인 단년계약,B,,73,83,73,77,61,77,76,13,61,54,70,외국인 · 성장형,Y,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,여동겸,93,SS,BAT,21,ACTIVE,0.3,1,1,181,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,63,77,67,55,37,70,54,16,65,72,68,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,임병혁,17,CF,BAT,31,ACTIVE,0.6,2,12,1802,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,71,77,72,78,79,72,77,19,65,73,72,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,추재준,27,CF,BAT,27,ACTIVE,0.6,0.8,9,1357,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,70,78,71,58,55,65,80,11,65,76,60,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,원성태,33,RF,BAT,26,ACTIVE,0.4,0,2,302,1,연봉계약,KBO 공식 연봉 + 기간 추정,B,,70,81,62,64,62,72,63,20,62,50,63,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,박찬도,43,RF,BAT,23,ACTIVE,0.4,1.3,5,800,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,64,73,62,63,37,65,62,13,67,53,65,1군 등록 선수,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,박수준,87,CF,BAT,27,ACTIVE,0.4,0,3,505,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,56,62,56,65,83,49,64,21,72,48,60,주루형,,KBO Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,오석도,31,SP,PIT,28,FARM,0.8,0.6,8,1218,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,48,64,10,10,39,40,52,49,69,89,72,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,정세찬,64,SP,PIT,20,FARM,0.3,0.4,1,168,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,61,75,10,10,50,60,58,60,72,73,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,김연겸,68,SP,PIT,22,FARM,0.5,0.9,2,294,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,59,79,10,10,52,59,68,60,61,91,68,퓨처스 · 성장형 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,임진진,69,SP,PIT,20,FARM,0.3,0.4,1,234,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,SP,63,74,10,10,39,68,65,64,62,87,61,퓨처스 · 이닝이터,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,김동호,99,RP,PIT,22,FARM,0.4,1.3,3,443,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,62,83,10,10,37,51,64,61,82,58,58,퓨처스 · 성장형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,이태윤,109,RP,PIT,21,FARM,0.3,1,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,61,75,10,10,44,65,67,67,66,50,53,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,한민원,110,RP,PIT,27,FARM,0.2,0.1,4,580,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,63,76,10,10,52,54,72,64,60,48,54,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,김태우,113,RP,PIT,20,FARM,0.3,0.6,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,54,73,10,10,34,55,50,50,72,54,55,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,이승형,118,RP,PIT,21,FARM,0.2,0,0,0,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,MR,54,65,10,10,51,47,61,54,82,57,69,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,박성재,56,C,BAT,22,FARM,0.3,0.5,2,324,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,46,61,42,42,77,42,41,12,60,58,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,김시재,121,C,BAT,25,FARM,0.4,0.5,5,725,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,60,72,59,50,70,55,72,13,65,55,63,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,김태호,1,2B,BAT,31,FARM,1.1,0.8,12,1790,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,48,54,53,39,57,54,38,13,60,75,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,이재겸,5,2B,BAT,21,FARM,0.3,1.3,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,77,63,45,74,62,67,19,84,69,64,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,오선안,6,2B,BAT,37,FARM,0.8,0.6,12,1824,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,57,60,52,57,65,47,56,9,60,74,58,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,김지우,26,3B,BAT,19,FARM,0.3,1.6,0,24,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,52,67,44,45,82,56,44,23,63,46,64,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,염승준,39,3B,BAT,20,FARM,0.3,1.6,1,158,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,52,71,58,59,50,48,58,8,72,63,56,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,이주안,58,CF,BAT,24,FARM,0.4,0.6,6,881,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,63,70,57,73,62,56,72,20,74,46,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,양현찬,60,2B,BAT,20,FARM,0.3,0.7,1,166,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,61,73,58,59,85,71,58,14,62,74,56,퓨처스 · 주루형,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,서유훈,104,3B,BAT,26,FARM,0.3,0.3,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,48,62,42,53,63,45,52,14,81,77,70,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,유정태,115,3B,BAT,23,FARM,0.3,0.4,1,145,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,56,67,55,56,41,52,55,14,68,50,60,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,이주서,2,CF,BAT,25,FARM,1.4,1.5,7,1070,1,연봉계약,KBO 공식 연봉 + 기간 추정,C,,46,53,40,56,62,39,55,20,74,46,59,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,박채윤,72,LF,BAT,22,FARM,0.3,0,0,13,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,51,72,44,49,64,43,48,24,63,69,68,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
-gocheok-heroes,심휘형,111,CF,BAT,21,FARM,0.3,0.3,2,290,1,퓨처스/최저연봉권,KBO 공식 연봉 + 기간 추정,C,,56,75,64,46,75,56,68,24,83,66,65,퓨처스,,KBO Futures Register Official Salary/Stat Rating 2026-06-23
+teamId,name,jerseyNumber,pos,type,age,rosterStatus,annualSalary,signingBonus,serviceYears,serviceDays,yearsLeft,contractKind,contractSource,controlYears,controlKind,faGrade,pitcherRole,ovr,pot,hit,pow,spd,def,arm,pit,form,stamina,durability,trait,foreignPlayer,source
+seoul-twin-stars,임찬훈,1,SP,PIT,34,ACTIVE,2,3,12,1829,2,실계약 4년 50억,2024 FA 계약,0,FA 자격권,B,SP,70,74,10,10,50,78,71,73,76,96,88,이닝이터 · 베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,함덕형,11,SP,PIT,31,ACTIVE,8,0.6,12,1816,2,실계약 4년 38억,2024 FA 계약,0,FA 자격권,C,SP,60,69,10,10,35,68,64,57,84,86,71,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,우강현,20,SP,PIT,24,ACTIVE,0.4,0.4,3,524,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,SP,60,70,10,10,39,63,60,61,73,87,73,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,배재호,25,SP,PIT,32,ACTIVE,0.6,1,11,1667,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,56,62,10,10,30,44,69,61,62,72,57,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,손주진,29,SP,PIT,28,ACTIVE,2.9,1.5,10,1527,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,69,78,10,10,39,73,67,70,81,82,75,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,톨허스수,30,SP,PIT,27,ACTIVE,6,0,1,234,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,A,SP,78,80,10,10,54,76,90,82,78,96,94,외국인 · 핵심전력 · 이닝이터 · 탈삼진형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,이정민,31,RP,PIT,30,ACTIVE,2.7,2,8,1234,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,69,71,10,10,32,68,80,76,79,53,69,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,김진서,42,RP,PIT,41,ACTIVE,4.5,0,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,68,73,10,10,43,58,74,73,72,44,59,베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,김진준,45,RP,PIT,28,ACTIVE,0.4,1,6,945,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,B,MR,70,78,10,10,40,60,76,72,79,45,60,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,리오원,46,RP,PIT,33,ACTIVE,6,0,0,15,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,B,MR,70,76,10,10,52,68,71,71,64,52,55,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,김윤영,47,RP,PIT,26,ACTIVE,1,2,7,1066,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,MR,59,64,10,10,33,55,55,54,78,53,70,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,장현수,50,RP,PIT,31,ACTIVE,15,1.5,12,1817,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,66,74,10,10,52,69,69,67,62,54,69,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,박시진,58,RP,PIT,20,ACTIVE,0.3,0,1,198,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,57,68,10,10,41,46,57,60,81,52,72,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,김영빈,67,RP,PIT,21,ACTIVE,0.9,2,1,234,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,67,84,10,10,43,75,79,72,75,56,65,상위 유망주,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,웰혁,68,RP,PIT,29,ACTIVE,6,0,1,221,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,MR,67,73,10,10,42,57,75,71,74,40,64,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,박동현,27,C,BAT,36,ACTIVE,5,0.6,12,1829,1,실계약 4년 65억,2023 FA 계약,0,FA 자격권,B,,70,74,68,67,37,77,66,21,66,80,57,베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,이주수,63,C,BAT,23,ACTIVE,0.6,0.7,5,814,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,B,,72,83,69,74,85,67,73,15,80,53,69,성장형 · 주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,문보성,2,3B,BAT,26,ACTIVE,4.8,0.8,6,959,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,B,,70,75,66,65,64,80,64,20,82,74,66,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,신민혁,4,2B,BAT,30,ACTIVE,3.8,0,8,1249,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,57,59,56,65,49,49,64,11,78,63,71,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,구본서,6,SS,BAT,29,ACTIVE,2.3,0.5,8,1249,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,62,69,66,65,36,53,64,13,74,52,70,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,이영혁,7,1B,BAT,24,ACTIVE,0.6,1.3,6,949,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,69,79,70,68,82,67,67,20,67,61,70,성장형 · 주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,오지태,10,SS,BAT,36,ACTIVE,14,2.8,12,1829,4,실계약 6년 124억,2024 비FA 다년계약,0,FA 자격권,C,,62,66,58,66,81,56,65,14,76,56,56,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,오스도,23,1B,BAT,33,ACTIVE,12,0,3,524,1,연봉계약,추정 연봉 · 서비스타임 반영,5,구단 보류권,A,,86,89,97,98,79,61,63,8,81,57,90,프랜차이즈급 · 교타자 · 장타형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,천성현,53,2B,BAT,29,ACTIVE,0.9,1,7,1104,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,C,,68,73,61,70,80,61,69,12,61,82,64,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,문정진,56,3B,BAT,23,ACTIVE,0.4,0.4,1,186,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,67,77,66,62,64,62,61,14,77,45,62,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,문성호,8,LF,BAT,29,ACTIVE,2.8,0.3,9,1379,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,,70,75,65,62,88,65,61,12,62,45,71,주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,박해태,17,CF,BAT,36,ACTIVE,8,0,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,,73,77,90,61,72,65,64,20,67,53,80,교타자 · 베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,홍창영,51,RF,BAT,33,ACTIVE,5.2,0.8,11,1684,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,67,69,69,57,57,61,79,23,73,53,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,송찬도,55,RF,BAT,27,ACTIVE,0.6,0.5,5,794,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,B,,72,81,66,80,78,72,79,12,63,65,71,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,이우훈,21,SP,PIT,34,FARM,0.8,1.1,12,1787,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,60,71,10,10,40,62,66,62,58,72,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,조원수,38,SP,PIT,23,FARM,0.3,2.5,5,814,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,SP,46,63,10,10,30,40,59,51,75,71,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,김동겸,43,SP,PIT,21,FARM,0.3,0.3,0,7,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,SP,49,70,10,10,55,53,56,53,63,85,71,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,조건진,48,SP,PIT,24,FARM,0.3,0.7,6,884,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,SP,45,61,10,10,34,40,45,42,71,79,69,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,권우재,49,RP,PIT,19,FARM,0.3,0.8,0,4,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,62,83,10,10,38,57,62,62,62,52,64,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,김주혁,57,RP,PIT,30,FARM,0.3,0.5,7,1104,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,MR,47,59,10,10,50,44,54,46,77,66,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,양우영,65,RP,PIT,19,FARM,0.3,2.5,0,89,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,51,64,10,10,53,47,54,53,68,41,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,하현태,119,RP,PIT,25,FARM,0.3,0.6,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,MR,52,63,10,10,44,53,58,58,77,64,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,오승우,123,RP,PIT,25,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,MR,44,63,10,10,49,46,49,42,71,58,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,김준안,44,C,BAT,32,FARM,0.6,0,12,1829,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,61,75,53,53,57,67,52,21,60,77,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,강민안,102,C,BAT,19,FARM,0.3,0.7,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,47,69,55,41,54,47,40,8,78,66,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,전경욱,128,C,BAT,27,FARM,0.3,0.6,9,1305,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,45,56,51,35,44,50,57,15,65,81,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,강민재,00,3B,BAT,26,FARM,0.3,0.3,0,6,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,52,66,57,47,40,47,46,23,71,59,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,김정혁,14,2B,BAT,28,FARM,0.5,1.1,10,1539,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,61,65,65,66,58,59,65,24,76,45,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,손용성,15,1B,BAT,26,FARM,0.3,1,2,300,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,46,56,40,42,86,42,41,10,71,64,56,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,추세욱,35,SS,BAT,20,FARM,0.3,1.5,1,234,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,47,66,40,47,37,51,46,18,69,85,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,김성원,36,2B,BAT,26,FARM,0.3,0.5,7,1024,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,53,59,46,63,60,62,62,12,63,60,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,이지혁,111,2B,BAT,20,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,53,74,45,63,68,43,62,23,78,60,68,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,곽민진,124,SS,BAT,22,FARM,0.3,0.3,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,47,63,46,45,74,37,44,19,70,71,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,김주욱,5,LF,BAT,28,FARM,0.4,1,11,1597,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,57,61,49,48,54,54,47,15,63,60,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,함창수,24,RF,BAT,25,FARM,0.3,0.5,2,379,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,44,63,49,45,40,48,44,15,75,73,61,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,이재준,52,LF,BAT,27,FARM,0.7,1,7,1068,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,58,67,65,66,41,51,65,18,83,55,70,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,서영도,60,LF,BAT,20,FARM,0.3,0.7,1,234,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,52,70,55,62,64,53,61,13,76,78,56,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,김현재,66,LF,BAT,22,FARM,0.3,1.5,2,314,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,52,71,46,51,60,58,50,11,79,72,67,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+seoul-twin-stars,엄태율,104,RF,BAT,23,FARM,0.3,0.3,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,53,68,61,54,68,52,53,8,83,65,66,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,고영빈,1,SP,PIT,35,ACTIVE,26,1.3,12,1825,3,실계약 5년 107억,2024 비FA 다년계약,0,FA 자격권,A,SP,79,82,10,10,41,77,93,85,78,96,76,핵심전력 · 이닝이터 · 탈삼진형 · 제구형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,스기모욱,11,SP,PIT,26,ACTIVE,6,0,0,75,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,SP,63,71,10,10,34,61,59,59,73,71,65,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,우규훈,12,SP,PIT,41,ACTIVE,2,1.2,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,60,60,10,10,38,55,60,60,79,81,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,김민원,26,SP,PIT,34,ACTIVE,2,1.1,12,1818,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,SP,71,77,10,10,40,69,73,73,61,74,68,베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,소형진,30,SP,PIT,25,ACTIVE,3.3,3.6,7,1081,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,B,SP,73,87,10,10,31,68,82,79,78,82,69,상위 유망주,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,사우준,32,SP,PIT,27,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,B,SP,71,74,10,10,42,79,83,76,74,96,85,외국인 · 이닝이터,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,이상혁,37,RP,PIT,31,ACTIVE,1,0.8,8,1182,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,67,73,10,10,54,66,74,70,74,49,67,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,주서,38,RP,PIT,31,ACTIVE,1.5,3,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,62,64,10,10,52,55,67,63,81,40,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,손동빈,41,RP,PIT,25,ACTIVE,1.5,0.9,8,1249,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,B,MR,71,81,10,10,31,70,84,77,70,65,68,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,로준,43,RP,PIT,29,ACTIVE,6,0,1,149,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,MR,59,61,10,10,38,59,67,59,66,50,64,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,오원빈,47,RP,PIT,25,ACTIVE,2.3,2,7,1089,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,MR,61,69,10,10,51,64,66,61,77,40,65,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,박영빈,60,RP,PIT,23,ACTIVE,3,3,5,814,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,MR,69,76,10,10,30,65,78,74,74,55,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,조대빈,42,C,BAT,27,ACTIVE,0.6,0.4,6,884,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,63,71,70,73,57,54,72,9,65,77,71,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,한승훈,45,C,BAT,32,ACTIVE,1.5,0.9,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,68,70,68,69,87,74,68,20,65,51,63,주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,오윤도,4,2B,BAT,34,ACTIVE,1.4,0,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,66,73,73,66,68,71,65,15,84,74,62,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,이강준,6,3B,BAT,19,ACTIVE,0.3,1.3,0,79,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,64,77,61,63,58,74,62,9,66,85,65,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,김상율,7,SS,BAT,36,ACTIVE,4,2.8,12,1829,1,실계약 4년 29억,2023 FA 계약,0,FA 자격권,B,,70,74,88,48,65,71,73,24,66,60,82,교타자 · 베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,류현현,9,3B,BAT,26,ACTIVE,0.3,0.5,3,515,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,64,72,69,53,79,74,75,13,71,48,60,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,허경재,13,3B,BAT,36,ACTIVE,7,1.3,12,1823,5,실계약 4+3년 85억,2025 FA 계약,0,FA 자격권,C,,62,69,65,51,44,70,73,14,59,72,56,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,힐리어서,34,1B,BAT,32,ACTIVE,12,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,A,,84,85,92,98,77,65,60,16,72,60,88,외국인 · 프랜차이즈급 · 교타자 · 장타형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,안인재,50,3B,BAT,25,ACTIVE,0.3,1,7,1018,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,68,75,65,58,77,76,80,13,61,58,72,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,권동안,52,SS,BAT,28,ACTIVE,0.7,1.5,6,959,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,63,74,63,55,40,55,54,22,69,84,72,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,최원태,3,LF,BAT,29,ACTIVE,6,1.5,11,1684,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,A,,81,82,97,77,82,65,65,11,79,77,94,핵심전력 · 교타자 · 주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,김현욱,10,RF,BAT,38,ACTIVE,8,0,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,A,,79,80,94,73,64,70,82,21,69,55,86,핵심전력 · 교타자 · 베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,안현호,23,RF,BAT,23,ACTIVE,1.8,0.7,5,783,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,58,65,65,57,47,54,56,16,80,55,65,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,배정윤,27,CF,BAT,31,ACTIVE,2.6,1.5,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,69,74,74,74,76,64,73,18,65,47,65,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,이정윤,33,RF,BAT,32,ACTIVE,0.7,0.3,10,1539,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,56,65,48,52,38,55,51,14,60,45,66,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,장진윤,51,RF,BAT,33,ACTIVE,0.9,0.7,9,1331,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,69,73,70,75,69,66,74,11,71,47,59,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,김민호,53,LF,BAT,31,ACTIVE,2.9,0.6,12,1805,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,58,65,57,52,80,51,51,22,81,48,70,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,이정율,21,SP,PIT,29,FARM,0.4,1.6,10,1539,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,57,71,10,10,41,47,67,60,69,73,66,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,한승진,35,SP,PIT,33,FARM,3,1.8,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,59,61,10,10,36,56,65,57,70,78,61,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,박건호,46,SP,PIT,20,FARM,0.3,1.2,1,234,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,SP,62,83,10,10,37,60,58,61,62,92,63,퓨처스 · 성장형 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,이상훈,48,SP,PIT,23,FARM,0.3,1.6,5,725,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,SP,62,80,10,10,45,50,68,69,65,88,70,퓨처스 · 성장형 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,이원안,64,RP,PIT,23,FARM,0.3,1,5,814,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,MR,55,63,10,10,36,47,53,53,76,63,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,고준훈,68,RP,PIT,21,FARM,0.3,0.7,0,89,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,46,63,10,10,31,50,49,52,79,49,54,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,정정호,92,RP,PIT,22,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,58,79,10,10,36,51,60,56,68,52,62,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,장민민,100,RP,PIT,24,FARM,0.3,0,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,53,68,10,10,37,49,53,52,78,65,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,김휘호,113,RP,PIT,19,FARM,0.3,0.3,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,58,78,10,10,54,50,61,61,79,45,57,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,권효호,117,RP,PIT,23,FARM,0.3,0,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,46,60,10,10,46,52,50,42,68,50,61,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,김민도,44,C,BAT,21,FARM,0.3,0.3,2,298,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,48,63,54,53,76,52,52,16,67,49,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,강현준,55,C,BAT,25,FARM,0.6,1.5,7,1077,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,44,54,44,43,74,49,42,12,69,62,61,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,강민태,5,1B,BAT,27,FARM,0.4,0.6,3,462,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,54,58,49,60,43,64,59,23,66,63,67,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,오서우,25,3B,BAT,20,FARM,0.3,0.6,1,157,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,48,59,46,53,73,46,52,8,60,85,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,장준율,56,2B,BAT,31,FARM,0.7,1,12,1796,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,53,58,51,48,60,56,47,9,69,66,68,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,손민훈,57,1B,BAT,22,FARM,0.3,0.9,3,435,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,58,76,52,57,54,61,56,18,74,49,61,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,임상혁,94,2B,BAT,23,FARM,0.3,0.8,0,89,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,49,58,56,44,56,39,43,22,68,77,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,이용율,106,2B,BAT,20,FARM,0.3,0.5,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,57,69,55,60,66,54,59,14,68,58,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,박성훈,120,1B,BAT,23,FARM,0.3,0,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,46,57,47,44,87,52,43,21,62,54,61,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,최성우,31,LF,BAT,24,FARM,0.3,0,3,524,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,56,68,56,51,40,63,50,14,76,57,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,이재준,65,LF,BAT,19,FARM,0.3,0.6,0,8,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,56,71,63,64,41,49,63,18,83,55,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,박민호,104,CF,BAT,20,FARM,0.3,0.7,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,54,72,50,60,81,45,59,13,62,74,67,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,정영민,108,RF,BAT,27,FARM,0.3,0.3,5,725,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,49,63,46,53,78,49,52,21,60,60,67,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+suwon-wizpark,김경재,109,RF,BAT,19,FARM,0.3,0.5,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,56,68,55,50,58,54,49,21,74,65,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,최지호,11,SP,PIT,28,ACTIVE,1.5,1.3,10,1539,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,68,77,10,10,39,57,66,69,70,70,71,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,미야겸,15,SP,PIT,27,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,SP,68,76,10,10,44,58,78,74,75,77,62,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,최원윤,20,SP,PIT,29,ACTIVE,16,3.5,12,1828,4,실계약 4년 70억,2026 FA 계약,0,FA 자격권,C,SP,61,63,10,10,48,61,66,58,61,73,62,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,이승우,26,SP,PIT,35,ACTIVE,1.5,1,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,SP,70,77,10,10,35,68,70,67,72,81,62,베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김태태,27,SP,PIT,34,ACTIVE,3,0.2,12,1802,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,60,66,10,10,38,57,68,60,72,89,72,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,이승호,28,RP,PIT,26,ACTIVE,1.1,0.7,7,1104,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,MR,62,73,10,10,45,61,76,69,80,63,68,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,백정재,29,RP,PIT,39,ACTIVE,2,1.5,12,1802,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,62,62,10,10,46,57,57,57,66,62,53,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,임기준,38,RP,PIT,33,ACTIVE,3,1.1,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,69,76,10,10,53,66,76,71,69,58,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,양창현,42,RP,PIT,27,ACTIVE,0.9,2.6,9,1388,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,62,67,10,10,55,60,63,66,82,61,64,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,배찬호,55,RP,PIT,20,ACTIVE,0.9,4,1,234,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,68,83,10,10,55,70,73,72,82,57,71,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,장찬현,60,RP,PIT,19,ACTIVE,0.3,1.1,0,79,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,68,83,10,10,39,57,66,69,62,62,63,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김재원,62,RP,PIT,36,ACTIVE,8,0,12,1829,2,실계약 4년 58억,2024 FA 계약,0,FA 자격권,C,MR,59,59,10,10,44,64,69,65,58,60,52,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,오러클영,64,SP,PIT,26,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,B,SP,75,83,10,10,50,68,94,81,79,96,82,외국인 · 이닝이터 · 탈삼진형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,후라안,75,SP,PIT,30,ACTIVE,6,0,3,514,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,A,SP,79,83,10,10,42,74,77,82,81,96,94,외국인 · 핵심전력 · 이닝이터 · 탈삼진형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김도찬,24,C,BAT,26,ACTIVE,0.5,1.1,8,1198,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,C,,69,77,71,68,57,75,67,18,70,48,68,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,장승진,46,C,BAT,32,ACTIVE,0.5,0.7,12,1793,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,,73,75,79,62,63,82,84,12,69,47,63,수비핵심,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,강민원,47,C,BAT,41,ACTIVE,3,0.9,12,1819,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,63,64,64,59,70,55,58,14,64,50,52,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,디아윤,0,1B,BAT,30,ACTIVE,8,0,2,379,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,A,,80,85,92,96,59,57,59,16,71,71,89,외국인 · 핵심전력 · 교타자 · 장타형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,류지찬,16,2B,BAT,32,ACTIVE,7,0.7,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,,76,80,90,71,76,65,61,22,68,76,90,교타자,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김영성,30,3B,BAT,23,ACTIVE,2.2,1.7,5,771,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,62,73,66,53,85,72,52,24,60,63,67,주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,양우우,53,3B,BAT,26,ACTIVE,0.4,0.8,8,1234,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,C,,64,73,56,68,68,69,67,16,84,64,63,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김상욱,56,2B,BAT,24,ACTIVE,0.3,0,0,53,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,63,77,58,63,80,62,62,22,65,74,63,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,전병빈,61,3B,BAT,34,ACTIVE,0.9,0.9,9,1394,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,,73,78,68,73,36,73,72,17,71,48,61,베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,구자윤,5,RF,BAT,33,ACTIVE,5,1.3,12,1828,1,실계약 5년 120억,2022 비FA 다년계약,0,FA 자격권,A,,84,84,92,87,79,69,79,24,72,82,87,프랜차이즈급 · 교타자 · 장타형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김헌재,32,LF,BAT,38,ACTIVE,1,0.7,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,68,68,75,56,45,59,78,16,68,51,61,베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,최형율,34,CF,BAT,43,ACTIVE,4,0.5,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,A,,81,81,95,84,67,67,68,19,73,88,89,핵심전력 · 교타자 · 장타형 · 베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김성성,39,CF,BAT,27,ACTIVE,2,0.7,10,1536,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,62,69,57,62,72,71,61,13,59,49,72,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김지수,58,2B,BAT,25,ACTIVE,2.3,1.1,7,1104,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,B,,74,80,90,49,82,74,77,17,67,69,88,교타자 · 주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,박승율,66,LF,BAT,26,ACTIVE,0.8,0.3,8,1237,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,A,,81,89,88,93,87,57,61,15,70,62,85,핵심전력 · 교타자 · 장타형 · 주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,이재안,17,SP,PIT,25,FARM,0.5,1.5,6,900,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,SP,45,64,10,10,54,51,56,48,67,80,66,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,양우,19,SP,PIT,34,FARM,0.7,0.3,12,1746,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,48,61,10,10,41,50,58,51,84,76,67,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,최하율,37,SP,PIT,27,FARM,0.6,0.5,8,1249,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,SP,59,64,10,10,46,49,58,54,74,86,60,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,이재윤,45,SP,PIT,32,FARM,0.6,0.4,7,1104,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,SP,59,69,10,10,45,59,71,66,82,91,70,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김무겸,48,RP,PIT,27,FARM,0.7,0.5,8,1168,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,MR,47,61,10,10,38,40,55,47,62,46,56,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,홍원욱,65,RP,PIT,25,FARM,0.4,0.8,7,1104,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,MR,57,71,10,10,53,48,64,59,62,49,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,박주찬,101,RP,PIT,25,FARM,0.4,0.6,5,725,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,MR,49,66,10,10,40,41,57,51,58,50,56,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,진희영,115,RP,PIT,20,FARM,0.3,0.3,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,51,69,10,10,41,57,59,54,59,43,56,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김동호,123,RP,PIT,25,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,MR,46,64,10,10,55,50,53,50,63,65,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,홍승태,131,RP,PIT,25,FARM,0.4,0.5,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,MR,56,68,10,10,54,61,63,59,58,56,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,이병욱,23,C,BAT,27,FARM,0.6,0.8,8,1249,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,,57,71,61,59,54,66,58,14,77,79,68,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,박세우,52,C,BAT,36,FARM,4,0.6,12,1801,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,54,58,49,60,69,48,59,10,83,76,54,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,이서욱,134,C,BAT,19,FARM,0.3,0.5,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,47,59,54,49,69,56,48,14,77,51,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,심재원,6,SS,BAT,20,FARM,0.4,1.6,1,163,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,59,70,60,56,61,51,55,19,58,54,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김재율,14,2B,BAT,22,FARM,0.4,1,3,453,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,57,67,54,61,70,55,60,21,60,78,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,차승태,35,1B,BAT,20,FARM,0.3,1.2,1,150,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,50,69,58,60,78,59,59,22,70,60,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,이창도,50,1B,BAT,27,FARM,0.4,0.4,2,298,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,50,60,55,50,71,58,49,17,65,69,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,강민안,127,2B,BAT,20,FARM,0.3,0.3,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,49,59,44,55,43,59,54,23,66,63,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,조민진,132,1B,BAT,23,FARM,0.3,0.5,5,725,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,54,67,62,44,42,63,66,15,62,57,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,이한영,143,2B,BAT,24,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,57,74,52,54,69,48,53,8,79,55,56,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,이성성,13,LF,BAT,33,FARM,1.1,0.8,11,1635,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,58,60,60,59,40,62,58,19,68,60,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김태수,25,LF,BAT,30,FARM,0.6,0.6,12,1762,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,46,50,51,54,65,45,53,21,72,78,56,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,함수민,40,RF,BAT,20,FARM,0.3,0.9,1,161,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,63,78,67,63,83,62,62,22,58,64,67,퓨처스 · 성장형 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김현혁,44,CF,BAT,24,FARM,1,0.3,6,890,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,63,81,58,55,39,57,54,12,81,69,62,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,김상준,107,RF,BAT,23,FARM,0.4,0.4,3,435,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,48,65,44,43,40,58,42,14,58,71,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daegu-blue-lions,이진민,117,CF,BAT,20,FARM,0.3,0.6,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,49,66,44,43,48,58,42,24,73,50,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,곽도원,0,SP,PIT,22,ACTIVE,0.9,0.6,3,472,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,B,SP,73,88,10,10,39,70,79,74,59,85,75,상위 유망주,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김태훈,10,SP,PIT,20,ACTIVE,0.6,3,1,209,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,SP,66,77,10,10,41,61,66,69,69,91,76,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,조상욱,11,SP,PIT,32,ACTIVE,4,2.5,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,59,68,10,10,53,49,68,61,71,71,67,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,올수,33,SP,PIT,32,ACTIVE,12,0,1,234,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,A,SP,87,91,10,10,54,83,95,92,87,96,92,외국인 · 에이스 · 이닝이터 · 탈삼진형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,최지형,39,SP,PIT,23,ACTIVE,1,1.5,5,803,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,SP,56,63,10,10,36,54,54,54,63,70,68,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,네도,40,SP,PIT,33,ACTIVE,8,0,2,379,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,A,SP,80,82,10,10,34,74,80,84,79,96,79,외국인 · 핵심전력 · 이닝이터 · 탈삼진형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,황동혁,41,RP,PIT,24,ACTIVE,0.8,0.4,3,514,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,MR,69,76,10,10,48,57,74,66,74,60,63,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김범겸,49,RP,PIT,31,ACTIVE,4,2,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,61,67,10,10,50,66,64,60,80,62,65,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,전상원,51,RP,PIT,30,ACTIVE,3.1,0.7,11,1635,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,57,66,10,10,49,53,62,55,76,66,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,양현민,54,RP,PIT,38,ACTIVE,8,2,12,1825,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,MR,73,75,10,10,36,81,69,71,62,57,54,베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,한재찬,55,RP,PIT,25,ACTIVE,0.8,0.7,6,951,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,MR,61,69,10,10,37,50,57,60,60,54,67,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,정해성,62,RP,PIT,25,ACTIVE,3,2,7,1093,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,MR,66,75,10,10,38,65,64,66,81,65,67,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,시라카율,63,RP,PIT,25,ACTIVE,6,0,2,311,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,MR,65,76,10,10,42,69,69,69,68,57,64,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,성영형,65,RP,PIT,22,ACTIVE,1.2,0.3,1,234,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,64,75,10,10,41,66,68,67,62,60,70,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,한준빈,25,C,BAT,27,ACTIVE,1,1.6,9,1394,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,67,75,74,66,69,70,65,23,59,64,67,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김태서,42,C,BAT,37,ACTIVE,6,0.8,12,1816,1,실계약 3년 25억,2024 비FA 다년계약,0,FA 자격권,C,,60,64,56,61,55,67,60,15,68,66,55,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,박율,2,SS,BAT,25,ACTIVE,0.6,1.5,7,1104,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,B,,71,85,74,62,52,78,61,12,82,45,68,상위 유망주 · 수비핵심,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김선영,3,2B,BAT,37,ACTIVE,6,0.3,12,1829,1,실계약 3년 30억,2024 FA 계약,0,FA 자격권,C,,61,61,68,49,47,66,71,8,73,53,54,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김도서,5,3B,BAT,23,ACTIVE,2.5,4,5,814,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,A,,86,91,91,98,70,69,81,20,73,82,88,프랜차이즈급 · 교타자 · 장타형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,정현안,12,SS,BAT,20,ACTIVE,0.6,0.5,1,234,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,63,79,67,70,63,66,69,12,73,74,71,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김규형,14,2B,BAT,29,ACTIVE,0.9,0.4,10,1539,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,62,69,55,62,50,61,61,19,83,51,73,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,윤도욱,16,2B,BAT,23,ACTIVE,0.6,1,5,771,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,B,,73,84,70,64,37,74,63,18,68,46,65,상위 유망주,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,변우훈,29,1B,BAT,26,ACTIVE,0.7,1.8,8,1178,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,B,,72,77,75,80,68,71,79,20,78,49,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,박정욱,1,CF,BAT,28,ACTIVE,0.6,0.5,6,959,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,65,69,63,61,69,74,60,18,63,82,70,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,박재윤,15,LF,BAT,20,ACTIVE,0.5,1,1,234,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,63,78,71,63,72,60,62,19,68,80,71,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,카스트수,26,CF,BAT,33,ACTIVE,6,0,0,36,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,,69,75,61,62,65,74,61,15,58,84,59,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김호우,27,CF,BAT,34,ACTIVE,2.5,0.3,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,A,,82,86,92,87,75,65,69,22,70,53,88,핵심전력 · 교타자 · 장타형 · 베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김민도,37,RF,BAT,19,ACTIVE,0.3,1,0,36,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,62,72,65,65,65,52,64,10,67,57,67,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,나성현,47,RF,BAT,37,ACTIVE,8,3,12,1829,2,실계약 6년 150억,2022 FA 계약,0,FA 자격권,A,,82,86,91,98,68,59,63,22,72,75,77,핵심전력 · 교타자 · 장타형 · 베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김현성,17,SP,PIT,26,FARM,0.6,0.9,8,1167,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,SP,62,76,10,10,48,59,67,59,74,84,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,윤중겸,19,SP,PIT,31,FARM,0.6,0.4,6,959,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,SP,53,63,10,10,47,44,48,49,68,92,63,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,지영,32,SP,PIT,19,FARM,0.3,0.6,0,9,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,SP,57,73,10,10,46,48,60,52,73,75,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,장재영,38,SP,PIT,25,FARM,0.3,0.5,5,743,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,SP,63,70,10,10,46,54,60,58,78,86,67,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김기형,53,RP,PIT,26,FARM,0.7,3.5,8,1173,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,MR,58,71,10,10,38,46,66,58,75,60,55,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,강이민,102,RP,PIT,28,FARM,0.3,0.7,8,1160,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,60,73,10,10,49,54,63,58,61,44,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,조건빈,112,RP,PIT,24,FARM,0.3,0,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,46,61,10,10,38,48,50,46,83,58,67,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김경재,118,RP,PIT,27,FARM,0.3,0,4,580,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,5,구단 보류권,C,MR,48,56,10,10,52,47,53,49,76,61,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,권다도,103,C,BAT,24,FARM,0.3,0.7,6,870,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,52,67,48,40,79,44,62,22,77,80,61,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김선형,116,C,BAT,25,FARM,0.3,0.3,5,725,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,46,62,46,48,83,45,47,19,83,45,62,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,신명진,142,C,BAT,24,FARM,0.3,0.3,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,51,62,43,48,81,42,47,24,79,54,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,최정겸,23,2B,BAT,30,FARM,0.5,1.1,12,1742,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,49,56,56,56,79,41,55,23,66,70,66,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,이호찬,36,SS,BAT,31,FARM,0.7,0.6,9,1314,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,59,65,65,69,39,50,68,14,67,76,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,한준겸,119,2B,BAT,19,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,61,73,55,66,71,60,65,17,70,82,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,황석호,127,1B,BAT,24,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,46,61,48,36,85,53,58,20,66,75,62,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,엄준윤,131,SS,BAT,20,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,63,81,55,63,63,72,62,17,65,74,67,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,박종서,133,1B,BAT,19,FARM,0.3,0.5,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,46,59,50,38,68,51,37,10,75,80,61,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,차상민,134,2B,BAT,23,FARM,0.3,0,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,45,55,43,48,80,38,47,12,79,65,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,정해성,9,CF,BAT,22,FARM,0.5,1,3,524,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,50,67,58,47,82,60,46,24,82,47,59,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,한승진,31,LF,BAT,23,FARM,0.3,0.3,2,329,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,59,67,62,67,36,53,66,16,61,75,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,고종형,57,RF,BAT,37,FARM,1,0.8,12,1780,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,54,63,53,63,41,44,62,12,84,73,51,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,김민겸,104,CF,BAT,26,FARM,0.3,0,4,580,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,5,구단 보류권,C,,61,65,66,62,45,61,61,16,61,81,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,박태,113,RF,BAT,20,FARM,0.4,0.3,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,56,76,61,49,74,52,48,17,73,58,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gwangju-tiger-kings,곽동서,138,RF,BAT,24,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,54,66,55,52,37,52,51,13,82,83,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,에르난데재,12,SP,PIT,27,ACTIVE,6,0,0,78,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,SP,60,68,10,10,48,50,61,57,83,71,68,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,이상영,18,SP,PIT,30,ACTIVE,0.4,0.4,8,1219,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,63,72,10,10,55,62,74,67,66,87,68,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,왕옌원,19,SP,PIT,25,ACTIVE,1.8,0,0,89,1,연봉계약,추정 연봉 · 서비스타임 반영,9,구단 보류권,B,SP,71,76,10,10,40,67,91,76,78,96,89,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,화이민,24,SP,PIT,27,ACTIVE,6,0,0,44,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,SP,59,63,10,10,38,57,59,59,70,79,63,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,이민수,27,SP,PIT,33,ACTIVE,0.6,2.4,10,1524,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,58,60,10,10,44,63,68,64,68,92,69,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,장유준,28,RP,PIT,26,ACTIVE,0.3,1,8,1180,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,C,MR,60,69,10,10,47,51,61,56,84,56,68,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,황준민,29,RP,PIT,21,ACTIVE,0.8,3.5,2,344,1,연봉계약,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,MR,63,78,10,10,35,71,61,60,79,46,68,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,조동원,57,RP,PIT,22,ACTIVE,0.9,1.5,2,379,1,연봉계약,공시 연봉 · 서비스타임 반영,7,구단 보류권,B,MR,71,81,10,10,34,62,75,67,60,53,58,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,박상태,58,RP,PIT,32,ACTIVE,2.6,0.8,10,1519,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,66,72,10,10,38,74,70,66,80,55,69,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,정우혁,61,RP,PIT,20,ACTIVE,0.7,5,1,234,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,61,72,10,10,53,62,60,63,75,39,58,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,박준윤,68,RP,PIT,24,ACTIVE,0.3,0,0,46,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,57,70,10,10,42,62,59,61,64,66,67,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,강건혁,69,RP,PIT,19,ACTIVE,0.3,1.3,0,39,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,59,70,10,10,47,59,60,55,79,57,67,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,박준태,96,RP,PIT,23,ACTIVE,0.3,2,5,814,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,MR,60,73,10,10,42,65,62,64,64,66,72,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,류현안,99,SP,PIT,39,ACTIVE,21,2.5,12,1815,6,실계약 8년 170억,2024 FA 복귀 계약,0,FA 자격권,A,SP,83,85,10,10,52,80,87,86,83,96,76,핵심전력 · 이닝이터 · 탈삼진형 · 제구형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,최재원,13,C,BAT,37,ACTIVE,4,0,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,67,67,71,70,75,61,69,9,80,72,64,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,허인영,59,C,BAT,23,ACTIVE,0.4,1.1,5,814,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,69,80,72,57,75,69,79,18,75,63,60,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,이도형,5,SS,BAT,30,ACTIVE,1.2,0.8,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,,72,78,80,80,85,82,79,15,80,85,64,주루형 · 수비핵심,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,심우수,7,SS,BAT,31,ACTIVE,4,1.3,12,1829,3,실계약 4년 50억,2025 FA 계약,0,FA 자격권,C,,60,66,67,56,51,60,55,14,83,64,64,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,노시율,8,3B,BAT,26,ACTIVE,10,2,8,1239,1,연봉계약,공개 다년계약 미확인,1,FA 임박,B,,73,81,76,83,55,77,82,10,67,56,60,장타형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,강백서,50,1B,BAT,27,ACTIVE,9,4.5,9,1394,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,A,,84,88,95,98,62,65,66,16,75,78,94,프랜차이즈급 · 교타자 · 장타형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,박정준,63,2B,BAT,25,ACTIVE,0.4,0.4,7,1068,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,68,79,60,57,83,61,79,24,67,48,72,주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,황영서,95,2B,BAT,27,ACTIVE,1,0.8,2,369,1,연봉계약,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,60,69,64,61,56,53,60,8,76,50,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,이진겸,10,RF,BAT,29,ACTIVE,1.1,0.5,11,1668,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,61,64,65,64,78,70,63,24,80,79,74,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,권광서,17,RF,BAT,29,ACTIVE,0.4,0,11,1600,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,,72,81,79,60,86,77,82,18,63,60,69,주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,김태성,25,LF,BAT,29,ACTIVE,1.3,0.5,10,1539,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,62,68,60,71,61,54,70,20,73,51,70,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,페라준,30,RF,BAT,28,ACTIVE,12,0,2,379,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,A,,86,94,97,98,77,62,73,18,76,64,94,외국인 · 프랜차이즈급 · 교타자 · 장타형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,이원호,37,CF,BAT,27,ACTIVE,0.7,0.8,8,1239,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,C,,62,67,54,50,80,64,72,12,58,68,72,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,문현영,51,2B,BAT,22,ACTIVE,2.3,1.5,3,524,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,A,,82,95,90,90,83,66,61,9,69,62,91,핵심전력 · 교타자 · 장타형 · 주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,유호,65,LF,BAT,23,ACTIVE,0.3,0.9,5,746,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,B,,70,81,63,77,55,80,76,15,69,47,68,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,김승안,14,SP,PIT,25,FARM,0.3,0.3,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,SP,59,75,10,10,53,67,68,61,73,69,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,이교원,31,SP,PIT,26,FARM,0.4,0.8,8,1165,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,SP,53,60,10,10,30,59,66,58,68,89,65,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,김종혁,38,SP,PIT,32,FARM,1.2,0.3,12,1794,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,53,55,10,10,49,59,50,51,60,91,60,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,김범안,40,SP,PIT,26,FARM,0.3,0.3,0,3,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,SP,59,73,10,10,50,59,66,58,60,76,70,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,김서진,44,RP,PIT,22,FARM,1.7,5,3,471,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,MR,59,81,10,10,40,48,61,61,60,65,63,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,원종진,48,RP,PIT,21,FARM,0.3,0.3,1,169,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,47,60,10,10,32,42,54,54,75,55,54,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,윤산도,49,RP,PIT,27,FARM,0.4,0,6,932,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,MR,48,64,10,10,40,44,54,50,71,62,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,강재형,55,RP,PIT,29,FARM,1.5,0.8,7,1024,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,C,MR,58,65,10,10,39,52,64,59,71,66,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,주현태,66,RP,PIT,34,FARM,1.9,0.5,12,1746,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,50,60,10,10,51,52,51,50,83,50,52,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,엄요찬,108,RP,PIT,20,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,63,84,10,10,45,52,67,70,82,54,58,퓨처스 · 상위 유망주,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,김관찬,112,RP,PIT,23,FARM,0.3,0.9,3,435,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,MR,47,56,10,10,54,51,50,50,64,51,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,박상원,42,C,BAT,29,FARM,0.4,0.4,10,1539,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,45,47,40,33,51,48,55,20,63,72,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,정우수,115,C,BAT,24,FARM,0.2,0,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,52,60,58,46,37,59,45,14,58,60,61,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,이지호,4,1B,BAT,21,FARM,0.3,0,0,48,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,54,75,60,48,76,61,47,13,74,46,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,한경태,6,1B,BAT,28,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,58,68,56,49,40,50,48,20,60,54,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,하주윤,16,SS,BAT,32,FARM,2,3,12,1782,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,51,60,54,42,54,45,41,18,68,80,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,채은형,22,1B,BAT,36,FARM,4,0,12,1809,3,실계약 6년 90억,2023 FA 계약,0,FA 자격권,C,,50,57,48,48,72,53,47,19,83,73,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,정은혁,43,2B,BAT,26,FARM,1.4,0.9,9,1318,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,45,59,50,45,52,52,44,15,84,54,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,김재,56,3B,BAT,26,FARM,0.3,0.7,7,1015,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,44,58,38,35,87,44,35,14,59,69,58,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,최유율,93,2B,BAT,24,FARM,0.3,0.8,0,10,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,49,65,54,58,79,44,57,14,78,45,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,유로찬,33,LF,BAT,26,FARM,0.3,1.1,8,1249,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,,47,57,39,43,35,40,42,20,74,66,68,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,한지형,36,LF,BAT,20,FARM,0.3,1.1,1,234,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,54,68,52,62,43,49,61,24,67,67,67,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,최인준,41,LF,BAT,26,FARM,0.6,0.6,7,1062,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,60,75,67,70,35,65,69,24,76,61,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,김동윤,113,LF,BAT,26,FARM,0.2,0,4,580,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,5,구단 보류권,C,,63,77,59,69,54,60,68,16,83,84,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,최윤겸,114,CF,BAT,26,FARM,0.2,0,4,580,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,5,구단 보류권,C,,57,72,60,46,63,66,68,10,69,62,67,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,박치혁,1,SP,PIT,28,ACTIVE,1.9,1.4,10,1534,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,57,63,10,10,50,56,54,56,74,83,75,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김동빈,4,SP,PIT,24,ACTIVE,0.5,1.2,6,891,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,SP,69,79,10,10,43,68,81,74,59,69,65,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,타카진,12,SP,PIT,24,ACTIVE,6,0,0,13,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,SP,56,63,10,10,46,46,55,51,61,71,69,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김정서,16,SP,PIT,27,ACTIVE,0.4,1.6,9,1382,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,60,67,10,10,41,59,70,63,68,78,66,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,이병수,29,SP,PIT,23,ACTIVE,0.9,2.7,5,814,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,SP,60,74,10,10,45,67,70,67,77,91,77,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,잭로율,39,SP,PIT,30,ACTIVE,6,0,1,224,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,B,SP,73,75,10,10,47,72,84,78,75,96,84,외국인 · 이닝이터 · 제구형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,최지욱,42,RP,PIT,25,ACTIVE,0.9,0,5,764,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,MR,65,73,10,10,47,54,58,61,78,45,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,이용태,45,RP,PIT,37,ACTIVE,1,4.5,12,1790,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,MR,70,77,10,10,31,65,79,76,82,57,59,베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,곽현,47,SP,PIT,27,ACTIVE,3.1,3,9,1393,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,A,SP,81,83,10,10,47,74,98,87,86,96,85,핵심전력 · 이닝이터 · 탈삼진형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,벤자형,48,RP,PIT,33,ACTIVE,6,0,5,790,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,MR,65,67,10,10,44,56,79,71,63,39,61,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,박신준,49,RP,PIT,27,ACTIVE,0.7,1.4,9,1361,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,58,67,10,10,37,61,62,57,82,59,63,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,이영재,50,RP,PIT,29,ACTIVE,6,3.5,10,1521,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,64,69,10,10,53,68,69,66,64,47,68,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김택서,63,RP,PIT,21,ACTIVE,2.2,3.5,2,363,1,연봉계약,공시 연봉 · 서비스타임 반영,7,구단 보류권,B,MR,70,83,10,10,47,58,65,66,65,66,60,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,최민겸,68,SP,PIT,20,ACTIVE,0.6,1.5,1,218,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,A,SP,81,92,10,10,37,84,89,86,85,96,86,핵심전력 · 이닝이터 · 탈삼진형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,양의형,25,C,BAT,39,ACTIVE,42,0.3,12,1829,3,실계약 4+2년 152억,2023 FA 계약,0,FA 자격권,B,,72,73,70,60,38,71,82,10,68,48,63,베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,윤준안,27,C,BAT,26,ACTIVE,0.3,0.7,3,524,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,B,,73,81,66,82,43,77,81,24,80,79,63,장타형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,류현빈,67,C,BAT,21,ACTIVE,0.3,0.3,2,294,1,연봉계약,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,69,83,70,60,45,72,59,24,80,65,65,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,오명율,6,2B,BAT,25,ACTIVE,1.1,0.5,7,1090,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,61,71,57,59,66,58,58,13,66,65,66,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,박찬우,7,3B,BAT,31,ACTIVE,8,0.8,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,64,67,63,58,50,54,57,8,70,54,70,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,이유준,13,SS,BAT,28,ACTIVE,1.1,0.6,10,1527,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,68,72,65,63,35,58,62,16,65,54,67,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,박지안,37,SS,BAT,26,ACTIVE,0.5,0.6,7,1104,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,61,70,55,62,64,56,61,13,79,65,63,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,박준수,52,3B,BAT,20,ACTIVE,0.7,2.6,1,226,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,68,79,75,76,60,77,75,20,79,49,66,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,안재윤,62,SS,BAT,24,ACTIVE,0.7,2,6,932,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,57,65,55,62,40,61,61,12,76,81,60,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김민빈,2,CF,BAT,22,ACTIVE,0.8,2.5,3,524,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,B,,77,87,90,69,73,69,71,17,69,81,89,상위 유망주 · 교타자,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,류승현,14,CF,BAT,22,ACTIVE,0.4,0.5,3,456,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,58,71,52,64,84,61,63,10,82,65,68,주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,카메우,24,RF,BAT,29,ACTIVE,12,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,A,,84,85,92,89,77,70,75,21,70,69,93,외국인 · 프랜차이즈급 · 교타자 · 장타형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,정수혁,31,CF,BAT,36,ACTIVE,6,0.6,12,1829,1,실계약 6년 56억,2021 FA 계약,0,FA 자격권,A,,78,82,90,70,87,65,68,24,68,53,88,핵심전력 · 교타자 · 주루형 · 베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김인훈,33,CF,BAT,32,ACTIVE,0.9,2,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,,70,76,70,59,43,74,81,22,64,79,66,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,조수빈,51,RF,BAT,33,ACTIVE,2,1.4,11,1684,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,67,70,74,60,62,75,59,22,65,62,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,최주영,15,SP,PIT,20,FARM,0.3,1.2,0,42,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,SP,51,62,10,10,47,50,48,47,61,85,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,박정재,17,SP,PIT,30,FARM,0.6,0.5,12,1792,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,46,50,10,10,42,53,50,50,80,78,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김영영,20,SP,PIT,24,FARM,0.4,0,3,456,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,SP,63,71,10,10,45,55,73,70,79,68,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,최승우,28,SP,PIT,25,FARM,1.6,0.8,6,938,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,SP,50,57,10,10,48,48,47,47,69,89,71,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김명찬,46,RP,PIT,33,FARM,1.1,1,10,1456,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,55,57,10,10,43,61,59,60,67,56,61,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김호진,56,RP,PIT,28,FARM,0.4,0,8,1249,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,57,73,10,10,52,46,58,58,71,44,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,장우우,106,RP,PIT,22,FARM,0.3,1,3,435,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,MR,48,65,10,10,39,52,46,49,84,52,66,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,백승현,112,RP,PIT,26,FARM,0.8,0.5,3,435,1,퓨처스/최저연봉권,추정 연봉 · 서비스타임 반영,6,구단 보류권,C,MR,46,55,10,10,38,44,46,46,65,58,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,이기찬,123,RP,PIT,24,FARM,0.3,0,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,51,60,10,10,49,59,50,49,78,48,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김기성,22,C,BAT,29,FARM,1,0.7,10,1516,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,56,63,56,58,71,64,57,17,81,49,66,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,박민윤,26,C,BAT,24,FARM,0.3,0.4,2,379,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,55,66,49,62,62,54,61,10,63,79,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,이희혁,121,C,BAT,22,FARM,0.3,0,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,57,70,49,57,54,66,56,16,70,72,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,임종욱,3,SS,BAT,21,FARM,0.5,1,2,312,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,59,80,59,50,75,53,49,14,80,80,66,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,박성영,5,2B,BAT,24,FARM,0.3,0.3,6,879,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,61,77,62,69,41,51,68,23,84,66,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김동겸,11,2B,BAT,24,FARM,0.4,1.3,5,814,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,45,52,41,46,44,41,45,18,78,47,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,신민훈,103,3B,BAT,23,FARM,0.3,0.8,5,725,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,60,76,53,51,63,63,50,24,66,83,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,지강수,105,1B,BAT,26,FARM,0.3,0.4,4,580,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,5,구단 보류권,C,,54,58,56,62,77,50,61,12,78,79,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,심건겸,117,SS,BAT,23,FARM,0.3,0.4,0,89,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,63,80,64,55,53,62,54,16,73,56,62,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,남태혁,118,2B,BAT,19,FARM,0.3,0.3,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,57,70,54,53,76,64,52,17,75,78,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,전다안,9,CF,BAT,25,FARM,0.3,0.6,2,291,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,53,64,49,52,85,60,51,11,79,53,61,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김대원,32,CF,BAT,26,FARM,0.4,3.5,8,1162,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,,47,63,50,41,79,54,40,19,69,70,68,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,천현겸,58,CF,BAT,27,FARM,0.3,0,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,47,62,45,48,63,50,47,16,81,57,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김주태,66,LF,BAT,19,FARM,0.3,2.5,0,89,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,48,69,55,43,55,52,42,11,58,51,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,김문욱,102,RF,BAT,22,FARM,0.3,0.3,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,63,76,64,57,49,64,56,17,74,82,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+jamsil-bears,임현우,116,RF,BAT,19,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,54,66,50,45,65,50,44,8,64,71,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,라일욱,3,SP,PIT,30,ACTIVE,1.8,0,1,195,1,연봉계약,추정 연봉 · 서비스타임 반영,7,구단 보류권,B,SP,73,79,10,10,48,70,78,70,58,88,67,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,토성,11,SP,PIT,26,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,SP,66,74,10,10,34,60,70,62,69,84,64,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,임지호,19,SP,PIT,23,ACTIVE,0.3,0.6,5,814,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,SP,56,63,10,10,36,46,58,54,74,88,71,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,최성훈,26,SP,PIT,29,ACTIVE,0.8,1,11,1610,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,SP,72,78,10,10,40,68,78,74,80,89,79,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,이준원,40,SP,PIT,23,ACTIVE,0.5,1.2,1,202,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,SP,69,81,10,10,47,77,66,65,60,72,64,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,류진훈,41,RP,PIT,30,ACTIVE,2,1,12,1819,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,56,63,10,10,49,59,59,54,59,47,59,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,신영형,43,RP,PIT,22,ACTIVE,0.3,2.5,3,477,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,MR,64,81,10,10,37,64,62,63,63,51,68,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,송명안,45,RP,PIT,26,ACTIVE,1.2,1.6,8,1175,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,C,MR,57,65,10,10,44,51,71,63,70,57,60,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,김진욱,54,RP,PIT,28,ACTIVE,1.3,0.9,10,1539,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,67,75,10,10,48,60,68,64,70,39,66,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,전사준,57,RP,PIT,27,ACTIVE,1.3,1,8,1238,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,C,MR,68,76,10,10,32,65,83,75,70,53,58,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,김태윤,60,RP,PIT,25,ACTIVE,0.4,1.5,7,1060,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,B,MR,71,79,10,10,31,74,82,77,70,48,65,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,최우안,64,RP,PIT,21,ACTIVE,0.4,0.6,2,306,1,연봉계약,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,MR,61,72,10,10,39,49,67,62,82,38,58,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,테일태,66,SP,PIT,31,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,B,SP,71,72,10,10,30,64,82,75,74,96,83,외국인 · 이닝이터,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,김태민,69,RP,PIT,20,ACTIVE,0.3,1.2,1,160,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,65,79,10,10,38,62,73,65,72,45,68,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,안중안,22,C,BAT,31,ACTIVE,0.6,1.3,12,1810,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,63,68,66,57,58,55,56,16,66,63,71,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,김형형,25,C,BAT,27,ACTIVE,2,1.5,9,1394,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,68,75,62,67,64,66,66,19,68,49,70,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,박민혁,2,2B,BAT,33,ACTIVE,8,1.6,12,1829,5,실계약 5+3년 140억,2023 FA 계약,0,FA 자격권,A,,79,81,97,71,68,69,68,11,74,53,84,핵심전력 · 교타자,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,서호안,5,3B,BAT,30,ACTIVE,1.5,0.3,7,1103,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,C,,59,65,64,63,51,62,62,18,58,81,69,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,오태율,6,2B,BAT,24,ACTIVE,0.3,0.6,6,897,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,67,75,74,68,88,71,67,11,58,63,72,주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,김주호,7,SS,BAT,24,ACTIVE,3.5,1.5,6,959,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,A,,84,92,96,90,68,70,74,19,73,66,87,프랜차이즈급 · 교타자 · 장타형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,김한수,13,2B,BAT,25,ACTIVE,0.5,0,5,797,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,58,65,60,57,73,65,56,13,65,59,60,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,최정태,14,CF,BAT,26,ACTIVE,0.9,0.5,7,1104,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,64,75,68,57,46,65,56,24,74,63,60,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,도태영,16,1B,BAT,33,ACTIVE,0.7,0,11,1664,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,61,63,61,63,57,52,62,19,59,64,67,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,데이비수,24,1B,BAT,35,ACTIVE,6,0,2,368,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,,57,57,65,52,49,55,51,10,82,67,58,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,천재윤,23,RF,BAT,32,ACTIVE,1,0,5,791,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,65,67,73,70,41,58,69,23,82,84,69,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,권희재,36,LF,BAT,36,ACTIVE,2.5,0.3,12,1820,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,64,65,67,58,38,66,57,9,62,84,54,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,박건욱,37,RF,BAT,36,ACTIVE,6,1,12,1829,2,실계약 6년 100억,2022 FA 계약,0,FA 자격권,A,,82,86,90,96,65,61,73,18,71,66,80,핵심전력 · 교타자 · 장타형 · 베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,이우겸,55,CF,BAT,32,ACTIVE,1.6,1.2,12,1826,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,A,,78,80,97,71,66,69,65,8,75,69,87,핵심전력 · 교타자,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,오장성,65,CF,BAT,24,ACTIVE,0.3,0.8,6,882,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,B,,72,82,69,81,50,68,80,12,61,50,63,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,김재혁,21,SP,PIT,30,FARM,0.9,0.3,7,1104,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,SP,61,66,10,10,52,68,62,62,62,83,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,하준우,29,SP,PIT,27,FARM,1.1,1.1,9,1317,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,48,62,10,10,37,42,52,47,61,85,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,손주도,46,SP,PIT,24,FARM,0.8,0.6,2,315,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,SP,52,61,10,10,40,47,54,54,58,88,68,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,조민재,47,SP,PIT,28,FARM,0.5,0.3,5,814,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,SP,60,74,10,10,55,50,65,64,75,80,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,박지훈,56,RP,PIT,26,FARM,0.3,0.4,0,2,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,46,50,10,10,53,53,45,48,68,49,56,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,최요진,67,RP,PIT,19,FARM,0.3,1,0,12,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,47,58,10,10,38,54,47,47,75,59,66,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,홍재안,107,RP,PIT,22,FARM,0.3,0.8,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,55,67,10,10,47,49,56,51,65,38,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,노재형,110,RP,PIT,25,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,MR,50,58,10,10,50,52,53,49,59,60,66,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,박동빈,111,RP,PIT,27,FARM,0.3,1,5,725,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,MR,63,78,10,10,54,70,66,66,66,46,54,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,윤서율,145,RP,PIT,19,FARM,0.3,0.3,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,52,67,10,10,50,57,55,51,84,54,68,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,이희도,32,C,BAT,19,FARM,0.3,1.5,0,89,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,56,69,48,56,54,65,55,16,70,72,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,김정겸,42,C,BAT,28,FARM,0.3,0.4,1,168,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,61,70,60,50,74,69,72,23,76,56,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,신재윤,9,SS,BAT,19,FARM,0.3,2.5,0,52,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,47,60,47,42,77,46,41,17,72,73,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,홍종겸,10,2B,BAT,26,FARM,0.5,1.1,7,1104,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,53,66,54,56,79,63,55,9,72,63,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,윤준윤,31,SS,BAT,25,FARM,0.4,0.8,7,1018,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,59,68,51,50,84,53,49,13,82,78,71,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,한재재,35,3B,BAT,25,FARM,0.3,0.4,2,293,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,52,69,47,46,69,55,45,20,61,63,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,김휘민,44,2B,BAT,24,FARM,2.4,1,6,921,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,49,65,53,44,54,46,43,9,67,63,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,김윤,52,2B,BAT,19,FARM,0.3,0.8,0,89,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,57,77,51,48,87,57,47,14,59,69,59,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,이진,122,2B,BAT,23,FARM,0.3,0.7,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,49,60,54,39,51,58,61,11,75,77,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,한석안,33,LF,BAT,32,FARM,0.5,0.5,7,1092,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,,51,57,51,44,88,58,43,9,73,50,63,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,고준안,49,CF,BAT,19,FARM,0.3,0.8,0,19,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,59,74,54,49,63,68,71,8,71,61,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,김범안,115,LF,BAT,26,FARM,0.3,0.6,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,47,61,39,47,77,49,46,22,60,63,68,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,박영재,119,CF,BAT,29,FARM,0.3,0,3,435,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,5,구단 보류권,C,,59,64,58,52,83,58,51,19,60,54,60,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+changwon-dino-force,장창준,123,LF,BAT,26,FARM,0.3,0.3,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,48,55,45,44,87,42,43,9,75,65,67,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,현도서,17,SP,PIT,33,ACTIVE,0.3,0,9,1377,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,66,68,10,10,42,60,78,70,60,83,68,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,김강혁,19,SP,PIT,31,ACTIVE,0.9,0,11,1627,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,69,78,10,10,47,69,64,65,61,89,72,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,박세율,21,SP,PIT,31,ACTIVE,21,2,12,1829,2,실계약 5년 90억,2023 비FA 다년계약,0,FA 자격권,B,SP,70,71,10,10,50,64,90,76,75,96,84,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,비슬겸,23,SP,PIT,31,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,B,SP,74,78,10,10,44,67,98,81,78,96,92,외국인 · 이닝이터 · 탈삼진형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,로드리게형,31,SP,PIT,28,ACTIVE,6,0,0,78,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,B,SP,74,77,10,10,50,71,98,81,76,96,81,외국인 · 이닝이터 · 탈삼진형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,김원도,34,RP,PIT,33,ACTIVE,8,1.5,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,MR,70,73,10,10,31,76,81,76,82,48,57,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,박정안,36,RP,PIT,23,ACTIVE,0.3,1.5,0,89,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,67,78,10,10,38,55,75,67,75,50,62,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,이민영,37,RP,PIT,23,ACTIVE,0.8,2,5,777,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,MR,57,69,10,10,47,45,58,53,64,46,63,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,나균도,43,SP,PIT,28,ACTIVE,1.8,1.5,10,1525,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,SP,73,76,10,10,50,66,87,78,78,96,82,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,이진민,45,RP,PIT,22,ACTIVE,0.3,1.5,3,457,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,MR,69,79,10,10,30,76,74,74,78,39,61,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,김기윤,47,RP,PIT,22,ACTIVE,0.3,0.8,0,13,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,63,73,10,10,46,51,66,58,77,48,69,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,최준수,56,RP,PIT,25,ACTIVE,1.4,2.5,7,1104,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,MR,58,70,10,10,41,53,58,61,78,58,62,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,정철형,65,RP,PIT,27,ACTIVE,1.8,1,9,1374,1,연봉계약,트레이드/연봉계약 추정,0,FA 자격권,C,MR,60,69,10,10,39,49,58,61,59,59,63,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,손성진,28,C,BAT,24,ACTIVE,0.6,1.5,6,959,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,B,,71,85,65,60,50,79,82,17,72,74,64,상위 유망주 · 수비핵심,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,박건형,69,C,BAT,23,ACTIVE,0.3,0,1,154,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,60,68,59,60,48,60,59,13,62,48,69,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,고승겸,2,2B,BAT,26,ACTIVE,1.9,1.5,8,1211,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,C,,59,66,59,69,72,56,68,21,72,52,69,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,김세훈,5,2B,BAT,23,ACTIVE,0.3,0.8,5,776,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,63,74,58,64,77,62,63,13,63,62,66,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,전민태,13,1B,BAT,27,ACTIVE,1.1,0.7,9,1394,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,58,66,60,64,61,68,63,11,62,85,71,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,한동수,25,3B,BAT,27,ACTIVE,1.6,1.8,9,1383,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,56,67,63,57,56,46,56,14,76,47,60,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,나승도,51,1B,BAT,24,ACTIVE,1,5,6,921,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,B,,72,83,69,82,85,82,81,11,61,50,63,성장형 · 장타형 · 주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,노진우,52,SS,BAT,37,ACTIVE,6,0.8,12,1803,1,실계약 4년 50억,2023 FA 계약,0,FA 자격권,B,,72,77,71,61,38,71,83,24,67,60,52,베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,박승민,53,SS,BAT,34,ACTIVE,1,0.8,12,1828,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,59,66,54,63,54,59,62,22,59,77,57,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,황성준,0,CF,BAT,29,ACTIVE,1.1,0.7,5,809,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,62,64,60,53,75,71,52,23,66,60,70,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,신윤윤,3,RF,BAT,30,ACTIVE,0.4,0.3,8,1208,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,59,61,52,52,65,55,51,19,68,66,69,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,레이예영,29,RF,BAT,32,ACTIVE,12,0,2,379,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,A,,84,85,97,89,67,70,75,16,77,76,88,외국인 · 프랜차이즈급 · 교타자 · 장타형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,손호진,33,3B,BAT,32,ACTIVE,1,0,12,1819,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,69,72,71,77,72,78,76,12,75,85,62,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,김동윤,50,RF,BAT,26,ACTIVE,0.5,0,3,458,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,63,67,70,63,45,57,62,10,69,78,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,김동윤,64,RF,BAT,22,ACTIVE,0.3,0.6,1,164,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,B,,73,86,68,79,84,79,78,9,63,50,68,상위 유망주 · 주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,윤동원,91,RF,BAT,23,ACTIVE,1.8,0.8,5,774,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,63,77,61,63,36,72,62,16,79,53,66,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,정성태,18,SP,PIT,31,FARM,0.4,1,9,1307,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,54,60,10,10,35,60,56,51,70,77,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,구승혁,22,SP,PIT,36,FARM,3,0.5,12,1772,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,53,61,10,10,31,51,62,59,77,86,59,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,김태욱,24,SP,PIT,38,FARM,1.5,1.3,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,61,71,10,10,47,60,58,57,82,83,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,홍민현,38,SP,PIT,25,FARM,0.6,1.6,7,1037,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,SP,56,69,10,10,49,61,55,54,63,90,66,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,이영율,40,RP,PIT,20,FARM,0.3,0.5,1,153,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,45,64,10,10,33,40,45,42,64,65,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,이승찬,46,RP,PIT,28,FARM,0.4,1.8,9,1316,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,63,72,10,10,53,51,64,65,71,40,54,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,최이율,49,RP,PIT,27,FARM,0.4,1.1,9,1349,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,57,69,10,10,52,60,66,58,65,63,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,정현민,57,RP,PIT,25,FARM,0.9,1.5,2,318,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,MR,53,71,10,10,47,61,50,49,74,60,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,박준태,58,RP,PIT,21,FARM,0.3,0.8,2,339,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,MR,46,58,10,10,35,40,48,43,70,62,56,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,박시형,62,RP,PIT,37,FARM,0.5,0,12,1829,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,50,56,10,10,42,51,60,54,80,61,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,석상율,133,RP,PIT,26,FARM,0.3,0.5,3,435,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,MR,49,55,10,10,44,51,59,55,83,45,55,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,박재성,26,C,BAT,20,FARM,0.3,0.8,1,149,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,58,77,56,63,85,65,62,18,66,83,63,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,유강형,27,C,BAT,34,FARM,7,0.4,12,1809,1,실계약 4년 80억,2023 FA 계약,0,FA 자격권,C,,50,56,52,43,38,40,42,10,72,50,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,정보혁,42,C,BAT,27,FARM,0.7,0.3,8,1182,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,,45,49,49,33,64,52,55,19,61,82,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,강승도,110,C,BAT,23,FARM,0.3,0,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,48,64,41,47,51,54,46,12,82,49,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,최호,14,3B,BAT,32,FARM,0.5,0,10,1460,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,48,54,48,40,52,43,39,8,62,71,61,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,김민도,16,3B,BAT,38,FARM,1.5,1,12,1771,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,56,57,50,55,66,56,54,8,81,62,50,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,박찬수,60,3B,BAT,24,FARM,0.6,0.2,1,234,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,60,69,63,53,81,57,52,22,81,62,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,이서율,63,2B,BAT,19,FARM,0.3,1,0,25,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,53,65,60,55,69,62,54,14,77,51,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,이지도,114,3B,BAT,23,FARM,0.2,0,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,44,61,40,51,63,38,50,14,59,72,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,배인안,127,SS,BAT,22,FARM,0.3,0.2,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,63,74,62,56,86,71,55,22,58,54,65,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,전준재,8,LF,BAT,40,FARM,7,1,12,1813,2,실계약 4년 47억,2024 FA 계약,0,FA 자격권,C,,44,52,46,39,59,43,38,19,79,52,52,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,김한도,95,LF,BAT,20,FARM,0.3,0.7,0,7,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,52,64,52,46,83,48,45,18,62,64,56,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,이인찬,102,LF,BAT,28,FARM,0.2,0.3,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,51,64,58,39,43,46,61,11,60,62,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,조민진,134,LF,BAT,21,FARM,0.3,0,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,59,80,52,52,74,61,51,8,68,60,63,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+busan-giant-waves,유제찬,142,CF,BAT,23,FARM,0.1,0.3,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,63,81,56,64,43,73,63,22,78,67,62,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,신상안,00,SP,PIT,19,ACTIVE,0.3,0.4,0,13,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,B,SP,71,88,10,10,31,74,76,77,84,91,78,상위 유망주 · 이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,김안,1,SP,PIT,27,ACTIVE,2.1,3,9,1394,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,59,67,10,10,54,60,62,62,72,86,64,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,이건호,16,SP,PIT,31,ACTIVE,0.3,2,12,1780,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,68,71,10,10,55,69,69,72,62,83,72,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,조병윤,19,SP,PIT,24,ACTIVE,2.5,0.7,6,959,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,SP,59,69,10,10,31,61,72,65,79,79,68,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,타케찬,23,SP,PIT,33,ACTIVE,6,0,0,75,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,SP,62,68,10,10,48,62,67,59,58,72,57,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,전영원,28,RP,PIT,24,ACTIVE,0.7,0.3,5,784,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,MR,63,73,10,10,37,55,65,62,71,56,64,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,최민윤,30,RP,PIT,27,ACTIVE,1.3,1,9,1379,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,63,67,10,10,38,71,67,63,79,58,60,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,노경준,38,RP,PIT,42,ACTIVE,4,3.5,12,1828,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,MR,70,73,10,10,31,67,75,76,58,51,51,베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,김건준,39,RP,PIT,24,ACTIVE,0.7,2,6,959,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,MR,60,71,10,10,52,54,69,61,67,61,68,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,김민태,40,RP,PIT,20,ACTIVE,0.3,2.7,0,16,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,68,82,10,10,40,61,74,70,68,59,68,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,베니지아진,41,RP,PIT,29,ACTIVE,6,0,0,89,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,MR,60,66,10,10,44,65,70,66,68,62,61,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,문승욱,42,RP,PIT,37,ACTIVE,8,1.8,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,59,66,10,10,33,60,57,54,75,38,49,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,해훈,55,RP,PIT,32,ACTIVE,6,0,0,11,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,B,MR,73,79,10,10,34,63,73,69,73,63,57,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,박시윤,57,RP,PIT,25,ACTIVE,1,0.2,5,796,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,MR,63,75,10,10,47,67,56,59,67,43,63,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,조형혁,20,C,BAT,24,ACTIVE,1.3,1.3,6,956,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,57,67,53,59,66,48,58,11,79,77,60,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,신범겸,25,C,BAT,28,ACTIVE,0.4,0.4,11,1613,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,59,67,62,68,59,58,67,22,73,79,67,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,박성현,2,SS,BAT,28,ACTIVE,4.2,0.9,10,1539,1,연봉계약,공개 다년계약 미확인,0,FA 자격권,A,,80,84,97,66,74,74,81,24,74,84,94,핵심전력 · 교타자,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,정준서,3,1B,BAT,23,ACTIVE,1.3,0.6,2,379,1,연봉계약,공시 연봉 · 서비스타임 반영,7,구단 보류권,B,,72,79,90,59,80,60,62,23,67,79,92,성장형 · 교타자,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,김민빈,5,SS,BAT,22,ACTIVE,0.3,0.5,3,459,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,59,73,64,54,79,54,53,13,68,58,64,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,최도,14,3B,BAT,39,ACTIVE,22,3,12,1828,4,실계약 4년 110억,2025 FA 계약,0,FA 자격권,A,,84,84,89,98,66,69,81,12,73,72,85,프랜차이즈급 · 교타자 · 장타형 · 베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,고명형,18,1B,BAT,24,ACTIVE,1.6,0.9,6,930,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,66,76,73,68,84,66,67,10,75,64,60,주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,전의겸,47,1B,BAT,26,ACTIVE,0.5,1.3,6,893,1,연봉계약,공시 연봉 · 서비스타임 반영,3,구단 보류권,B,,71,79,78,67,67,78,66,9,59,57,62,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,홍대진,97,SS,BAT,25,ACTIVE,0.3,0.3,1,224,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,57,69,58,49,56,53,48,12,65,49,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,채현형,15,LF,BAT,31,ACTIVE,0.4,0.3,8,1239,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,62,64,55,57,47,70,56,9,63,85,72,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,에레디윤,27,LF,BAT,35,ACTIVE,8,0,3,524,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,A,,81,84,90,98,65,61,59,14,70,77,81,외국인 · 핵심전력 · 교타자 · 장타형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,김성재,31,LF,BAT,33,ACTIVE,1,0.7,12,1817,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,58,60,54,58,35,48,57,9,68,58,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,김재원,32,LF,BAT,38,ACTIVE,5,1.5,12,1819,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,59,63,64,65,79,69,64,22,72,63,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,오태성,37,1B,BAT,35,ACTIVE,5,0.9,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,60,64,57,66,69,63,65,8,62,63,57,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,최지원,54,CF,BAT,29,ACTIVE,3.7,0.8,7,1104,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,C,,63,69,55,66,57,69,65,15,73,71,69,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,윤태윤,12,SP,PIT,23,FARM,0.3,2.5,5,814,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,SP,55,73,10,10,38,57,59,55,73,78,66,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,한두영,34,SP,PIT,29,FARM,1,0,9,1372,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,63,73,10,10,48,66,68,60,64,76,70,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,김도원,61,SP,PIT,23,FARM,0.3,1,5,742,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,SP,49,63,10,10,54,53,52,52,71,69,62,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,최수성,62,SP,PIT,26,FARM,0.3,0.8,8,1160,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,1,FA 임박,C,SP,50,58,10,10,54,48,53,53,79,89,68,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,최용수,67,RP,PIT,25,FARM,0.3,0.3,6,896,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,MR,56,64,10,10,47,49,59,52,75,48,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,이준민,90,RP,PIT,24,FARM,0.3,0,0,8,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,53,62,10,10,38,58,57,53,72,49,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,류현진,104,RP,PIT,22,FARM,0.3,0.4,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,51,63,10,10,52,42,60,52,84,43,57,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,김민영,24,C,BAT,37,FARM,1,1.4,12,1768,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,63,68,62,67,68,53,66,21,77,59,48,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,이지훈,56,C,BAT,40,FARM,2,0,12,1805,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,62,69,69,70,86,58,69,23,80,49,55,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,장현서,05,1B,BAT,22,FARM,0.3,0,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,50,61,45,49,40,42,48,16,71,72,56,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,박명혁,07,2B,BAT,25,FARM,0.3,0.9,7,1015,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,45,58,46,50,81,39,49,9,61,64,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,김태원,36,2B,BAT,23,FARM,0.3,0.4,1,234,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,49,64,56,53,69,55,52,14,61,64,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,석정윤,52,SS,BAT,27,FARM,0.4,0,5,735,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,47,54,42,48,59,49,47,22,70,68,56,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,최윤준,65,3B,BAT,20,FARM,0.3,0.6,1,161,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,48,68,40,53,46,58,52,9,84,66,67,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,안재안,111,SS,BAT,23,FARM,0.3,0.3,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,55,65,60,46,57,64,45,21,76,52,61,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,최준겸,7,2B,BAT,27,FARM,0.7,0.7,9,1359,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,57,71,49,65,61,61,64,22,64,60,68,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,이승호,9,RF,BAT,21,FARM,0.3,1.3,2,379,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,50,71,47,41,82,51,40,13,80,60,71,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,이정빈,33,LF,BAT,28,FARM,0.3,0.6,6,885,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,47,59,47,37,88,39,59,16,80,57,69,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,한유도,35,RF,BAT,37,FARM,9,0.3,12,1786,1,실계약 5년 60억,2022 비FA 다년계약,0,FA 자격권,C,,60,65,66,51,47,53,50,19,59,66,51,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,김정찬,48,CF,BAT,22,FARM,0.3,1,3,469,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,55,71,59,56,52,62,55,11,58,62,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,이원진,100,CF,BAT,20,FARM,0.3,0.7,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,63,82,70,52,61,73,74,9,59,77,67,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+incheon-landing,이승재,106,CF,BAT,20,FARM,0.3,0.6,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,60,80,68,54,58,61,53,12,58,63,57,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,박준영,18,SP,PIT,19,ACTIVE,0.3,7,0,49,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,B,SP,73,84,10,10,37,69,73,72,74,75,70,상위 유망주,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,김윤찬,19,SP,PIT,21,ACTIVE,0.4,2,2,330,1,연봉계약,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,SP,63,77,10,10,36,58,61,61,64,85,75,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,조영우,20,SP,PIT,27,ACTIVE,0.7,1,8,1241,1,연봉계약,공시 연봉 · 서비스타임 반영,1,FA 임박,C,SP,58,65,10,10,37,53,60,57,82,69,65,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,김성혁,21,SP,PIT,29,ACTIVE,0.6,0.7,6,959,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,SP,57,62,10,10,47,64,56,53,63,75,71,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,박지혁,37,SP,PIT,19,ACTIVE,0.3,1.2,0,43,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,SP,69,85,10,10,34,71,63,65,72,79,66,상위 유망주,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,안우우,41,RP,PIT,27,ACTIVE,4.8,6,9,1378,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,MR,62,70,10,10,40,66,64,64,69,39,57,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,정다민,45,RP,PIT,20,ACTIVE,0.3,0.9,0,35,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,57,68,10,10,31,52,60,63,63,49,68,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,원종우,46,RP,PIT,39,ACTIVE,5,1.1,12,1817,1,실계약 4년 25억,2023 FA 계약,0,FA 자격권,C,MR,66,73,10,10,35,73,66,63,69,45,59,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,유찬,48,RP,PIT,27,ACTIVE,0.8,0,0,89,1,연봉계약,추정 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,61,65,10,10,40,49,71,63,82,40,62,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,알칸타태,54,SP,PIT,34,ACTIVE,12,0,8,1239,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,A,SP,84,85,10,10,38,76,89,88,83,96,89,외국인 · 에이스 · 이닝이터 · 탈삼진형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,배동율,61,RP,PIT,28,ACTIVE,0.3,0.6,6,938,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,MR,59,66,10,10,33,53,53,54,81,58,72,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,전준찬,62,RP,PIT,21,ACTIVE,0.4,2.1,2,317,1,연봉계약,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,MR,59,69,10,10,44,66,65,65,79,57,69,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,박정호,94,RP,PIT,20,ACTIVE,0.3,1,1,224,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,MR,66,76,10,10,38,64,66,66,58,61,70,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,김건준,12,C,BAT,22,ACTIVE,0.6,2.2,3,524,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,64,74,56,52,61,56,74,11,68,76,68,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,김동형,44,C,BAT,22,ACTIVE,0.4,1.5,3,468,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,B,,70,83,68,79,58,62,78,15,62,57,67,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,권혁형,00,1B,BAT,21,ACTIVE,0.3,0.5,1,200,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,B,,70,83,63,59,80,66,81,23,66,77,70,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,안치율,9,2B,BAT,36,ACTIVE,2,1.8,12,1829,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,57,62,50,52,74,65,51,24,81,71,55,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,김웅혁,10,2B,BAT,30,ACTIVE,0.4,0.8,11,1638,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,67,72,64,55,42,61,77,21,79,69,70,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,서건안,14,SS,BAT,37,ACTIVE,1.2,0,12,1817,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,,73,78,65,78,78,79,77,17,60,51,51,수비핵심 · 베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,히우찬,22,2B,BAT,30,ACTIVE,6,0,0,26,1,외국인 단년계약,외국인 단년계약 추정,0,외국인 보류 제외,C,,64,70,59,60,63,58,59,24,63,54,60,외국인,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,최재욱,38,2B,BAT,19,ACTIVE,0.3,0.8,0,47,1,연봉계약,공시 연봉 · 서비스타임 반영,9,구단 보류권,B,,73,84,70,65,76,65,64,18,79,49,65,상위 유망주,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,최주욱,53,1B,BAT,38,ACTIVE,3,0.6,12,1829,1,실계약 4년 42억,2021 FA 계약,0,FA 자격권,B,,73,73,66,63,41,69,85,10,67,49,52,베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,어준준,92,1B,BAT,20,ACTIVE,0.5,1.1,1,201,1,외국인 단년계약,공시 연봉 · 외국인 단년계약,0,외국인 보류 제외,B,,73,83,73,77,61,77,76,13,61,54,70,외국인 · 성장형,Y,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,여동겸,93,SS,BAT,21,ACTIVE,0.3,1,1,181,1,연봉계약,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,63,77,67,55,37,70,54,16,65,72,68,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,임병혁,17,CF,BAT,31,ACTIVE,0.6,2,12,1802,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,,71,77,72,78,79,72,77,19,65,73,72,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,추재준,27,CF,BAT,27,ACTIVE,0.6,0.8,9,1357,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,,70,78,71,58,55,65,80,11,65,76,60,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,원성태,33,RF,BAT,26,ACTIVE,0.4,0,2,302,1,연봉계약,공시 연봉 · 서비스타임 반영,7,구단 보류권,B,,70,81,62,64,62,72,63,20,62,50,63,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,박찬도,43,RF,BAT,23,ACTIVE,0.4,1.3,5,800,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,64,73,62,63,37,65,62,13,67,53,65,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,박수준,87,CF,BAT,27,ACTIVE,0.4,0,3,505,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,,56,62,56,65,83,49,64,21,72,48,60,주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,오석도,31,SP,PIT,28,FARM,0.8,0.6,8,1218,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,SP,48,64,10,10,39,40,52,49,69,89,72,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,정세찬,64,SP,PIT,20,FARM,0.3,0.4,1,168,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,SP,61,75,10,10,50,60,58,60,72,73,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,김연겸,68,SP,PIT,22,FARM,0.5,0.9,2,294,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,SP,59,79,10,10,52,59,68,60,61,91,68,퓨처스 · 성장형 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,임진진,69,SP,PIT,20,FARM,0.3,0.4,1,234,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,SP,63,74,10,10,39,68,65,64,62,87,61,퓨처스 · 이닝이터,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,김동호,99,RP,PIT,22,FARM,0.4,1.3,3,443,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,MR,62,83,10,10,37,51,64,61,82,58,58,퓨처스 · 성장형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,이태윤,109,RP,PIT,21,FARM,0.3,1,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,61,75,10,10,44,65,67,67,66,50,53,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,한민원,110,RP,PIT,27,FARM,0.2,0.1,4,580,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,5,구단 보류권,C,MR,63,76,10,10,52,54,72,64,60,48,54,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,김태우,113,RP,PIT,20,FARM,0.3,0.6,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,54,73,10,10,34,55,50,50,72,54,55,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,이승형,118,RP,PIT,21,FARM,0.2,0,0,0,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,MR,54,65,10,10,51,47,61,54,82,57,69,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,박성재,56,C,BAT,22,FARM,0.3,0.5,2,324,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,46,61,42,42,77,42,41,12,60,58,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,김시재,121,C,BAT,25,FARM,0.4,0.5,5,725,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,60,72,59,50,70,55,72,13,65,55,63,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,김태호,1,2B,BAT,31,FARM,1.1,0.8,12,1790,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,48,54,53,39,57,54,38,13,60,75,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,이재겸,5,2B,BAT,21,FARM,0.3,1.3,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,57,77,63,45,74,62,67,19,84,69,64,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,오선안,6,2B,BAT,37,FARM,0.8,0.6,12,1824,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,57,60,52,57,65,47,56,9,60,74,58,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,김지우,26,3B,BAT,19,FARM,0.3,1.6,0,24,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,52,67,44,45,82,56,44,23,63,46,64,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,염승준,39,3B,BAT,20,FARM,0.3,1.6,1,158,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,52,71,58,59,50,48,58,8,72,63,56,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,이주안,58,CF,BAT,24,FARM,0.4,0.6,6,881,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,3,구단 보류권,C,,63,70,57,73,62,56,72,20,74,46,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,양현찬,60,2B,BAT,20,FARM,0.3,0.7,1,166,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,61,73,58,59,85,71,58,14,62,74,56,퓨처스 · 주루형,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,서유훈,104,3B,BAT,26,FARM,0.3,0.3,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,48,62,42,53,63,45,52,14,81,77,70,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,유정태,115,3B,BAT,23,FARM,0.3,0.4,1,145,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,8,구단 보류권,C,,56,67,55,56,41,52,55,14,68,50,60,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,이주서,2,CF,BAT,25,FARM,1.4,1.5,7,1070,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,46,53,40,56,62,39,55,20,74,46,59,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,박채윤,72,LF,BAT,22,FARM,0.3,0,0,13,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,9,구단 보류권,C,,51,72,44,49,64,43,48,24,63,69,68,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23
+gocheok-heroes,심휘형,111,CF,BAT,21,FARM,0.3,0.3,2,290,1,퓨처스/최저연봉권,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,56,75,64,46,75,56,68,24,83,66,65,퓨처스,,공시 퓨처스 등록 공시 연봉/기록 기반 2026-06-23

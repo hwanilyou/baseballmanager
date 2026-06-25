@@ -7,6 +7,9 @@ const ROOT = __dirname;
 const SAVE_PATH = path.join(ROOT, "save.json");
 const DATA_IMPORT_PATH = path.join(ROOT, "data", "kbo_players.csv");
 const DATA_SOURCE_URL_PATH = path.join(ROOT, "data", "source-url.txt");
+const DRAFT_DAY = 120;
+const DRAFT_ROUNDS = 11;
+const HS_DRAFT_POOL_SIZE = 60;
 
 const teamTemplates = [
   { id: "daejeon-orange-eagles", city: "대전", name: "오렌지이글스", short: "오렌지", primary: "#f37321", secondary: "#1f2933", power: 68 },
@@ -224,12 +227,12 @@ function estimateContractForPlayer(p, index = 0) {
     kind = "외국인계약";
   } else if (service >= 8 && ovr >= 74) {
     annual = Math.max(5, Math.min(25, (ovr - 58) * 0.62 + (pot - ovr) * 0.12 + rnd(0, 45) / 10));
-    yearsLeft = ovr >= 82 ? rnd(3, 6) : rnd(2, 4);
-    kind = grade === "A" ? "FA/장기계약" : "다년계약";
+    yearsLeft = 1;
+    kind = "연봉계약";
   } else if (service >= 5 || ovr >= 72) {
     annual = Math.max(1.4, Math.min(12, (ovr - 55) * 0.32 + service * 0.32 + rnd(0, 25) / 10));
-    yearsLeft = ovr >= 78 && age <= 30 ? rnd(2, 4) : rnd(1, 2);
-    kind = yearsLeft >= 2 ? "비FA다년계약" : "연봉계약";
+    yearsLeft = 1;
+    kind = "연봉계약";
   } else if (isActive) {
     annual = Math.max(0.6, Math.min(4.2, (ovr - 50) * 0.13 + service * 0.18 + rnd(0, 12) / 10));
     yearsLeft = 1;
@@ -242,6 +245,65 @@ function estimateContractForPlayer(p, index = 0) {
   if (age <= 22 && pot >= 80 && !signingBonus) signingBonus = Math.round((0.5 + (pot - 75) * 0.08 + rnd(0, 8) / 10) * 10) / 10;
   annual = Math.round(annual * 10) / 10;
   return { yearsLeft, annual, kind, signingBonus };
+}
+
+function gameContractYears(p, annual = Number(p?.contract?.annual || p?.salary || 0)) {
+  if (!p || p.rosterStatus === "DEV" || p.development || p.foreignPlayer === true || isLikelyForeignName(p.name || "")) return 1;
+  const ovr = Number(p.ovr) || 60;
+  const pot = Number(p.pot) || ovr;
+  const age = Number(p.age) || 24;
+  const service = Number.isFinite(Number(p.serviceYears)) ? Number(p.serviceYears) : Math.max(0, Math.min(12, age - 21));
+  const required = age <= 27 ? 9 : 8;
+  const controlYears = Number.isFinite(Number(p.controlYears)) ? Number(p.controlYears) : Math.max(0, Math.ceil(required - service));
+  if (controlYears <= 0) {
+    if (ovr >= 80 || annual >= 7) return 3;
+    if (ovr >= 73 || annual >= 3) return 2;
+    return 1;
+  }
+  if (ovr >= 82 && age <= 31) return Math.min(5, Math.max(2, controlYears));
+  if (ovr >= 76 && age <= 30) return Math.min(4, Math.max(2, controlYears));
+  if (ovr >= 70 && p.rosterStatus === "ACTIVE") return Math.min(3, Math.max(1, controlYears));
+  if (pot >= 82 && age <= 24) return Math.min(4, Math.max(2, controlYears));
+  if (annual >= 2.5 && p.rosterStatus === "ACTIVE") return 2;
+  return 1;
+}
+
+function shouldRebuildPrivateContract(p) {
+  return false;
+}
+
+function hasFakeReserveContract(p) {
+  const kind = String(p?.contract?.kind || "");
+  const source = String(p?.contract?.source || "");
+  return kind.includes("보류권 기반")
+    || kind.includes("연봉계약+보류권")
+    || source.includes("KBO 공식")
+    || source.includes("계약기간 비공개")
+    || source.includes("기간 추정")
+    || source.includes("보류권/FA기간 반영")
+    || source.includes("기존 저장값 보정");
+}
+
+function normalizeContractReality(p) {
+  if (!p) return;
+  if (!p.contract) {
+    const estimated = estimateContractForPlayer(p);
+    p.contract = {
+      yearsLeft: estimated.yearsLeft,
+      annual: Number(p.salary || estimated.annual),
+      kind: estimated.kind,
+      source: p.rosterStatus === "DEV" ? "육성계약" : "추정 연봉 · 서비스타임 반영"
+    };
+  }
+  if (hasFakeReserveContract(p)) {
+    const annual = Number(p.contract.annual || p.salary || 0);
+    p.contract.yearsLeft = 1;
+    p.contract.annual = annual;
+    p.contract.kind = p.rosterStatus === "FARM" && annual < 1 ? "퓨처스/최저연봉권" : "연봉계약";
+    p.contract.source = annual ? "공시 연봉 · 서비스타임 반영" : "추정 연봉 · 서비스타임 반영";
+    p.years = 1;
+    p.salary = annual;
+  }
 }
 
 function hasPlaceholderContract(p) {
@@ -357,7 +419,7 @@ function migrateState(state) {
   if (Array.isArray(state.players)) {
     state.players = state.players.filter((p) => p && typeof p === "object");
     for (const [index, p] of state.players.entries()) {
-      if (!String(p.dataSource || "").startsWith("KBO") && nameMigration[p.name]) p.name = nameMigration[p.name];
+      if (!String(p.dataSource || "").startsWith("공시") && nameMigration[p.name]) p.name = nameMigration[p.name];
       if (!p.jerseyNumber) p.jerseyNumber = defaultJerseyNumber(index);
       if (!p.serviceYears && p.serviceYears !== 0) p.serviceYears = Math.max(0, Math.min(12, (p.age || 24) - 21));
       ensureServiceTime(p);
@@ -369,12 +431,16 @@ function migrateState(state) {
       if (p.trait === "실데이터 import") p.trait = "";
       if (p.foreignPlayer === undefined) p.foreignPlayer = isLikelyForeignName(p.name);
       if (!p.faGrade) p.faGrade = p.ovr >= 78 ? "A" : p.ovr >= 70 ? "B" : "C";
-      if (hasPlaceholderContract(p) || !p.contract?.kind) {
+      if (hasPlaceholderContract(p) || shouldRebuildPrivateContract(p) || !p.contract?.kind) {
         const estimated = estimateContractForPlayer(p, index);
-        p.contract = { yearsLeft: estimated.yearsLeft, annual: estimated.annual, kind: estimated.kind };
-        p.salary = estimated.annual;
-        p.signingBonus = estimated.signingBonus;
+        const annual = Number(p.contract?.annual || p.salary || estimated.annual);
+        const yearsLeft = shouldRebuildPrivateContract(p) ? gameContractYears(p, annual) : estimated.yearsLeft;
+        const kind = shouldRebuildPrivateContract(p) ? (yearsLeft >= 3 ? "보류권 기반 다년관리" : "연봉계약+보류권") : estimated.kind;
+        p.contract = { yearsLeft, annual, kind, source: shouldRebuildPrivateContract(p) ? "기존 저장값 보정 · 보류권/FA기간 반영" : p.contract?.source };
+        p.salary = annual;
+        p.signingBonus = Number(p.signingBonus) || estimated.signingBonus;
       }
+      normalizeContractReality(p);
       if (!p.pitcherRole && p.type === "PIT") p.pitcherRole = p.pos === "SP" ? "SP" : p.pos === "CL" ? "CL" : "MR";
       if (!p.stamina && p.stamina !== 0) p.stamina = p.type === "PIT" ? rnd(p.pos === "SP" ? 68 : 38, p.pos === "SP" ? 92 : 66) : rnd(45, 85);
       if (p.type === "PIT") ensurePitchArsenal(p);
@@ -385,7 +451,7 @@ function migrateState(state) {
         });
       }
       if (p.type === "PIT" && p.stats) {
-        ["era","win","so","sv","hold","ip"].forEach((key) => {
+        ["era","win","loss","so","sv","hold","ip"].forEach((key) => {
           if (!Number.isFinite(p.stats[key])) p.stats[key] = 0;
         });
       }
@@ -410,8 +476,29 @@ function migrateState(state) {
   if (!Array.isArray(state.tradeOffers)) state.tradeOffers = [];
   if (!Array.isArray(state.tradeTargets)) state.tradeTargets = [];
   if (!Array.isArray(state.awards)) state.awards = [];
+  if (!Array.isArray(state.draftClass)) state.draftClass = [];
+  if (!Array.isArray(state.draftHistory)) state.draftHistory = [];
+  if (!Array.isArray(state.draftOrder)) state.draftOrder = [];
+  if (!state.draftRound) state.draftRound = 1;
+  if (!Number.isFinite(state.draftPick)) state.draftPick = 0;
+  if (!Number.isFinite(state.draftCycle)) state.draftCycle = 0;
+  if (!Number.isFinite(state.seasonYear)) state.seasonYear = 1;
+  if (!Number.isFinite(state.draftDay)) state.draftDay = DRAFT_DAY;
+  if (typeof state.draftWindowOpen !== "boolean") state.draftWindowOpen = false;
+  if (!Number.isFinite(state.draftCompletedSeason)) state.draftCompletedSeason = 0;
+  if (!Array.isArray(state.hsCohorts)) state.hsCohorts = [];
+  if ((state.day || 1) < (state.draftDay || DRAFT_DAY) && !state.draftWindowOpen) {
+    state.draftClass = [];
+    state.draftOrder = [];
+    state.draftRound = 1;
+    state.draftPick = 0;
+  }
+  ensureHighSchoolCohorts(state);
   ensureLeaguePlayers(state);
+  ensureTeamStats(state);
   backfillStandingsGames(state);
+  ensureTeamStats(state);
+  ensureDraftWindow(state);
   if (state.seasonAwarded !== true && state.day > state.seasonGames) finalizeSeasonAwards(state);
   if (!Array.isArray(state.freeAgents)) state.freeAgents = [];
   pruneInvalidOffers(state);
@@ -577,7 +664,7 @@ function makePlayer(seed, i) {
     complaint: null,
     happy: rnd(58, 88),
     trait,
-    stats: isPitcher ? { era: 0, win: 0, so: 0, sv: 0, hold: 0, ip: 0 } : { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, obp: 0, slg: 0 }
+    stats: isPitcher ? { era: 0, win: 0, loss: 0, so: 0, sv: 0, hold: 0, ip: 0 } : { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, obp: 0, slg: 0 }
   };
   player.serviceDays = player.serviceYears * KBO_SERVICE_DAYS_PER_YEAR + rnd(0, KBO_SERVICE_DAYS_PER_YEAR - 1);
   ensureServiceTime(player);
@@ -618,8 +705,10 @@ function ensureLeaguePlayers(state) {
   for (const p of state.leaguePlayers) {
     const team = state.teams?.find((t) => t.id === p.teamId) || teamTemplates.find((t) => t.id === p.teamId);
     if (team && !p.teamName) p.teamName = `${team.city} ${team.name}`;
+    normalizeContractReality(p);
     if (p.type === "BAT" && !p.stats) p.stats = { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, obp: 0, slg: 0 };
-    if (p.type === "PIT" && !p.stats) p.stats = { era: 0, win: 0, so: 0, sv: 0, hold: 0, ip: 0 };
+    if (p.type === "PIT" && !p.stats) p.stats = { era: 0, win: 0, loss: 0, so: 0, sv: 0, hold: 0, ip: 0 };
+    if (p.type === "PIT") ensurePitchingStats(p);
     ensurePositionData(p);
   }
   backfillLeaguePlayerStats(state);
@@ -714,10 +803,11 @@ function updateComplaints(state) {
 
 function createState(teamId) {
   const selected = teamTemplates.find((t) => t.id === teamId) || teamTemplates[0];
-  const teams = teamTemplates.map((t) => ({ ...t, w: 0, l: 0 }));
+  const teams = teamTemplates.map((t) => ({ ...t, w: 0, l: 0, t: 0, teamStats: emptyTeamStats() }));
   const seeds = playerSeeds[selected.id] || playerSeeds.default;
   const state = {
     selectedTeamId: selected.id,
+    seasonYear: 1,
     day: 1,
     seasonGames: 144,
     budget: 82,
@@ -736,6 +826,16 @@ function createState(teamId) {
     tradeTargets: [],
     scout: [],
     freeAgents: [],
+    draftClass: [],
+    draftHistory: [],
+    draftOrder: [],
+    draftRound: 1,
+    draftPick: 0,
+    draftCycle: 0,
+    draftDay: DRAFT_DAY,
+    draftWindowOpen: false,
+    draftCompletedSeason: 0,
+    hsCohorts: [],
     awards: [],
     seasonAwarded: false,
     schedule: buildSeasonSchedule(teams, selected.id, 144),
@@ -1098,6 +1198,8 @@ function finishManualGame(state) {
     state.fanInterest -= 1;
     state.trainingPts += 1;
   }
+  recordTeamGame(me, game.score.user, game.score.opp, estimateTeamErrors(me, game.score.opp));
+  recordTeamGame(opp, game.score.opp, game.score.user, estimateTeamErrors(opp, game.score.user));
   state.morale = Math.max(20, Math.min(95, state.morale));
   state.fanInterest = Math.max(25, Math.min(98, state.fanInterest));
   state.budget += won ? 0.5 : tied ? 0.25 : 0.15;
@@ -1112,6 +1214,7 @@ function finishManualGame(state) {
   maybeAutomaticInjury(state, playedIds.map((id) => state.players.find((p) => p.id === id)), "manual-game");
   if (state.day % 6 === 0 || Math.random() < 0.18) generateOffer(state);
   progressPitchTraining(state);
+  progressTrainingAssignments(state);
   accrueServiceDays(state);
   simulateOtherTeams(state);
   state.day += 1;
@@ -1360,17 +1463,22 @@ function resolveUserAtBat(state, tactic) {
       text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 파울. 카운트 ${game.count.balls}-${game.count.strikes}`;
     } else {
       const event = userBattedBallEvent(batter, opponentPitcher, tactic);
+      const fielding = opponentFielderDetail(event, batter);
       if (event.bases > 0) {
         const result = advanceRunners(game, batter.name, event.bases);
         game.score.user += result.runs;
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 인플레이, ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
+        const errorText = event.error ? ` (${fielding.name} ${fielding.errorType})` : "";
+        const touchText = event.bases < 4 ? `, ${fielding.name} 처리 시도` : "";
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 인플레이, ${result.text}${errorText}${touchText}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
       } else if (game.bases[0] && game.outs <= 1 && rnd(1, 100) < Math.max(5, Math.min(24, 28 - (batter.spd || 55) * 0.2 + (opponentPitcher.command || 60) * 0.05))) {
         game.bases[0] = null;
         game.outs = Math.min(3, game.outs + 2);
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 인플레이, ${batter.name} 병살타. ${game.outs}아웃`;
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 인플레이, ${batter.name} 병살타. 상대 유격수-2루수-1루수 처리, ${game.outs}아웃`;
       } else {
         game.outs += 1;
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 인플레이, ${batter.name} 범타. ${game.outs}아웃`;
+        const great = rnd(1, 100) < fielding.greatChance;
+        const sac = fielding.outType.includes("뜬공") ? trySacrificeFly(game, "user", 64) : { text: "" };
+        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 인플레이, ${great ? `${fielding.name} 호수비! ` : ""}${fielding.name} ${fielding.outType}${sac.scored ? " · 희생플라이" : ""}${sac.text}. ${game.outs}아웃`;
       }
       game.count = { balls: 0, strikes: 0 };
       game.lineupIndex += 1;
@@ -1432,6 +1540,7 @@ function ensurePitchingStats(player) {
   if (!player.stats) player.stats = {};
   player.stats.era = Number.isFinite(Number(player.stats.era)) ? Number(player.stats.era) : 0;
   player.stats.win = Number(player.stats.win) || 0;
+  player.stats.loss = Number(player.stats.loss) || 0;
   player.stats.so = Number(player.stats.so) || 0;
   player.stats.sv = Number(player.stats.sv) || 0;
   player.stats.hold = Number(player.stats.hold) || 0;
@@ -1474,6 +1583,7 @@ function updateManualPitchingStats(state, game, won) {
   const starterId = (game.usedPitchers || [])[0] || game.pitcherId;
   const starter = state.players.find((p) => p.id === Number(starterId));
   if (starter?.type === "PIT" && won) ensurePitchingStats(starter).win += 1;
+  if (starter?.type === "PIT" && !won && (Number(game.score?.user) || 0) < (Number(game.score?.opp) || 0)) ensurePitchingStats(starter).loss += 1;
 }
 
 function defensiveUnit(state, game) {
@@ -1486,12 +1596,76 @@ function defensiveUnit(state, game) {
   const outfield = byPos(["LF", "CF", "RF"]);
   const catcher = fielders.find((entry) => entry.pos === "C")?.player;
   return {
+    fielders,
     def: avg(all.map((p) => p.def || 55)),
     arm: avg(all.map((p) => p.arm || 55)),
     infieldArm: avg(infield.map((p) => p.arm || 55)),
     outfieldArm: avg(outfield.map((p) => p.arm || 55)),
     catcherArm: catcher?.arm || avg(all.map((p) => p.arm || 55))
   };
+}
+
+function fielderByPos(defense, pos) {
+  return defense?.fielders?.find((entry) => entry.pos === pos)?.player || null;
+}
+
+function chooseFielder(defense, positions) {
+  const pool = (defense?.fielders || []).filter((entry) => positions.includes(entry.pos));
+  if (!pool.length) return null;
+  return pool[rnd(0, pool.length - 1)];
+}
+
+function battedBallDefenseDetail(defense, batter, event = {}) {
+  const pull = rnd(1, 100);
+  const isAir = event.bases >= 2 || rnd(1, 100) > 58;
+  const positions = isAir
+    ? (pull < 34 ? ["LF"] : pull < 67 ? ["CF"] : ["RF"])
+    : (pull < 22 ? ["3B"] : pull < 43 ? ["SS"] : pull < 65 ? ["2B"] : pull < 84 ? ["1B"] : ["P", "C"]);
+  let entry = chooseFielder(defense, positions);
+  if (!entry && positions.includes("P")) entry = { pos: "P", player: null };
+  if (!entry) entry = chooseFielder(defense, isAir ? ["LF", "CF", "RF"] : ["1B", "2B", "3B", "SS", "C"]);
+  const player = entry?.player;
+  const name = player?.name || (entry?.pos === "P" ? "투수" : "야수");
+  const pos = entry?.pos || "?";
+  const def = player?.def || defense?.def || 60;
+  const arm = player?.arm || defense?.arm || 60;
+  const hard = (batter?.power || batter?.contact || 60) + (event.bases || 0) * 8;
+  const errorChance = Math.max(1, Math.min(18, 10 + hard * 0.06 - def * 0.09 - arm * 0.03));
+  const greatChance = Math.max(2, Math.min(20, def * 0.17 + arm * 0.06 - hard * 0.07));
+  const errorType = isAir ? "포구 실책" : (rnd(1, 100) > 55 ? "송구 실책" : "포구 실책");
+  const outType = isAir ? "뜬공 처리" : (pos === "C" ? "포수 앞 땅볼 처리" : "땅볼 처리");
+  return { name, pos, def, arm, isAir, errorChance, greatChance, errorType, outType };
+}
+
+function opponentFielderDetail(event = {}, batter = {}) {
+  const pull = rnd(1, 100);
+  const isAir = event.bases >= 2 || rnd(1, 100) > 58;
+  const pos = isAir
+    ? (pull < 34 ? "LF" : pull < 67 ? "CF" : "RF")
+    : (pull < 22 ? "3B" : pull < 43 ? "SS" : pull < 65 ? "2B" : pull < 84 ? "1B" : "C");
+  const posKo = { C: "포수", "1B": "1루수", "2B": "2루수", "3B": "3루수", SS: "유격수", LF: "좌익수", CF: "중견수", RF: "우익수" }[pos] || "야수";
+  const hard = (batter?.pow || batter?.hit || 60) + (event.bases || 0) * 8;
+  return {
+    pos,
+    name: `상대 ${posKo}`,
+    outType: isAir ? "뜬공 처리" : "땅볼 처리",
+    errorType: isAir ? "포구 실책" : (rnd(1, 100) > 55 ? "송구 실책" : "포구 실책"),
+    errorChance: Math.max(1, Math.min(12, 7 + hard * 0.04 - 4)),
+    greatChance: Math.max(2, Math.min(16, 8 - hard * 0.03 + rnd(0, 7)))
+  };
+}
+
+function trySacrificeFly(game, offense, fielderArm = 60) {
+  if (!game.bases?.[2] || game.outs >= 2) return { scored: false, text: "" };
+  const runnerName = game.bases[2];
+  const chance = Math.max(18, Math.min(72, 58 - fielderArm * 0.32 + rnd(-8, 12)));
+  if (rnd(1, 100) <= chance) {
+    game.bases[2] = null;
+    if (offense === "user") game.score.user += 1;
+    else game.score.opp += 1;
+    return { scored: true, text: `, 3루 주자 ${runnerName} 태그업 홈인` };
+  }
+  return { scored: false, text: `, 3루 주자 ${runnerName} 태그업 보류` };
 }
 
 function resolveOpponentPlateAppearance(state) {
@@ -1535,10 +1709,11 @@ function resolveOpponentPlateAppearance(state) {
     return state;
   }
   if (game.bases[0] && !game.bases[1] && rnd(1, 100) < Math.max(4, 16 + attack * 0.04 - defense.catcherArm * 0.1)) {
+    const catcher = fielderByPos(defense, "C");
     if (rnd(1, 100) + defense.catcherArm > 116) {
       game.bases[0] = null;
       game.outs += 1;
-      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 포수 송구로 2루 도루 저지. ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`);
+      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${catcher?.name || "포수"} 송구로 2루 도루 저지. ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`);
       if (game.outs >= 3) {
         updatePitcherMood(game, pitcher, 0);
         recordPitcherGameLine(game, pitcher, Math.max(0, Math.min(3, game.outs) - outsBefore), Math.max(0, (Number(game.score?.opp) || 0) - runsBefore), strikeoutAdded);
@@ -1548,7 +1723,7 @@ function resolveOpponentPlateAppearance(state) {
     } else {
       game.bases[1] = game.bases[0];
       game.bases[0] = null;
-      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 상대 주자 2루 도루 성공. 포수 송구 ${Math.round(defense.catcherArm)}, 주자 ${basesLabel(game.bases)}`);
+      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 상대 주자 2루 도루 성공. ${catcher?.name || "포수"} 송구 ${Math.round(defense.catcherArm)}, 주자 ${basesLabel(game.bases)}`);
     }
   }
   const fatiguePenalty = Math.max(0, game.pitchCount - (pitcher?.stamina || 65)) * 0.35;
@@ -1589,32 +1764,42 @@ function resolveOpponentPlateAppearance(state) {
     game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 파울. ${game.count.balls}-${game.count.strikes}`);
   } else {
     const event = opponentBattedBallEvent(batter, pitchPower, defense);
+    const fielding = battedBallDefenseDetail(defense, batter, event);
     if (event.bases > 0) {
       hardContact = event.bases >= 2 || event.error ? 2 : 1;
       const result = advanceRunners(game, `${opp.short} 타자`, event.bases);
       game.score.opp += result.runs;
       let throwText = "";
       if (event.bases < 4 && game.outs < 3 && rnd(1, 100) + defense.outfieldArm > 134) {
+        const thrower = chooseFielder(defense, ["LF", "CF", "RF"])?.player;
         game.outs += 1;
-        throwText = `, 외야 송구로 추가 주자 아웃`;
+        throwText = `, ${thrower?.name || "외야수"} 송구로 추가 주자 아웃`;
       }
-      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${result.text}${result.runs ? `, ${result.runs}실점` : ""}${throwText}`);
+      const errorText = event.error ? ` (${fielding.name} ${fielding.errorType})` : "";
+      const touchText = event.bases < 4 ? `, ${fielding.pos} ${fielding.name} 처리 시도` : "";
+      game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${result.text}${errorText}${touchText}${result.runs ? `, ${result.runs}실점` : ""}${throwText}`);
       game.count = { balls: 0, strikes: 0 };
       game.paPitchCount = 0;
       game.opponentLineupIndex += 1;
     } else {
-      if (rnd(1, 100) + defense.infieldArm < 36) {
+      if (rnd(1, 100) < fielding.errorChance) {
         const result = advanceRunners(game, `${opp.short} 타자`, 1);
         game.score.opp += result.runs;
-        game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 내야 송구 실책${result.runs ? `, ${result.runs}실점` : ""}. 주자 ${basesLabel(game.bases)}`);
+        game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${fielding.pos} ${fielding.name} ${fielding.errorType}${result.runs ? `, ${result.runs}실점` : ""}. 주자 ${basesLabel(game.bases)}`);
       } else {
         if (game.bases[0] && game.outs <= 1 && rnd(1, 100) < Math.max(10, Math.min(38, defense.def * 0.28 + defense.infieldArm * 0.12 - batter.contact * 0.12))) {
           game.bases[0] = null;
           game.outs = Math.min(3, game.outs + 2);
-          game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 유격수-2루수-1루수 병살 처리. ${game.outs}아웃`);
+          const ss = fielderByPos(defense, "SS");
+          const second = fielderByPos(defense, "2B");
+          const first = fielderByPos(defense, "1B");
+          game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${ss?.name || "유격수"}-${second?.name || "2루수"}-${first?.name || "1루수"} 병살 처리. ${game.outs}아웃`);
         } else {
           game.outs += 1;
-          game.log.unshift(`${game.inning}회말 ${pitchSummary()}, 인플레이 아웃. ${game.outs}아웃`);
+          const great = rnd(1, 100) < fielding.greatChance;
+          const prefix = great ? `${fielding.name} 호수비! ` : "";
+          const sac = fielding.isAir ? trySacrificeFly(game, "opp", fielding.arm) : { text: "" };
+          game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${prefix}${fielding.pos} ${fielding.name} ${fielding.outType}${sac.scored ? " · 희생플라이 허용" : ""}${sac.text}. ${game.outs}아웃`);
         }
       }
       game.count = { balls: 0, strikes: 0 };
@@ -1805,6 +1990,23 @@ function pinchRun(state, baseIndex, inId) {
   return state;
 }
 
+function changeDefensivePositions(state, positions) {
+  const game = state.activeGame;
+  if (!game || game.complete) return state;
+  const clean = Array.isArray(positions) ? positions.slice(0, 9) : [];
+  if (!hasCompleteFieldPositions(clean)) {
+    game.log.unshift("수비 위치 변경 실패: C, 1B, 2B, 3B, SS, LF, CF, RF, DH를 각각 한 번씩 지정해야 합니다.");
+    return state;
+  }
+  game.lineupPositions = clean;
+  const summary = game.lineup.map((id, index) => {
+    const p = state.players.find((x) => x.id === id);
+    return `${clean[index]} ${p?.name || "선수"}`;
+  }).join(" · ");
+  game.log.unshift(`수비 위치 변경: ${summary}`);
+  return state;
+}
+
 function teamPower(state) {
   const players = (state.players || []).filter((p) => p && typeof p === "object");
   const hitters = players.filter((p) => p.type === "BAT");
@@ -1923,12 +2125,20 @@ function goalMet(state) {
   const rank = state.teams.findIndex((t) => t.id === state.selectedTeamId) + 1;
   if (state.seasonGoal?.level === "champion") return rank === 1;
   if (state.seasonGoal?.level === "top3") return rank <= 3;
-  if (state.seasonGoal?.level === "rebuild") return state.players.filter((p) => p.age <= 25 && p.ovr > 70).length >= 5 || (state.trainingPts || 0) >= 18;
+  if (state.seasonGoal?.level === "rebuild") return state.players.filter((p) => p.age <= 25 && p.ovr > 70).length >= 5;
   return rank <= 5 || (me?.w || 0) >= 72;
 }
 
 function finalizeSeasonAwards(state) {
   if (state.seasonAwarded) return state;
+  if (state.draftWindowOpen) {
+    let guard = 0;
+    while (currentDraftTeamId(state) && guard < DRAFT_ROUNDS * 10) {
+      autoDraftForTeam(state, currentDraftTeamId(state));
+      advanceDraftSlot(state);
+      guard += 1;
+    }
+  }
   updateRanks(state);
   const recordPlayers = leagueRecordPlayers(state);
   const hitters = recordPlayers.filter((p) => p.type === "BAT");
@@ -1954,6 +2164,7 @@ function finalizeSeasonAwards(state) {
     ["장타율왕", hitters, (p) => p.stats.slg || 0, (p) => `장타율 ${(p.stats.slg || 0).toFixed(3)}`],
     ["평균자책점왕", pitchers, (p) => -(p.stats.era || 9), (p) => `ERA ${(p.stats.era || 0).toFixed(2)}`],
     ["다승왕", pitchers, (p) => p.stats.win || 0, (p) => `${p.stats.win || 0}승`],
+    ["승률왕", pitchers.filter((p) => (p.stats.win || 0) + (p.stats.loss || 0) >= 8 || (p.stats.win || 0) >= 8), (p) => (p.stats.win || 0) / Math.max(1, (p.stats.win || 0) + (p.stats.loss || 0)), (p) => `${p.stats.win || 0}승 · 승률 ${((p.stats.win || 0) / Math.max(1, (p.stats.win || 0) + (p.stats.loss || 0))).toFixed(3)}`],
     ["탈삼진왕", pitchers, (p) => p.stats.so || 0, (p) => `${p.stats.so || 0}K`],
     ["세이브왕", pitchers, (p) => p.stats.sv || 0, (p) => `${p.stats.sv || 0}세이브`],
     ["홀드왕", pitchers, (p) => p.stats.hold || 0, (p) => `${p.stats.hold || 0}홀드`]
@@ -1992,6 +2203,7 @@ function pruneInvalidOffers(state) {
 }
 
 function updateRanks(state) {
+  ensureTeamStats(state);
   const mine = currentTeam(state);
   if (mine) mine.power = teamPower(state);
   state.teams.sort((a, b) => {
@@ -1999,6 +2211,47 @@ function updateRanks(state) {
     const bp = b.w / Math.max(1, b.w + b.l);
     return bp - ap || b.power - a.power;
   });
+}
+
+function emptyTeamStats() {
+  return { games: 0, runsFor: 0, runsAgainst: 0, errors: 0 };
+}
+
+function ensureTeamStats(state) {
+  if (!Array.isArray(state?.teams)) return state;
+  state.teams.forEach((team) => {
+    if (!team.teamStats) team.teamStats = emptyTeamStats();
+    ["games", "runsFor", "runsAgainst", "errors"].forEach((key) => {
+      team.teamStats[key] = Math.max(0, Number(team.teamStats[key]) || 0);
+    });
+    const played = (team.w || 0) + (team.l || 0) + (team.t || 0);
+    if (team.teamStats.games < played) {
+      const missing = played - team.teamStats.games;
+      const winRate = (team.w || 0) / Math.max(1, (team.w || 0) + (team.l || 0));
+      const avgFor = 3.7 + (team.power || 65) / 55 + winRate * 0.8;
+      const avgAgainst = 4.9 - (team.power || 65) / 70 + (1 - winRate) * 0.9;
+      team.teamStats.runsFor += Math.round(missing * Math.max(2.6, avgFor));
+      team.teamStats.runsAgainst += Math.round(missing * Math.max(2.5, avgAgainst));
+      team.teamStats.errors += Math.round(missing * Math.max(0.35, 1.05 - (team.power || 65) / 120));
+      team.teamStats.games = played;
+    }
+  });
+  return state;
+}
+
+function estimateTeamErrors(team, runsAgainst = 0) {
+  const base = 0.35 + Math.max(0, 72 - (team?.power || 65)) / 45 + Math.max(0, runsAgainst - 4) * 0.08;
+  const variance = rnd(0, 100) < base * 45 ? 1 : 0;
+  return Math.min(4, variance + (rnd(0, 100) < Math.max(2, base * 8) ? 1 : 0));
+}
+
+function recordTeamGame(team, runsFor, runsAgainst, errors) {
+  if (!team) return;
+  if (!team.teamStats) team.teamStats = emptyTeamStats();
+  team.teamStats.games += 1;
+  team.teamStats.runsFor += Math.max(0, Number(runsFor) || 0);
+  team.teamStats.runsAgainst += Math.max(0, Number(runsAgainst) || 0);
+  team.teamStats.errors += Math.max(0, Number(errors) || 0);
 }
 
 function simulateOtherTeams(state) {
@@ -2017,13 +2270,21 @@ function simulateOtherTeams(state) {
 
 function simulateTeamResult(a, b) {
   const chance = a.power / Math.max(1, a.power + b.power);
-  if (Math.random() < chance) {
+  const base = rnd(2, 6);
+  let aRuns = Math.max(0, Math.min(13, Math.round(base + (a.power - 65) / 18 + rnd(-2, 3))));
+  let bRuns = Math.max(0, Math.min(13, Math.round(base + (b.power - 65) / 18 + rnd(-2, 3))));
+  const aWon = Math.random() < chance;
+  if (aWon && aRuns <= bRuns) aRuns = bRuns + 1;
+  if (!aWon && bRuns <= aRuns) bRuns = aRuns + 1;
+  if (aWon) {
     a.w += 1;
     b.l += 1;
   } else {
     b.w += 1;
     a.l += 1;
   }
+  recordTeamGame(a, aRuns, bRuns, estimateTeamErrors(a, bRuns));
+  recordTeamGame(b, bRuns, aRuns, estimateTeamErrors(b, aRuns));
 }
 
 function backfillStandingsGames(state) {
@@ -2080,10 +2341,15 @@ function simulateTeamPlayerStats(state, team) {
     p.stats.slg = Math.min(0.7, Math.max(0.25, p.stats.avg + (p.pow || 60) / 290));
   }
   if (starter) {
+    const stats = ensurePitchingStats(starter);
     starter.stats.ip = (starter.stats.ip || 0) + rnd(45, 68) / 10;
     starter.stats.so = (starter.stats.so || 0) + Math.max(1, Math.round((starter.pit || 62) / 16) + rnd(-1, 2));
     starter.stats.era = Math.min(7.2, Math.max(1.6, (starter.stats.era || 3.9) + rnd(-8, 8) / 100));
-    if (Math.random() < Math.max(0.28, (team.power || 65) / 160)) starter.stats.win = (starter.stats.win || 0) + 1;
+    const winChance = Math.max(0.28, (team.power || 65) / 160);
+    const lossChance = Math.max(0.18, (78 - (team.power || 65)) / 160);
+    const decision = Math.random();
+    if (decision < winChance) stats.win += 1;
+    else if (decision < winChance + lossChance) stats.loss += 1;
   }
   const bullpen = pitchers.filter((p) => p.id !== starter?.id).slice(0, 3);
   bullpen.forEach((p) => {
@@ -2099,7 +2365,15 @@ function ageAndDevelop(state) {
   const grown = [];
   for (const p of state.players) {
     const room = p.pot - p.ovr;
-    if (room > 0 && p.age <= 27 && Math.random() < 0.45) {
+    const rosterBoost = p.rosterStatus === "FARM" ? 0.12 : p.rosterStatus === "ACTIVE" ? 0.04 : p.rosterStatus === "DEV" ? 0.08 : 0;
+    const focusBoost = p.developmentFocus ? 0.05 : 0;
+    if (room > 0 && p.age <= 27 && Math.random() < 0.33 + rosterBoost + focusBoost) {
+      const focus = p.developmentFocus || (p.type === "PIT" ? "pit" : ["hit", "pow", "def", "arm"][rnd(0, 3)]);
+      if (focus === "hit") p.hit = Math.min(99, (p.hit || 50) + 1);
+      if (focus === "pow") p.pow = Math.min(99, (p.pow || 50) + 1);
+      if (focus === "def") p.def = Math.min(99, (p.def || 50) + 1);
+      if (focus === "arm") p.arm = Math.min(99, (p.arm || playerArmFallback(p)) + 1);
+      if (focus === "pit") p.pit = Math.min(99, (p.pit || 50) + 1);
       p.ovr += 1;
       grown.push(`${p.name} +1`);
     }
@@ -2226,7 +2500,7 @@ function refreshTradeTargets(state, silent = false) {
         const rawName = row[nameIndex];
         const rowSource = (idx("source") >= 0 && row[idx("source")]) || DATA_IMPORT_PATH;
         const jersey = idx("jerseyNumber") >= 0 ? row[idx("jerseyNumber")] : "";
-        const shouldAlias = String(rowSource).startsWith("KBO") && !String(rowSource).includes("Public Alias");
+        const shouldAlias = (String(rowSource).startsWith("공시") || String(rowSource).startsWith("KBO")) && !String(rowSource).includes("Public Alias");
         const name = shouldAlias ? publicAliasName(rawName, `${rowTeamId}-${jersey}`) : rawName;
         const pos = row[posIndex] || "CF";
         if (!name) return;
@@ -2249,6 +2523,8 @@ function refreshTradeTargets(state, silent = false) {
           kind: idx("contractKind") >= 0 && row[idx("contractKind")] ? row[idx("contractKind")] : estimated.kind,
           source: idx("contractSource") >= 0 && row[idx("contractSource")] ? row[idx("contractSource")] : ""
         };
+        p.controlYears = idx("controlYears") >= 0 && row[idx("controlYears")] !== "" ? Number(row[idx("controlYears")]) : Math.max(0, Math.ceil(((p.age <= 27 ? 9 : 8) * KBO_SERVICE_DAYS_PER_YEAR - (p.serviceDays || 0)) / KBO_SERVICE_DAYS_PER_YEAR));
+        p.controlKind = idx("controlKind") >= 0 && row[idx("controlKind")] ? row[idx("controlKind")] : (p.controlYears <= 0 ? "FA 자격권" : "구단 보류권");
         p.jerseyNumber = Number(jersey) || p.jerseyNumber;
         ["hit","pow","spd","def","arm","pit","form","stamina","durability"].forEach((key) => {
           if (idx(key) >= 0 && row[idx(key)]) p[key] = Number(row[idx(key)]) || p[key];
@@ -2303,6 +2579,7 @@ function ensureTradeTargets(state) {
   const usesImportedTargets = state.tradeTargets.every((p) => p.dataSource === "trade-target-import");
   if (state.day <= tradeDeadlineDay(state) && (state.tradeTargets.length < 200 || ids.size !== state.tradeTargets.length || !usesImportedTargets)) refreshTradeTargets(state, true);
   if (state.day > tradeDeadlineDay(state)) state.tradeTargets = [];
+  for (const p of state.tradeTargets) normalizeContractReality(p);
   return state;
 }
 
@@ -2472,6 +2749,54 @@ function rejectTradeOffer(state, id) {
   return state;
 }
 
+function teamStatRows(state) {
+  ensureTeamStats(state);
+  const rows = new Map((state.teams || []).map((team) => [team.id, {
+    teamId: team.id,
+    runsFor: team.teamStats?.runsFor || 0,
+    runsAgainst: team.teamStats?.runsAgainst || 0,
+    errors: team.teamStats?.errors || 0,
+    hr: 0,
+    hits: 0,
+    pa: 0,
+    ip: 0,
+    earnedRuns: 0
+  }]));
+  [...(state.players || []), ...(state.leaguePlayers || [])].forEach((p) => {
+    const teamId = p.teamId || state.selectedTeamId;
+    const row = rows.get(teamId);
+    if (!row || !p.stats) return;
+    if (p.type === "BAT") {
+      row.hr += Number(p.stats.hr) || 0;
+      row.hits += Number(p.stats.h) || 0;
+      row.pa += Number(p.stats.pa) || 0;
+    } else if (p.type === "PIT") {
+      const ip = Number(p.stats.ip) || 0;
+      row.ip += ip;
+      row.earnedRuns += ((Number(p.stats.era) || 0) * ip) / 9;
+    }
+  });
+  return [...rows.values()].map((row) => {
+    const team = (state.teams || []).find((t) => t.id === row.teamId);
+    const games = Math.max(0, team?.teamStats?.games || 0);
+    if (games > 0 && row.pa <= 0) {
+      const power = team?.power || 65;
+      row.pa = games * 36;
+      row.hits = Math.max(0, Math.round(games * (7.2 + power / 45 + (row.runsFor || 0) / Math.max(1, games * 8))));
+      row.hr = Math.max(0, Math.round(games * Math.max(0.45, (power - 50) / 34)));
+    }
+    if (games > 0 && row.ip <= 0) {
+      row.ip = games * 9;
+      row.earnedRuns = Math.max(0, row.runsAgainst - Math.round((row.errors || 0) * 0.35));
+    }
+    return {
+      ...row,
+      avg: row.pa > 0 ? row.hits / row.pa : 0,
+      era: row.ip > 0 ? (row.earnedRuns * 9) / row.ip : 0
+    };
+  });
+}
+
 function publicState(state) {
   ensureActiveGameDetails(state);
   ensureLeaguePlayers(state);
@@ -2488,7 +2813,9 @@ function publicState(state) {
     scheduleInfo: currentScheduleInfo(state),
     rank: state.teams.findIndex((t) => t.id === state.selectedTeamId) + 1,
     teamPower: teamPower(state),
-    rosterCounts: rosterCounts(state)
+    rosterCounts: rosterCounts(state),
+    teamStatRows: teamStatRows(state),
+    protectionRecommendations: protectionRecommendations(state)
   };
 }
 
@@ -2523,6 +2850,8 @@ function playGame(state) {
   state.morale = Math.max(20, Math.min(95, state.morale));
   state.fanInterest = Math.max(25, Math.min(98, state.fanInterest));
   state.budget += won ? 0.4 : 0.1;
+  recordTeamGame(me, finalMe, finalOpp, estimateTeamErrors(me, finalOpp));
+  recordTeamGame(opp, finalOpp, finalMe, estimateTeamErrors(opp, finalMe));
 
   const activeBatters = state.players
     .filter((p) => p.rosterStatus === "ACTIVE" && p.type === "BAT" && p.health?.status !== "INJURED")
@@ -2569,6 +2898,7 @@ function playGame(state) {
       p.stats.ip = (p.stats.ip || 0) + Math.round((pitches / 15) * 10) / 10;
       p.stats.era = Math.min(7.5, Math.max(1.8, (p.stats.era || 3.8) + (Math.random() - 0.52) / 3));
       if (won && p.id === starter?.id) p.stats.win += 1;
+      if (!won && p.id === starter?.id) p.stats.loss = (p.stats.loss || 0) + 1;
       if (p.pitcherRole === "CL" && won && Math.random() < 0.28) p.stats.sv = (p.stats.sv || 0) + 1;
       if (["MR","SU"].includes(p.pitcherRole) && won && Math.random() < 0.18) p.stats.hold = (p.stats.hold || 0) + 1;
     }
@@ -2585,6 +2915,7 @@ function playGame(state) {
   if (state.day % 6 === 0 || Math.random() < 0.18) generateOffer(state);
   if (state.day % 12 === 0) ageAndDevelop(state);
   progressPitchTraining(state);
+  progressTrainingAssignments(state);
   accrueServiceDays(state);
   simulateOtherTeams(state);
   state.day += 1;
@@ -2668,6 +2999,458 @@ function trainPlayer(state, id, focus) {
   return state;
 }
 
+function trainingLabel(focus) {
+  return {
+    hit: "컨택 훈련",
+    pow: "장타 훈련",
+    def: "수비 훈련",
+    arm: "송구 훈련",
+    pit: "투구 밸런스"
+  }[focus] || "개별 훈련";
+}
+
+function progressTrainingAssignments(state) {
+  const reports = [];
+  for (const p of state.players || []) {
+    if (!p || p.health?.status === "INJURED") continue;
+    ensurePositionData(p);
+
+    if (p.trainingFocus?.focus) {
+      const focus = p.trainingFocus.focus;
+      const ceiling = Math.max(p.pot || p.ovr || 60, p.ovr || 60);
+      const growth = rnd(7, 13) + Math.max(0, ceiling - (p.ovr || 60)) * 0.18 + ((p.form || 65) - 65) * 0.05;
+      p.trainingFocus.days = (p.trainingFocus.days || 0) + 1;
+      p.trainingFocus.progress = Math.min(100, Math.round((p.trainingFocus.progress || 0) + growth));
+      p.form = Math.max(35, Math.min(96, (p.form || 65) + rnd(-1, 1)));
+      if (p.health?.status === "OK" && Math.random() < injuryRisk(p, "training") * 0.45) randomInjury(state, p.id, "training");
+
+      if (p.trainingFocus.progress >= 100) {
+        p.developmentFocus = focus;
+        reports.push(`${p.name} ${trainingLabel(focus)} 방향 설정`);
+        p.trainingFocus = null;
+      }
+    }
+
+    if (p.positionTrainingFocus?.pos && p.type === "BAT") {
+      const pos = p.positionTrainingFocus.pos;
+      const base = p.positionTraining[pos] || ((p.secondaryPositions || []).includes(pos) ? 70 : 0);
+      const gain = rnd(6, 12) + Math.max(0, (p.def || 60) - 55) * 0.04;
+      p.positionTrainingFocus.days = (p.positionTrainingFocus.days || 0) + 1;
+      p.positionTrainingFocus.progress = Math.min(100, Math.round((p.positionTrainingFocus.progress || 0) + gain));
+      p.positionTraining[pos] = Math.min(100, Math.round(base + gain));
+      if (p.positionTraining[pos] >= 60 && !p.secondaryPositions.includes(pos)) {
+        p.secondaryPositions.push(pos);
+        reports.push(`${p.name} ${pos} 백업 출장 가능`);
+      }
+      if (p.positionTraining[pos] >= 85 && p.pos !== pos) {
+        reports.push(`${p.name} ${pos} 포지션 적응 완료`);
+      }
+      if (p.positionTrainingFocus.progress >= 100) {
+        if (p.positionTraining[pos] < 85) reports.push(`${p.name} ${pos} 포지션 적응도 ${p.positionTraining[pos]}%`);
+        p.positionTrainingFocus = null;
+      }
+    }
+  }
+  if (reports.length) addNews(state, "훈련 리포트", reports.slice(0, 5).join(" · "), "육성");
+}
+
+function trainPlayer(state, id, focus) {
+  const p = state.players.find((x) => x.id === Number(id));
+  if (!p) {
+    addNews(state, "훈련 지시 실패", "선수를 다시 선택해야 한다.", "육성");
+    return state;
+  }
+  state.selectedId = p.id;
+  ensurePositionData(p);
+  const value = String(focus || "");
+
+  if (value.startsWith("pos:") && p.type === "BAT") {
+    const pos = value.split(":")[1];
+    if (!FIELD_POSITIONS.includes(pos)) return state;
+    p.positionTrainingFocus = { pos, progress: 0, days: 0 };
+    p.happy = Math.max(25, Math.min(98, (p.happy || 65) + (pos === p.pos ? 1 : -1)));
+    addNews(state, "포지션 훈련 지시", `${p.name}에게 ${pos} 수비 적응 훈련을 지시했다. 일정이 지나면 숙련도가 오른다.`, "육성");
+    return state;
+  }
+
+  if (value.startsWith("pitch:") && p.type === "PIT") {
+    ensurePitchArsenal(p);
+    const pitchType = value.split(":")[1];
+    const pitch = p.pitchArsenal.find((item) => item.type === pitchType);
+    if (!pitch) {
+      addNews(state, "구종 훈련 실패", `${p.name}은 아직 ${pitchType}을 실전 구종으로 쓰지 않는다.`, "육성");
+      return state;
+    }
+    p.pitchTraining = { mode: "refine", type: pitchType, progress: 0, days: 0 };
+    addNews(state, "구종 훈련 지시", `${p.name}에게 ${pitchType} 집중 훈련을 지시했다. 일정이 지나면 숙련도가 오른다.`, "육성");
+    return state;
+  }
+
+  if (value.startsWith("pitchnew:") && p.type === "PIT") {
+    ensurePitchArsenal(p);
+    const pitchType = value.split(":")[1];
+    if (!pitchCatalogByType(pitchType)) return state;
+    if (p.pitchArsenal.some((item) => item.type === pitchType)) {
+      addNews(state, "신구종 훈련 보류", `${p.name}은 이미 ${pitchType}을 던진다. 기존 구종 훈련으로 전환하세요.`, "육성");
+      return state;
+    }
+    if ((p.pitchArsenal || []).length >= 6) {
+      addNews(state, "신구종 훈련 보류", `${p.name}은 이미 구종이 많아 새 구종보다 기존 결정구 완성도가 우선이다.`, "육성");
+      return state;
+    }
+    p.pitchTraining = { mode: "new", type: pitchType, progress: 0, days: 0 };
+    p.happy = Math.max(25, (p.happy || 65) - 1);
+    addNews(state, "신구종 훈련 지시", `${p.name}이 ${pitchType} 습득 훈련을 시작했다. 며칠 일정이 지나 진행률 100%가 되면 실전 구종에 추가된다.`, "육성");
+    return state;
+  }
+
+  const valid = p.type === "PIT" ? ["pit", "def", "arm"] : ["hit", "pow", "def", "arm"];
+  const selectedFocus = valid.includes(value) ? value : (p.type === "PIT" ? "pit" : "hit");
+  p.trainingFocus = { focus: selectedFocus, progress: 0, days: 0 };
+  p.happy = Math.max(25, Math.min(98, (p.happy || 65) + 1));
+  addNews(state, "훈련 과제 지시", `${p.name}에게 ${trainingLabel(selectedFocus)}을 지시했다. 훈련은 성장 방향을 잡고, 실제 능력 상승은 2군/경기 경험을 거치며 반영된다.`, "육성");
+  return state;
+}
+
+const HS_SCHOOLS = ["북일고", "덕수고", "장충고", "충암고", "경남고", "광주일고", "대구상원고", "서울고", "유신고", "인천고", "부산고", "전주고"];
+const HS_LAST = ["김", "이", "박", "최", "정", "강", "조", "윤", "장", "임", "한", "오", "서", "문", "권", "류"];
+const HS_MIDDLE = ["도", "민", "서", "지", "현", "준", "태", "하", "건", "유", "시", "찬", "우", "원", "재", "율"];
+const HS_END = ["현", "우", "준", "민", "찬", "성", "율", "빈", "호", "겸", "윤", "혁", "진", "원", "재", "영"];
+
+function makeHighSchoolName(seed) {
+  return HS_LAST[seed % HS_LAST.length] + HS_MIDDLE[(seed * 3 + 5) % HS_MIDDLE.length] + HS_END[(seed * 7 + 2) % HS_END.length];
+}
+
+function makeHighSchoolStats(type, base, seed) {
+  return [1, 2, 3].map((year) => {
+    const age = 15 + year;
+    const growth = (year - 1) * rnd(2, 5) + Math.max(0, base - 60) * 0.12;
+    if (type === "PIT") {
+      const ip = rnd(22 + year * 8, 42 + year * 14);
+      const eraRaw = Math.max(0.7, 5.2 - (base + growth - 55) * 0.055 + rnd(-8, 9) / 10);
+      return {
+        year: `${year}학년`,
+        age,
+        g: rnd(8 + year, 13 + year * 2),
+        ip,
+        era: Math.round(eraRaw * 100) / 100,
+        so: Math.round(ip * (0.78 + (base + growth - 55) * 0.018)),
+        bb: Math.max(4, Math.round(ip * (0.36 - (base + growth - 60) * 0.004))),
+        velo: Math.min(156, Math.round(134 + (base - 50) * 0.35 + year * rnd(1, 3) + seed % 4))
+      };
+    }
+    const pa = rnd(42 + year * 12, 72 + year * 16);
+    const avg = Math.max(0.210, Math.min(0.470, 0.245 + (base + growth - 55) * 0.006 + rnd(-25, 26) / 1000));
+    const hr = Math.max(0, Math.round((base - 54) * 0.08 + year * 0.7 + rnd(-1, 2)));
+    return {
+      year: `${year}학년`,
+      age,
+      g: rnd(13 + year, 20 + year * 2),
+      pa,
+      avg: Math.round(avg * 1000) / 1000,
+      hr,
+      rbi: Math.max(3, Math.round(pa * avg * 0.42 + hr * 2 + rnd(0, 8))),
+      sb: Math.max(0, Math.round((base - 50) * 0.09 + rnd(0, 7))),
+      ops: Math.round(Math.min(1.250, avg + 0.310 + hr * 0.035 + rnd(-20, 31) / 1000) * 1000) / 1000
+    };
+  });
+}
+
+function draftReport(prospect) {
+  if (prospect.type === "PIT") {
+    const senior = prospect.hsStats[(prospect.hsStats || []).length - 1] || {};
+    return `${senior.velo}km/h · ERA ${senior.era} · ${senior.so}K/${senior.bb}BB`;
+  }
+  const senior = prospect.hsStats[(prospect.hsStats || []).length - 1] || {};
+  return `AVG ${Number(senior.avg || 0).toFixed(3)} · OPS ${Number(senior.ops || 0).toFixed(3)} · ${senior.hr || 0}HR · ${senior.sb || 0}SB`;
+}
+
+function makeDraftProspect(index, grade = 3, cohortSeed = 0) {
+  const pos = ["SP", "SS", "CF", "C", "3B", "RF", "2B", "RP", "1B", "LF"][index % 10];
+  const type = ["SP", "RP", "CL"].includes(pos) ? "PIT" : "BAT";
+  const base = rnd(48, 78) + (index < 10 ? rnd(4, 10) : 0) - Math.max(0, 3 - grade) * 3;
+  const pot = Math.max(58, Math.min(96, base + rnd(10, 24)));
+  const ovr = Math.max(42, Math.min(74, base + rnd(-4, 5)));
+  const hsStats = makeHighSchoolStats(type, base, index + cohortSeed).filter((s, statIndex) => statIndex < grade);
+  const school = HS_SCHOOLS[index % HS_SCHOOLS.length];
+  const prospect = {
+    id: 900000 + (cohortSeed % 100000) * 100 + index,
+    name: makeHighSchoolName(index + cohortSeed + rnd(0, 1000)),
+    school,
+    grade,
+    pos,
+    type,
+    age: 15 + grade,
+    batsThrows: type === "PIT" ? (rnd(1, 100) > 72 ? "좌투" : "우투") : (rnd(1, 100) > 70 ? "좌타" : "우타"),
+    ovr,
+    pot,
+    hit: type === "BAT" ? Math.max(35, Math.min(82, ovr + rnd(-5, 7))) : 10,
+    pow: type === "BAT" ? Math.max(30, Math.min(84, ovr + rnd(-8, 9))) : 10,
+    spd: Math.max(35, Math.min(90, rnd(45, 78) + (["SS", "CF", "2B"].includes(pos) ? 8 : 0))),
+    def: Math.max(35, Math.min(88, rnd(45, 76) + (["C", "SS", "CF"].includes(pos) ? 9 : 0))),
+    arm: Math.max(42, Math.min(94, rnd(48, 82) + (type === "PIT" || ["C", "SS", "RF"].includes(pos) ? 8 : 0))),
+    pit: type === "PIT" ? Math.max(38, Math.min(82, ovr + rnd(-6, 8))) : 10,
+    stamina: type === "PIT" ? rnd(pos === "SP" ? 62 : 38, pos === "SP" ? 88 : 62) : rnd(48, 78),
+    durability: rnd(45, 86),
+    hsStats,
+    report: "",
+    signBonus: Math.round((0.4 + Math.max(0, pot - 60) * 0.09 + Math.max(0, ovr - 58) * 0.04) * 10) / 10,
+    drafted: false
+  };
+  prospect.report = draftReport(prospect);
+  prospect.rankScore = Math.round(prospect.pot * 1.55 + prospect.ovr * 0.9 + (prospect.age <= 18 ? 8 : 0) + rnd(-10, 10));
+  return prospect;
+}
+
+function buildHighSchoolCohort(grade, seasonYear = 1) {
+  const seed = seasonYear * 1000 + grade * 100;
+  return Array.from({ length: HS_DRAFT_POOL_SIZE }, (_, index) => makeDraftProspect(index, grade, seed))
+    .map((p, index) => ({ ...p, cohortYear: seasonYear, cohortId: `${seasonYear}-${grade}-${index}` }));
+}
+
+function ensureHighSchoolCohorts(state) {
+  if (!state) return state;
+  const seasonYear = Number(state.seasonYear) || 1;
+  if (!Array.isArray(state.hsCohorts) || !state.hsCohorts.length) {
+    state.hsCohorts = [1, 2, 3].map((grade) => ({ grade, seasonYear, players: buildHighSchoolCohort(grade, seasonYear) }));
+  }
+  for (const grade of [1, 2, 3]) {
+    const cohort = state.hsCohorts.find((c) => Number(c.grade) === grade);
+    if (!cohort || !Array.isArray(cohort.players) || !cohort.players.length) {
+      state.hsCohorts = state.hsCohorts.filter((c) => Number(c.grade) !== grade);
+      state.hsCohorts.push({ grade, seasonYear, players: buildHighSchoolCohort(grade, seasonYear) });
+    }
+  }
+  state.hsCohorts.sort((a, b) => Number(a.grade) - Number(b.grade));
+  return state;
+}
+
+function seniorHighSchoolPool(state) {
+  ensureHighSchoolCohorts(state);
+  const senior = state.hsCohorts.find((c) => Number(c.grade) === 3);
+  return (senior?.players || []).filter((p) => !p.drafted);
+}
+
+function promoteHighSchoolCohorts(state) {
+  ensureHighSchoolCohorts(state);
+  const seasonYear = (Number(state.seasonYear) || 1) + 1;
+  const grade2 = state.hsCohorts.find((c) => Number(c.grade) === 2)?.players || [];
+  const grade1 = state.hsCohorts.find((c) => Number(c.grade) === 1)?.players || [];
+  const promote = (players, grade) => players.map((p, index) => {
+    const next = { ...p, grade, age: 15 + grade, drafted: false };
+    next.hsStats = makeHighSchoolStats(next.type, Math.max(48, next.ovr || 55), index + seasonYear * 1000).filter((s, statIndex) => statIndex < grade);
+    next.report = draftReport(next);
+    next.rankScore = Math.round(next.pot * 1.55 + next.ovr * 0.9 + (grade === 3 ? 8 : 0) + rnd(-10, 10));
+    return next;
+  });
+  state.seasonYear = seasonYear;
+  state.hsCohorts = [
+    { grade: 1, seasonYear, players: buildHighSchoolCohort(1, seasonYear) },
+    { grade: 2, seasonYear, players: promote(grade1, 2) },
+    { grade: 3, seasonYear, players: promote(grade2, 3) }
+  ];
+  return state;
+}
+
+function makeRandomDevelopmentProspect(index) {
+  const pos = ["SP", "RP", "C", "SS", "CF", "2B", "3B", "RF", "1B", "LF"][rnd(0, 9)];
+  const type = ["SP", "RP", "CL"].includes(pos) ? "PIT" : "BAT";
+  const age = rnd(18, 23);
+  const ovr = rnd(38, 62) + (index < 8 ? rnd(3, 8) : 0);
+  const pot = Math.max(ovr + rnd(8, 24), rnd(58, 88));
+  const name = makeHighSchoolName(index + rnd(1000, 9999));
+  const source = ["독립리그 테스트", "지역 연습경기", "대학 중퇴", "군 전역 테스트", "트라이아웃", "퓨처스 추천"][rnd(0, 5)];
+  const p = {
+    id: 950000 + Date.now() % 100000 + index,
+    name,
+    school: source,
+    pos,
+    type,
+    age,
+    batsThrows: type === "PIT" ? (rnd(1, 100) > 75 ? "좌투" : "우투") : (rnd(1, 100) > 68 ? "좌타" : "우타"),
+    ovr,
+    pot,
+    hit: type === "BAT" ? rnd(34, Math.min(75, ovr + 10)) : 10,
+    pow: type === "BAT" ? rnd(30, Math.min(76, ovr + 10)) : 10,
+    spd: rnd(38, 84),
+    def: rnd(36, 78),
+    arm: rnd(42, 88),
+    pit: type === "PIT" ? rnd(36, Math.min(76, ovr + 12)) : 10,
+    stamina: type === "PIT" ? rnd(pos === "SP" ? 55 : 35, pos === "SP" ? 82 : 60) : rnd(44, 76),
+    durability: rnd(42, 82),
+    hsStats: [],
+    report: "",
+    signBonus: Math.round((0.1 + Math.max(0, pot - 55) * 0.035 + Math.max(0, ovr - 50) * 0.025) * 10) / 10,
+    drafted: false,
+    developmentDraft: true
+  };
+  p.report = type === "PIT"
+    ? `${source} · 최고 ${Math.min(154, 132 + p.pit * 0.25 + rnd(0, 7))}km/h · 제구/체력 검증 필요`
+    : `${source} · ${p.pos} 테스트 · 툴 ${Math.max(p.hit, p.pow, p.spd, p.def, p.arm)} · 실전 검증 필요`;
+  p.rankScore = Math.round(p.pot * 1.35 + p.ovr * 0.85 + rnd(-14, 12));
+  return p;
+}
+
+function generateDraftClass(state) {
+  ensureHighSchoolCohorts(state);
+  const seasonYear = Number(state.seasonYear) || 1;
+  if ((state.day || 1) < (state.draftDay || DRAFT_DAY)) {
+    addNews(state, "드래프트 일정 전", `신인 드래프트는 Day ${state.draftDay || DRAFT_DAY}에 열린다. 현재는 고교 선수 스카우팅 기간이다.`, "드래프트");
+    return state;
+  }
+  if (state.draftCompletedSeason === seasonYear) {
+    addNews(state, "드래프트 종료", `${seasonYear}시즌 신인 드래프트는 이미 종료됐다.`, "드래프트");
+    return state;
+  }
+  if (state.draftWindowOpen && Array.isArray(state.draftClass) && state.draftClass.length) return state;
+  const prospects = seniorHighSchoolPool(state)
+    .sort((a, b) => b.rankScore - a.rankScore)
+    .map((p, index) => ({ ...p, rank: index + 1, projectedRound: Math.floor(index / 10) + 1 }));
+  state.draftClass = prospects;
+  state.draftCycle = seasonYear;
+  state.draftSeason = seasonYear;
+  state.draftWindowOpen = true;
+  state.draftOrder = draftOrderForState(state);
+  state.draftRound = 1;
+  state.draftPick = 0;
+  addNews(state, "신인 드래프트 개막", `${seasonYear}시즌 고교 3학년 지명 후보 ${prospects.length}명이 공개됐다. 1~2학년은 다음 시즌 이후 드래프트로 넘어간다.`, "드래프트");
+  advanceDraftToUser(state);
+  return state;
+}
+
+function ensureDraftWindow(state) {
+  if (!state) return state;
+  ensureHighSchoolCohorts(state);
+  const seasonYear = Number(state.seasonYear) || 1;
+  if ((state.day || 1) >= (state.draftDay || DRAFT_DAY) && state.draftCompletedSeason !== seasonYear && !state.draftWindowOpen) {
+    generateDraftClass(state);
+  }
+  return state;
+}
+
+function draftOrderForState(state) {
+  return (state.teams || teamTemplates)
+    .slice()
+    .sort((a, b) => {
+      const ar = (a.w || 0) / Math.max(1, (a.w || 0) + (a.l || 0));
+      const br = (b.w || 0) / Math.max(1, (b.w || 0) + (b.l || 0));
+      return ar - br || (a.w || 0) - (b.w || 0) || (b.l || 0) - (a.l || 0);
+    })
+    .map((t) => t.id);
+}
+
+function currentDraftTeamId(state) {
+  if (!Array.isArray(state.draftOrder) || state.draftOrder.length !== 10) state.draftOrder = draftOrderForState(state);
+  if ((state.draftRound || 1) > DRAFT_ROUNDS) return null;
+  return state.draftOrder[state.draftPick % state.draftOrder.length];
+}
+
+function advanceDraftSlot(state) {
+  state.draftPick = (state.draftPick || 0) + 1;
+  if (state.draftPick >= 10) {
+    state.draftPick = 0;
+    state.draftRound = (state.draftRound || 1) + 1;
+  }
+  if ((state.draftRound || 1) > DRAFT_ROUNDS) completeDraftSeason(state);
+}
+
+function completeDraftSeason(state) {
+  const seasonYear = Number(state.seasonYear) || 1;
+  state.draftWindowOpen = false;
+  state.draftCompletedSeason = seasonYear;
+  state.draftClass = [];
+  state.draftOrder = [];
+  state.draftRound = 1;
+  state.draftPick = 0;
+  promoteHighSchoolCohorts(state);
+  addNews(state, "신인 드래프트 종료", `${seasonYear}시즌 드래프트가 종료됐다. 고교 2학년은 다음 시즌 3학년 지명 후보로 올라간다.`, "드래프트");
+  return state;
+}
+
+function autoDraftForTeam(state, teamId) {
+  const prospect = (state.draftClass || []).filter((p) => !p.drafted).sort((a, b) => b.rankScore - a.rankScore)[0];
+  if (!prospect) return null;
+  prospect.drafted = true;
+  prospect.draftedBy = teamId;
+  prospect.draftedRound = state.draftRound;
+  markCohortProspectDrafted(state, prospect, teamId);
+  const team = (state.teams || teamTemplates).find((t) => t.id === teamId);
+  state.draftHistory.unshift({ day: state.day, teamId, teamName: team ? `${team.city} ${team.name}` : teamId, name: prospect.name, school: prospect.school, rank: prospect.rank, round: state.draftRound });
+  return prospect;
+}
+
+function markCohortProspectDrafted(state, prospect, teamId) {
+  const senior = (state.hsCohorts || []).find((c) => Number(c.grade) === 3);
+  const match = (senior?.players || []).find((p) => p.cohortId === prospect.cohortId || p.id === prospect.id);
+  if (match) {
+    match.drafted = true;
+    match.draftedBy = teamId;
+    match.draftedRound = state.draftRound;
+  }
+}
+
+function advanceDraftToUser(state) {
+  if (!Array.isArray(state.draftClass) || !state.draftClass.length) generateDraftClass(state);
+  let picks = 0;
+  while (currentDraftTeamId(state) && currentDraftTeamId(state) !== state.selectedTeamId && picks < 120) {
+    const teamId = currentDraftTeamId(state);
+    const picked = autoDraftForTeam(state, teamId);
+    if (!picked) break;
+    advanceDraftSlot(state);
+    picks += 1;
+  }
+  addNews(state, "드래프트 진행", currentDraftTeamId(state) === state.selectedTeamId ? `${state.draftRound}라운드 ${state.draftPick + 1}번째, 우리 구단 지명 차례다.` : "드래프트가 종료됐다.", "드래프트");
+  return state;
+}
+
+function draftProspect(state, id) {
+  if (!Array.isArray(state.draftClass) || !state.draftClass.length) generateDraftClass(state);
+  if (currentDraftTeamId(state) !== state.selectedTeamId) {
+    addNews(state, "지명 순번 대기", "아직 우리 구단 지명 차례가 아니다. 내 순번까지 진행을 눌러야 한다.", "드래프트");
+    return state;
+  }
+  const prospect = state.draftClass.find((p) => p.id === Number(id) && !p.drafted);
+  if (!prospect) return state;
+  const counts = rosterCounts(state);
+  const rosterStatus = counts.registered < 65 ? "FARM" : "DEV";
+  const newId = Math.max(0, ...state.players.map((p) => p.id || 0)) + 1;
+  const trait = prospect.developmentDraft ? `${prospect.school} 육성 후보 지명` : `${prospect.school} 3년 성적 지명`;
+  const p = makePlayer([prospect.name, prospect.pos, prospect.type, prospect.age, prospect.ovr, prospect.pot, trait], newId - 1);
+  Object.assign(p, {
+    id: newId,
+    hit: prospect.hit,
+    pow: prospect.pow,
+    spd: prospect.spd,
+    def: prospect.def,
+    arm: prospect.arm,
+    pit: prospect.pit,
+    stamina: prospect.stamina,
+    durability: prospect.durability,
+    rosterStatus,
+    development: rosterStatus === "DEV",
+    serviceYears: 0,
+    serviceDays: 0,
+    faRemainingDays: faServiceRequiredDays({ age: 18 }) || 9 * KBO_SERVICE_DAYS_PER_YEAR,
+    contract: { yearsLeft: 1, annual: 0.3, kind: prospect.developmentDraft ? "육성 후보 연봉계약" : "신인지명 연봉계약", source: prospect.developmentDraft ? "랜덤 육성 후보 드래프트" : "가상 고교 3년 성적 드래프트" },
+    salary: 0.3,
+    signingBonus: prospect.signBonus,
+    hsStats: prospect.hsStats,
+    draftInfo: { rank: prospect.rank, round: prospect.projectedRound, school: prospect.school, report: prospect.report },
+    dataSource: prospect.developmentDraft ? "fictional-dev-draft" : "fictional-hs-draft"
+  });
+  if (p.type === "PIT") ensurePitchArsenal(p);
+  state.players.push(p);
+  prospect.drafted = true;
+  prospect.draftedBy = state.selectedTeamId;
+  prospect.draftedRound = state.draftRound;
+  markCohortProspectDrafted(state, prospect, state.selectedTeamId);
+  state.draftHistory.unshift({ day: state.day, playerId: p.id, name: p.name, school: prospect.school, rank: prospect.rank, round: prospect.projectedRound });
+  state.selectedId = p.id;
+  addNews(state, "신인 지명 완료", `${state.draftRound}라운드 ${state.draftPick + 1}번째로 ${p.name}(${prospect.school}, ${p.pos})을 지명했다. 계약금 ${money(prospect.signBonus)}.`, "드래프트");
+  advanceDraftSlot(state);
+  return state;
+}
+
 function scout(state, league) {
   const names = league === "MLB"
     ? ["도미닉 헤일", "마테오 크루즈", "잭 밀러", "노아 벤튼"]
@@ -2714,7 +3497,7 @@ function signScout(state, index) {
     happy: rnd(62, 84),
     trait: `${s.league} 영입`,
     foreignPlayer: true,
-    stats: isPitcher ? { era: 0, win: 0, so: 0, sv: 0, hold: 0, ip: 0 } : { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, obp: 0, slg: 0 }
+    stats: isPitcher ? { era: 0, win: 0, loss: 0, so: 0, sv: 0, hold: 0, ip: 0 } : { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, obp: 0, slg: 0 }
   });
   addNews(state, "신규 영입", `${s.name} 영입 완료. ${s.league} 스카우팅 라인이 첫 성과를 냈다.`, "이적");
   state.scout.splice(index, 1);
@@ -2842,6 +3625,50 @@ function faCompensation(fa, includePlayer) {
   if (fa.grade === "A") return includePlayer ? { cash: fa.previousSalary * 2, protected: 20 } : { cash: fa.previousSalary * 3, protected: 0 };
   if (fa.grade === "B") return includePlayer ? { cash: fa.previousSalary, protected: 25 } : { cash: fa.previousSalary * 2, protected: 0 };
   return { cash: fa.previousSalary * 1.5, protected: 0 };
+}
+
+function protectionScore(p) {
+  if (!p || p.rosterStatus === "DEV" || isForeignPlayer(p)) return -999;
+  let score = (p.ovr || 0) * 1.5 + (p.pot || 0) * 0.75;
+  score += Math.max(0, 29 - (p.age || 29)) * 1.6;
+  score += Math.max(0, Number(p.controlYears) || 0) * 4;
+  if (String(p.contract?.kind || "").includes("실계약") && (p.contract?.yearsLeft || 0) >= 2) score += 6;
+  if ((p.contract?.annual || p.salary || 0) >= 8) score += 3;
+  if (p.type === "PIT" && (p.pitcherRole === "SP" || p.pos === "SP")) score += 7;
+  if (["C", "SS", "CF"].includes(p.pos)) score += 5;
+  if (playerIconLevel(p) >= 4) score += 10;
+  if (p.health?.status === "INJURED") score -= 8;
+  return Math.round(score);
+}
+
+function protectionRecommendations(state) {
+  const candidates = (state.players || [])
+    .filter((p) => p && p.rosterStatus !== "DEV" && !isForeignPlayer(p))
+    .map((p) => ({
+      id: p.id,
+      name: p.name,
+      pos: p.pos,
+      age: p.age,
+      ovr: p.ovr,
+      pot: p.pot,
+      controlYears: Number(p.controlYears) || 0,
+      contract: p.contract,
+      score: protectionScore(p),
+      reason: [
+        (p.ovr || 0) >= 78 ? "즉시전력" : null,
+        (p.pot || 0) >= 82 ? "고잠재" : null,
+        (Number(p.controlYears) || 0) >= 3 ? "보류권 길음" : null,
+        ["C", "SS", "CF"].includes(p.pos) ? "센터라인" : null,
+        p.type === "PIT" && (p.pitcherRole === "SP" || p.pos === "SP") ? "선발자원" : null
+      ].filter(Boolean).join(" · ") || "전력가치"
+    }))
+    .sort((a, b) => b.score - a.score);
+  return {
+    gradeAProtected20: candidates.slice(0, 20),
+    gradeBProtected25: candidates.slice(0, 25),
+    exposedRiskA: candidates.slice(20, 28),
+    exposedRiskB: candidates.slice(25, 33)
+  };
 }
 
 function signFreeAgent(state, id, includePlayer) {
@@ -3153,13 +3980,15 @@ function importPlayersFromCsv(state, csv, source) {
 
   const targetTeamId = state.selectedTeamId;
   const imported = [];
+  const importedLeague = [];
   let nextId = 1;
+  let nextLeagueId = 100001;
   for (const row of rows.slice(1)) {
     const rowTeamId = teamIdIndex >= 0 ? row[teamIdIndex] : targetTeamId;
-    if (rowTeamId && rowTeamId !== targetTeamId) continue;
+    const isTargetTeam = !rowTeamId || rowTeamId === targetTeamId;
     const rawName = row[nameIndex];
     const rowSource = (idx("source") >= 0 && row[idx("source")]) || source || "user-import";
-    const shouldAlias = String(rowSource).startsWith("KBO") && !String(rowSource).includes("Public Alias");
+    const shouldAlias = (String(rowSource).startsWith("공시") || String(rowSource).startsWith("KBO")) && !String(rowSource).includes("Public Alias");
     const name = shouldAlias ? publicAliasName(rawName, `${rowTeamId}-${idx("jerseyNumber") >= 0 ? row[idx("jerseyNumber")] : ""}`) : rawName;
     const pos = row[posIndex] || "CF";
     if (!name) continue;
@@ -3169,12 +3998,13 @@ function importPlayersFromCsv(state, csv, source) {
     const pot = Number(row[idx("pot")]) || Math.max(ovr, rnd(65, 88));
     const seed = [name, pos, type, age, ovr, pot, row[idx("trait")] || ""];
     const p = makePlayer(seed, nextId - 1);
-    p.id = nextId++;
+    p.id = isTargetTeam ? nextId++ : nextLeagueId++;
     p.teamId = rowTeamId || targetTeamId;
-    p.teamName = teamTemplates.find((t) => t.id === p.teamId)?.name || "";
+    const importedTeam = teamTemplates.find((t) => t.id === p.teamId);
+    p.teamName = importedTeam ? `${importedTeam.city} ${importedTeam.name}` : "";
     p.rosterStatus = row[idx("rosterStatus")] || "FARM";
     p.pitcherRole = type === "PIT" ? (row[idx("pitcherRole")] || (pos === "SP" ? "SP" : pos === "CL" ? "CL" : "MR")) : null;
-    const estimated = estimateContractForPlayer(p, state.players.length);
+    const estimated = estimateContractForPlayer(p, imported.length + importedLeague.length);
     const importedYears = idx("yearsLeft") >= 0 ? Number(row[idx("yearsLeft")]) : null;
     const importedAnnual = idx("annualSalary") >= 0 ? Number(row[idx("annualSalary")]) : idx("salary") >= 0 ? Number(row[idx("salary")]) : null;
     p.contract = {
@@ -3183,6 +4013,8 @@ function importPlayersFromCsv(state, csv, source) {
       kind: idx("contractKind") >= 0 && row[idx("contractKind")] ? row[idx("contractKind")] : estimated.kind,
       source: idx("contractSource") >= 0 && row[idx("contractSource")] ? row[idx("contractSource")] : ""
     };
+    p.controlYears = idx("controlYears") >= 0 && row[idx("controlYears")] !== "" ? Number(row[idx("controlYears")]) : Math.max(0, Math.ceil(((p.age <= 27 ? 9 : 8) * KBO_SERVICE_DAYS_PER_YEAR - (p.serviceDays || 0)) / KBO_SERVICE_DAYS_PER_YEAR));
+    p.controlKind = idx("controlKind") >= 0 && row[idx("controlKind")] ? row[idx("controlKind")] : (p.controlYears <= 0 ? "FA 자격권" : "구단 보류권");
     p.jerseyNumber = Number(row[idx("jerseyNumber")]) || p.jerseyNumber;
     ["hit","pow","spd","def","arm","pit","form","stamina","durability"].forEach((key) => {
       if (idx(key) >= 0 && row[idx(key)]) p[key] = Number(row[idx(key)]) || p[key];
@@ -3197,18 +4029,38 @@ function importPlayersFromCsv(state, csv, source) {
     p.development = p.rosterStatus === "DEV";
     p.foreignPlayer = idx("foreignPlayer") >= 0 ? ["Y","TRUE","1","외국인"].includes(String(row[idx("foreignPlayer")]).toUpperCase()) : isLikelyForeignName(name);
     p.dataSource = rowSource;
-    imported.push(p);
+    if (shouldRebuildPrivateContract(p)) {
+      const yearsLeft = gameContractYears(p, p.contract.annual);
+      p.contract.yearsLeft = yearsLeft;
+      p.contract.kind = yearsLeft >= 3 ? "보류권 기반 다년관리" : "연봉계약+보류권";
+      p.contract.source = p.contract.annual ? "공시 연봉 · 서비스타임 반영" : "추정 연봉 · 서비스타임 반영";
+    }
+    normalizeContractReality(p);
+    if (isTargetTeam) imported.push(p);
+    else importedLeague.push(p);
   }
   if (!imported.length) return state;
 
-  const keepOtherTeamsOrDev = state.players.filter((p) => p.dataSource === "system-locked");
+  const keepOtherTeamsOrDev = state.players
+    .filter((p) => p.dataSource === "system-locked" || p.rosterStatus === "DEV")
+    .map((p) => {
+      p.teamId = p.teamId || targetTeamId;
+      const team = teamTemplates.find((t) => t.id === p.teamId);
+      p.teamName = p.teamName || (team ? `${team.city} ${team.name}` : "");
+      if (p.controlYears === undefined) {
+        p.controlYears = Math.max(0, Math.ceil(((p.age <= 27 ? 9 : 8) * KBO_SERVICE_DAYS_PER_YEAR - (p.serviceDays || 0)) / KBO_SERVICE_DAYS_PER_YEAR));
+      }
+      if (!p.controlKind) p.controlKind = p.controlYears <= 0 ? "FA 자격권" : "구단 보류권";
+      return p;
+    });
   state.players = [...keepOtherTeamsOrDev, ...imported];
+  state.leaguePlayers = importedLeague;
   state.realDataMode = true;
   state.rosterInitialized = true;
   state.activeGame = null;
   state.selectedId = state.players[0]?.id || null;
   ensureRosterDepth(state);
-  addNews(state, "선수 데이터 import", `${imported.length}명의 선수 데이터를 반영했다. 출처: ${source || "user-import"}`, "데이터");
+  addNews(state, "선수 데이터 import", `${imported.length}명의 내 팀 선수와 ${importedLeague.length}명의 상대팀 선수를 반영했다. 출처: ${source || "user-import"}`, "데이터");
   return state;
 }
 
@@ -3310,6 +4162,7 @@ const server = http.createServer(async (req, res) => {
     "/api/game/defense": () => resolveOpponentHalf(state),
     "/api/game/substitute": () => substituteBatter(state, body.outId, body.inId),
     "/api/game/pinch-run": () => pinchRun(state, body.baseIndex, body.inId),
+    "/api/game/positions": () => changeDefensivePositions(state, body.positions),
     "/api/roster/status": () => setRosterStatus(state, body.id, body.status),
     "/api/player/create-dev": () => createDevelopmentPlayer(state, body),
     "/api/player/convert-dev": () => convertDevelopmentPlayer(state, body.id),
@@ -3326,6 +4179,9 @@ const server = http.createServer(async (req, res) => {
     "/api/train": () => trainPlayer(state, Number(body.id), body.focus),
     "/api/scout": () => scout(state, body.league || "MLB"),
     "/api/sign": () => signScout(state, Number(body.index)),
+    "/api/draft/generate": () => generateDraftClass(state),
+    "/api/draft/advance": () => advanceDraftToUser(state),
+    "/api/draft/pick": () => draftProspect(state, body.id),
     "/api/accept-offer": () => acceptOffer(state, Number(body.id)),
     "/api/reject-offer": () => rejectOffer(state, Number(body.id)),
     "/api/season/goal": () => setSeasonGoal(state, body.level),

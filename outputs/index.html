@@ -743,6 +743,20 @@
       align-content: center;
     }
 
+    .scoreboard .metric strong {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+      word-break: keep-all;
+    }
+
+    .scoreboard .metric.wide {
+      grid-column: span 2;
+      min-height: 76px;
+    }
+
     .scoreboard .offer-actions {
       min-height: 42px;
       align-items: center;
@@ -795,7 +809,7 @@
   <div class="team-select" id="teamSelect">
     <div class="select-inner">
       <h2>구단을 선택하세요</h2>
-      <div class="subtitle">KBO 감성의 가상 구단입니다. 색과 선수 이름은 현실 리그를 떠올릴 수 있게 맞췄습니다.</div>
+      <div class="subtitle">현실 리그 감성의 가상 구단입니다. 색과 선수 이름은 현실감을 살리되 서비스용으로 변형했습니다.</div>
       <div class="team-grid" id="teamGrid"></div>
     </div>
   </div>
@@ -853,7 +867,7 @@
               <div class="grid three">
                 <div class="metric"><strong id="morale"></strong><span>팀 분위기</span></div>
                 <div class="metric"><strong id="fanInterest"></strong><span>팬 관심도</span></div>
-                <div class="metric"><strong id="trainingPts"></strong><span>훈련 포인트</span></div>
+                <div class="metric"><strong id="trainingPts"></strong><span>훈련 과제</span></div>
               </div>
               <div style="height: 12px;"></div>
               <div id="urgentBox" class="empty"></div>
@@ -930,8 +944,8 @@
               <div class="diamond-state">
                 <div class="metric"><strong id="manualCount">0-0</strong><span>볼-스트라이크</span></div>
                 <div class="metric"><strong id="manualOrder">-</strong><span>상대 타순</span></div>
-                <div class="metric"><strong id="manualOppBatter">-</strong><span>상대 타자</span></div>
-                <div class="metric"><strong id="manualOppProfile">-</strong><span>유형</span></div>
+                <div class="metric wide"><strong id="manualOppBatter">-</strong><span>상대 타자</span></div>
+                <div class="metric wide"><strong id="manualOppProfile">-</strong><span>타자 유형</span></div>
               </div>
               <div class="diamond-state">
                 <div class="metric"><strong id="manualPitcher">-</strong><span>투수</span></div>
@@ -965,14 +979,18 @@
             <section class="panel">
               <div class="toolbar">
                 <h2 style="margin-right:auto;">선수단</h2>
+                <input id="rosterSearch" placeholder="선수 검색" style="max-width:180px;" />
                 <select id="rosterFilter">
                   <option value="all">전체</option>
                   <option value="ACTIVE">1군</option>
                   <option value="FARM">2군</option>
                   <option value="DEV">육성</option>
-                  <option value="BAT">야수</option>
-                  <option value="PIT">투수</option>
                   <option value="prospect">유망주</option>
+                </select>
+                <select id="rosterTypeFilter">
+                  <option value="all">투수+야수</option>
+                  <option value="PIT">투수</option>
+                  <option value="BAT">야수</option>
                 </select>
               </div>
               <div style="overflow:auto; max-height: 620px;">
@@ -1011,6 +1029,19 @@
             <section class="panel">
               <div class="toolbar">
                 <h2 style="margin-right:auto;">육성 센터</h2>
+                <input id="trainingSearch" placeholder="육성 선수 검색" style="max-width:180px;" />
+                <select id="trainingStatusFilter">
+                  <option value="all">전체</option>
+                  <option value="ACTIVE">1군</option>
+                  <option value="FARM">2군</option>
+                  <option value="DEV">육성</option>
+                  <option value="prospect">유망주</option>
+                </select>
+                <select id="trainingTypeFilter">
+                  <option value="all">투수+야수</option>
+                  <option value="PIT">투수</option>
+                  <option value="BAT">야수</option>
+                </select>
                 <button class="secondary" id="autoTrain">코치 추천 훈련</button>
               </div>
               <div id="trainingList" class="log"></div>
@@ -1040,10 +1071,17 @@
                     <div class="news-title">내가 보내는 카드</div>
                     <div class="small">카드를 클릭해서 여러 명 선택</div>
                   </div>
+                  <input id="tradeMySearch" placeholder="내 선수 검색" />
+                  <select id="tradeMyTypeFilter">
+                    <option value="all">투수+야수</option>
+                    <option value="PIT">투수</option>
+                    <option value="BAT">야수</option>
+                  </select>
                   <div class="trade-roster-tabs" id="myTradeTabs">
                     <button type="button" data-roster="ALL" class="active">전체</button>
                     <button type="button" data-roster="ACTIVE">1군</button>
                     <button type="button" data-roster="FARM">2군</button>
+                    <button type="button" data-roster="prospect">유망주</button>
                   </div>
                   <select id="tradePlayerSelect" class="trade-hidden-select" multiple></select>
                   <div id="tradePlayerCards" class="trade-card-list"></div>
@@ -1059,10 +1097,17 @@
                     <div class="news-title">상대가 보내는 카드</div>
                     <select id="tradeTeamSelect"></select>
                   </div>
+                  <input id="tradeTheirSearch" placeholder="상대 선수 검색" />
+                  <select id="tradeTheirTypeFilter">
+                    <option value="all">투수+야수</option>
+                    <option value="PIT">투수</option>
+                    <option value="BAT">야수</option>
+                  </select>
                   <div class="trade-roster-tabs" id="theirTradeTabs">
                     <button type="button" data-roster="ALL" class="active">전체</button>
                     <button type="button" data-roster="ACTIVE">1군</button>
                     <button type="button" data-roster="FARM">2군</button>
+                    <button type="button" data-roster="prospect">유망주</button>
                   </div>
                   <select id="tradeTargetSelect" class="trade-hidden-select" multiple></select>
                   <div id="tradeTargetCards" class="trade-card-list"></div>
@@ -1080,6 +1125,15 @@
                 <button id="scoutNPB" class="secondary">일본 시장 조사</button>
               </div>
               <div id="scoutBoard" class="log"></div>
+            </section>
+            <section class="panel">
+              <div class="toolbar">
+                <h2 style="margin-right:auto;">신인 드래프트</h2>
+                <button id="generateDraft" class="secondary">드래프트 풀 생성</button>
+                <button id="advanceDraft" class="secondary">내 순번까지 진행</button>
+              </div>
+              <div id="draftMeta" class="empty"></div>
+              <div id="draftBoard" class="log"></div>
             </section>
             <section class="panel">
               <div class="toolbar">
@@ -1123,14 +1177,50 @@
         <div class="view" id="league">
           <div class="grid two">
             <section class="panel">
-              <h2>순위표</h2>
-              <table>
-                <thead><tr><th>순위</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th></tr></thead>
-                <tbody id="standings"></tbody>
-              </table>
+              <div class="toolbar">
+                <h2 style="margin-right:auto;">전체 선수 검색</h2>
+                <input id="leaguePlayerSearch" placeholder="이름, 등번호, 팀, 포지션 검색" style="min-width:260px;" />
+                <select id="leagueStatusFilter">
+                  <option value="all">전체</option>
+                  <option value="ACTIVE">1군</option>
+                  <option value="FARM">2군</option>
+                  <option value="DEV">육성</option>
+                  <option value="prospect">유망주</option>
+                </select>
+                <select id="leagueTypeFilter">
+                  <option value="all">투수+야수</option>
+                  <option value="PIT">투수</option>
+                  <option value="BAT">야수</option>
+                </select>
+              </div>
+              <div id="leagueSearchResults" class="log" style="max-height:320px;"></div>
             </section>
             <section class="panel">
-              <h2>개인 기록 상위</h2>
+              <h2>순위표</h2>
+              <div style="overflow-x:auto;">
+                <table style="min-width:980px;">
+                  <thead><tr><th>순위</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>실책</th><th>홈런</th><th>안타</th><th>타율</th><th>방어율</th></tr></thead>
+                  <tbody id="standings"></tbody>
+                </table>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="toolbar">
+                <h2 style="margin-right:auto;">개인 기록 상위</h2>
+                <input id="leaderSearch" placeholder="기록판 선수 검색" style="min-width:220px;" />
+                <select id="leaderStatusFilter">
+                  <option value="all">전체</option>
+                  <option value="ACTIVE">1군</option>
+                  <option value="FARM">2군</option>
+                  <option value="DEV">육성</option>
+                  <option value="prospect">유망주</option>
+                </select>
+                <select id="leaderTypeFilter">
+                  <option value="all">투수+야수</option>
+                  <option value="PIT">투수</option>
+                  <option value="BAT">야수</option>
+                </select>
+              </div>
               <div id="leaders"></div>
             </section>
           </div>
@@ -1156,9 +1246,13 @@
     const contractText = (p) => {
       const contract = p.contract || {};
       const kind = contract.kind || (p.rosterStatus === "DEV" ? "육성계약" : "연봉계약");
+      const annual = contract.annual || p.salary || 0;
       const bonus = p.signingBonus ? ` · 계약금 ${money(p.signingBonus)}` : "";
       const source = contract.source ? ` · ${contract.source}` : "";
-      return `${kind} · ${contract.yearsLeft || p.years || 1}년 · 연 ${money(contract.annual || p.salary || 0)}${bonus}${source}`;
+      const isRealTerm = kind.includes("실계약") || kind.includes("장기계약") || kind.includes("다년계약");
+      if (p.foreignPlayer || kind.includes("외국인")) return `외국인 단년계약 · 올해연봉 ${money(annual)}${bonus}${source}`;
+      if (isRealTerm) return `${kind} · 잔여 ${contract.yearsLeft || p.years || 1}년 · 올해연봉 ${money(annual)}${bonus}${source}`;
+      return `${kind} · 올해연봉 ${money(annual)} · ${controlText(p)}${bonus}${source}`;
     };
     const faTimeText = (p) => {
       if (p.foreignPlayer) return "외국인 FA 제외";
@@ -1167,6 +1261,12 @@
       const need = (p.age <= 27 ? 9 : 8) * 145;
       const left = Math.max(0, need - days);
       return left <= 0 ? `FA 자격 충족 · 등록 ${days}일` : `FA ${left}일 남음 · 등록 ${days}/${need}일`;
+    };
+    const controlText = (p) => {
+      if (p.foreignPlayer) return "외국인 보류 제외";
+      if (p.rosterStatus === "DEV") return "육성 보류";
+      const years = Number(p.controlYears ?? Math.ceil(Math.max(0, ((p.age <= 27 ? 9 : 8) * 145 - (p.serviceDays || 0)) / 145)));
+      return years <= 0 ? "FA 권리 발생" : `${p.controlKind || "구단 보류권"} ${years}시즌`;
     };
     const api = async (path, body) => {
       const res = await fetch(path, body ? {
@@ -1286,6 +1386,50 @@
       if (!p) return "-";
       const base = `${p.name}${p.jerseyNumber ? ` #${p.jerseyNumber}` : ""}`;
       return p.dataSource === "league-rival" && p.teamName ? `${base} · ${p.teamName}` : base;
+    }
+
+    function searchText(value) {
+      return String(value || "").toLowerCase().replace(/\s+/g, "");
+    }
+
+    function playerMatchesSearch(p, query) {
+      const q = searchText(query);
+      if (!q) return true;
+      const labels = [
+        p.name,
+        p.name?.slice(0, 1),
+        p.name?.slice(0, 2),
+        p.name?.slice(-1),
+        p.jerseyNumber ? `#${p.jerseyNumber}` : "",
+        p.jerseyNumber,
+        p.pos,
+        positionLabelForPlayer(p),
+        p.pitcherRole,
+        pitcherRoleLabel(p.pitcherRole),
+        rosterStatusLabel(p.rosterStatus),
+        p.teamName,
+        p.trait,
+        p.age,
+        p.ovr,
+        p.pot
+      ];
+      return labels.some((item) => searchText(item).includes(q));
+    }
+
+    function isProspect(p) {
+      return (Number(p.pot || 0) - Number(p.ovr || 0) >= 12)
+        || (Number(p.age || 99) <= 23 && Number(p.pot || 0) >= 75)
+        || String(p.trait || "").includes("유망주")
+        || String(p.trait || "").includes("성장형");
+    }
+
+    function playerMatchesFilters(p, status = "all", type = "all") {
+      const statusOk = status === "all"
+        || status === "ALL"
+        || p.rosterStatus === status
+        || (status === "prospect" && isProspect(p));
+      const typeOk = type === "all" || p.type === type;
+      return statusOk && typeOk;
     }
 
     function playerIconLevel(p) {
@@ -1452,7 +1596,7 @@
       return fieldPositions.map((pos) => {
         const trained = p.positionTraining?.[pos] || ((p.secondaryPositions || []).includes(pos) ? 70 : 0);
         const label = trained ? `${pos} ${trained}%` : pos;
-        return `<button class="${p.pos === pos ? "primary" : "secondary"}" onclick="train(${p.id}, 'pos:${pos}')">${label}</button>`;
+        return `<button class="${p.positionTrainingFocus?.pos === pos || p.pos === pos ? "primary" : "secondary"}" onclick="train(${p.id}, 'pos:${pos}')">${label}</button>`;
       }).join("");
     }
 
@@ -1504,7 +1648,7 @@
       $("rank").textContent = `${state.rank}위`;
       $("morale").textContent = pct(state.morale);
       $("fanInterest").textContent = pct(state.fanInterest);
-      $("trainingPts").textContent = state.trainingPts;
+      $("trainingPts").textContent = state.players.filter((p) => p.trainingFocus || p.positionTrainingFocus || p.pitchTraining).length;
       renderDashboard();
       renderGame();
       renderRoster();
@@ -1513,6 +1657,16 @@
       renderMarket();
       renderLeague();
       renderNews();
+      maybeOpenDraftWindow();
+    }
+
+    function maybeOpenDraftWindow() {
+      if (!state?.draftWindowOpen) return;
+      const key = `${state.seasonYear || 1}-${state.day || 0}`;
+      if (sessionStorage.getItem("draftAutoOpen") === key) return;
+      sessionStorage.setItem("draftAutoOpen", key);
+      openView("market");
+      setTimeout(() => $("draftMeta")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
     }
 
     function renderDashboard() {
@@ -1524,7 +1678,7 @@
       $("playGame").disabled = state.day > state.seasonGames || state.players.length < 9;
       $("urgentBox").innerHTML = state.offers.length
         ? `<strong>${state.offers.length}건의 해외 오퍼</strong><br><span class="small">이적 시장 탭에서 수락 또는 거절을 결정하세요.</span>`
-        : `<strong>운영 이슈 없음</strong><br><span class="small">훈련 포인트를 써서 유망주의 성장 속도를 끌어올릴 수 있습니다.</span>`;
+        : `<strong>운영 이슈 없음</strong><br><span class="small">육성 센터에서 선수별 훈련 과제를 지시하고 일정 진행으로 성장을 확인하세요.</span>`;
       $("ownerGoal").textContent = `목표 ${state.seasonGoal?.label || "포스트시즌 진출"}`;
       $("seasonGoalSelect").value = state.seasonGoal?.level || "playoff";
       $("recentGames").innerHTML = state.games.length ? state.games.map((g) => `<div class="news-item"><div class="news-title">Day ${g.day}</div>${g.text}</div>`).join("") : `<div class="empty">아직 진행된 경기가 없습니다.</div>`;
@@ -1641,6 +1795,22 @@
           </div>
           <div class="small">대주자는 해당 베이스 주자를 대신하고 그 선수의 타순을 이어받습니다.</div>
         </div>
+        <div class="news-item">
+          <div class="news-title">수비 위치 변경</div>
+          <div class="lineup-grid">
+            ${activeLineupPlayers.map((p, i) => `
+              <label class="lineup-row">
+                <span class="badge">${i + 1}</span>
+                <span>${playerName(p)}</span>
+                <select class="livePosSelect" data-slot="${i}">
+                  ${lineupPositionOptions(active.lineupPositions?.[i] || p.pos, active.lineupPositions || [], i)}
+                </select>
+              </label>
+            `).join("")}
+          </div>
+          <button class="secondary" onclick="submitLivePositions()" ${active.complete ? "disabled" : ""}>수비 위치 적용</button>
+          <div class="small">대타/대주자 투입 후에도 C, 1B, 2B, 3B, SS, LF, CF, RF, DH를 다시 배치할 수 있습니다.</div>
+        </div>
       ` : `<div class="empty">경기가 시작되면 1군 선수단에서 교체 선수를 고를 수 있습니다.</div>`;
 
       if (!active) {
@@ -1676,7 +1846,7 @@
         $("countOuts").textContent = active.outs || 0;
         $("manualOrder").textContent = opponentBatting && oppBatter ? `${oppBatter.order}번` : "-";
         $("manualOppBatter").textContent = opponentBatting && oppBatter ? `${oppBatter.name} · ${oppBatter.pos}` : "-";
-        $("manualOppProfile").textContent = opponentBatting && oppBatter ? `${oppBatter.hand}타 · 컨택 ${oppBatter.contact} · 파워 ${oppBatter.power}` : "-";
+        $("manualOppProfile").textContent = opponentBatting && oppBatter ? `${oppBatter.hand}타 / 컨택 ${oppBatter.contact} / 파워 ${oppBatter.power}` : "-";
         $("manualPitcher").textContent = displayPitcherName || "-";
         $("manualPitchCount").textContent = displayPitchCount || 0;
         $("manualPitchMood").textContent = displayPitchMood || "정상";
@@ -1694,6 +1864,9 @@
             <div class="small">현재 1군 등록 투수 중 이미 등판하지 않은 투수만 선택됩니다.</div>
           </div>
         `;
+        document.querySelectorAll(".livePosSelect").forEach((select) => {
+          bindSwapSelect(select, ".livePosSelect");
+        });
       }
 
       const canManage = active && !active.complete;
@@ -1876,9 +2049,25 @@
       });
     }
 
+    async function submitLivePositions() {
+      const positions = [...document.querySelectorAll(".livePosSelect")].map((select) => select.value).slice(0, 9);
+      const missing = fieldPositions.filter((pos) => !positions.includes(pos));
+      const duplicatePosition = positions.find((pos, index) => positions.indexOf(pos) !== index);
+      if (positions.length !== 9 || missing.length || duplicatePosition) {
+        showToast(`수비 포지션은 C, 1B, 2B, 3B, SS, LF, CF, RF, DH를 각각 한 번씩 써야 합니다. 빠진 포지션: ${missing.join(", ") || "없음"}`);
+        return;
+      }
+      await mutate("/api/game/positions", { positions });
+    }
+
     function renderRoster() {
       const filter = $("rosterFilter").value;
-      const players = state.players.filter((p) => filter === "all" || p.type === filter || p.rosterStatus === filter || (filter === "prospect" && p.pot - p.ovr >= 12));
+      const typeFilter = $("rosterTypeFilter")?.value || "all";
+      const query = $("rosterSearch")?.value || "";
+      const players = state.players.filter((p) =>
+        playerMatchesFilters(p, filter, typeFilter)
+        && playerMatchesSearch(p, query)
+      );
       $("rosterBody").innerHTML = players.map((p) => `
         <tr class="${p.id === state.selectedId ? "selected" : ""}" data-player="${p.id}">
           <td><div class="name-cell"><strong>${playerName(p)}</strong>${p.trait ? `<span class="small">${p.trait}</span>` : ""}</div></td>
@@ -1913,11 +2102,11 @@
           <div><h3>${playerName(p)}</h3><div class="small">${p.age}세 · ${positionLabelForPlayer(p)} · ${stats}</div></div>
             <span class="badge">${p.ovr}/${p.pot}</span>
           </div>
-          <div class="traits">${playerStatusTags(p).map((tag) => `<span class="trait">${tag}</span>`).join("")}${p.trait ? `<span class="trait">${p.trait}</span>` : ""}${p.foreignPlayer ? `<span class="trait">외국인 · FA/트레이드 불가</span>` : ""}<span class="trait">${statusLabel(p.rosterStatus)}</span>${p.type === "PIT" ? `<span class="trait">${pitcherRoleLabel(p.pitcherRole)}</span><span class="trait">스태미나 ${p.stamina}</span>` : `<span class="trait">${positionLabelForPlayer(p)}</span>`}<span class="trait">${healthLabel(p.health)}</span><span class="trait">부상성향 ${injuryTendencyLabel(p)}</span><span class="trait">FA ${p.faGrade}등급</span><span class="trait">${faTimeText(p)}</span><span class="trait">${contractText(p)}</span><span class="trait">옵션 ${p.options}</span><span class="trait">행복도 ${pct(p.happy)}</span><span class="trait">컨디션 ${pct(p.form)}</span></div>
+          <div class="traits">${playerStatusTags(p).map((tag) => `<span class="trait">${tag}</span>`).join("")}${p.trait ? `<span class="trait">${p.trait}</span>` : ""}${p.foreignPlayer ? `<span class="trait">외국인 · FA/트레이드 불가</span>` : ""}<span class="trait">${statusLabel(p.rosterStatus)}</span>${p.type === "PIT" ? `<span class="trait">${pitcherRoleLabel(p.pitcherRole)}</span><span class="trait">스태미나 ${p.stamina}</span>` : `<span class="trait">${positionLabelForPlayer(p)}</span>`}<span class="trait">${healthLabel(p.health)}</span><span class="trait">부상성향 ${injuryTendencyLabel(p)}</span><span class="trait">FA ${p.faGrade}등급</span><span class="trait">${faTimeText(p)}</span><span class="trait">${controlText(p)}</span><span class="trait">${contractText(p)}</span><span class="trait">옵션 ${p.options}</span><span class="trait">행복도 ${pct(p.happy)}</span><span class="trait">컨디션 ${pct(p.form)}</span></div>
           ${skillBar("컨택", p.hit)}${skillBar("파워", p.pow)}${skillBar("주루", p.spd)}${skillBar("수비", p.def)}${skillBar("송구", p.arm || 55)}${skillBar("투구", p.pit)}${skillBar("내구성", p.durability || 65)}
           ${p.type === "BAT" ? `
             <div>
-              <div class="small">포지션 훈련 지시 · 포인트 소모 없음</div>
+              <div class="small">포지션 훈련 지시 · 적응도만 상승 · 능력치 변화 없음</div>
               <div class="offer-actions">${positionTrainingButtons(p)}</div>
             </div>
           ` : ""}
@@ -1945,8 +2134,8 @@
             </div>
           ` : ""}
           <div class="offer-actions">
-            <button onclick="train(${p.id}, '${p.type === "PIT" ? "pit" : "hit"}')">주요 능력 훈련</button>
-            <button class="secondary" onclick="train(${p.id}, 'arm')">송구 훈련</button>
+            <button onclick="train(${p.id}, '${p.type === "PIT" ? "pit" : "hit"}')">훈련 과제 지정</button>
+            <button class="secondary" onclick="train(${p.id}, 'arm')">송구 과제</button>
             <button class="secondary" onclick="mutate('/api/offer', { id: ${p.id} })">시장 반응 확인</button>
             <button class="secondary" onclick="mutate('/api/player/rehab', { id: ${p.id} })" ${p.health?.status === "OK" ? "disabled" : ""}>재활 진행</button>
             <button class="secondary" onclick="mutate('/api/player/clear-rehab', { id: ${p.id} })" ${p.health?.status === "OK" ? "disabled" : ""}>복귀 승인</button>
@@ -2030,7 +2219,9 @@
     function renderTradeCards(containerId, selectId, players, side) {
       const selected = new Set(selectedValues(selectId));
       const filter = tradeRosterFilter[side];
-      const visible = players.filter((p) => filter === "ALL" || p.rosterStatus === filter);
+      const query = side === "my" ? $("tradeMySearch")?.value || "" : $("tradeTheirSearch")?.value || "";
+      const typeFilter = side === "my" ? $("tradeMyTypeFilter")?.value || "all" : $("tradeTheirTypeFilter")?.value || "all";
+      const visible = players.filter((p) => playerMatchesFilters(p, filter, typeFilter) && playerMatchesSearch(p, query));
       $(containerId).innerHTML = visible.length ? visible.map((p) => `
         <button type="button" class="trade-player-card ${selected.has(Number(p.id)) ? "selected" : ""}" data-select="${selectId}" data-id="${p.id}">
           <span>
@@ -2073,8 +2264,26 @@
     }
 
     function renderTraining() {
+      const focusName = (focus) => ({
+        hit: "컨택",
+        pow: "장타",
+        def: "수비",
+        arm: "송구",
+        pit: "투구 밸런스"
+      })[focus] || "개별";
+      const trainingStatus = (p) => {
+        const items = [];
+        if (p.trainingFocus) items.push(`성장 방향 과제: ${focusName(p.trainingFocus.focus)} · ${p.trainingFocus.progress || 0}% · ${p.trainingFocus.days || 0}일차`);
+        if (p.positionTrainingFocus) items.push(`포지션 적응 과제: ${p.positionTrainingFocus.pos} · ${p.positionTrainingFocus.progress || 0}% · ${p.positionTrainingFocus.days || 0}일차`);
+        if (p.pitchTraining) items.push(`구종 과제: ${p.pitchTraining.type} · ${p.pitchTraining.progress || 0}% · ${p.pitchTraining.days || 0}일차`);
+        return items.length ? `<div class="empty">${items.join("<br>")}</div>` : `<div class="small">현재 지정된 훈련 과제 없음</div>`;
+      };
+      const query = $("trainingSearch")?.value || "";
+      const statusFilter = $("trainingStatusFilter")?.value || "all";
+      const typeFilter = $("trainingTypeFilter")?.value || "all";
       $("trainingList").innerHTML = state.players
         .slice()
+        .filter((p) => playerMatchesFilters(p, statusFilter, typeFilter) && playerMatchesSearch(p, query))
         .sort((a, b) => (b.pot - b.ovr) - (a.pot - a.ovr))
         .map((p) => `
           <div class="news-item">
@@ -2082,10 +2291,11 @@
               <div><div class="news-title">${playerName(p)} · ${positionLabelForPlayer(p)}</div><div class="small">성장 여지 ${Math.max(0, p.pot - p.ovr)} · 현재 ${p.ovr} · 잠재 ${p.pot}</div></div>
               <span class="badge">${p.age}세</span>
             </div>
+            ${trainingStatus(p)}
             <div class="offer-actions" style="margin-top:8px;">
-              ${p.type === "PIT" ? `<button onclick="train(${p.id}, 'pit')">투구</button>` : `<button onclick="train(${p.id}, 'hit')">컨택</button><button onclick="train(${p.id}, 'pow')" class="secondary">장타</button>`}
-              <button onclick="train(${p.id}, 'def')" class="secondary">수비</button>
-              <button onclick="train(${p.id}, 'arm')" class="secondary">송구</button>
+              ${p.type === "PIT" ? `<button onclick="train(${p.id}, 'pit')">투구 밸런스</button>` : `<button onclick="train(${p.id}, 'hit')">컨택 과제</button><button onclick="train(${p.id}, 'pow')" class="secondary">장타 과제</button>`}
+              <button onclick="train(${p.id}, 'def')" class="secondary">수비 과제</button>
+              <button onclick="train(${p.id}, 'arm')" class="secondary">송구 과제</button>
             </div>
             ${p.type === "PIT" ? `<div class="log" style="max-height:none; margin-top:8px;">${pitchArsenalHtml(p, true)}</div>` : ""}
             ${p.type === "BAT" ? `<div class="offer-actions" style="margin-top:8px;">${positionTrainingButtons(p)}</div>` : ""}
@@ -2166,7 +2376,57 @@
           </div>
         </div>
       `).join("") : `<div class="empty">스카우팅을 돌리면 외부 영입 후보가 나타납니다.</div>`;
-      $("faBoard").innerHTML = state.freeAgents?.length ? state.freeAgents.map((fa) => {
+      const hsStatLine = (p) => (p.hsStats || []).map((s) => {
+        if (p.type === "PIT") return `${s.year}: ${s.g}G ${s.ip}이닝 ERA ${s.era} ${s.so}K/${s.bb}BB ${s.velo}km`;
+        return `${s.year}: ${s.g}G ${s.pa}타석 AVG ${Number(s.avg || 0).toFixed(3)} OPS ${Number(s.ops || 0).toFixed(3)} ${s.hr}HR ${s.sb}SB`;
+      }).join("<br>");
+      const prospectLine = (p) => p.developmentDraft
+        ? `육성 후보 리포트: ${p.report}<br>툴: 컨택 ${p.hit} · 파워 ${p.pow} · 주루 ${p.spd} · 수비 ${p.def} · 송구 ${p.arm}${p.type === "PIT" ? ` · 투구 ${p.pit}` : ""}`
+        : hsStatLine(p);
+      const draftOrder = state.draftOrder || [];
+      const currentDraftTeamId = draftOrder.length ? draftOrder[(state.draftPick || 0) % draftOrder.length] : null;
+      const currentDraftTeam = state.teams.find((t) => t.id === currentDraftTeamId);
+      const isMyDraftTurn = currentDraftTeamId === state.selectedTeamId;
+      const draftDay = state.draftDay || 120;
+      const draftOpen = Boolean(state.draftWindowOpen);
+      $("generateDraft").disabled = state.day < draftDay || draftOpen;
+      $("generateDraft").textContent = state.day < draftDay ? `Day ${draftDay} 개막` : draftOpen ? "드래프트 진행중" : "드래프트 개막";
+      $("advanceDraft").disabled = !draftOpen || !state.draftClass?.length;
+      $("draftMeta").innerHTML = state.draftClass?.length
+        ? `<strong>${state.seasonYear || state.draftCycle || 1}시즌 신인 드래프트 · ${state.draftRound || 1}라운드 ${(state.draftPick || 0) + 1}번째 지명</strong><br><span class="small">참가 대상: 고교 3학년만 · 현재 순번: ${currentDraftTeam ? teamName(currentDraftTeam) : "종료"} · 지명 순서 ${draftOrder.map((id) => teamName(state.teams.find((t) => t.id === id) || { name: id })).join(" → ")}</span>`
+        : `<strong>드래프트 대기 · Day ${draftDay}</strong><br><span class="small">드래프트 날짜가 오면 자동으로 이 창이 열립니다. 올해는 고교 3학년만 참가하고, 다음 시즌에는 현재 2학년이 3학년 후보로 올라옵니다.</span>`;
+      $("draftBoard").innerHTML = state.draftClass?.length ? state.draftClass.slice(0, 30).map((p) => `
+        <div class="news-item">
+          <div class="bio">
+            <div>
+              <div class="news-title">${p.rank}위 · ${p.name} · ${p.school} ${p.grade || 3}학년 · ${p.pos}</div>
+              <div class="small">${p.batsThrows || ""} · ${p.age}세 · 현재 ${p.ovr} · 잠재 ${p.pot} · 예상 ${p.projectedRound}라운드 · 계약금 ${money(p.signBonus || 0)}</div>
+            </div>
+            <button class="${p.drafted ? "secondary" : "primary"}" onclick="mutate('/api/draft/pick', { id: ${p.id} })" ${p.drafted || !isMyDraftTurn ? "disabled" : ""}>${p.drafted ? "지명 완료" : isMyDraftTurn ? "지명" : "순번 대기"}</button>
+          </div>
+          <div class="empty">${prospectLine(p)}</div>
+          <div class="small">스카우트 리포트: ${p.report}</div>
+        </div>
+      `).join("") : `<div class="empty">드래프트 풀을 생성하면 고교 3년치 성적 기반 후보가 표시됩니다.</div>`;
+      const protect = state.protectionRecommendations || {};
+      const protectRows = (protect.gradeAProtected20 || []).slice(0, 8).map((p, index) => `
+        <div class="news-item">
+          <div class="bio">
+            <div><div class="news-title">${index + 1}. ${p.name} · ${p.pos}</div><div class="small">${p.age}세 · 현재 ${p.ovr} · 잠재 ${p.pot} · ${p.reason} · ${p.controlYears}시즌 보류</div></div>
+            <span class="badge">${p.score}</span>
+          </div>
+        </div>
+      `).join("");
+      const riskRows = (protect.exposedRiskA || []).slice(0, 5).map((p) => `<span class="trait">${p.name} ${p.pos} ${p.score}</span>`).join("");
+      const protectPanel = `
+        <div class="news-item">
+          <div class="bio"><div><div class="news-title">FA 보상 보호 추천</div><div class="small">A급 FA 보상선수 포함 계약 기준 20인 보호 우선순위입니다.</div></div><span class="badge">20인</span></div>
+          <div class="log" style="margin-top:8px; max-height:260px;">${protectRows || `<div class="empty">보호 추천을 계산할 선수가 없습니다.</div>`}</div>
+          <div class="small" style="margin-top:8px;">20인 밖 위험 후보</div>
+          <div class="traits">${riskRows || `<span class="trait">위험 후보 없음</span>`}</div>
+        </div>
+      `;
+      $("faBoard").innerHTML = protectPanel + (state.freeAgents?.length ? state.freeAgents.map((fa) => {
         const cashOnly = fa.grade === "A" ? fa.previousSalary * 3 : fa.grade === "B" ? fa.previousSalary * 2 : fa.previousSalary * 1.5;
         const withPlayer = fa.grade === "A" ? fa.previousSalary * 2 : fa.grade === "B" ? fa.previousSalary : null;
         return `
@@ -2184,15 +2444,58 @@
             </div>
           </div>
         `;
-      }).join("") : `<div class="empty">FA 명단을 갱신하면 등급별 보상 규칙이 적용된 후보가 나타납니다.</div>`;
+      }).join("") : `<div class="empty">FA 명단을 갱신하면 등급별 보상 규칙이 적용된 후보가 나타납니다.</div>`);
     }
 
     function renderLeague() {
+      const teamStats = new Map((state.teamStatRows || []).map((row) => [row.teamId, row]));
       $("standings").innerHTML = state.teams.map((t, i) => {
         const rate = t.w / Math.max(1, t.w + t.l);
-        return `<tr><td>${i + 1}</td><td class="standings-team">${teamName(t)}</td><td>${t.w}</td><td>${t.l}</td><td>${t.t || 0}</td><td>${rate.toFixed(3)}</td></tr>`;
+        const s = teamStats.get(t.id) || {};
+        return `<tr>
+          <td>${i + 1}</td>
+          <td class="standings-team">${teamName(t)}</td>
+          <td>${t.w}</td>
+          <td>${t.l}</td>
+          <td>${t.t || 0}</td>
+          <td>${rate.toFixed(3)}</td>
+          <td>${s.runsFor || 0}</td>
+          <td>${s.runsAgainst || 0}</td>
+          <td>${s.errors || 0}</td>
+          <td>${s.hr || 0}</td>
+          <td>${s.hits || 0}</td>
+          <td>${Number(s.avg || 0).toFixed(3)}</td>
+          <td>${Number(s.era || 0).toFixed(2)}</td>
+        </tr>`;
       }).join("");
       const recordPlayers = [...(state.players || []), ...(state.leaguePlayers || [])];
+      const leagueQuery = $("leaguePlayerSearch")?.value || "";
+      const leaderQuery = $("leaderSearch")?.value || leagueQuery;
+      const leagueStatus = $("leagueStatusFilter")?.value || "all";
+      const leagueType = $("leagueTypeFilter")?.value || "all";
+      const leaderStatus = $("leaderStatusFilter")?.value || leagueStatus;
+      const leaderType = $("leaderTypeFilter")?.value || leagueType;
+      const searchedPlayers = recordPlayers
+        .filter((p) => playerMatchesFilters(p, leagueStatus, leagueType) && playerMatchesSearch(p, leagueQuery))
+        .sort((a, b) => (b.ovr || 0) - (a.ovr || 0) || (b.pot || 0) - (a.pot || 0))
+        .slice(0, 40);
+      $("leagueSearchResults").innerHTML = leagueQuery
+        ? searchedPlayers.map((p) => {
+          const stats = p.type === "PIT"
+            ? `ERA ${(p.stats?.era || 0).toFixed(2)} · ${p.stats?.win || 0}승 ${p.stats?.loss || 0}패 · ${p.stats?.so || 0}K`
+            : `AVG ${(p.stats?.avg || 0).toFixed(3)} · ${p.stats?.hr || 0}HR · ${p.stats?.h || 0}H · ${p.stats?.sb || 0}SB`;
+          return `<div class="news-item">
+            <div class="bio">
+              <div>
+                <div class="news-title">${playerName(p)} · ${positionLabelForPlayer(p)}</div>
+                <div class="small">${playerTeamLabel(p) || "소속 미상"} · ${p.age}세 · 현재 ${p.ovr} · 잠재 ${p.pot} · ${stats}</div>
+              </div>
+              <span class="badge">${statusLabel(p.rosterStatus)}</span>
+            </div>
+          </div>`;
+        }).join("") || `<div class="empty">검색 결과가 없습니다.</div>`
+        : `<div class="empty">이름 앞 두 글자, 등번호, 팀명, 포지션으로 전체 선수단을 검색할 수 있습니다.</div>`;
+      const leaderPool = recordPlayers.filter((p) => playerMatchesFilters(p, leaderStatus, leaderType) && playerMatchesSearch(p, leaderQuery));
       const leaderRows = (players, valueFn) => players.map((p, index) => `
         <tr>
           <td>${index + 1}</td>
@@ -2200,25 +2503,35 @@
           <td>${valueFn(p)}</td>
         </tr>
       `).join("");
-      const hitters = recordPlayers.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.hr || 0) - (a.stats.hr || 0)).slice(0, 5);
-      const pitchers = recordPlayers.filter((p) => p.type === "PIT").sort((a, b) => (b.stats.so || 0) - (a.stats.so || 0)).slice(0, 5);
+      const hitters = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.hr || 0) - (a.stats.hr || 0)).slice(0, 5);
+      const pitchers = leaderPool.filter((p) => p.type === "PIT").sort((a, b) => (b.stats.so || 0) - (a.stats.so || 0)).slice(0, 5);
       const eraValue = (p) => Number.isFinite(Number(p.stats?.era)) ? Number(p.stats.era) : 9;
-      const avgLeaders = recordPlayers.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.avg || 0) - (a.stats.avg || 0)).slice(0, 5);
-      const stealLeaders = recordPlayers.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.sb || 0) - (a.stats.sb || 0)).slice(0, 5);
-      const rbiLeaders = recordPlayers.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.rbi || 0) - (a.stats.rbi || 0)).slice(0, 5);
-      const hitLeaders = recordPlayers.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.h || 0) - (a.stats.h || 0)).slice(0, 5);
-      const eraLeaders = recordPlayers.filter((p) => p.type === "PIT" && ((p.stats?.ip || 0) > 0 || (p.stats?.so || 0) > 0 || (p.stats?.win || 0) > 0)).sort((a, b) => eraValue(a) - eraValue(b)).slice(0, 5);
-      const saveLeaders = recordPlayers.filter((p) => p.type === "PIT").sort((a, b) => (b.stats.sv || 0) - (a.stats.sv || 0)).slice(0, 5);
+      const avgLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.avg || 0) - (a.stats.avg || 0)).slice(0, 5);
+      const stealLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.sb || 0) - (a.stats.sb || 0)).slice(0, 5);
+      const rbiLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.rbi || 0) - (a.stats.rbi || 0)).slice(0, 5);
+      const hitLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.h || 0) - (a.stats.h || 0)).slice(0, 5);
+      const eraLeaders = leaderPool.filter((p) => p.type === "PIT" && ((p.stats?.ip || 0) > 0 || (p.stats?.so || 0) > 0 || (p.stats?.win || 0) > 0)).sort((a, b) => eraValue(a) - eraValue(b)).slice(0, 5);
+      const saveLeaders = leaderPool.filter((p) => p.type === "PIT").sort((a, b) => (b.stats.sv || 0) - (a.stats.sv || 0)).slice(0, 5);
+      const winLeaders = leaderPool.filter((p) => p.type === "PIT").sort((a, b) => (b.stats.win || 0) - (a.stats.win || 0) || eraValue(a) - eraValue(b)).slice(0, 5);
+      const holdLeaders = leaderPool.filter((p) => p.type === "PIT").sort((a, b) => (b.stats.hold || 0) - (a.stats.hold || 0) || eraValue(a) - eraValue(b)).slice(0, 5);
+      const winPct = (p) => (p.stats?.win || 0) / Math.max(1, (p.stats?.win || 0) + (p.stats?.loss || 0));
+      const winPctLeaders = leaderPool
+        .filter((p) => p.type === "PIT" && (((p.stats?.win || 0) + (p.stats?.loss || 0)) >= 3 || (p.stats?.win || 0) >= 3))
+        .sort((a, b) => winPct(b) - winPct(a) || (b.stats.win || 0) - (a.stats.win || 0))
+        .slice(0, 5);
       $("leaders").innerHTML = `
         <h3>타격왕 경쟁</h3><table><tbody>${leaderRows(avgLeaders, (p) => (p.stats.avg || 0).toFixed(3))}</tbody></table>
         <h3 style="margin-top:14px;">도루왕 경쟁</h3><table><tbody>${leaderRows(stealLeaders, (p) => p.stats.sb || 0)}</tbody></table>
         <h3 style="margin-top:14px;">홈런</h3><table><tbody>${leaderRows(hitters, (p) => p.stats.hr || 0)}</tbody></table>
         <h3 style="margin-top:14px;">타점</h3><table><tbody>${leaderRows(rbiLeaders, (p) => p.stats.rbi || 0)}</tbody></table>
         <h3 style="margin-top:14px;">안타</h3><table><tbody>${leaderRows(hitLeaders, (p) => p.stats.h || 0)}</tbody></table>
+        <h3 style="margin-top:14px;">다승</h3><table><tbody>${leaderRows(winLeaders, (p) => `${p.stats.win || 0}승 ${p.stats.loss || 0}패`)}</tbody></table>
+        <h3 style="margin-top:14px;">승률</h3><table><tbody>${leaderRows(winPctLeaders, (p) => `${winPct(p).toFixed(3)} · ${p.stats.win || 0}승 ${p.stats.loss || 0}패`)}</tbody></table>
         <h3 style="margin-top:14px;">평균자책</h3><table><tbody>${leaderRows(eraLeaders, (p) => eraValue(p).toFixed(2))}</tbody></table>
         <h3 style="margin-top:14px;">탈삼진</h3><table><tbody>${leaderRows(pitchers, (p) => p.stats.so || 0)}</tbody></table>
         <h3 style="margin-top:14px;">세이브</h3><table><tbody>${leaderRows(saveLeaders, (p) => p.stats.sv || 0)}</tbody></table>
-        <h3 style="margin-top:14px;">시즌 시상</h3>${state.awards?.length ? `<table><tbody>${state.awards.map((a) => `<tr><td>${a.title}</td><td>${a.name}</td><td>${a.detail}</td></tr>`).join("")}</tbody></table>` : `<div class="empty">시즌 종료 후 MVP, 타격왕, 도루왕, 골든글러브가 발표됩니다.</div>`}
+        <h3 style="margin-top:14px;">홀드</h3><table><tbody>${leaderRows(holdLeaders, (p) => p.stats.hold || 0)}</tbody></table>
+        <h3 style="margin-top:14px;">시즌 시상</h3>${state.awards?.length ? `<table><tbody>${state.awards.map((a) => `<tr><td>${a.title}</td><td>${a.name}</td><td>${a.detail}</td></tr>`).join("")}</tbody></table>` : `<div class="empty">시즌 종료 후 MVP, 타격왕, 도루왕, 다승왕, 승률왕, 평균자책점왕, 골든글러브가 발표됩니다.</div>`}
       `;
     }
 
@@ -2251,13 +2564,30 @@
     $("cmdDefense").addEventListener("click", runDefense);
     $("autoTrain").addEventListener("click", autoTrain);
     $("rosterFilter").addEventListener("change", renderRoster);
+    $("rosterTypeFilter").addEventListener("change", renderRoster);
+    $("rosterSearch").addEventListener("input", renderRoster);
+    $("trainingSearch").addEventListener("input", renderTraining);
+    $("trainingStatusFilter").addEventListener("change", renderTraining);
+    $("trainingTypeFilter").addEventListener("change", renderTraining);
+    $("leaguePlayerSearch").addEventListener("input", renderLeague);
+    $("leagueStatusFilter").addEventListener("change", renderLeague);
+    $("leagueTypeFilter").addEventListener("change", renderLeague);
+    $("leaderSearch").addEventListener("input", renderLeague);
+    $("leaderStatusFilter").addEventListener("change", renderLeague);
+    $("leaderTypeFilter").addEventListener("change", renderLeague);
     $("scoutMLB").addEventListener("click", () => mutate("/api/scout", { league: "MLB" }));
     $("scoutNPB").addEventListener("click", () => mutate("/api/scout", { league: "NPB" }));
+    $("generateDraft").addEventListener("click", () => mutate("/api/draft/generate"));
+    $("advanceDraft").addEventListener("click", () => mutate("/api/draft/advance"));
     $("setSeasonGoal").addEventListener("click", () => mutate("/api/season/goal", { level: $("seasonGoalSelect").value }));
     $("generateTrade").addEventListener("click", () => mutate("/api/trade/generate", { playerId: selectedValues("tradePlayerSelect")[0] }));
     $("tradePlayerSelect").addEventListener("change", updateTradePreview);
     $("tradeTeamSelect").addEventListener("change", renderMarket);
     $("tradeTargetSelect").addEventListener("change", updateTradePreview);
+    $("tradeMySearch").addEventListener("input", renderMarket);
+    $("tradeTheirSearch").addEventListener("input", renderMarket);
+    $("tradeMyTypeFilter").addEventListener("change", renderMarket);
+    $("tradeTheirTypeFilter").addEventListener("change", renderMarket);
     $("tradePlayerCards").addEventListener("click", (event) => {
       const card = event.target.closest(".trade-player-card");
       if (card) toggleTradeCard(card.dataset.select, card.dataset.id);

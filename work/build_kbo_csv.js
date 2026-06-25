@@ -70,8 +70,7 @@ const KNOWN_CONTRACTS = {
 
   "gocheok-heroes::송성문": { yearsLeft: 5, kind: "실계약 6년 120억", total: 120, source: "비FA 다년계약 보도 반영" },
   "gocheok-heroes::원종현": { yearsLeft: 1, kind: "실계약 4년 25억", total: 25, source: "2023 FA 계약" },
-  "gocheok-heroes::최주환": { yearsLeft: 1, kind: "실계약 4년 42억", total: 42, source: "2021 FA 계약" },
-  "gocheok-heroes::안우진": { yearsLeft: 3, kind: "보류권/군복무 반영", source: "서비스타임 보정" }
+  "gocheok-heroes::최주환": { yearsLeft: 1, kind: "실계약 4년 42억", total: 42, source: "2021 FA 계약" }
 };
 
 function knownContractFor(teamId, name) {
@@ -439,6 +438,25 @@ function serviceYearsFromDetail(detail, age, type, rosterStatus) {
   return Math.max(0, Math.min(12, age - (type === "PIT" ? 22 : 21) - (rosterStatus === "FARM" ? 1 : 0)));
 }
 
+function privateContractYears(row, ratings, age, annual, serviceYears, rosterStatus) {
+  if (rosterStatus === "DEV") return 1;
+  const totalServiceDays = Math.max(0, Math.round(serviceYears * 145));
+  const faRequiredDays = (age <= 27 ? 9 : 8) * 145;
+  const controlYears = Math.max(0, Math.ceil((faRequiredDays - totalServiceDays) / 145));
+  if (controlYears <= 0) {
+    if (ratings.ovr >= 80 || annual >= 7) return 3;
+    if (ratings.ovr >= 73 || annual >= 3) return 2;
+    return 1;
+  }
+  const det = rating(`${row.teamId || ""}-${row.name || ""}-${age}-${annual}-private-contract`, 0, 99);
+  if (ratings.ovr >= 82 && age <= 31) return Math.min(5, Math.max(2, controlYears));
+  if (ratings.ovr >= 76 && age <= 30) return Math.min(det > 45 ? 4 : 3, Math.max(2, controlYears));
+  if (ratings.ovr >= 70 && rosterStatus === "ACTIVE") return Math.min(det > 60 ? 3 : 2, Math.max(1, controlYears));
+  if (ratings.pot >= 82 && age <= 24) return Math.min(4, Math.max(2, controlYears));
+  if (annual >= 2.5 && rosterStatus === "ACTIVE") return 2;
+  return 1;
+}
+
 function contractShape(row, detail, ratings, age, foreignPlayer, rosterStatus) {
   const serviceYears = serviceYearsFromDetail(detail, age, row.type, rosterStatus);
   const realAnnual = Number(detail?.annualSalary) || 0;
@@ -452,9 +470,9 @@ function contractShape(row, detail, ratings, age, foreignPlayer, rosterStatus) {
 
   let yearsLeft = 1;
   let kind = foreignPlayer ? "외국인 단년계약" : "연봉계약";
-  let contractSource = realAnnual ? "KBO 공식 연봉 + 기간 추정" : "기간/연봉 추정";
+  let contractSource = realAnnual ? "공시 연봉 · 서비스타임 반영" : "추정 연봉 · 서비스타임 반영";
   if (foreignPlayer) {
-    contractSource = realAnnual ? "KBO 공식 연봉 + 외국인 단년계약" : "외국인 단년계약 추정";
+    contractSource = realAnnual ? "공시 연봉 · 외국인 단년계약" : "외국인 단년계약 추정";
   } else {
     const known = knownContractFor(row.teamId, row.name);
     if (known) {
@@ -462,30 +480,17 @@ function contractShape(row, detail, ratings, age, foreignPlayer, rosterStatus) {
       kind = known.kind;
       contractSource = known.source || "공개 계약 보도 반영";
     } else {
-    const primeAge = age >= 25 && age <= 33;
-    const nearFaOrVeteran = serviceYears >= 6;
-    const premiumSalary = annual >= 8;
-    const regularSalary = annual >= 3.5;
-    const prospectControl = age <= 25 && ratings.pot >= 78 && ratings.ovr >= 64 && rosterStatus === "ACTIVE";
-    const det = rating(`${row.teamId || ""}-${row.name || ""}-${age}-${annual}-contract-years`, 0, 99);
-    if (annual >= 18 || (ratings.ovr >= 84 && nearFaOrVeteran)) {
-      yearsLeft = 4 + (det % 2);
-      kind = "FA/비FA 다년계약";
-    } else if (premiumSalary && (ratings.ovr >= 78 || nearFaOrVeteran)) {
-      yearsLeft = 3 + (det % 2);
-      kind = nearFaOrVeteran ? "FA/비FA 다년계약" : "핵심전력 계약";
-    } else if ((regularSalary && (ratings.ovr >= 72 || nearFaOrVeteran || primeAge)) || (ratings.ovr >= 76 && serviceYears >= 3)) {
-      yearsLeft = 2 + (det % 2);
-      kind = ratings.ovr >= 76 ? "핵심전력 계약" : "비FA 다년계약";
-    } else if (prospectControl) {
-      yearsLeft = 2;
-      kind = "유망주 장기보유";
-    }
+      yearsLeft = 1;
+      kind = rosterStatus === "FARM" && annual < 1 ? "퓨처스/최저연봉권" : "연봉계약";
+      contractSource = realAnnual ? "공시 연봉 · 서비스타임 반영" : "추정 연봉 · 서비스타임 반영";
     }
   }
-  if (rosterStatus === "FARM" && annual < 1) kind = "퓨처스/최저연봉권";
+  if (rosterStatus === "FARM" && annual < 1 && kind === "연봉계약") kind = "퓨처스/최저연봉권";
 
   const totalServiceDays = Math.max(0, Math.round(serviceYears * 145 + (Number(detail?.currentSeasonServiceDays) || 0)));
+  const faRequiredDays = (age <= 27 ? 9 : 8) * 145;
+  const controlYears = foreignPlayer ? 0 : Math.max(0, Math.ceil((faRequiredDays - totalServiceDays) / 145));
+  const controlKind = foreignPlayer ? "외국인 보류 제외" : controlYears <= 0 ? "FA 자격권" : controlYears <= 1 ? "FA 임박" : "구단 보류권";
   return {
     annualSalary: annual,
     signingBonus: Number(detail?.signingBonus) || 0,
@@ -493,7 +498,9 @@ function contractShape(row, detail, ratings, age, foreignPlayer, rosterStatus) {
     serviceDays: totalServiceDays,
     yearsLeft,
     contractKind: kind,
-    contractSource
+    contractSource,
+    controlYears,
+    controlKind
   };
 }
 
@@ -602,13 +609,15 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
         yearsLeft: contract.yearsLeft,
         contractKind: contract.contractKind,
         contractSource: contract.contractSource,
+        controlYears: contract.controlYears,
+        controlKind: contract.controlKind,
         faGrade: ratings.ovr >= 78 ? "A" : ratings.ovr >= 70 ? "B" : "C",
         pitcherRole: finalPitcherRole,
         ...ratings,
         durability,
         trait,
         foreignPlayer: foreignPlayer ? "Y" : "",
-        source: `${sourceLabel} Official Salary/Stat Rating ${SOURCE_DATE}`
+        source: `${sourceLabel} 공시 연봉/기록 기반 ${SOURCE_DATE}`
       });
     }
   }
@@ -621,14 +630,14 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
   for (const [code, teamId] of teams) {
     const activeHtml = await fetchTeam(ACTIVE_URL, code);
     const futuresHtml = await fetchTeam(FUTURES_URL, code);
-    const active = await parsePlayers(activeHtml, "ACTIVE", teamId, "KBO Register", officialStats);
-    const farm = (await parsePlayers(futuresHtml, "FARM", teamId, "KBO Futures Register", officialStats))
+    const active = await parsePlayers(activeHtml, "ACTIVE", teamId, "공시 1군 등록", officialStats);
+    const farm = (await parsePlayers(futuresHtml, "FARM", teamId, "공시 퓨처스 등록", officialStats))
       .filter((p) => !active.some((a) => a.name === p.name && a.jerseyNumber === p.jerseyNumber))
       .slice(0, 28);
     rows.push(...active, ...farm);
     console.log(`${code} ${teamId}: active ${active.length}, farm ${farm.length}`);
   }
-  const header = ["teamId","name","jerseyNumber","pos","type","age","rosterStatus","annualSalary","signingBonus","serviceYears","serviceDays","yearsLeft","contractKind","contractSource","faGrade","pitcherRole","ovr","pot","hit","pow","spd","def","arm","pit","form","stamina","durability","trait","foreignPlayer","source"];
+  const header = ["teamId","name","jerseyNumber","pos","type","age","rosterStatus","annualSalary","signingBonus","serviceYears","serviceDays","yearsLeft","contractKind","contractSource","controlYears","controlKind","faGrade","pitcherRole","ovr","pot","hit","pow","spd","def","arm","pit","form","stamina","durability","trait","foreignPlayer","source"];
   const text = [header.join(","), ...rows.map((row) => header.map((key) => csv(row[key])).join(","))].join("\n") + "\n";
   fs.writeFileSync(OUT, text, "utf8");
   console.log(`wrote ${rows.length} players to ${OUT}`);
