@@ -1,0 +1,500 @@
+const fs = require("fs");
+const path = require("path");
+
+const ROOT = path.resolve(__dirname, "..");
+const OUT = path.join(ROOT, "outputs", "data", "kbo_players.csv");
+const SOURCE_DATE = "2026-06-23";
+const ACTIVE_URL = "https://www.koreabaseball.com/Player/Register.aspx";
+const FUTURES_URL = "https://www.koreabaseball.com/Futures/Player/Register.aspx";
+
+const teams = [
+  ["LG", "seoul-twin-stars"],
+  ["KT", "suwon-wizpark"],
+  ["SS", "daegu-blue-lions"],
+  ["HT", "gwangju-tiger-kings"],
+  ["HH", "daejeon-orange-eagles"],
+  ["OB", "jamsil-bears"],
+  ["NC", "changwon-dino-force"],
+  ["LT", "busan-giant-waves"],
+  ["SK", "incheon-landing"],
+  ["WO", "gocheok-heroes"]
+];
+
+const roleByKind = {
+  "투수": { pos: "RP", type: "PIT" },
+  "포수": { pos: "C", type: "BAT" },
+  "내야수": { pos: "SS", type: "BAT" },
+  "외야수": { pos: "CF", type: "BAT" }
+};
+
+const knownPosition = {
+  "daejeon-orange-eagles": {
+    "최재훈": "C", "허인서": "C",
+    "이도윤": "SS", "심우준": "SS", "노시환": "3B", "강백호": "1B", "박정현": "2B", "황영묵": "2B", "하주석": "SS", "채은성": "1B", "김태연": "1B",
+    "이진영": "RF", "권광민": "RF", "김태연": "LF", "페라자": "RF", "이원석": "CF", "문현빈": "CF", "유로결": "CF"
+  },
+  "seoul-twin-stars": {
+    "박동원": "C", "오스틴": "1B", "문보경": "3B", "신민재": "2B", "오지환": "SS", "김현수": "LF", "박해민": "CF", "홍창기": "RF"
+  },
+  "busan-giant-waves": {
+    "유강남": "C", "나승엽": "1B", "고승민": "2B", "손호영": "3B", "박승욱": "SS", "전준우": "LF", "황성빈": "CF", "윤동희": "RF"
+  },
+  "daegu-blue-lions": {
+    "강민호": "C", "디아즈": "1B", "김지찬": "2B", "김영웅": "3B", "이재현": "SS", "구자욱": "RF", "김성윤": "CF", "이성규": "LF"
+  },
+  "gwangju-tiger-kings": {
+    "김태군": "C", "변우혁": "1B", "김선빈": "2B", "김도영": "3B", "박찬호": "SS", "최형우": "LF", "소크라테스": "CF", "나성범": "RF"
+  },
+  "jamsil-bears": {
+    "양의지": "C", "양석환": "1B", "강승호": "2B", "허경민": "3B", "박준영": "SS", "정수빈": "CF", "김재환": "LF", "조수행": "RF"
+  },
+  "changwon-dino-force": {
+    "박세혁": "C", "데이비슨": "1B", "박민우": "2B", "서호철": "3B", "김주원": "SS", "권희동": "LF", "박건우": "RF", "최정원": "CF"
+  },
+  "suwon-wizpark": {
+    "장성우": "C", "박병호": "1B", "천성호": "2B", "황재균": "3B", "김상수": "SS", "로하스": "LF", "배정대": "CF", "강백호": "RF"
+  },
+  "incheon-landing": {
+    "이지영": "C", "오태곤": "1B", "김성현": "2B", "최정": "3B", "박성한": "SS", "에레디아": "LF", "최지훈": "CF", "한유섬": "RF"
+  },
+  "gocheok-heroes": {
+    "김재현": "C", "최주환": "1B", "김혜성": "2B", "송성문": "3B", "김휘집": "SS", "이주형": "CF", "도슨": "LF", "변상권": "RF"
+  }
+};
+
+Object.entries({
+  "seoul-twin-stars": {
+    "구본혁": "SS", "이영빈": "1B", "천성호": "2B", "문정빈": "3B",
+    "문성주": "LF", "송찬의": "RF"
+  },
+  "suwon-wizpark": {
+    "강백호": "RF", "문상철": "1B", "오재일": "1B", "오윤석": "2B", "김상수": "SS", "황재균": "3B", "천성호": "2B", "신본기": "SS",
+    "로하스": "LF", "배정대": "CF", "김민혁": "LF", "정준영": "CF", "안치영": "RF", "송민섭": "RF"
+  },
+  "daegu-blue-lions": {
+    "디아즈": "1B", "전병우": "3B", "류지혁": "2B", "안주형": "SS", "김헌곤": "LF", "윤정빈": "RF", "김현준": "CF"
+  },
+  "gwangju-tiger-kings": {
+    "한승택": "C", "서건창": "2B", "변우혁": "1B", "김규성": "2B", "홍종표": "SS", "최원준": "CF", "이창진": "LF", "박정우": "CF"
+  },
+  "daejeon-orange-eagles": {
+    "장진혁": "CF", "이원석": "CF", "유로결": "LF", "임종찬": "RF", "최인호": "LF", "권광민": "RF", "이진영": "RF", "페라자": "RF",
+    "하주석": "SS", "이도윤": "SS", "심우준": "SS", "문현빈": "2B", "김인환": "1B"
+  },
+  "jamsil-bears": {
+    "장승현": "C", "김기연": "C", "이유찬": "SS", "전민재": "2B", "박계범": "SS", "여동건": "2B", "라모스": "RF", "제러드": "LF", "조수행": "RF"
+  },
+  "changwon-dino-force": {
+    "김형준": "C", "도태훈": "1B", "김한별": "2B", "최정원": "CF", "김성욱": "CF", "한석현": "LF", "천재환": "RF", "박영빈": "CF"
+  },
+  "busan-giant-waves": {
+    "정보근": "C", "손성빈": "C", "노진혁": "SS", "정훈": "1B", "이학주": "SS", "한동희": "3B", "레이예스": "RF", "김민석": "CF", "장두성": "LF"
+  },
+  "incheon-landing": {
+    "조형우": "C", "고명준": "1B", "안상현": "2B", "전의산": "1B", "최준우": "2B", "하재훈": "RF", "추신수": "RF", "오태곤": "1B"
+  },
+  "gocheok-heroes": {
+    "김건희": "C", "김동헌": "C", "이원석": "1B", "김태진": "2B", "송성문": "3B", "김휘집": "SS", "임병욱": "CF", "변상권": "RF", "박수종": "CF"
+  }
+}).forEach(([teamId, map]) => {
+  Object.assign(knownPosition[teamId] ||= {}, map);
+});
+
+function fallbackFieldPosition(basePos, teamId, name, jerseyNumber, rosterStatus) {
+  const mapped = knownPosition[teamId]?.[name];
+  if (mapped) return mapped;
+  const h = rating(`${teamId}-${name}-${jerseyNumber}-${rosterStatus}-pos`, 0, 99);
+  if (basePos === "SS") return ["1B", "2B", "3B", "SS"][h % 4];
+  if (basePos === "CF") return ["LF", "CF", "RF"][h % 3];
+  return basePos;
+}
+
+function clean(html) {
+  return String(html || "")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/<style[\s\S]*?<\/style>/gi, "")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function csv(value) {
+  const s = String(value ?? "");
+  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function ageFromBirth(birth) {
+  const year = Number(String(birth).slice(0, 4));
+  return Number.isFinite(year) ? Math.max(17, 2026 - year) : 24;
+}
+
+function rating(seed, min, max) {
+  let h = 0;
+  for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return min + (h % (max - min + 1));
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, Math.round(Number(value) || 0)));
+}
+
+function num(value) {
+  const n = Number(String(value || "0").replace(/[^0-9.-]/g, ""));
+  return Number.isFinite(n) ? n : 0;
+}
+
+function innings(value) {
+  const s = String(value || "0");
+  const [whole, frac] = s.split(/\s+/);
+  const base = Number(whole) || 0;
+  if (!frac) return base;
+  const outs = frac.startsWith("1/3") ? 1 : frac.startsWith("2/3") ? 2 : 0;
+  return base + outs / 3;
+}
+
+const statTeamToId = {
+  "LG": "seoul-twin-stars",
+  "KT": "suwon-wizpark",
+  "삼성": "daegu-blue-lions",
+  "KIA": "gwangju-tiger-kings",
+  "한화": "daejeon-orange-eagles",
+  "두산": "jamsil-bears",
+  "NC": "changwon-dino-force",
+  "롯데": "busan-giant-waves",
+  "SSG": "incheon-landing",
+  "키움": "gocheok-heroes"
+};
+
+function statKey(teamId, name) {
+  return `${teamId}::${name}`;
+}
+
+function parseStatRows(html) {
+  const rows = [];
+  for (const tableMatch of String(html || "").matchAll(/<table[^>]*class="[^"]*(?:tData|tNData|tbl)[^"]*"[\s\S]*?<\/table>/gi)) {
+    const table = tableMatch[0];
+    for (const rowMatch of table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)) {
+      const cells = [...rowMatch[1].matchAll(/<t[dh][^>]*>([\s\S]*?)<\/t[dh]>/gi)].map((m) => clean(m[1]));
+      if (cells.length >= 8 && /^\d+$/.test(cells[0])) rows.push(cells);
+    }
+  }
+  return rows;
+}
+
+async function fetchOfficialStats() {
+  const out = { hitters: new Map(), pitchers: new Map() };
+  const hitterHtml = await (await fetch("https://www.koreabaseball.com/Record/Player/HitterBasic/Basic1.aspx", { headers: { "User-Agent": "KBO ratings importer" } })).text();
+  const pitcherHtml = await (await fetch("https://www.koreabaseball.com/Record/Player/PitcherBasic/Basic1.aspx", { headers: { "User-Agent": "KBO ratings importer" } })).text();
+  for (const cells of parseStatRows(hitterHtml)) {
+    const teamId = statTeamToId[cells[2]];
+    if (!teamId) continue;
+    out.hitters.set(statKey(teamId, cells[1]), {
+      avg: num(cells[3]), g: num(cells[4]), pa: num(cells[5]), ab: num(cells[6]), r: num(cells[7]),
+      h: num(cells[8]), doubles: num(cells[9]), triples: num(cells[10]), hr: num(cells[11]),
+      tb: num(cells[12]), rbi: num(cells[13])
+    });
+  }
+  for (const cells of parseStatRows(pitcherHtml)) {
+    const teamId = statTeamToId[cells[2]];
+    if (!teamId) continue;
+    out.pitchers.set(statKey(teamId, cells[1]), {
+      era: num(cells[3]), g: num(cells[4]), w: num(cells[5]), l: num(cells[6]), sv: num(cells[7]), hld: num(cells[8]),
+      ip: innings(cells[10]), h: num(cells[11]), hr: num(cells[12]), bb: num(cells[13]), so: num(cells[15]), whip: num(cells[18])
+    });
+  }
+  console.log(`official stat matches loaded: hitters ${out.hitters.size}, pitchers ${out.pitchers.size}`);
+  return out;
+}
+
+function fallbackRatings(base, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer) {
+  const active = rosterStatus === "ACTIVE";
+  const top = active ? 73 : 63;
+  const bottom = active ? 56 : 44;
+  const ovr = rating(`${teamId}-${name}-${jerseyNumber}-real-fallback`, bottom, top + (foreignPlayer ? 5 : 0));
+  const youth = age <= 22 ? 10 : age <= 25 ? 7 : age <= 28 ? 4 : age >= 35 ? 0 : 2;
+  const pot = Math.max(ovr, Math.min(92, ovr + youth + rating(`${name}-ceiling`, 0, active ? 7 : 12)));
+  if (base.type === "PIT") {
+    const pit = clamp(ovr + rating(`${name}-pit`, -5, 7), 42, 92);
+    return { ovr, pot, hit: 10, pow: 10, spd: rating(`${name}-spd`, 30, 55), def: clamp(ovr + rating(`${name}-def`, -12, 8), 40, 88), arm: clamp(pit + rating(`${name}-arm`, -3, 8), 45, 96), pit, form: rating(`${name}-form`, 58, 84), stamina: base.pos === "SP" ? rating(`${name}-stamina`, 68, 92) : rating(`${name}-stamina`, 38, 66) };
+  }
+  return { ovr, pot, hit: clamp(ovr + rating(`${name}-hit`, -8, 8), 35, 90), pow: clamp(ovr + rating(`${name}-pow`, -12, 10), 30, 90), spd: rating(`${name}-spd`, 35, 88), def: clamp(ovr + rating(`${name}-def`, -10, 10), 35, 92), arm: clamp(ovr + rating(`${name}-arm`, -10, 12), 35, 94), pit: rating(`${name}-batpit`, 8, 24), form: rating(`${name}-form`, 58, 84), stamina: rating(`${name}-stamina`, 45, 85) };
+}
+
+function hitterRatings(stat, base, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer) {
+  if (!stat) return fallbackRatings(base, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer);
+  const avg = stat.avg || 0;
+  const iso = stat.ab ? Math.max(0, (stat.tb - stat.h) / stat.ab) : 0;
+  const rRate = stat.pa ? stat.r / stat.pa : 0;
+  const contact = clamp(42 + avg * 125 + Math.min(18, stat.h / 5), 45, 96);
+  const power = clamp(43 + iso * 130 + stat.hr * 1.25 + stat.rbi * 0.18, 38, 96);
+  const speed = clamp(48 + rRate * 120 + stat.triples * 4 + (base.pos === "CF" ? 8 : ["LF","RF","SS","2B"].includes(base.pos) ? 4 : -2), 35, 94);
+  const defense = clamp(58 + (["C","SS","CF","2B"].includes(base.pos) ? 10 : ["3B","RF"].includes(base.pos) ? 6 : 1) + rating(`${name}-def-real`, -5, 6), 45, 94);
+  const arm = clamp(defense + (["C","RF","3B","SS"].includes(base.pos) ? 7 : 0) + rating(`${name}-arm-real`, -5, 5), 40, 96);
+  const ovr = clamp(contact * 0.33 + power * 0.28 + speed * 0.12 + defense * 0.18 + arm * 0.09, 48, 94);
+  const youth = age <= 22 ? 8 : age <= 25 ? 5 : age <= 28 ? 3 : 0;
+  const pot = Math.max(ovr, Math.min(96, ovr + youth + rating(`${name}-pot-real`, 0, 5)));
+  return { ovr, pot, hit: contact, pow: power, spd: speed, def: defense, arm, pit: rating(`${name}-pit-bat`, 8, 24), form: clamp(62 + (avg - 0.25) * 120 + stat.hr * 0.35, 50, 96), stamina: rating(`${name}-stamina`, 52, 88) };
+}
+
+function pitcherRatings(stat, base, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer) {
+  if (!stat) return fallbackRatings(base, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer);
+  const k9 = stat.ip ? stat.so * 9 / stat.ip : 6;
+  const bb9 = stat.ip ? stat.bb * 9 / stat.ip : 4;
+  const runPrevent = clamp(96 - stat.era * 7 - (stat.whip - 1.1) * 18, 45, 96);
+  const stuff = clamp(52 + k9 * 4.4 + stat.sv * 1.2 + stat.hld * 0.7, 45, 97);
+  const command = clamp(78 - bb9 * 5 - Math.max(0, stat.whip - 1.15) * 22, 38, 94);
+  const roleBoost = base.pos === "SP" ? Math.min(8, stat.ip / 12) : Math.min(7, stat.sv * 0.8 + stat.hld * 0.3);
+  const pit = clamp(stuff * 0.45 + runPrevent * 0.35 + command * 0.2 + roleBoost, 45, 97);
+  const ovr = clamp(pit * 0.7 + runPrevent * 0.2 + command * 0.1, 48, 95);
+  const youth = age <= 23 ? 8 : age <= 26 ? 5 : age <= 29 ? 2 : 0;
+  const pot = Math.max(ovr, Math.min(96, ovr + youth + rating(`${name}-pot-pit`, 0, 4)));
+  return { ovr, pot, hit: 10, pow: 10, spd: rating(`${name}-spd-pit`, 30, 55), def: clamp(ovr + rating(`${name}-def-pit`, -8, 8), 42, 90), arm: clamp(stuff + rating(`${name}-arm-pit`, -3, 6), 48, 98), pit, form: clamp(88 - stat.era * 5 + k9 * 1.2, 45, 96), stamina: base.pos === "SP" ? clamp(66 + stat.ip / 2.2, 62, 96) : rating(`${name}-stamina-rp`, 38, 66) };
+}
+
+const detailCache = new Map();
+
+function playerIdFromRow(rowHtml) {
+  const href = String(rowHtml || "").match(/playerId=(\d+)/i)?.[1];
+  return href || "";
+}
+
+function moneyManwonToEok(value) {
+  const n = num(value);
+  return n > 0 ? Math.round((n / 10000) * 10) / 10 : 0;
+}
+
+function parseDetail(html, type) {
+  const text = clean(html);
+  const salaryManwon = text.match(/연봉:\s*([0-9,]+)만원/)?.[1] || "";
+  const bonusManwon = text.match(/입단 계약금:\s*([0-9,]+)만원/)?.[1] || "";
+  const debutToken = text.match(/입단년도:\s*([0-9]{2,4})/)?.[1] || "";
+  const seasonService = text.match(/시즌합계\s*([0-9]+)(?:\s|$)/)?.[1] || "";
+  const detail = {
+    annualSalary: moneyManwonToEok(salaryManwon),
+    signingBonus: moneyManwonToEok(bonusManwon),
+    debutYear: debutToken ? Number(debutToken.length === 2 ? `20${debutToken}` : debutToken) : 0,
+    currentSeasonServiceDays: Number(seasonService) || 0
+  };
+  if (type === "PIT") {
+    const first = text.match(/팀명 ERA G CG SHO W L SV HLD WPCT TBF NP IP H 2B 3B HR\s+\S+\s+([\d.]+)\s+(\d+)\s+\d+\s+\d+\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+[\d.]+\s+\d+\s+\d+\s+(\d+(?:\s+[12]\/3)?)\s+(\d+)\s+\d+\s+\d+\s+(\d+)/);
+    const second = text.match(/SAC SF BB IBB SO WP BK R ER BSV WHIP AVG QS\s+\d+\s+\d+\s+(\d+)\s+\d+\s+(\d+)\s+(\d+)\s+\d+\s+\d+\s+\d+\s+\d+\s+([\d.]+)/);
+    if (first) {
+      detail.stat = {
+        era: num(first[1]), g: num(first[2]), w: num(first[3]), l: num(first[4]), sv: num(first[5]), hld: num(first[6]),
+        ip: innings(first[7]), h: num(first[8]), hr: num(first[9]),
+        bb: second ? num(second[1]) : 0, so: second ? num(second[2]) : 0, wp: second ? num(second[3]) : 0, whip: second ? num(second[4]) : 1.35
+      };
+    }
+  } else {
+    const first = text.match(/팀명 AVG G PA AB R H 2B 3B HR TB RBI SB CS SAC SF\s+\S+\s+([\d.]+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/);
+    const second = text.match(/BB IBB HBP SO GDP SLG OBP E SB% MH OPS RISP PH-BA\s+(\d+)\s+\d+\s+\d+\s+(\d+)\s+(\d+)\s+([\d.]+)\s+([\d.]+)/);
+    if (first) {
+      detail.stat = {
+        avg: num(first[1]), g: num(first[2]), pa: num(first[3]), ab: num(first[4]), r: num(first[5]),
+        h: num(first[6]), doubles: num(first[7]), triples: num(first[8]), hr: num(first[9]), tb: num(first[10]),
+        rbi: num(first[11]), sb: num(first[12]), cs: num(first[13]), bb: second ? num(second[1]) : 0,
+        so: second ? num(second[2]) : 0, gdp: second ? num(second[3]) : 0, slg: second ? num(second[4]) : 0, obp: second ? num(second[5]) : 0
+      };
+    }
+  }
+  return detail;
+}
+
+async function fetchPlayerDetail(type, playerId) {
+  if (!playerId) return {};
+  const key = `${type}:${playerId}`;
+  if (detailCache.has(key)) return detailCache.get(key);
+  const kind = type === "PIT" ? "Pitcher" : "Hitter";
+  const url = `https://www.koreabaseball.com/Record/Player/${kind}Detail/Basic.aspx?playerId=${playerId}`;
+  try {
+    const html = await (await fetch(url, { headers: { "User-Agent": "KBO contract importer" } })).text();
+    const detail = parseDetail(html, type);
+    detailCache.set(key, detail);
+    await new Promise((resolve) => setTimeout(resolve, 35));
+    return detail;
+  } catch {
+    const detail = {};
+    detailCache.set(key, detail);
+    return detail;
+  }
+}
+
+function serviceYearsFromDetail(detail, age, type, rosterStatus) {
+  if (detail?.debutYear) {
+    const years = 2026 - detail.debutYear + 1;
+    const youthPenalty = detail.debutYear >= 2023 ? 1 : detail.debutYear >= 2020 ? 0.5 : 0;
+    return clamp(years - youthPenalty, 0, 12);
+  }
+  return Math.max(0, Math.min(12, age - (type === "PIT" ? 22 : 21) - (rosterStatus === "FARM" ? 1 : 0)));
+}
+
+function contractShape(row, detail, ratings, age, foreignPlayer, rosterStatus) {
+  const serviceYears = serviceYearsFromDetail(detail, age, row.type, rosterStatus);
+  const realAnnual = Number(detail?.annualSalary) || 0;
+  let annual = realAnnual;
+  if (!annual) {
+    const floor = rosterStatus === "ACTIVE" ? 0.35 : 0.3;
+    const star = ratings.ovr >= 84 ? 12.0 : ratings.ovr >= 80 ? 8.0 : ratings.ovr >= 74 ? 4.5 : ratings.ovr >= 68 ? 1.8 : 0.8;
+    annual = foreignPlayer ? Math.max(6.0, star) : Math.max(floor, star);
+  }
+  annual = Math.round(annual * 10) / 10;
+
+  let yearsLeft = 1;
+  let kind = foreignPlayer ? "외국인 단년계약" : "연봉계약";
+  if (!foreignPlayer) {
+    if (ratings.ovr >= 84 && serviceYears >= 6) {
+      yearsLeft = Math.max(2, Math.min(5, 6 - Math.floor(age / 7)));
+      kind = "FA/비FA 다년계약";
+    } else if (ratings.ovr >= 78 && serviceYears >= 4) {
+      yearsLeft = 2;
+      kind = "핵심전력 계약";
+    }
+  }
+  if (rosterStatus === "FARM" && annual < 1) kind = "퓨처스/최저연봉권";
+
+  const totalServiceDays = Math.max(0, Math.round(serviceYears * 145 + (Number(detail?.currentSeasonServiceDays) || 0)));
+  return {
+    annualSalary: annual,
+    signingBonus: Number(detail?.signingBonus) || 0,
+    serviceYears,
+    serviceDays: totalServiceDays,
+    yearsLeft,
+    contractKind: kind
+  };
+}
+
+const aliasSyllables = ["준","민","훈","윤","현","율","성","진","우","원","호","빈","재","겸","서","안","도","혁","형","찬","수","욱","태","영"];
+const koreanSurnames = new Set([... "김이박최정강조윤장임한오서신권황안송전홍유고문양손배조백허남심노하곽성차주우구민류나진지엄채원천방공현함변염여추도소석선설마길연위표명기반라왕금옥육인맹제모탁국"]);
+
+function aliasName(name, salt = "") {
+  const chars = [...String(name || "").trim()];
+  if (!chars.length) return name;
+  const seed = `${name}-${salt}`;
+  let h = 0;
+  for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  const replaceAt = (index, offset) => {
+    let next = aliasSyllables[(h + offset) % aliasSyllables.length];
+    if (next === chars[index]) next = aliasSyllables[(h + offset + 1) % aliasSyllables.length];
+    chars[index] = next;
+  };
+  replaceAt(chars.length - 1, 0);
+  return chars.join("");
+}
+
+function isLikelyForeignName(name) {
+  const chars = [...String(name || "").trim().replace(/\s+/g, "")];
+  if (!chars.length) return false;
+  if (chars.length >= 4) return true;
+  return !koreanSurnames.has(chars[0]);
+}
+
+function attrs(html) {
+  const out = {};
+  for (const m of html.matchAll(/<input[^>]+>/gi)) {
+    const tag = m[0];
+    const name = tag.match(/\bname="([^"]*)"/i)?.[1];
+    const value = tag.match(/\bvalue="([^"]*)"/i)?.[1] || "";
+    if (name) out[name] = value;
+  }
+  return out;
+}
+
+async function fetchTeam(url, code) {
+  const first = await fetch(url, { headers: { "User-Agent": "KBO roster importer" } });
+  const firstHtml = await first.text();
+  const fields = attrs(firstHtml);
+  const teamField = Object.keys(fields).find((name) => name.endsWith("$hfSearchTeam"));
+  const dateField = Object.keys(fields).find((name) => name.endsWith("$hfSearchDate"));
+  const buttonField = Object.keys(fields).find((name) => name.endsWith("$btnCalendarSelect"));
+  if (teamField) fields[teamField] = code;
+  if (dateField) fields[dateField] = "20260623";
+  fields.__EVENTTARGET = buttonField || "";
+  fields.__EVENTARGUMENT = "";
+  const body = new URLSearchParams(fields);
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+      "User-Agent": "KBO roster importer",
+      "Referer": url
+    },
+    body
+  });
+  return res.text();
+}
+
+async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialStats) {
+  const main = html.split(/등\/말소 현황|등록\/말소 현황/)[0];
+  const players = [];
+  for (const tableMatch of main.matchAll(/<table[^>]*class="(?:tNData|tbl)"[\s\S]*?<\/table>/gi)) {
+    const table = tableMatch[0];
+    const headers = [...table.matchAll(/<th[^>]*>([\s\S]*?)<\/th>/gi)].map((m) => clean(m[1]));
+    const kind = headers[1];
+    if (!roleByKind[kind]) continue;
+    const base = roleByKind[kind];
+    for (const rowMatch of table.matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/gi)) {
+      const cells = [...rowMatch[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/gi)].map((m) => clean(m[1]));
+      if (cells.length < 5 || !/^\d+$/.test(cells[0])) continue;
+      const [jerseyNumber, name, hand, birth] = cells;
+      if (!name || name.includes("없습니다")) continue;
+      const playerId = playerIdFromRow(rowMatch[1]);
+      const publicName = aliasName(name, `${teamId}-${jerseyNumber}`);
+      const foreignPlayer = isLikelyForeignName(name);
+      const age = ageFromBirth(birth);
+      const detail = await fetchPlayerDetail(base.type, playerId);
+      const stat = detail.stat || (base.type === "PIT" ? officialStats?.pitchers?.get(statKey(teamId, name)) : officialStats?.hitters?.get(statKey(teamId, name)));
+      const isStarter = base.type === "PIT" && players.filter((p) => p.type === "PIT").length < (rosterStatus === "ACTIVE" ? 5 : 4);
+      const pos = base.type === "PIT" ? (stat?.ip >= 40 ? "SP" : isStarter ? "SP" : "RP") : fallbackFieldPosition(base.pos, teamId, name, jerseyNumber, rosterStatus);
+      const pitcherRole = base.type === "PIT" ? (isStarter ? "SP" : "MR") : "";
+      const finalPitcherRole = base.type === "PIT" ? (pos === "SP" ? "SP" : pitcherRole) : "";
+      const ratings = base.type === "PIT"
+        ? pitcherRatings(stat, { ...base, pos }, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer)
+        : hitterRatings(stat, { ...base, pos }, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer);
+      const contract = contractShape({ type: base.type }, detail, ratings, age, foreignPlayer, rosterStatus);
+      players.push({
+        teamId,
+        name: publicName,
+        jerseyNumber,
+        pos,
+        type: base.type,
+        age,
+        rosterStatus,
+        annualSalary: contract.annualSalary,
+        signingBonus: contract.signingBonus,
+        serviceYears: contract.serviceYears,
+        serviceDays: contract.serviceDays,
+        yearsLeft: contract.yearsLeft,
+        contractKind: contract.contractKind,
+        faGrade: ratings.ovr >= 78 ? "A" : ratings.ovr >= 70 ? "B" : "C",
+        pitcherRole: finalPitcherRole,
+        ...ratings,
+        foreignPlayer: foreignPlayer ? "Y" : "",
+        source: `${sourceLabel} Official Salary/Stat Rating ${SOURCE_DATE}`
+      });
+    }
+  }
+  return players;
+}
+
+(async () => {
+  const rows = [];
+  const officialStats = await fetchOfficialStats();
+  for (const [code, teamId] of teams) {
+    const activeHtml = await fetchTeam(ACTIVE_URL, code);
+    const futuresHtml = await fetchTeam(FUTURES_URL, code);
+    const active = await parsePlayers(activeHtml, "ACTIVE", teamId, "KBO Register", officialStats);
+    const farm = (await parsePlayers(futuresHtml, "FARM", teamId, "KBO Futures Register", officialStats))
+      .filter((p) => !active.some((a) => a.name === p.name && a.jerseyNumber === p.jerseyNumber))
+      .slice(0, 28);
+    rows.push(...active, ...farm);
+    console.log(`${code} ${teamId}: active ${active.length}, farm ${farm.length}`);
+  }
+  const header = ["teamId","name","jerseyNumber","pos","type","age","rosterStatus","annualSalary","signingBonus","serviceYears","serviceDays","yearsLeft","contractKind","faGrade","pitcherRole","ovr","pot","hit","pow","spd","def","arm","pit","form","stamina","foreignPlayer","source"];
+  const text = [header.join(","), ...rows.map((row) => header.map((key) => csv(row[key])).join(","))].join("\n") + "\n";
+  fs.writeFileSync(OUT, text, "utf8");
+  console.log(`wrote ${rows.length} players to ${OUT}`);
+})();

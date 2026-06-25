@@ -3175,6 +3175,8 @@ function importPlayersFromCsv(state, csv, source) {
     const seed = [name, pos, type, age, ovr, pot, row[idx("trait")] || ""];
     const p = makePlayer(seed, nextId - 1);
     p.id = nextId++;
+    p.teamId = rowTeamId || targetTeamId;
+    p.teamName = teamTemplates.find((t) => t.id === p.teamId)?.name || "";
     p.rosterStatus = row[idx("rosterStatus")] || "FARM";
     p.pitcherRole = type === "PIT" ? (row[idx("pitcherRole")] || (pos === "SP" ? "SP" : pos === "CL" ? "CL" : "MR")) : null;
     const estimated = estimateContractForPlayer(p, state.players.length);
