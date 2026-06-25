@@ -287,9 +287,11 @@ function hitterRatings(stat, base, teamId, name, jerseyNumber, rosterStatus, age
   const avg = stat.avg || 0;
   const iso = stat.ab ? Math.max(0, (stat.tb - stat.h) / stat.ab) : 0;
   const rRate = stat.pa ? stat.r / stat.pa : 0;
-  const contact = clamp(42 + avg * 125 + Math.min(18, stat.h / 5), 45, 96);
-  const power = clamp(43 + iso * 130 + stat.hr * 1.25 + stat.rbi * 0.18, 38, 96);
-  const speed = clamp(48 + rRate * 120 + stat.triples * 4 + (base.pos === "CF" ? 8 : ["LF","RF","SS","2B"].includes(base.pos) ? 4 : -2), 35, 94);
+  const obpBoost = stat.obp ? (stat.obp - 0.33) * 105 : 0;
+  const slgBoost = stat.slg ? (stat.slg - 0.39) * 85 : 0;
+  const contact = clamp(39 + avg * 138 + obpBoost + Math.min(16, stat.h / 6) - Math.max(0, (stat.so || 0) - (stat.bb || 0)) * 0.04, 42, 97);
+  const power = clamp(40 + iso * 155 + slgBoost + stat.hr * 1.45 + stat.rbi * 0.15, 35, 98);
+  const speed = clamp(46 + rRate * 125 + (stat.sb || 0) * 1.2 - (stat.cs || 0) * 0.7 + stat.triples * 4 + (base.pos === "CF" ? 8 : ["LF","RF","SS","2B"].includes(base.pos) ? 4 : -2), 32, 96);
   const defense = clamp(58 + (["C","SS","CF","2B"].includes(base.pos) ? 10 : ["3B","RF"].includes(base.pos) ? 6 : 1) + rating(`${name}-def-real`, -5, 6), 45, 94);
   const arm = clamp(defense + (["C","RF","3B","SS"].includes(base.pos) ? 7 : 0) + rating(`${name}-arm-real`, -5, 5), 40, 96);
   const ovr = clamp(contact * 0.33 + power * 0.28 + speed * 0.12 + defense * 0.18 + arm * 0.09, 48, 94);
@@ -302,15 +304,62 @@ function pitcherRatings(stat, base, teamId, name, jerseyNumber, rosterStatus, ag
   if (!stat) return fallbackRatings(base, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer);
   const k9 = stat.ip ? stat.so * 9 / stat.ip : 6;
   const bb9 = stat.ip ? stat.bb * 9 / stat.ip : 4;
+  const hr9 = stat.ip ? stat.hr * 9 / stat.ip : 1;
   const runPrevent = clamp(96 - stat.era * 7 - (stat.whip - 1.1) * 18, 45, 96);
-  const stuff = clamp(52 + k9 * 4.4 + stat.sv * 1.2 + stat.hld * 0.7, 45, 97);
-  const command = clamp(78 - bb9 * 5 - Math.max(0, stat.whip - 1.15) * 22, 38, 94);
+  const stuff = clamp(50 + k9 * 4.8 + stat.sv * 1.2 + stat.hld * 0.7 - hr9 * 1.4, 43, 98);
+  const command = clamp(81 - bb9 * 5.7 - Math.max(0, stat.whip - 1.15) * 24 - Math.max(0, hr9 - 1) * 2.5, 36, 95);
   const roleBoost = base.pos === "SP" ? Math.min(8, stat.ip / 12) : Math.min(7, stat.sv * 0.8 + stat.hld * 0.3);
   const pit = clamp(stuff * 0.45 + runPrevent * 0.35 + command * 0.2 + roleBoost, 45, 97);
   const ovr = clamp(pit * 0.7 + runPrevent * 0.2 + command * 0.1, 48, 95);
   const youth = age <= 23 ? 8 : age <= 26 ? 5 : age <= 29 ? 2 : 0;
   const pot = Math.max(ovr, Math.min(96, ovr + youth + rating(`${name}-pot-pit`, 0, 4)));
   return { ovr, pot, hit: 10, pow: 10, spd: rating(`${name}-spd-pit`, 30, 55), def: clamp(ovr + rating(`${name}-def-pit`, -8, 8), 42, 90), arm: clamp(stuff + rating(`${name}-arm-pit`, -3, 6), 48, 98), pit, form: clamp(88 - stat.era * 5 + k9 * 1.2, 45, 96), stamina: base.pos === "SP" ? clamp(66 + stat.ip / 2.2, 62, 96) : rating(`${name}-stamina-rp`, 38, 66) };
+}
+
+function playerTrait(base, stat, ratings, age, foreignPlayer, rosterStatus) {
+  const tags = [];
+  if (foreignPlayer) tags.push("외국인");
+  if (rosterStatus === "FARM") tags.push("퓨처스");
+  if (ratings.ovr >= 84) tags.push(base.type === "PIT" ? "에이스" : "프랜차이즈급");
+  else if (ratings.ovr >= 78) tags.push("핵심전력");
+  else if (ratings.pot >= 84 && age <= 25) tags.push("상위 유망주");
+  else if (ratings.pot >= 78 && age <= 24) tags.push("성장형");
+  if (base.type === "PIT") {
+    const ip = stat?.ip || 0;
+    const k9 = ip ? (stat.so || 0) * 9 / ip : 0;
+    const bb9 = ip ? (stat.bb || 0) * 9 / ip : 0;
+    if (base.pos === "SP" && ratings.stamina >= 86) tags.push("이닝이터");
+    if (k9 >= 8.5 || ratings.pit >= 82) tags.push("탈삼진형");
+    if (bb9 && bb9 <= 2.4) tags.push("제구형");
+    if ((stat?.hld || 0) >= 5) tags.push("필승조");
+    if ((stat?.sv || 0) >= 5) tags.push("마무리형");
+  } else {
+    const iso = stat?.ab ? Math.max(0, ((stat.tb || 0) - (stat.h || 0)) / stat.ab) : 0;
+    if (ratings.hit >= 82 || (stat?.avg || 0) >= 0.3) tags.push("교타자");
+    if (ratings.pow >= 82 || iso >= 0.18 || (stat?.hr || 0) >= 10) tags.push("장타형");
+    if (ratings.spd >= 82 || (stat?.sb || 0) >= 10) tags.push("주루형");
+    if (["C","SS","CF"].includes(base.pos) && ratings.def >= 78) tags.push("수비핵심");
+    if ((stat?.bb || 0) > (stat?.so || 0) * 0.65 && (stat?.pa || 0) >= 40) tags.push("선구안");
+  }
+  if (age >= 34 && ratings.ovr >= 68) tags.push("베테랑");
+  return [...new Set(tags)].slice(0, 4).join(" · ") || (rosterStatus === "ACTIVE" ? "1군 등록 선수" : "2군 등록 선수");
+}
+
+function durabilityFromReality(base, stat, ratings, age, rosterStatus) {
+  let value = 66;
+  if (base.type === "PIT") {
+    const ip = stat?.ip || 0;
+    value += base.pos === "SP" ? Math.min(18, ip / 5) : Math.min(12, (stat?.g || 0) * 0.45);
+    value += (ratings.stamina - 65) * 0.18;
+  } else {
+    value += Math.min(18, (stat?.g || 0) * 0.35);
+    value += Math.min(10, (stat?.pa || 0) / 35);
+  }
+  if (rosterStatus === "FARM") value -= 4;
+  if (age >= 35) value -= 9;
+  else if (age >= 32) value -= 4;
+  if (ratings.form >= 80) value += 3;
+  return clamp(value + rating(`${base.type}-${age}-${ratings.ovr}-durability`, -6, 6), 35, 94);
 }
 
 const detailCache = new Map();
@@ -536,6 +585,8 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
         ? pitcherRatings(stat, { ...base, pos }, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer)
         : hitterRatings(stat, { ...base, pos }, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer);
       const contract = contractShape({ type: base.type, teamId, name }, detail, ratings, age, foreignPlayer, rosterStatus);
+      const trait = playerTrait({ ...base, pos }, stat, ratings, age, foreignPlayer, rosterStatus);
+      const durability = durabilityFromReality({ ...base, pos }, stat, ratings, age, rosterStatus);
       players.push({
         teamId,
         name: publicName,
@@ -554,6 +605,8 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
         faGrade: ratings.ovr >= 78 ? "A" : ratings.ovr >= 70 ? "B" : "C",
         pitcherRole: finalPitcherRole,
         ...ratings,
+        durability,
+        trait,
         foreignPlayer: foreignPlayer ? "Y" : "",
         source: `${sourceLabel} Official Salary/Stat Rating ${SOURCE_DATE}`
       });
@@ -575,7 +628,7 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
     rows.push(...active, ...farm);
     console.log(`${code} ${teamId}: active ${active.length}, farm ${farm.length}`);
   }
-  const header = ["teamId","name","jerseyNumber","pos","type","age","rosterStatus","annualSalary","signingBonus","serviceYears","serviceDays","yearsLeft","contractKind","contractSource","faGrade","pitcherRole","ovr","pot","hit","pow","spd","def","arm","pit","form","stamina","foreignPlayer","source"];
+  const header = ["teamId","name","jerseyNumber","pos","type","age","rosterStatus","annualSalary","signingBonus","serviceYears","serviceDays","yearsLeft","contractKind","contractSource","faGrade","pitcherRole","ovr","pot","hit","pow","spd","def","arm","pit","form","stamina","durability","trait","foreignPlayer","source"];
   const text = [header.join(","), ...rows.map((row) => header.map((key) => csv(row[key])).join(","))].join("\n") + "\n";
   fs.writeFileSync(OUT, text, "utf8");
   console.log(`wrote ${rows.length} players to ${OUT}`);
