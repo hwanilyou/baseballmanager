@@ -24,33 +24,54 @@ const KNOWN_CONTRACTS = {
   "daejeon-orange-eagles::류현진": { yearsLeft: 6, kind: "실계약 8년 170억", total: 170, source: "2024 FA 복귀 계약" },
   "daejeon-orange-eagles::채은성": { yearsLeft: 3, kind: "실계약 6년 90억", total: 90, source: "2023 FA 계약" },
   "daejeon-orange-eagles::안치홍": { yearsLeft: 4, kind: "실계약 4+2년 72억", total: 72, source: "2024 FA 계약" },
+  "daejeon-orange-eagles::엄상백": { yearsLeft: 3, kind: "실계약 4년 78억", total: 78, source: "2025 FA 계약" },
+  "daejeon-orange-eagles::심우준": { yearsLeft: 3, kind: "실계약 4년 50억", total: 50, source: "2025 FA 계약" },
   "daejeon-orange-eagles::노시환": { yearsLeft: 1, kind: "연봉계약", source: "공개 다년계약 미확인" },
 
   "seoul-twin-stars::오지환": { yearsLeft: 4, kind: "실계약 6년 124억", total: 124, source: "2024 비FA 다년계약" },
   "seoul-twin-stars::김현수": { yearsLeft: 2, kind: "실계약 4+2년 115억", total: 115, source: "2022 FA 계약" },
   "seoul-twin-stars::박동원": { yearsLeft: 1, kind: "실계약 4년 65억", total: 65, source: "2023 FA 계약" },
+  "seoul-twin-stars::임찬규": { yearsLeft: 2, kind: "실계약 4년 50억", total: 50, source: "2024 FA 계약" },
+  "seoul-twin-stars::함덕주": { yearsLeft: 2, kind: "실계약 4년 38억", total: 38, source: "2024 FA 계약" },
 
   "suwon-wizpark::고영표": { yearsLeft: 3, kind: "실계약 5년 107억", total: 107, source: "2024 비FA 다년계약" },
   "suwon-wizpark::허경민": { yearsLeft: 5, kind: "실계약 4+3년 85억", total: 85, source: "2025 FA 계약" },
+  "suwon-wizpark::김상수": { yearsLeft: 1, kind: "실계약 4년 29억", total: 29, source: "2023 FA 계약" },
+  "suwon-wizpark::장성우": { yearsLeft: 1, kind: "실계약 4년 42억", total: 42, source: "2022 FA 계약" },
 
   "daegu-blue-lions::구자욱": { yearsLeft: 1, kind: "실계약 5년 120억", total: 120, source: "2022 비FA 다년계약" },
+  "daegu-blue-lions::김재윤": { yearsLeft: 2, kind: "실계약 4년 58억", total: 58, source: "2024 FA 계약" },
+  "daegu-blue-lions::최원태": { yearsLeft: 4, kind: "실계약 4년 70억", total: 70, source: "2026 FA 계약" },
 
   "gwangju-tiger-kings::나성범": { yearsLeft: 2, kind: "실계약 6년 150억", total: 150, source: "2022 FA 계약" },
+  "gwangju-tiger-kings::김선빈": { yearsLeft: 1, kind: "실계약 3년 30억", total: 30, source: "2024 FA 계약" },
+  "gwangju-tiger-kings::김태군": { yearsLeft: 1, kind: "실계약 3년 25억", total: 25, source: "2024 비FA 다년계약" },
 
   "jamsil-bears::양의지": { yearsLeft: 3, kind: "실계약 4+2년 152억", total: 152, source: "2023 FA 계약" },
   "jamsil-bears::정수빈": { yearsLeft: 1, kind: "실계약 6년 56억", total: 56, source: "2021 FA 계약" },
+  "jamsil-bears::김재환": { yearsLeft: 1, kind: "실계약 4년 115억", total: 115, source: "2022 FA 계약" },
+  "jamsil-bears::허경민": { yearsLeft: 1, kind: "실계약 4+3년 85억", total: 85, source: "2021 FA 계약" },
 
   "changwon-dino-force::박민우": { yearsLeft: 5, kind: "실계약 5+3년 140억", total: 140, source: "2023 FA 계약" },
   "changwon-dino-force::박건우": { yearsLeft: 2, kind: "실계약 6년 100억", total: 100, source: "2022 FA 계약" },
+  "changwon-dino-force::손아섭": { yearsLeft: 1, kind: "실계약 4년 64억", total: 64, source: "2022 FA 계약" },
+  "changwon-dino-force::박세혁": { yearsLeft: 1, kind: "실계약 4년 46억", total: 46, source: "2023 FA 계약" },
 
   "busan-giant-waves::박세웅": { yearsLeft: 2, kind: "실계약 5년 90억", total: 90, source: "2023 비FA 다년계약" },
   "busan-giant-waves::전준우": { yearsLeft: 2, kind: "실계약 4년 47억", total: 47, source: "2024 FA 계약" },
   "busan-giant-waves::유강남": { yearsLeft: 1, kind: "실계약 4년 80억", total: 80, source: "2023 FA 계약" },
   "busan-giant-waves::노진혁": { yearsLeft: 1, kind: "실계약 4년 50억", total: 50, source: "2023 FA 계약" },
+  "busan-giant-waves::정철원": { yearsLeft: 1, kind: "연봉계약", source: "트레이드/연봉계약 추정" },
 
   "incheon-landing::한유섬": { yearsLeft: 1, kind: "실계약 5년 60억", total: 60, source: "2022 비FA 다년계약" },
+  "incheon-landing::최정": { yearsLeft: 4, kind: "실계약 4년 110억", total: 110, source: "2025 FA 계약" },
+  "incheon-landing::김광현": { yearsLeft: 1, kind: "실계약 4년 151억", total: 151, source: "2022 복귀 계약" },
+  "incheon-landing::박성한": { yearsLeft: 1, kind: "연봉계약", source: "공개 다년계약 미확인" },
 
-  "gocheok-heroes::송성문": { yearsLeft: 5, kind: "실계약 6년 120억", total: 120, source: "비FA 다년계약 보도 반영" }
+  "gocheok-heroes::송성문": { yearsLeft: 5, kind: "실계약 6년 120억", total: 120, source: "비FA 다년계약 보도 반영" },
+  "gocheok-heroes::원종현": { yearsLeft: 1, kind: "실계약 4년 25억", total: 25, source: "2023 FA 계약" },
+  "gocheok-heroes::최주환": { yearsLeft: 1, kind: "실계약 4년 42억", total: 42, source: "2021 FA 계약" },
+  "gocheok-heroes::안우진": { yearsLeft: 3, kind: "보류권/군복무 반영", source: "서비스타임 보정" }
 };
 
 function knownContractFor(teamId, name) {

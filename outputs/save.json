@@ -17,6 +17,48 @@
     },
     {
       "day": 1,
+      "title": "투수 보직 변경",
+      "body": "에르난데현의 보직을 선발로 조정했다.",
+      "kind": "선수단"
+    },
+    {
+      "day": 1,
+      "title": "투수 보직 변경",
+      "body": "에르난데현의 보직을 롱릴리프로 조정했다.",
+      "kind": "선수단"
+    },
+    {
+      "day": 1,
+      "title": "투수 보직 변경",
+      "body": "에르난데현의 보직을 선발로 조정했다.",
+      "kind": "선수단"
+    },
+    {
+      "day": 1,
+      "title": "투수 보직 변경",
+      "body": "에르난데현의 보직을 롱릴리프로 조정했다.",
+      "kind": "선수단"
+    },
+    {
+      "day": 1,
+      "title": "투수 보직 변경",
+      "body": "에르난데현의 보직을 선발로 조정했다.",
+      "kind": "선수단"
+    },
+    {
+      "day": 1,
+      "title": "투수 보직 변경",
+      "body": "에르난데현의 보직을 롱릴리프로 조정했다.",
+      "kind": "선수단"
+    },
+    {
+      "day": 1,
+      "title": "선수 데이터 import",
+      "body": "54명의 선수 데이터를 반영했다. 출처: C:\\Users\\DELL\\Documents\\Codex\\2026-06-23\\new-chat\\outputs\\data\\kbo_players.csv",
+      "kind": "데이터"
+    },
+    {
+      "day": 1,
       "title": "선수 데이터 import",
       "body": "54명의 선수 데이터를 반영했다. 출처: C:\\Users\\DELL\\Documents\\Codex\\2026-06-23\\new-chat\\outputs\\data\\kbo_players.csv",
       "kind": "데이터"
@@ -36352,10 +36394,10 @@
       "arm": 61,
       "pit": 57,
       "form": 83,
-      "durability": 71,
+      "durability": 45,
       "serviceYears": 0,
       "rosterStatus": "ACTIVE",
-      "options": 3,
+      "options": 2,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "SP",
@@ -36371,7 +36413,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 84,
+      "happy": 65,
       "trait": "",
       "stats": {
         "era": 0,
@@ -36396,27 +36438,21 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 51,
-          "velo": 143,
-          "usage": 49
+          "grade": 66,
+          "velo": 142,
+          "usage": 42
         },
         {
           "type": "슬라이더",
-          "grade": 52,
+          "grade": 54,
           "velo": 130,
-          "usage": 28
+          "usage": 34
         },
         {
           "type": "커브",
-          "grade": 62,
-          "velo": 114,
-          "usage": 18
-        },
-        {
-          "type": "투심",
-          "grade": 42,
-          "velo": 139,
-          "usage": 5
+          "grade": 54,
+          "velo": 121,
+          "usage": 24
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -36440,7 +36476,7 @@
       "arm": 74,
       "pit": 67,
       "form": 66,
-      "durability": 64,
+      "durability": 54,
       "serviceYears": 8,
       "rosterStatus": "ACTIVE",
       "options": 3,
@@ -36459,7 +36495,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 67,
+      "happy": 60,
       "trait": "",
       "stats": {
         "era": 0,
@@ -36472,7 +36508,7 @@
       "serviceDays": 1219,
       "faRemainingDays": 0,
       "faEligibleSeason": "자격 충족",
-      "years": 1,
+      "years": 2,
       "salary": 0.4,
       "contract": {
         "yearsLeft": 1,
@@ -36484,27 +36520,21 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 66,
-          "velo": 145,
-          "usage": 44
+          "grade": 82,
+          "velo": 153,
+          "usage": 43
         },
         {
           "type": "슬라이더",
-          "grade": 71,
-          "velo": 139,
-          "usage": 31
+          "grade": 68,
+          "velo": 132,
+          "usage": 34
         },
         {
           "type": "체인지업",
-          "grade": 65,
-          "velo": 123,
-          "usage": 13
-        },
-        {
-          "type": "커브",
-          "grade": 59,
-          "velo": 115,
-          "usage": 12
+          "grade": 78,
+          "velo": 124,
+          "usage": 22
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -36528,7 +36558,7 @@
       "arm": 91,
       "pit": 76,
       "form": 78,
-      "durability": 80,
+      "durability": 57,
       "serviceYears": 0,
       "rosterStatus": "ACTIVE",
       "options": 2,
@@ -36547,7 +36577,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 59,
+      "happy": 79,
       "trait": "",
       "stats": {
         "era": 0,
@@ -36560,7 +36590,7 @@
       "serviceDays": 89,
       "faRemainingDays": 1216,
       "faEligibleSeason": "9시즌 후",
-      "years": 2,
+      "years": 1,
       "salary": 1.8,
       "contract": {
         "yearsLeft": 1,
@@ -36572,21 +36602,33 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 65,
-          "velo": 147,
-          "usage": 53
+          "grade": 83,
+          "velo": 146,
+          "usage": 37
         },
         {
           "type": "슬라이더",
-          "grade": 66,
-          "velo": 138,
-          "usage": 31
+          "grade": 79,
+          "velo": 128,
+          "usage": 32
+        },
+        {
+          "type": "체인지업",
+          "grade": 64,
+          "velo": 122,
+          "usage": 18
+        },
+        {
+          "type": "스플리터",
+          "grade": 75,
+          "velo": 141,
+          "usage": 9
         },
         {
           "type": "커브",
-          "grade": 78,
-          "velo": 128,
-          "usage": 16
+          "grade": 74,
+          "velo": 113,
+          "usage": 5
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -36610,10 +36652,10 @@
       "arm": 59,
       "pit": 59,
       "form": 70,
-      "durability": 53,
+      "durability": 82,
       "serviceYears": 0,
       "rosterStatus": "ACTIVE",
-      "options": 2,
+      "options": 1,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "SP",
@@ -36629,7 +36671,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 67,
+      "happy": 69,
       "trait": "",
       "stats": {
         "era": 0,
@@ -36654,27 +36696,27 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 60,
-          "velo": 145,
+          "grade": 59,
+          "velo": 142,
           "usage": 44
         },
         {
           "type": "슬라이더",
-          "grade": 66,
-          "velo": 140,
-          "usage": 32
-        },
-        {
-          "type": "커브",
-          "grade": 69,
-          "velo": 112,
-          "usage": 17
+          "grade": 51,
+          "velo": 141,
+          "usage": 36
         },
         {
           "type": "스플리터",
-          "grade": 62,
-          "velo": 136,
+          "grade": 48,
+          "velo": 141,
           "usage": 7
+        },
+        {
+          "type": "체인지업",
+          "grade": 54,
+          "velo": 134,
+          "usage": 14
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -36698,7 +36740,7 @@
       "arm": 68,
       "pit": 64,
       "form": 68,
-      "durability": 75,
+      "durability": 45,
       "serviceYears": 10,
       "rosterStatus": "ACTIVE",
       "options": 1,
@@ -36742,27 +36784,27 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 54,
-          "velo": 154,
-          "usage": 39
+          "grade": 62,
+          "velo": 143,
+          "usage": 40
         },
         {
           "type": "슬라이더",
-          "grade": 65,
-          "velo": 141,
-          "usage": 32
-        },
-        {
-          "type": "체인지업",
-          "grade": 63,
-          "velo": 132,
-          "usage": 21
+          "grade": 75,
+          "velo": 133,
+          "usage": 25
         },
         {
           "type": "커브",
-          "grade": 61,
-          "velo": 117,
-          "usage": 8
+          "grade": 53,
+          "velo": 123,
+          "usage": 19
+        },
+        {
+          "type": "체인지업",
+          "grade": 52,
+          "velo": 124,
+          "usage": 16
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -36786,7 +36828,7 @@
       "arm": 61,
       "pit": 56,
       "form": 84,
-      "durability": 80,
+      "durability": 55,
       "serviceYears": 8,
       "rosterStatus": "ACTIVE",
       "options": 2,
@@ -36830,21 +36872,21 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 58,
-          "velo": 148,
-          "usage": 49
+          "grade": 64,
+          "velo": 154,
+          "usage": 46
         },
         {
           "type": "슬라이더",
-          "grade": 60,
+          "grade": 58,
           "velo": 132,
-          "usage": 33
+          "usage": 34
         },
         {
-          "type": "커브",
-          "grade": 48,
-          "velo": 126,
-          "usage": 17
+          "type": "체인지업",
+          "grade": 71,
+          "velo": 133,
+          "usage": 20
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -36868,10 +36910,10 @@
       "arm": 61,
       "pit": 60,
       "form": 79,
-      "durability": 67,
+      "durability": 68,
       "serviceYears": 2,
       "rosterStatus": "ACTIVE",
-      "options": 3,
+      "options": 2,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "MR",
@@ -36887,7 +36929,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 73,
+      "happy": 58,
       "trait": "",
       "stats": {
         "era": 0,
@@ -36912,27 +36954,21 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 72,
-          "velo": 152,
-          "usage": 43
+          "grade": 65,
+          "velo": 142,
+          "usage": 46
         },
         {
           "type": "슬라이더",
-          "grade": 55,
-          "velo": 131,
-          "usage": 38
+          "grade": 61,
+          "velo": 135,
+          "usage": 35
         },
         {
           "type": "커브",
-          "grade": 63,
-          "velo": 114,
-          "usage": 15
-        },
-        {
-          "type": "싱커",
-          "grade": 54,
-          "velo": 146,
-          "usage": 5
+          "grade": 55,
+          "velo": 118,
+          "usage": 19
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -36956,10 +36992,10 @@
       "arm": 75,
       "pit": 67,
       "form": 60,
-      "durability": 81,
+      "durability": 82,
       "serviceYears": 2,
       "rosterStatus": "ACTIVE",
-      "options": 1,
+      "options": 3,
       "development": false,
       "faGrade": "B",
       "pitcherRole": "MR",
@@ -36975,7 +37011,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 85,
+      "happy": 66,
       "trait": "",
       "stats": {
         "era": 0,
@@ -37000,32 +37036,26 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 89,
-          "velo": 145,
-          "usage": 37
-        },
-        {
-          "type": "커브",
-          "grade": 75,
-          "velo": 120,
-          "usage": 14
+          "grade": 83,
+          "velo": 148,
+          "usage": 39
         },
         {
           "type": "슬라이더",
-          "grade": 71,
-          "velo": 139,
-          "usage": 26
+          "grade": 68,
+          "velo": 129,
+          "usage": 33
         },
         {
           "type": "체인지업",
-          "grade": 78,
+          "grade": 73,
           "velo": 133,
-          "usage": 15
+          "usage": 19
         },
         {
-          "type": "투심",
-          "grade": 64,
-          "velo": 145,
+          "type": "커브",
+          "grade": 73,
+          "velo": 118,
           "usage": 9
         }
       ],
@@ -37050,7 +37080,7 @@
       "arm": 70,
       "pit": 66,
       "form": 80,
-      "durability": 51,
+      "durability": 73,
       "serviceYears": 10,
       "rosterStatus": "ACTIVE",
       "options": 3,
@@ -37069,7 +37099,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 84,
+      "happy": 65,
       "trait": "",
       "stats": {
         "era": 0,
@@ -37082,7 +37112,7 @@
       "serviceDays": 1519,
       "faRemainingDays": 0,
       "faEligibleSeason": "자격 충족",
-      "years": 1,
+      "years": 2,
       "salary": 2.6,
       "contract": {
         "yearsLeft": 1,
@@ -37094,27 +37124,27 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 55,
-          "velo": 144,
-          "usage": 44
-        },
-        {
-          "type": "커브",
-          "grade": 57,
-          "velo": 114,
-          "usage": 21
+          "grade": 84,
+          "velo": 148,
+          "usage": 37
         },
         {
           "type": "슬라이더",
-          "grade": 51,
-          "velo": 128,
-          "usage": 24
+          "grade": 79,
+          "velo": 132,
+          "usage": 29
         },
         {
           "type": "체인지업",
-          "grade": 64,
-          "velo": 133,
-          "usage": 11
+          "grade": 75,
+          "velo": 125,
+          "usage": 20
+        },
+        {
+          "type": "투심",
+          "grade": 78,
+          "velo": 139,
+          "usage": 13
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -37138,7 +37168,7 @@
       "arm": 60,
       "pit": 63,
       "form": 75,
-      "durability": 52,
+      "durability": 78,
       "serviceYears": 1,
       "rosterStatus": "ACTIVE",
       "options": 3,
@@ -37157,7 +37187,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 83,
+      "happy": 71,
       "trait": "",
       "stats": {
         "era": 0,
@@ -37182,27 +37212,27 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 67,
-          "velo": 144,
-          "usage": 44
+          "grade": 65,
+          "velo": 146,
+          "usage": 37
         },
         {
           "type": "슬라이더",
-          "grade": 68,
-          "velo": 136,
-          "usage": 33
+          "grade": 45,
+          "velo": 140,
+          "usage": 31
         },
         {
-          "type": "커브",
-          "grade": 72,
-          "velo": 127,
-          "usage": 17
+          "type": "체인지업",
+          "grade": 59,
+          "velo": 123,
+          "usage": 20
         },
         {
-          "type": "스플리터",
-          "grade": 56,
-          "velo": 143,
-          "usage": 6
+          "type": "투심",
+          "grade": 44,
+          "velo": 145,
+          "usage": 12
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -37226,7 +37256,7 @@
       "arm": 59,
       "pit": 61,
       "form": 64,
-      "durability": 59,
+      "durability": 49,
       "serviceYears": 0,
       "rosterStatus": "FARM",
       "options": 2,
@@ -37270,21 +37300,21 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 59,
-          "velo": 142,
-          "usage": 49
+          "grade": 64,
+          "velo": 148,
+          "usage": 41
         },
         {
           "type": "슬라이더",
-          "grade": 58,
-          "velo": 140,
-          "usage": 34
+          "grade": 56,
+          "velo": 139,
+          "usage": 36
         },
         {
-          "type": "스플리터",
-          "grade": 46,
-          "velo": 132,
-          "usage": 17
+          "type": "체인지업",
+          "grade": 54,
+          "velo": 135,
+          "usage": 23
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -37308,10 +37338,10 @@
       "arm": 60,
       "pit": 55,
       "form": 79,
-      "durability": 80,
+      "durability": 79,
       "serviceYears": 0,
       "rosterStatus": "ACTIVE",
-      "options": 2,
+      "options": 1,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "MR",
@@ -37327,7 +37357,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 79,
+      "happy": 78,
       "trait": "",
       "stats": {
         "era": 0,
@@ -37352,21 +37382,27 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 73,
-          "velo": 148,
-          "usage": 53
+          "grade": 60,
+          "velo": 145,
+          "usage": 47
         },
         {
           "type": "슬라이더",
-          "grade": 71,
-          "velo": 133,
-          "usage": 38
+          "grade": 58,
+          "velo": 138,
+          "usage": 26
         },
         {
-          "type": "커터",
+          "type": "체인지업",
+          "grade": 65,
+          "velo": 122,
+          "usage": 14
+        },
+        {
+          "type": "커브",
           "grade": 64,
-          "velo": 136,
-          "usage": 9
+          "velo": 119,
+          "usage": 13
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -37390,10 +37426,10 @@
       "arm": 62,
       "pit": 64,
       "form": 64,
-      "durability": 84,
+      "durability": 50,
       "serviceYears": 5,
       "rosterStatus": "ACTIVE",
-      "options": 1,
+      "options": 3,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "MR",
@@ -37409,7 +37445,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 81,
+      "happy": 59,
       "trait": "",
       "stats": {
         "era": 0,
@@ -37434,21 +37470,27 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 47,
-          "velo": 152,
-          "usage": 51
-        },
-        {
-          "type": "슬라이더",
-          "grade": 53,
-          "velo": 134,
-          "usage": 31
+          "grade": 54,
+          "velo": 149,
+          "usage": 44
         },
         {
           "type": "커브",
-          "grade": 61,
-          "velo": 120,
-          "usage": 18
+          "grade": 55,
+          "velo": 124,
+          "usage": 15
+        },
+        {
+          "type": "슬라이더",
+          "grade": 57,
+          "velo": 135,
+          "usage": 30
+        },
+        {
+          "type": "투심",
+          "grade": 45,
+          "velo": 142,
+          "usage": 11
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -37472,7 +37514,7 @@
       "arm": 87,
       "pit": 86,
       "form": 83,
-      "durability": 59,
+      "durability": 50,
       "serviceYears": 12,
       "rosterStatus": "ACTIVE",
       "options": 1,
@@ -37491,7 +37533,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 82,
+      "happy": 60,
       "trait": "",
       "stats": {
         "era": 0,
@@ -37504,7 +37546,7 @@
       "serviceDays": 1815,
       "faRemainingDays": 0,
       "faEligibleSeason": "자격 충족",
-      "years": 3,
+      "years": 5,
       "salary": 21,
       "contract": {
         "yearsLeft": 6,
@@ -37516,27 +37558,27 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 85,
-          "velo": 153,
-          "usage": 44
+          "grade": 80,
+          "velo": 146,
+          "usage": 45
         },
         {
           "type": "슬라이더",
-          "grade": 87,
-          "velo": 130,
-          "usage": 32
+          "grade": 78,
+          "velo": 133,
+          "usage": 30
         },
         {
           "type": "체인지업",
-          "grade": 85,
-          "velo": 135,
-          "usage": 20
+          "grade": 73,
+          "velo": 124,
+          "usage": 16
         },
         {
-          "type": "싱커",
+          "type": "커브",
           "grade": 80,
-          "velo": 143,
-          "usage": 5
+          "velo": 115,
+          "usage": 9
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -37560,10 +37602,10 @@
       "arm": 69,
       "pit": 9,
       "form": 80,
-      "durability": 45,
+      "durability": 64,
       "serviceYears": 12,
       "rosterStatus": "ACTIVE",
-      "options": 1,
+      "options": 3,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -37579,7 +37621,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 83,
+      "happy": 74,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -37595,7 +37637,7 @@
       "serviceDays": 1829,
       "faRemainingDays": 0,
       "faEligibleSeason": "자격 충족",
-      "years": 2,
+      "years": 1,
       "salary": 4,
       "contract": {
         "yearsLeft": 2,
@@ -37625,10 +37667,10 @@
       "arm": 79,
       "pit": 18,
       "form": 75,
-      "durability": 51,
+      "durability": 50,
       "serviceYears": 5,
       "rosterStatus": "ACTIVE",
-      "options": 1,
+      "options": 2,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -37644,7 +37686,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 87,
+      "happy": 77,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -37690,7 +37732,7 @@
       "arm": 79,
       "pit": 15,
       "form": 80,
-      "durability": 69,
+      "durability": 61,
       "serviceYears": 12,
       "rosterStatus": "ACTIVE",
       "options": 3,
@@ -37709,7 +37751,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 77,
+      "happy": 86,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -37725,7 +37767,7 @@
       "serviceDays": 1829,
       "faRemainingDays": 0,
       "faEligibleSeason": "자격 충족",
-      "years": 1,
+      "years": 2,
       "salary": 1.2,
       "contract": {
         "yearsLeft": 1,
@@ -37755,10 +37797,10 @@
       "arm": 55,
       "pit": 14,
       "form": 83,
-      "durability": 62,
+      "durability": 69,
       "serviceYears": 12,
       "rosterStatus": "ACTIVE",
-      "options": 1,
+      "options": 2,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -37774,7 +37816,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 80,
+      "happy": 68,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -37790,13 +37832,13 @@
       "serviceDays": 1829,
       "faRemainingDays": 0,
       "faEligibleSeason": "자격 충족",
-      "years": 2,
+      "years": 1,
       "salary": 4,
       "contract": {
-        "yearsLeft": 2,
+        "yearsLeft": 3,
         "annual": 4,
-        "kind": "비FA 다년계약",
-        "source": "KBO 공식 연봉 + 기간 추정"
+        "kind": "실계약 4년 50억",
+        "source": "2025 FA 계약"
       },
       "signingBonus": 1.3,
       "teamId": "daejeon-orange-eagles",
@@ -37820,10 +37862,10 @@
       "arm": 82,
       "pit": 10,
       "form": 67,
-      "durability": 48,
+      "durability": 85,
       "serviceYears": 8,
       "rosterStatus": "ACTIVE",
-      "options": 3,
+      "options": 2,
       "development": false,
       "faGrade": "B",
       "pitcherRole": null,
@@ -37839,7 +37881,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 86,
+      "happy": 59,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -37885,10 +37927,10 @@
       "arm": 66,
       "pit": 16,
       "form": 75,
-      "durability": 53,
+      "durability": 80,
       "serviceYears": 9,
       "rosterStatus": "ACTIVE",
-      "options": 3,
+      "options": 1,
       "development": false,
       "faGrade": "A",
       "pitcherRole": null,
@@ -37904,7 +37946,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 75,
+      "happy": 76,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -37969,7 +38011,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 60,
+      "happy": 80,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -38015,10 +38057,10 @@
       "arm": 60,
       "pit": 8,
       "form": 76,
-      "durability": 72,
+      "durability": 66,
       "serviceYears": 2,
       "rosterStatus": "ACTIVE",
-      "options": 3,
+      "options": 2,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -38034,7 +38076,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 85,
+      "happy": 75,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -38050,7 +38092,7 @@
       "serviceDays": 369,
       "faRemainingDays": 936,
       "faEligibleSeason": "7시즌 후",
-      "years": 1,
+      "years": 2,
       "salary": 1,
       "contract": {
         "yearsLeft": 1,
@@ -38083,7 +38125,7 @@
       "durability": 80,
       "serviceYears": 11,
       "rosterStatus": "ACTIVE",
-      "options": 2,
+      "options": 1,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -38099,7 +38141,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 68,
+      "happy": 59,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -38145,10 +38187,10 @@
       "arm": 82,
       "pit": 18,
       "form": 63,
-      "durability": 87,
+      "durability": 84,
       "serviceYears": 11,
       "rosterStatus": "ACTIVE",
-      "options": 2,
+      "options": 1,
       "development": false,
       "faGrade": "B",
       "pitcherRole": null,
@@ -38164,7 +38206,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 71,
+      "happy": 79,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -38210,7 +38252,7 @@
       "arm": 70,
       "pit": 20,
       "form": 73,
-      "durability": 78,
+      "durability": 83,
       "serviceYears": 10,
       "rosterStatus": "ACTIVE",
       "options": 3,
@@ -38229,7 +38271,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 64,
+      "happy": 75,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -38275,10 +38317,10 @@
       "arm": 73,
       "pit": 18,
       "form": 76,
-      "durability": 63,
+      "durability": 83,
       "serviceYears": 2,
       "rosterStatus": "ACTIVE",
-      "options": 3,
+      "options": 2,
       "development": false,
       "faGrade": "A",
       "pitcherRole": null,
@@ -38294,7 +38336,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 76,
+      "happy": 87,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -38340,10 +38382,10 @@
       "arm": 72,
       "pit": 12,
       "form": 58,
-      "durability": 51,
+      "durability": 49,
       "serviceYears": 8,
       "rosterStatus": "ACTIVE",
-      "options": 1,
+      "options": 3,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -38359,7 +38401,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 76,
+      "happy": 86,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -38375,7 +38417,7 @@
       "serviceDays": 1239,
       "faRemainingDays": 66,
       "faEligibleSeason": "1시즌 후",
-      "years": 2,
+      "years": 1,
       "salary": 0.7,
       "contract": {
         "yearsLeft": 1,
@@ -38405,7 +38447,7 @@
       "arm": 61,
       "pit": 9,
       "form": 69,
-      "durability": 49,
+      "durability": 60,
       "serviceYears": 3,
       "rosterStatus": "ACTIVE",
       "options": 2,
@@ -38424,7 +38466,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 78,
+      "happy": 65,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -38440,7 +38482,7 @@
       "serviceDays": 524,
       "faRemainingDays": 781,
       "faEligibleSeason": "6시즌 후",
-      "years": 2,
+      "years": 3,
       "salary": 2.3,
       "contract": {
         "yearsLeft": 3,
@@ -38470,10 +38512,10 @@
       "arm": 76,
       "pit": 15,
       "form": 69,
-      "durability": 67,
+      "durability": 59,
       "serviceYears": 5,
       "rosterStatus": "ACTIVE",
-      "options": 2,
+      "options": 1,
       "development": false,
       "faGrade": "B",
       "pitcherRole": null,
@@ -38489,7 +38531,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 67,
+      "happy": 74,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -38535,7 +38577,7 @@
       "arm": 68,
       "pit": 61,
       "form": 73,
-      "durability": 48,
+      "durability": 66,
       "serviceYears": 2,
       "rosterStatus": "FARM",
       "options": 1,
@@ -38554,7 +38596,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 85,
+      "happy": 69,
       "trait": "",
       "stats": {
         "era": 0,
@@ -38567,7 +38609,7 @@
       "serviceDays": 290,
       "faRemainingDays": 1015,
       "faEligibleSeason": "7시즌 후",
-      "years": 2,
+      "years": 1,
       "salary": 0.3,
       "contract": {
         "yearsLeft": 1,
@@ -38579,21 +38621,27 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 64,
+          "grade": 71,
           "velo": 153,
-          "usage": 49
+          "usage": 45
         },
         {
           "type": "슬라이더",
           "grade": 57,
-          "velo": 141,
-          "usage": 31
+          "velo": 134,
+          "usage": 30
         },
         {
           "type": "체인지업",
-          "grade": 66,
-          "velo": 126,
-          "usage": 20
+          "grade": 70,
+          "velo": 132,
+          "usage": 14
+        },
+        {
+          "type": "투심",
+          "grade": 60,
+          "velo": 144,
+          "usage": 11
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -38617,10 +38665,10 @@
       "arm": 66,
       "pit": 58,
       "form": 68,
-      "durability": 47,
+      "durability": 70,
       "serviceYears": 8,
       "rosterStatus": "FARM",
-      "options": 3,
+      "options": 2,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "SP",
@@ -38636,7 +38684,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 80,
+      "happy": 77,
       "trait": "",
       "stats": {
         "era": 0,
@@ -38661,27 +38709,27 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 54,
-          "velo": 143,
-          "usage": 44
+          "grade": 66,
+          "velo": 147,
+          "usage": 38
         },
         {
           "type": "슬라이더",
-          "grade": 62,
-          "velo": 138,
-          "usage": 28
+          "grade": 51,
+          "velo": 141,
+          "usage": 33
         },
         {
           "type": "체인지업",
-          "grade": 55,
-          "velo": 132,
-          "usage": 22
+          "grade": 54,
+          "velo": 130,
+          "usage": 17
         },
         {
-          "type": "스플리터",
-          "grade": 55,
-          "velo": 137,
-          "usage": 6
+          "type": "커브",
+          "grade": 41,
+          "velo": 121,
+          "usage": 12
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -38705,10 +38753,10 @@
       "arm": 50,
       "pit": 51,
       "form": 60,
-      "durability": 37,
+      "durability": 38,
       "serviceYears": 12,
       "rosterStatus": "FARM",
-      "options": 1,
+      "options": 2,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "SP",
@@ -38724,7 +38772,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 75,
+      "happy": 86,
       "trait": "",
       "stats": {
         "era": 0,
@@ -38737,7 +38785,7 @@
       "serviceDays": 1794,
       "faRemainingDays": 0,
       "faEligibleSeason": "자격 충족",
-      "years": 2,
+      "years": 1,
       "salary": 1.2,
       "contract": {
         "yearsLeft": 1,
@@ -38749,21 +38797,21 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 62,
-          "velo": 145,
-          "usage": 50
+          "grade": 71,
+          "velo": 151,
+          "usage": 54
         },
         {
           "type": "슬라이더",
-          "grade": 72,
-          "velo": 139,
-          "usage": 33
+          "grade": 57,
+          "velo": 140,
+          "usage": 36
         },
         {
-          "type": "커브",
-          "grade": 56,
-          "velo": 118,
-          "usage": 17
+          "type": "투심",
+          "grade": 64,
+          "velo": 144,
+          "usage": 10
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -38787,10 +38835,10 @@
       "arm": 66,
       "pit": 58,
       "form": 60,
-      "durability": 49,
+      "durability": 70,
       "serviceYears": 0,
       "rosterStatus": "FARM",
-      "options": 1,
+      "options": 2,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "SP",
@@ -38806,7 +38854,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 82,
+      "happy": 88,
       "trait": "",
       "stats": {
         "era": 0,
@@ -38831,21 +38879,21 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 78,
-          "velo": 148,
-          "usage": 47
+          "grade": 70,
+          "velo": 151,
+          "usage": 51
         },
         {
           "type": "슬라이더",
-          "grade": 64,
-          "velo": 129,
-          "usage": 31
+          "grade": 63,
+          "velo": 139,
+          "usage": 35
         },
         {
           "type": "체인지업",
-          "grade": 75,
-          "velo": 122,
-          "usage": 22
+          "grade": 60,
+          "velo": 132,
+          "usage": 14
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -38869,7 +38917,7 @@
       "arm": 61,
       "pit": 61,
       "form": 60,
-      "durability": 55,
+      "durability": 48,
       "serviceYears": 3,
       "rosterStatus": "FARM",
       "options": 3,
@@ -38888,7 +38936,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 68,
+      "happy": 81,
       "trait": "",
       "stats": {
         "era": 0,
@@ -38913,21 +38961,21 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 63,
-          "velo": 150,
-          "usage": 49
+          "grade": 69,
+          "velo": 151,
+          "usage": 48
         },
         {
           "type": "슬라이더",
-          "grade": 57,
-          "velo": 138,
+          "grade": 69,
+          "velo": 131,
           "usage": 37
         },
         {
           "type": "커브",
-          "grade": 65,
-          "velo": 115,
-          "usage": 14
+          "grade": 68,
+          "velo": 121,
+          "usage": 15
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -38951,10 +38999,10 @@
       "arm": 54,
       "pit": 54,
       "form": 75,
-      "durability": 39,
+      "durability": 61,
       "serviceYears": 1,
       "rosterStatus": "FARM",
-      "options": 1,
+      "options": 2,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "MR",
@@ -38970,7 +39018,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 80,
+      "happy": 69,
       "trait": "",
       "stats": {
         "era": 0,
@@ -38995,19 +39043,19 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 59,
-          "velo": 148,
-          "usage": 43
+          "grade": 67,
+          "velo": 145,
+          "usage": 47
         },
         {
           "type": "슬라이더",
-          "grade": 57,
-          "velo": 138,
-          "usage": 36
+          "grade": 54,
+          "velo": 136,
+          "usage": 32
         },
         {
           "type": "커브",
-          "grade": 64,
+          "grade": 56,
           "velo": 128,
           "usage": 22
         }
@@ -39033,10 +39081,10 @@
       "arm": 54,
       "pit": 50,
       "form": 71,
-      "durability": 81,
+      "durability": 71,
       "serviceYears": 6,
       "rosterStatus": "FARM",
-      "options": 1,
+      "options": 2,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "MR",
@@ -39052,7 +39100,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 73,
+      "happy": 65,
       "trait": "",
       "stats": {
         "era": 0,
@@ -39077,27 +39125,27 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 61,
-          "velo": 144,
-          "usage": 39
+          "grade": 52,
+          "velo": 153,
+          "usage": 41
         },
         {
           "type": "슬라이더",
-          "grade": 53,
-          "velo": 141,
-          "usage": 33
+          "grade": 62,
+          "velo": 130,
+          "usage": 34
         },
         {
           "type": "커브",
-          "grade": 45,
-          "velo": 122,
-          "usage": 14
+          "grade": 66,
+          "velo": 116,
+          "usage": 18
         },
         {
-          "type": "체인지업",
-          "grade": 52,
-          "velo": 129,
-          "usage": 13
+          "type": "투심",
+          "grade": 61,
+          "velo": 144,
+          "usage": 8
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -39121,10 +39169,10 @@
       "arm": 64,
       "pit": 59,
       "form": 71,
-      "durability": 52,
+      "durability": 74,
       "serviceYears": 7,
       "rosterStatus": "FARM",
-      "options": 2,
+      "options": 1,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "MR",
@@ -39140,7 +39188,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 74,
+      "happy": 84,
       "trait": "",
       "stats": {
         "era": 0,
@@ -39153,7 +39201,7 @@
       "serviceDays": 1024,
       "faRemainingDays": 136,
       "faEligibleSeason": "1시즌 후",
-      "years": 1,
+      "years": 2,
       "salary": 1.5,
       "contract": {
         "yearsLeft": 1,
@@ -39165,21 +39213,27 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 67,
-          "velo": 150,
-          "usage": 46
+          "grade": 61,
+          "velo": 152,
+          "usage": 45
         },
         {
           "type": "슬라이더",
           "grade": 51,
-          "velo": 133,
-          "usage": 40
+          "velo": 134,
+          "usage": 28
         },
         {
-          "type": "커브",
-          "grade": 57,
-          "velo": 123,
-          "usage": 15
+          "type": "체인지업",
+          "grade": 70,
+          "velo": 136,
+          "usage": 21
+        },
+        {
+          "type": "커터",
+          "grade": 66,
+          "velo": 142,
+          "usage": 6
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -39203,10 +39257,10 @@
       "arm": 51,
       "pit": 50,
       "form": 83,
-      "durability": 57,
+      "durability": 48,
       "serviceYears": 12,
       "rosterStatus": "FARM",
-      "options": 1,
+      "options": 3,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "MR",
@@ -39222,7 +39276,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 59,
+      "happy": 61,
       "trait": "",
       "stats": {
         "era": 0,
@@ -39247,27 +39301,21 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 49,
-          "velo": 143,
-          "usage": 44
+          "grade": 68,
+          "velo": 150,
+          "usage": 46
         },
         {
           "type": "슬라이더",
-          "grade": 61,
-          "velo": 138,
-          "usage": 28
-        },
-        {
-          "type": "체인지업",
-          "grade": 64,
-          "velo": 123,
-          "usage": 15
+          "grade": 62,
+          "velo": 128,
+          "usage": 33
         },
         {
           "type": "커브",
-          "grade": 46,
-          "velo": 118,
-          "usage": 12
+          "grade": 60,
+          "velo": 123,
+          "usage": 21
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -39291,10 +39339,10 @@
       "arm": 67,
       "pit": 70,
       "form": 82,
-      "durability": 55,
+      "durability": 57,
       "serviceYears": 0,
       "rosterStatus": "FARM",
-      "options": 3,
+      "options": 1,
       "development": false,
       "faGrade": "C",
       "pitcherRole": "MR",
@@ -39310,7 +39358,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 83,
+      "happy": 59,
       "trait": "",
       "stats": {
         "era": 0,
@@ -39320,8 +39368,8 @@
         "hold": 0,
         "ip": 0
       },
-      "serviceDays": 117,
-      "faRemainingDays": 1188,
+      "serviceDays": 36,
+      "faRemainingDays": 1269,
       "faEligibleSeason": "9시즌 후",
       "years": 1,
       "salary": 0.3,
@@ -39336,20 +39384,26 @@
         {
           "type": "포심",
           "grade": 62,
-          "velo": 154,
-          "usage": 45
+          "velo": 144,
+          "usage": 41
         },
         {
           "type": "슬라이더",
-          "grade": 53,
-          "velo": 137,
-          "usage": 30
+          "grade": 55,
+          "velo": 139,
+          "usage": 35
         },
         {
-          "type": "체인지업",
-          "grade": 72,
-          "velo": 125,
-          "usage": 26
+          "type": "커브",
+          "grade": 49,
+          "velo": 121,
+          "usage": 11
+        },
+        {
+          "type": "스플리터",
+          "grade": 60,
+          "velo": 135,
+          "usage": 13
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -39373,7 +39427,7 @@
       "arm": 50,
       "pit": 50,
       "form": 64,
-      "durability": 53,
+      "durability": 44,
       "serviceYears": 3,
       "rosterStatus": "FARM",
       "options": 2,
@@ -39392,7 +39446,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 68,
+      "happy": 81,
       "trait": "",
       "stats": {
         "era": 0,
@@ -39417,21 +39471,21 @@
       "pitchArsenal": [
         {
           "type": "포심",
-          "grade": 64,
-          "velo": 151,
-          "usage": 39
+          "grade": 61,
+          "velo": 153,
+          "usage": 48
         },
         {
           "type": "슬라이더",
-          "grade": 52,
+          "grade": 60,
           "velo": 130,
-          "usage": 39
+          "usage": 32
         },
         {
           "type": "체인지업",
-          "grade": 49,
-          "velo": 134,
-          "usage": 23
+          "grade": 63,
+          "velo": 122,
+          "usage": 21
         }
       ],
       "teamId": "daejeon-orange-eagles",
@@ -39455,7 +39509,7 @@
       "arm": 55,
       "pit": 20,
       "form": 63,
-      "durability": 84,
+      "durability": 63,
       "serviceYears": 10,
       "rosterStatus": "FARM",
       "options": 1,
@@ -39474,7 +39528,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 75,
+      "happy": 64,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -39520,10 +39574,10 @@
       "arm": 45,
       "pit": 14,
       "form": 58,
-      "durability": 49,
+      "durability": 60,
       "serviceYears": 2,
       "rosterStatus": "FARM",
-      "options": 1,
+      "options": 3,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -39539,7 +39593,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 83,
+      "happy": 63,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -39585,7 +39639,7 @@
       "arm": 47,
       "pit": 13,
       "form": 74,
-      "durability": 76,
+      "durability": 44,
       "serviceYears": 0,
       "rosterStatus": "FARM",
       "options": 3,
@@ -39604,7 +39658,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 85,
+      "happy": 87,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -39650,10 +39704,10 @@
       "arm": 48,
       "pit": 20,
       "form": 60,
-      "durability": 69,
+      "durability": 76,
       "serviceYears": 2,
       "rosterStatus": "FARM",
-      "options": 2,
+      "options": 3,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -39669,7 +39723,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 70,
+      "happy": 82,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -39715,10 +39769,10 @@
       "arm": 41,
       "pit": 18,
       "form": 68,
-      "durability": 59,
+      "durability": 66,
       "serviceYears": 12,
       "rosterStatus": "FARM",
-      "options": 3,
+      "options": 1,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -39734,7 +39788,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 77,
+      "happy": 58,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -39750,7 +39804,7 @@
       "serviceDays": 1782,
       "faRemainingDays": 0,
       "faEligibleSeason": "자격 충족",
-      "years": 1,
+      "years": 2,
       "salary": 2,
       "contract": {
         "yearsLeft": 1,
@@ -39780,10 +39834,10 @@
       "arm": 47,
       "pit": 19,
       "form": 83,
-      "durability": 64,
+      "durability": 44,
       "serviceYears": 12,
       "rosterStatus": "FARM",
-      "options": 1,
+      "options": 2,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -39799,7 +39853,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 77,
+      "happy": 64,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -39845,10 +39899,10 @@
       "arm": 44,
       "pit": 15,
       "form": 84,
-      "durability": 73,
+      "durability": 53,
       "serviceYears": 9,
       "rosterStatus": "FARM",
-      "options": 3,
+      "options": 2,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -39864,7 +39918,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 60,
+      "happy": 59,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -39880,7 +39934,7 @@
       "serviceDays": 1318,
       "faRemainingDays": 0,
       "faEligibleSeason": "자격 충족",
-      "years": 2,
+      "years": 1,
       "salary": 1.4,
       "contract": {
         "yearsLeft": 1,
@@ -39910,7 +39964,7 @@
       "arm": 35,
       "pit": 14,
       "form": 59,
-      "durability": 59,
+      "durability": 73,
       "serviceYears": 7,
       "rosterStatus": "FARM",
       "options": 2,
@@ -39929,7 +39983,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 60,
+      "happy": 72,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -39975,10 +40029,10 @@
       "arm": 57,
       "pit": 14,
       "form": 78,
-      "durability": 43,
+      "durability": 81,
       "serviceYears": 0,
       "rosterStatus": "FARM",
-      "options": 1,
+      "options": 3,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -39994,7 +40048,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 73,
+      "happy": 68,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -40040,7 +40094,7 @@
       "arm": 42,
       "pit": 20,
       "form": 74,
-      "durability": 54,
+      "durability": 67,
       "serviceYears": 8,
       "rosterStatus": "FARM",
       "options": 2,
@@ -40059,7 +40113,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 86,
+      "happy": 78,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -40075,7 +40129,7 @@
       "serviceDays": 1249,
       "faRemainingDays": 56,
       "faEligibleSeason": "1시즌 후",
-      "years": 1,
+      "years": 2,
       "salary": 0.3,
       "contract": {
         "yearsLeft": 1,
@@ -40105,10 +40159,10 @@
       "arm": 61,
       "pit": 24,
       "form": 67,
-      "durability": 63,
+      "durability": 79,
       "serviceYears": 1,
       "rosterStatus": "FARM",
-      "options": 2,
+      "options": 1,
       "development": false,
       "faGrade": "C",
       "pitcherRole": null,
@@ -40124,7 +40178,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 85,
+      "happy": 70,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -40170,7 +40224,7 @@
       "arm": 69,
       "pit": 24,
       "form": 76,
-      "durability": 80,
+      "durability": 51,
       "serviceYears": 7,
       "rosterStatus": "FARM",
       "options": 3,
@@ -40189,7 +40243,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 67,
+      "happy": 59,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -40235,7 +40289,7 @@
       "arm": 68,
       "pit": 16,
       "form": 83,
-      "durability": 72,
+      "durability": 55,
       "serviceYears": 4,
       "rosterStatus": "FARM",
       "options": 3,
@@ -40254,7 +40308,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 68,
+      "happy": 84,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -40300,7 +40354,7 @@
       "arm": 68,
       "pit": 10,
       "form": 69,
-      "durability": 57,
+      "durability": 82,
       "serviceYears": 4,
       "rosterStatus": "FARM",
       "options": 1,
@@ -40319,7 +40373,7 @@
       ],
       "positionTraining": {},
       "complaint": null,
-      "happy": 60,
+      "happy": 84,
       "trait": "",
       "stats": {
         "hr": 0,
@@ -40335,7 +40389,7 @@
       "serviceDays": 580,
       "faRemainingDays": 725,
       "faEligibleSeason": "5시즌 후",
-      "years": 2,
+      "years": 1,
       "salary": 0.2,
       "contract": {
         "yearsLeft": 1,
