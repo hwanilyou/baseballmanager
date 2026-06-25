@@ -2246,7 +2246,8 @@ function refreshTradeTargets(state, silent = false) {
         p.contract = {
           yearsLeft: Number.isFinite(importedYears) && importedYears > 0 ? importedYears : estimated.yearsLeft,
           annual: Number.isFinite(importedAnnual) && importedAnnual > 0 ? importedAnnual : estimated.annual,
-          kind: idx("contractKind") >= 0 && row[idx("contractKind")] ? row[idx("contractKind")] : estimated.kind
+          kind: idx("contractKind") >= 0 && row[idx("contractKind")] ? row[idx("contractKind")] : estimated.kind,
+          source: idx("contractSource") >= 0 && row[idx("contractSource")] ? row[idx("contractSource")] : ""
         };
         p.jerseyNumber = Number(jersey) || p.jerseyNumber;
         ["hit","pow","spd","def","arm","pit","form","stamina","durability"].forEach((key) => {
@@ -3179,7 +3180,8 @@ function importPlayersFromCsv(state, csv, source) {
     p.contract = {
       yearsLeft: Number.isFinite(importedYears) && importedYears > 0 ? importedYears : estimated.yearsLeft,
       annual: Number.isFinite(importedAnnual) && importedAnnual > 0 ? importedAnnual : estimated.annual,
-      kind: idx("contractKind") >= 0 && row[idx("contractKind")] ? row[idx("contractKind")] : estimated.kind
+      kind: idx("contractKind") >= 0 && row[idx("contractKind")] ? row[idx("contractKind")] : estimated.kind,
+      source: idx("contractSource") >= 0 && row[idx("contractSource")] ? row[idx("contractSource")] : ""
     };
     p.jerseyNumber = Number(row[idx("jerseyNumber")]) || p.jerseyNumber;
     ["hit","pow","spd","def","arm","pit","form","stamina","durability"].forEach((key) => {

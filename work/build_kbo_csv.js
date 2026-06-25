@@ -20,6 +20,43 @@ const teams = [
   ["WO", "gocheok-heroes"]
 ];
 
+const KNOWN_CONTRACTS = {
+  "daejeon-orange-eagles::류현진": { yearsLeft: 6, kind: "실계약 8년 170억", total: 170, source: "2024 FA 복귀 계약" },
+  "daejeon-orange-eagles::채은성": { yearsLeft: 3, kind: "실계약 6년 90억", total: 90, source: "2023 FA 계약" },
+  "daejeon-orange-eagles::안치홍": { yearsLeft: 4, kind: "실계약 4+2년 72억", total: 72, source: "2024 FA 계약" },
+  "daejeon-orange-eagles::노시환": { yearsLeft: 1, kind: "연봉계약", source: "공개 다년계약 미확인" },
+
+  "seoul-twin-stars::오지환": { yearsLeft: 4, kind: "실계약 6년 124억", total: 124, source: "2024 비FA 다년계약" },
+  "seoul-twin-stars::김현수": { yearsLeft: 2, kind: "실계약 4+2년 115억", total: 115, source: "2022 FA 계약" },
+  "seoul-twin-stars::박동원": { yearsLeft: 1, kind: "실계약 4년 65억", total: 65, source: "2023 FA 계약" },
+
+  "suwon-wizpark::고영표": { yearsLeft: 3, kind: "실계약 5년 107억", total: 107, source: "2024 비FA 다년계약" },
+  "suwon-wizpark::허경민": { yearsLeft: 5, kind: "실계약 4+3년 85억", total: 85, source: "2025 FA 계약" },
+
+  "daegu-blue-lions::구자욱": { yearsLeft: 1, kind: "실계약 5년 120억", total: 120, source: "2022 비FA 다년계약" },
+
+  "gwangju-tiger-kings::나성범": { yearsLeft: 2, kind: "실계약 6년 150억", total: 150, source: "2022 FA 계약" },
+
+  "jamsil-bears::양의지": { yearsLeft: 3, kind: "실계약 4+2년 152억", total: 152, source: "2023 FA 계약" },
+  "jamsil-bears::정수빈": { yearsLeft: 1, kind: "실계약 6년 56억", total: 56, source: "2021 FA 계약" },
+
+  "changwon-dino-force::박민우": { yearsLeft: 5, kind: "실계약 5+3년 140억", total: 140, source: "2023 FA 계약" },
+  "changwon-dino-force::박건우": { yearsLeft: 2, kind: "실계약 6년 100억", total: 100, source: "2022 FA 계약" },
+
+  "busan-giant-waves::박세웅": { yearsLeft: 2, kind: "실계약 5년 90억", total: 90, source: "2023 비FA 다년계약" },
+  "busan-giant-waves::전준우": { yearsLeft: 2, kind: "실계약 4년 47억", total: 47, source: "2024 FA 계약" },
+  "busan-giant-waves::유강남": { yearsLeft: 1, kind: "실계약 4년 80억", total: 80, source: "2023 FA 계약" },
+  "busan-giant-waves::노진혁": { yearsLeft: 1, kind: "실계약 4년 50억", total: 50, source: "2023 FA 계약" },
+
+  "incheon-landing::한유섬": { yearsLeft: 1, kind: "실계약 5년 60억", total: 60, source: "2022 비FA 다년계약" },
+
+  "gocheok-heroes::송성문": { yearsLeft: 5, kind: "실계약 6년 120억", total: 120, source: "비FA 다년계약 보도 반영" }
+};
+
+function knownContractFor(teamId, name) {
+  return KNOWN_CONTRACTS[`${teamId}::${name}`] || null;
+}
+
 const roleByKind = {
   "투수": { pos: "RP", type: "PIT" },
   "포수": { pos: "C", type: "BAT" },
@@ -345,13 +382,33 @@ function contractShape(row, detail, ratings, age, foreignPlayer, rosterStatus) {
 
   let yearsLeft = 1;
   let kind = foreignPlayer ? "외국인 단년계약" : "연봉계약";
+  let contractSource = realAnnual ? "KBO 공식 연봉 + 기간 추정" : "기간/연봉 추정";
   if (!foreignPlayer) {
-    if (ratings.ovr >= 84 && serviceYears >= 6) {
-      yearsLeft = Math.max(2, Math.min(5, 6 - Math.floor(age / 7)));
+    const known = knownContractFor(row.teamId, row.name);
+    if (known) {
+      yearsLeft = known.yearsLeft;
+      kind = known.kind;
+      contractSource = known.source || "공개 계약 보도 반영";
+    } else {
+    const primeAge = age >= 25 && age <= 33;
+    const nearFaOrVeteran = serviceYears >= 6;
+    const premiumSalary = annual >= 8;
+    const regularSalary = annual >= 3.5;
+    const prospectControl = age <= 25 && ratings.pot >= 78 && ratings.ovr >= 64 && rosterStatus === "ACTIVE";
+    const det = rating(`${row.teamId || ""}-${row.name || ""}-${age}-${annual}-contract-years`, 0, 99);
+    if (annual >= 18 || (ratings.ovr >= 84 && nearFaOrVeteran)) {
+      yearsLeft = 4 + (det % 2);
       kind = "FA/비FA 다년계약";
-    } else if (ratings.ovr >= 78 && serviceYears >= 4) {
+    } else if (premiumSalary && (ratings.ovr >= 78 || nearFaOrVeteran)) {
+      yearsLeft = 3 + (det % 2);
+      kind = nearFaOrVeteran ? "FA/비FA 다년계약" : "핵심전력 계약";
+    } else if ((regularSalary && (ratings.ovr >= 72 || nearFaOrVeteran || primeAge)) || (ratings.ovr >= 76 && serviceYears >= 3)) {
+      yearsLeft = 2 + (det % 2);
+      kind = ratings.ovr >= 76 ? "핵심전력 계약" : "비FA 다년계약";
+    } else if (prospectControl) {
       yearsLeft = 2;
-      kind = "핵심전력 계약";
+      kind = "유망주 장기보유";
+    }
     }
   }
   if (rosterStatus === "FARM" && annual < 1) kind = "퓨처스/최저연봉권";
@@ -363,7 +420,8 @@ function contractShape(row, detail, ratings, age, foreignPlayer, rosterStatus) {
     serviceYears,
     serviceDays: totalServiceDays,
     yearsLeft,
-    contractKind: kind
+    contractKind: kind,
+    contractSource
   };
 }
 
@@ -454,7 +512,7 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
       const ratings = base.type === "PIT"
         ? pitcherRatings(stat, { ...base, pos }, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer)
         : hitterRatings(stat, { ...base, pos }, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer);
-      const contract = contractShape({ type: base.type }, detail, ratings, age, foreignPlayer, rosterStatus);
+      const contract = contractShape({ type: base.type, teamId, name }, detail, ratings, age, foreignPlayer, rosterStatus);
       players.push({
         teamId,
         name: publicName,
@@ -469,6 +527,7 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
         serviceDays: contract.serviceDays,
         yearsLeft: contract.yearsLeft,
         contractKind: contract.contractKind,
+        contractSource: contract.contractSource,
         faGrade: ratings.ovr >= 78 ? "A" : ratings.ovr >= 70 ? "B" : "C",
         pitcherRole: finalPitcherRole,
         ...ratings,
@@ -493,7 +552,7 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
     rows.push(...active, ...farm);
     console.log(`${code} ${teamId}: active ${active.length}, farm ${farm.length}`);
   }
-  const header = ["teamId","name","jerseyNumber","pos","type","age","rosterStatus","annualSalary","signingBonus","serviceYears","serviceDays","yearsLeft","contractKind","faGrade","pitcherRole","ovr","pot","hit","pow","spd","def","arm","pit","form","stamina","foreignPlayer","source"];
+  const header = ["teamId","name","jerseyNumber","pos","type","age","rosterStatus","annualSalary","signingBonus","serviceYears","serviceDays","yearsLeft","contractKind","contractSource","faGrade","pitcherRole","ovr","pot","hit","pow","spd","def","arm","pit","form","stamina","foreignPlayer","source"];
   const text = [header.join(","), ...rows.map((row) => header.map((key) => csv(row[key])).join(","))].join("\n") + "\n";
   fs.writeFileSync(OUT, text, "utf8");
   console.log(`wrote ${rows.length} players to ${OUT}`);
