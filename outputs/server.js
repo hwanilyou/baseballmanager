@@ -587,10 +587,12 @@ function migrateState(state) {
       }
       if (!p.health) p.health = { status: "OK", injury: null, days: 0, rehab: 0 };
       if (p.type === "BAT" && p.stats) {
-        ["hr","rbi","avg","sb","h","r","pa","ab","obp","slg","bb","so"].forEach((key) => {
+        ["hr","rbi","avg","sb","h","r","pa","ab","obp","slg","bb","so","tb","hbp","sf"].forEach((key) => {
           if (!Number.isFinite(p.stats[key])) p.stats[key] = key === "avg" ? 0 : 0;
         });
         if (!p.stats.ab && p.stats.pa) p.stats.ab = Math.max(0, (Number(p.stats.pa) || 0) - (Number(p.stats.bb) || 0));
+        if (!p.stats.tb && p.stats.h) p.stats.tb = (Number(p.stats.h) || 0) + (Number(p.stats.hr) || 0) * 3;
+        updateRateStats(p);
       }
       if (p.type === "PIT" && p.stats) {
         ["era","win","loss","so","sv","hold","ip"].forEach((key) => {
@@ -869,7 +871,7 @@ function makePlayer(seed, i) {
     complaint: null,
     happy: rnd(58, 88),
     trait,
-    stats: isPitcher ? { era: 0, win: 0, loss: 0, so: 0, sv: 0, hold: 0, ip: 0 } : { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, ab: 0, obp: 0, slg: 0, bb: 0, so: 0 }
+    stats: isPitcher ? { era: 0, win: 0, loss: 0, so: 0, sv: 0, hold: 0, ip: 0 } : { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, ab: 0, obp: 0, slg: 0, bb: 0, so: 0, tb: 0, hbp: 0, sf: 0 }
   };
   player.serviceDays = player.serviceYears * KBO_SERVICE_DAYS_PER_YEAR + rnd(0, KBO_SERVICE_DAYS_PER_YEAR - 1);
   ensureServiceTime(player);
@@ -911,7 +913,7 @@ function ensureLeaguePlayers(state) {
     const team = state.teams?.find((t) => t.id === p.teamId) || teamTemplates.find((t) => t.id === p.teamId);
     if (team && !p.teamName) p.teamName = `${team.city} ${team.name}`;
     normalizeContractReality(p);
-    if (p.type === "BAT" && !p.stats) p.stats = { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, ab: 0, obp: 0, slg: 0, bb: 0, so: 0 };
+    if (p.type === "BAT" && !p.stats) p.stats = { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, ab: 0, obp: 0, slg: 0, bb: 0, so: 0, tb: 0, hbp: 0, sf: 0 };
     if (p.type === "PIT" && !p.stats) p.stats = { era: 0, win: 0, loss: 0, so: 0, sv: 0, hold: 0, ip: 0 };
     if (p.type === "PIT") ensurePitchingStats(p);
     ensurePositionData(p);
@@ -1682,7 +1684,7 @@ function finishBuntPlay(game) {
 
 function ensureBattingStats(player) {
   if (!player.stats) player.stats = {};
-  ["hr", "rbi", "avg", "sb", "h", "r", "pa", "ab", "obp", "slg", "bb", "so"].forEach((key) => {
+  ["hr", "rbi", "avg", "sb", "h", "r", "pa", "ab", "obp", "slg", "bb", "so", "tb", "hbp", "sf"].forEach((key) => {
     player.stats[key] = Number(player.stats[key]) || 0;
   });
   return player.stats;
@@ -1690,11 +1692,11 @@ function ensureBattingStats(player) {
 
 function updateRateStats(player) {
   const stats = ensureBattingStats(player);
-  const plateAppearances = Math.max(1, stats.pa || 0);
-  const atBats = Math.max(1, stats.ab || plateAppearances - (stats.bb || 0));
-  stats.avg = Math.min(0.5, Math.max(0, stats.h / atBats));
-  stats.obp = Math.min(0.58, Math.max(stats.avg, ((stats.h || 0) + (stats.bb || 0)) / plateAppearances));
-  stats.slg = Math.min(0.95, Math.max(stats.avg, stats.avg + (player.pow || 60) / 320 + (stats.hr || 0) / Math.max(40, atBats * 2)));
+  const atBats = Math.max(0, stats.ab || 0);
+  const obpDenominator = atBats + (stats.bb || 0) + (stats.hbp || 0) + (stats.sf || 0);
+  stats.avg = atBats > 0 ? (stats.h || 0) / atBats : 0;
+  stats.obp = obpDenominator > 0 ? ((stats.h || 0) + (stats.bb || 0) + (stats.hbp || 0)) / obpDenominator : 0;
+  stats.slg = atBats > 0 ? (stats.tb || stats.h || 0) / atBats : 0;
 }
 
 function recordPlateAppearance(player, result = {}) {
@@ -1704,8 +1706,11 @@ function recordPlateAppearance(player, result = {}) {
   stats.pa += 1;
   if (countsAtBat) stats.ab += 1;
   if (result.hitBases && !result.error) stats.h += 1;
+  if (result.hitBases && !result.error) stats.tb += Math.max(1, Number(result.hitBases) || 1);
   if (result.hitBases >= 4 && !result.error) stats.hr += 1;
   if (result.walk) stats.bb += 1;
+  if (result.hitByPitch) stats.hbp += 1;
+  if (result.sacFly) stats.sf += 1;
   if (result.strikeout) stats.so += 1;
   stats.rbi += Math.max(0, Number(result.rbi) || 0);
   stats.r += Math.max(0, Number(result.runs) || 0);
@@ -1988,7 +1993,7 @@ function resolveUserAtBat(state, tactic) {
         game.outs += 1;
         const great = rnd(1, 100) < fielding.greatChance;
         const sac = fielding.outType.includes("뜬공") ? trySacrificeFly(game, "user", 64) : { text: "" };
-        recordPlateAppearance(batter, { countsAtBat: !sac.scored, out: true, rbi: sac.scored ? 1 : 0 });
+        recordPlateAppearance(batter, { countsAtBat: !sac.scored, out: true, rbi: sac.scored ? 1 : 0, sacFly: Boolean(sac.scored) });
         text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${battedText}. ${great ? `${fielding.name} 호수비! ` : ""}${fielding.name} ${fielding.outType}${sac.scored ? " · 희생플라이" : ""}${sac.text}. ${game.outs}아웃`;
       }
       game.count = { balls: 0, strikes: 0 };
@@ -3141,10 +3146,8 @@ function simulateTeamPlayerStats(state, team) {
     p.stats.bb = (p.stats.bb || 0) + (Math.random() < Math.max(0.04, (p.hit || 60) / 1700) ? 1 : 0);
     p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round(pa * Math.max(0.12, 0.31 - (p.hit || 60) / 500)) + rnd(-1, 1));
     p.stats.ab = Math.max(p.stats.ab || 0, p.stats.pa - (p.stats.bb || 0));
-    const atBats = Math.max(1, p.stats.ab);
-    p.stats.avg = Math.min(0.39, Math.max(0.17, p.stats.h / atBats));
-    p.stats.obp = Math.min(0.48, Math.max(p.stats.avg, ((p.stats.h || 0) + (p.stats.bb || 0)) / Math.max(1, p.stats.pa)));
-    p.stats.slg = Math.min(0.7, Math.max(0.25, p.stats.avg + (p.pow || 60) / 290));
+    p.stats.tb = Math.max(p.stats.tb || 0, (p.stats.h || 0) + (p.stats.hr || 0) * 3);
+    updateRateStats(p);
   }
   if (starter) {
     const stats = ensurePitchingStats(starter);
@@ -3749,10 +3752,8 @@ function playGame(state) {
       p.stats.bb = (p.stats.bb || 0) + (Math.random() < Math.max(0.04, p.hit / 1700) ? 1 : 0);
       p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round(pa * Math.max(0.12, 0.31 - p.hit / 500)) + rnd(-1, 1));
       p.stats.ab = Math.max(p.stats.ab || 0, p.stats.pa - (p.stats.bb || 0));
-      const atBats = Math.max(1, p.stats.ab);
-      p.stats.avg = Math.min(0.38, Math.max(0.18, p.stats.h / atBats));
-      p.stats.obp = Math.min(0.46, Math.max(p.stats.avg, ((p.stats.h || 0) + (p.stats.bb || 0)) / Math.max(1, p.stats.pa)));
-      p.stats.slg = Math.min(0.68, Math.max(0.25, p.stats.avg + (p.pow / 260)));
+      p.stats.tb = Math.max(p.stats.tb || 0, (p.stats.h || 0) + (p.stats.hr || 0) * 3);
+      updateRateStats(p);
     } else {
       const pitches = pitcherUsage[p.id] || 0;
       if (!pitches) continue;
@@ -4361,7 +4362,7 @@ function signScout(state, index) {
     happy: rnd(62, 84),
     trait: `${s.league} 영입`,
     foreignPlayer: true,
-    stats: isPitcher ? { era: 0, win: 0, loss: 0, so: 0, sv: 0, hold: 0, ip: 0 } : { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, ab: 0, obp: 0, slg: 0, bb: 0, so: 0 }
+    stats: isPitcher ? { era: 0, win: 0, loss: 0, so: 0, sv: 0, hold: 0, ip: 0 } : { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, ab: 0, obp: 0, slg: 0, bb: 0, so: 0, tb: 0, hbp: 0, sf: 0 }
   });
   addNews(state, "신규 영입", `${s.name} 영입 완료. ${s.league} 스카우팅 라인이 첫 성과를 냈다.`, "이적");
   state.scout.splice(index, 1);

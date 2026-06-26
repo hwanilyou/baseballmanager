@@ -15,6 +15,7 @@
       --primaryText: #111111;
       --secondary: #1f2933;
       --secondaryText: #ffffff;
+      --secondaryButtonText: #1f2933;
       --gold: #d5a33c;
       --red: #bd3f3f;
       --blue: #316fa3;
@@ -56,10 +57,18 @@
     }
 
     button.primary { background: var(--primary); color: var(--primaryText); font-weight: 700; }
-    button.secondary { background: #fff; color: var(--secondary); border-color: var(--line); }
+    button.secondary { background: #fff; color: var(--secondaryButtonText); border-color: var(--line); }
     button.good { background: var(--green); }
     button.danger { background: var(--red); }
-    button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    button:disabled {
+      opacity: 1;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      background-image: none;
+      border-color: #d8dee8;
+      color: #566273;
+    }
     button.primary:disabled { color: var(--primaryText); }
 
     .app {
@@ -1747,6 +1756,15 @@
       return luminance > 0.48 ? "#111111" : "#ffffff";
     }
 
+    function colorIsTooLightForWhiteButton(hex) {
+      const clean = String(hex || "").replace("#", "");
+      if (!/^[0-9a-f]{6}$/i.test(clean)) return false;
+      const r = parseInt(clean.slice(0, 2), 16);
+      const g = parseInt(clean.slice(2, 4), 16);
+      const b = parseInt(clean.slice(4, 6), 16);
+      return (r * 299 + g * 587 + b * 114) / 1000 > 205;
+    }
+
     function isUserBatting(active) {
       return active?.isHome ? active?.half === "bottom" : active?.half === "top";
     }
@@ -2045,6 +2063,7 @@
       document.documentElement.style.setProperty("--secondary", state.selectedTeam.secondary);
       document.documentElement.style.setProperty("--primaryText", readableTextColor(state.selectedTeam.primary));
       document.documentElement.style.setProperty("--secondaryText", readableTextColor(state.selectedTeam.secondary));
+      document.documentElement.style.setProperty("--secondaryButtonText", colorIsTooLightForWhiteButton(state.selectedTeam.secondary) ? "#17202a" : state.selectedTeam.secondary);
     }
 
     function render() {
