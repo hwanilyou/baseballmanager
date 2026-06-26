@@ -400,6 +400,33 @@
     table { width: 100%; border-collapse: collapse; font-size: 13px; }
     th, td { padding: 9px 8px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
     th { color: var(--muted); font-size: 12px; background: #f4f7fb; position: sticky; top: 0; z-index: 1; }
+    .roster-table { min-width: 1060px; }
+    .sort-header {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      width: 100%;
+      min-height: 24px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-weight: 800;
+      text-align: left;
+      cursor: pointer;
+    }
+    .sort-header::after {
+      content: "↕";
+      color: #94a3b8;
+      font-size: 11px;
+      line-height: 1;
+    }
+    .sort-header.active { color: var(--ink); }
+    .sort-header.active::after {
+      content: attr(data-arrow);
+      color: var(--primary);
+    }
     tr.selected td { background: color-mix(in srgb, var(--primary) 14%, white); }
     #leaders table { table-layout: fixed; margin-bottom: 4px; }
     #leaders td:first-child { width: 42px; color: var(--muted); font-weight: 800; }
@@ -1259,8 +1286,20 @@
                 </select>
               </div>
               <div style="overflow:auto; max-height: 620px;">
-                <table>
-                  <thead><tr><th>선수</th><th>나이</th><th>포지션</th><th>현재</th><th>잠재</th><th>컨디션</th><th>내구성</th><th>소속</th><th>계약</th></tr></thead>
+                <table class="roster-table">
+                  <thead><tr>
+                    <th><button class="sort-header" data-sort="name">선수</button></th>
+                    <th><button class="sort-header" data-sort="age">나이</button></th>
+                    <th><button class="sort-header" data-sort="pos">포지션</button></th>
+                    <th><button class="sort-header" data-sort="throwHand">투구손</button></th>
+                    <th><button class="sort-header" data-sort="batHand">타격손</button></th>
+                    <th><button class="sort-header" data-sort="ovr">현재</button></th>
+                    <th><button class="sort-header" data-sort="pot">잠재</button></th>
+                    <th><button class="sort-header" data-sort="form">컨디션</button></th>
+                    <th><button class="sort-header" data-sort="durability">내구성</button></th>
+                    <th><button class="sort-header" data-sort="status">소속</button></th>
+                    <th><button class="sort-header" data-sort="contract">계약</button></th>
+                  </tr></thead>
                   <tbody id="rosterBody"></tbody>
                 </table>
               </div>
@@ -1797,6 +1836,11 @@
         positionLabelForPlayer(p),
         p.pitcherRole,
         pitcherRoleLabel(p.pitcherRole),
+        p.type === "PIT" ? pitcherHandLabel(p) : "",
+        p.type === "BAT" ? batterHandLabel(p) : "",
+        p.batsThrows,
+        p.throwHand,
+        p.batHand,
         rosterStatusLabel(p.rosterStatus),
         p.teamName,
         p.trait,
@@ -1823,7 +1867,13 @@
       return statusOk && typeOk;
     }
 
-    function rosterSort(a, b) {
+    const rosterSortState = { key: "default", dir: "asc" };
+    const rosterNumericSorts = new Set(["age", "ovr", "pot", "form", "durability"]);
+    const rosterPositionOrder = ["SP", "RP", "CP", "C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
+    const rosterHandOrder = { "좌완": 0, "우완": 1, "양손": 2, "좌타": 0, "우타": 1, "양타": 2, "-": 9 };
+    const rosterStatusOrder = { ACTIVE: 0, FARM: 1, DEV: 2 };
+
+    function rosterDefaultSort(a, b) {
       const starterRank = (p) => p.type === "PIT" && (p.pitcherRole === "SP" || p.pos === "SP") ? 0 : 1;
       const statusRank = (p) => p.rosterStatus === "ACTIVE" ? 0 : p.rosterStatus === "FARM" ? 1 : 2;
       const typeRank = (p) => p.type === "PIT" ? 0 : 1;
@@ -1833,6 +1883,39 @@
         || (Number(b.ovr) || 0) - (Number(a.ovr) || 0)
         || (Number(b.pot) || 0) - (Number(a.pot) || 0)
         || String(a.name || "").localeCompare(String(b.name || ""), "ko");
+    }
+
+    function rosterPositionRank(p) {
+      const role = p.type === "PIT" ? (p.pitcherRole === "SP" ? "SP" : "RP") : p.pos;
+      const idx = rosterPositionOrder.indexOf(role);
+      return idx >= 0 ? idx : rosterPositionOrder.length;
+    }
+
+    function rosterSortValue(p, key) {
+      if (key === "name") return playerName(p);
+      if (key === "age") return Number(p.age) || 0;
+      if (key === "pos") return rosterPositionRank(p);
+      if (key === "throwHand") return rosterHandOrder[rosterThrowLabel(p)] ?? 9;
+      if (key === "batHand") return rosterHandOrder[rosterBatLabel(p)] ?? 9;
+      if (key === "ovr") return Number(p.ovr) || 0;
+      if (key === "pot") return Number(p.pot) || 0;
+      if (key === "form") return Number(p.form) || 0;
+      if (key === "durability") return Number(p.durability) || 0;
+      if (key === "status") return rosterStatusOrder[p.rosterStatus] ?? 9;
+      if (key === "contract") return Number(p.contract?.annual || p.salary || 0);
+      return 0;
+    }
+
+    function rosterSort(a, b) {
+      if (rosterSortState.key === "default") return rosterDefaultSort(a, b);
+      const key = rosterSortState.key;
+      const av = rosterSortValue(a, key);
+      const bv = rosterSortValue(b, key);
+      const direction = rosterSortState.dir === "desc" ? -1 : 1;
+      const compared = typeof av === "number" && typeof bv === "number"
+        ? av - bv
+        : String(av).localeCompare(String(bv), "ko");
+      return compared * direction || rosterDefaultSort(a, b);
     }
 
     function playerIconLevel(p) {
@@ -1941,6 +2024,18 @@
     function handTag(label, p) {
       const side = label.includes("좌") ? "left" : label.includes("양") ? "switch" : "right";
       return `<span class="hand-tag ${side}">${label}</span>`;
+    }
+
+    function rosterThrowLabel(p) {
+      return p?.type === "PIT" || p?.throwHand || String(p?.batsThrows || "").includes("투") ? pitcherHandLabel(p) : "-";
+    }
+
+    function rosterBatLabel(p) {
+      return p?.type === "BAT" || p?.batHand || String(p?.batsThrows || "").includes("타") ? batterHandLabel(p) : "-";
+    }
+
+    function rosterHandCell(label) {
+      return label === "-" ? `<span class="small">-</span>` : handTag(label);
     }
 
     function lineupPlayerOptions(hitters, selectedId, selectedIds, slot) {
@@ -2599,11 +2694,14 @@
         playerMatchesFilters(p, filter, typeFilter)
         && playerMatchesSearch(p, query)
       ).sort(rosterSort);
+      updateRosterSortHeaders();
       $("rosterBody").innerHTML = players.map((p) => `
         <tr class="${p.id === state.selectedId ? "selected" : ""}" data-player="${p.id}">
           <td><div class="name-cell"><strong>${playerName(p)}</strong><span class="small">${p.type === "PIT" ? pitcherHandLabel(p) : batterHandLabel(p)}${p.trait ? ` · ${p.trait}` : ""}</span></div></td>
           <td>${p.age}</td>
           <td><span class="badge">${p.pos}</span></td>
+          <td>${rosterHandCell(rosterThrowLabel(p))}</td>
+          <td>${rosterHandCell(rosterBatLabel(p))}</td>
           <td>${p.ovr}</td>
           <td>${p.pot}</td>
           <td><div class="bar" title="${Math.round(p.form)}"><i style="--w:${pct(p.form)}"></i></div></td>
@@ -2695,6 +2793,25 @@
         <div class="metric"><strong>FA 보상</strong><span>${state.rules?.compensation || "등급제 적용"} · 등록일수 145일=1시즌</span></div>
         <div class="metric"><strong>육성 규칙</strong><span>정식 전환 전 1군 등록 불가</span></div>
       `;
+    }
+
+    function setRosterSort(key) {
+      if (!key) return;
+      if (rosterSortState.key === key) {
+        rosterSortState.dir = rosterSortState.dir === "asc" ? "desc" : "asc";
+      } else {
+        rosterSortState.key = key;
+        rosterSortState.dir = rosterNumericSorts.has(key) || key === "contract" ? "desc" : "asc";
+      }
+      renderRoster();
+    }
+
+    function updateRosterSortHeaders() {
+      document.querySelectorAll("#roster .sort-header").forEach((button) => {
+        const active = button.dataset.sort === rosterSortState.key;
+        button.classList.toggle("active", active);
+        button.dataset.arrow = rosterSortState.dir === "asc" ? "▲" : "▼";
+      });
     }
 
     function stopPlayerDetailPropagation() {
@@ -3150,6 +3267,10 @@
     $("rosterFilter").addEventListener("change", renderRoster);
     $("rosterTypeFilter").addEventListener("change", renderRoster);
     $("rosterSearch").addEventListener("input", renderRoster);
+    document.querySelector("#roster table thead").addEventListener("click", (event) => {
+      const button = event.target.closest(".sort-header");
+      if (button) setRosterSort(button.dataset.sort);
+    });
     $("trainingSearch").addEventListener("input", renderTraining);
     $("trainingStatusFilter").addEventListener("change", renderTraining);
     $("trainingTypeFilter").addEventListener("change", renderTraining);
