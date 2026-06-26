@@ -598,6 +598,7 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
         teamId,
         name: publicName,
         jerseyNumber,
+        batsThrows: hand,
         pos,
         type: base.type,
         age,
@@ -637,7 +638,7 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
     rows.push(...active, ...farm);
     console.log(`${code} ${teamId}: active ${active.length}, farm ${farm.length}`);
   }
-  const header = ["teamId","name","jerseyNumber","pos","type","age","rosterStatus","annualSalary","signingBonus","serviceYears","serviceDays","yearsLeft","contractKind","contractSource","controlYears","controlKind","faGrade","pitcherRole","ovr","pot","hit","pow","spd","def","arm","pit","form","stamina","durability","trait","foreignPlayer","source"];
+  const header = ["teamId","name","jerseyNumber","batsThrows","pos","type","age","rosterStatus","annualSalary","signingBonus","serviceYears","serviceDays","yearsLeft","contractKind","contractSource","controlYears","controlKind","faGrade","pitcherRole","ovr","pot","hit","pow","spd","def","arm","pit","form","stamina","durability","trait","foreignPlayer","source"];
   const text = [header.join(","), ...rows.map((row) => header.map((key) => csv(row[key])).join(","))].join("\n") + "\n";
   fs.writeFileSync(OUT, text, "utf8");
   console.log(`wrote ${rows.length} players to ${OUT}`);

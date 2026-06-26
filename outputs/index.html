@@ -1869,28 +1869,33 @@
     }
 
     function handSide(p) {
-      const hand = String(p?.hand || "").trim().toUpperCase();
-      if (hand.includes("좌") || hand === "L") return "left";
+      const hand = String(p?.hand || p?.batHand || p?.throwHand || "").trim().toUpperCase();
       if (hand.includes("양") || hand === "S") return "switch";
+      if (hand.includes("좌") || hand === "L") return "left";
       return "right";
     }
 
     function batterHandLabel(p) {
-      const side = handSide(p);
+      const raw = String(p?.batsThrows || p?.hand || "").trim();
+      const bat = p?.batHand || raw.match(/([좌우양])\s*타/)?.[1] || "";
+      const side = bat === "좌" ? "left" : bat === "양" ? "switch" : bat === "우" ? "right" : handSide(p);
       if (side === "left") return "좌타";
       if (side === "switch") return "양타";
       return "우타";
     }
 
     function pitcherHandLabel(p) {
-      const side = handSide(p);
+      const raw = String(p?.batsThrows || p?.hand || "").trim();
+      const throwing = p?.throwHand || raw.match(/([좌우양])\s*투/)?.[1] || "";
+      const side = throwing === "좌" ? "left" : throwing === "양" ? "switch" : throwing === "우" ? "right" : handSide(p);
       if (side === "left") return "좌완";
       if (side === "switch") return "양손";
       return "우완";
     }
 
     function handTag(label, p) {
-      return `<span class="hand-tag ${handSide(p)}">${label}</span>`;
+      const side = label.includes("좌") ? "left" : label.includes("양") ? "switch" : "right";
+      return `<span class="hand-tag ${side}">${label}</span>`;
     }
 
     function lineupPlayerOptions(hitters, selectedId, selectedIds, slot) {

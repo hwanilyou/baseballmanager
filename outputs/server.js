@@ -680,6 +680,30 @@ function clampValue(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
+function parseBatsThrows(value, type) {
+  const raw = String(value || "").trim();
+  const throwMatch = raw.match(/([좌우양])\s*투/);
+  const batMatch = raw.match(/([좌우양])\s*타/);
+  const throwHand = throwMatch ? throwMatch[1] : raw.includes("좌완") ? "좌" : raw.includes("우완") ? "우" : raw === "L" ? "좌" : raw === "R" ? "우" : "";
+  const batHand = batMatch ? batMatch[1] : raw.includes("좌타") ? "좌" : raw.includes("우타") ? "우" : raw.includes("양타") ? "양" : "";
+  return {
+    batsThrows: raw,
+    throwHand: throwHand || (type === "PIT" ? "" : "우"),
+    batHand: batHand || (type === "PIT" ? "" : throwHand || "우"),
+    hand: type === "PIT" ? (throwHand || "우") : (batHand || throwHand || "우")
+  };
+}
+
+function applyBatsThrows(player, value) {
+  if (!player || !value) return player;
+  const parsed = parseBatsThrows(value, player.type);
+  player.batsThrows = parsed.batsThrows;
+  if (parsed.throwHand) player.throwHand = parsed.throwHand;
+  if (parsed.batHand) player.batHand = parsed.batHand;
+  player.hand = parsed.hand;
+  return player;
+}
+
 function weightedChoice(entries) {
   const total = entries.reduce((sum, entry) => sum + Math.max(0, entry.weight), 0);
   let roll = Math.random() * Math.max(1, total);
@@ -3246,6 +3270,8 @@ function refreshTradeTargets(state, silent = false) {
         const ovr = Number(row[idx("ovr")]) || rnd(52, 76);
         const pot = Number(row[idx("pot")]) || Math.max(ovr, rnd(65, 88));
         const p = makePlayer([name, pos, type, age, ovr, pot, ""], cards.length);
+        const handValue = idx("batsThrows") >= 0 ? row[idx("batsThrows")] : idx("hand") >= 0 ? row[idx("hand")] : "";
+        applyBatsThrows(p, handValue);
         p.id = idBase + cards.length + 1;
         p.teamId = rowTeamId;
         p.teamName = `${team.city} ${team.name}`;
@@ -4747,6 +4773,8 @@ function importPlayersFromCsv(state, csv, source) {
     const pot = Number(row[idx("pot")]) || Math.max(ovr, rnd(65, 88));
     const seed = [name, pos, type, age, ovr, pot, row[idx("trait")] || ""];
     const p = makePlayer(seed, nextId - 1);
+    const handValue = idx("batsThrows") >= 0 ? row[idx("batsThrows")] : idx("hand") >= 0 ? row[idx("hand")] : "";
+    applyBatsThrows(p, handValue);
     p.id = isTargetTeam ? nextId++ : nextLeagueId++;
     p.teamId = rowTeamId || targetTeamId;
     const importedTeam = teamTemplates.find((t) => t.id === p.teamId);
