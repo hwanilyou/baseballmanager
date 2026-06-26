@@ -1050,6 +1050,7 @@
       </div>
       <div class="season-strip">
         <div class="pill user-box">👤 <span id="userLabel">-</span><button class="secondary" id="logoutBtn">로그아웃</button></div>
+        <div class="pill">접속 <span id="onlineCount">1</span>명</div>
         <div class="pill">📅 <span id="dateLabel">-</span></div>
         <div class="pill">💰 <span id="budgetLabel">-</span></div>
         <div class="pill">🎯 <span id="ownerGoal">목표 플레이오프</span></div>
@@ -1130,6 +1131,7 @@
               <div class="toolbar">
                 <h2 style="margin-right:auto;">라인업</h2>
                 <button class="secondary" id="resetManualGame">라인업 다시 짜기</button>
+                <button class="secondary" id="startSkipGame">라인업 제출 후 경기 스킵</button>
                 <button class="primary" id="startManualGame">라인업 제출</button>
               </div>
               <div id="opponentStarterBox"></div>
@@ -1216,6 +1218,7 @@
                 <span class="help-tip" tabindex="0" data-tip="도루는 베이스 옆 도루 버튼으로 먼저 대기시킨 뒤 타격 지시나 다음 플레이를 누르면 함께 판정됩니다. 견제는 수비 때 주자를 묶거나 낮은 확률로 견제사를 노리는 지시입니다.">?</span>
                 <button id="cmdPickoff" class="secondary">견제</button>
                 <button id="cmdSkipHalf" class="secondary">이닝 스킵</button>
+                <button id="cmdSkipGame" class="secondary">경기 스킵</button>
                 <button id="cmdDefense" class="good">다음 플레이</button>
               </div>
             </section>
@@ -1513,6 +1516,7 @@
     let teams = [];
     let currentUser = null;
     let boardPosts = [];
+    let onlineCount = 1;
 
     const $ = (id) => document.getElementById(id);
     const pct = (v) => `${Math.max(0, Math.min(100, Math.round(v)))}%`;
@@ -1567,8 +1571,17 @@
       return res.json();
     };
 
+    function updateOnlineCount(value) {
+      const count = Number(value);
+      if (!Number.isFinite(count) || count < 1) return;
+      onlineCount = Math.round(count);
+      const el = $("onlineCount");
+      if (el) el.textContent = String(onlineCount);
+    }
+
     async function init() {
       const auth = await api("/api/auth/me");
+      updateOnlineCount(auth.onlineCount);
       if (!auth.authenticated) {
         currentUser = null;
         teams = (await api("/api/meta")).teams;
@@ -1580,6 +1593,7 @@
       currentUser = auth.user;
       $("authSelect").classList.remove("active");
       const data = await api("/api/state");
+      updateOnlineCount(data.onlineCount);
       teams = data.teams;
       currentUser = data.user || currentUser;
       $("userLabel").textContent = currentUser?.username || "-";
@@ -1599,6 +1613,7 @@
         const username = $("authUsername").value.trim();
         const password = $("authPassword").value;
         const data = await api(`/api/auth/${mode}`, { username, password });
+        updateOnlineCount(data.onlineCount);
         currentUser = data.user;
         $("userLabel").textContent = currentUser.username;
         $("authSelect").classList.remove("active");
@@ -1658,6 +1673,7 @@
 
     async function newGame(teamId) {
       state = await api("/api/new-game", { teamId });
+      updateOnlineCount(state.onlineCount);
       $("teamSelect").classList.remove("active");
       $("authSelect").classList.remove("active");
       render();
@@ -1668,6 +1684,7 @@
       const previousNewsId = state?.news?.[0]?.id || `${state?.news?.[0]?.day || ""}-${state?.news?.[0]?.title || ""}-${state?.news?.[0]?.body || ""}`;
       const previousNewsCount = state?.news?.length || 0;
       state = await api(path, body || {});
+      updateOnlineCount(state.onlineCount);
       if (requestedSelectedId && state?.players?.some((p) => p.id === requestedSelectedId)) {
         state.selectedId = requestedSelectedId;
       }
@@ -2273,6 +2290,7 @@
 
       const canManage = active && !active.complete;
       $("startManualGame").disabled = active && !active.complete;
+      $("startSkipGame").disabled = active && !active.complete;
       $("resetManualGame").disabled = !canManage;
       $("cmdSwing").disabled = !canManage || !isUserBatting(active);
       $("swingTypeSelect").disabled = !canManage || !isUserBatting(active);
@@ -2286,6 +2304,7 @@
       $("pickoffBaseSelect").disabled = !canPickoff;
       $("cmdPickoff").disabled = !canPickoff;
       $("cmdSkipHalf").disabled = !canManage;
+      $("cmdSkipGame").disabled = !canManage;
       $("cmdDefense").disabled = !canManage;
     }
 
@@ -2420,6 +2439,19 @@
       }
       const lineup = selectedLineup();
       await mutate("/api/game/start", { lineup, lineupPositions: positions, starterId: selectedStarter() });
+    }
+
+    async function startAndSkipGame() {
+      const rawLineup = [...document.querySelectorAll(".lineupSelect")].map((select) => Number(select.value));
+      const positions = selectedLineupPositions();
+      const lineupError = validateManualLineup(rawLineup, positions);
+      if (lineupError) {
+        showToast(lineupError);
+        return;
+      }
+      const lineup = selectedLineup();
+      await mutate("/api/game/start", { lineup, lineupPositions: positions, starterId: selectedStarter() });
+      await mutate("/api/game/skip-game");
     }
 
     async function commandAtBat(tactic) {
@@ -3083,6 +3115,7 @@
 
     $("playGame").addEventListener("click", () => openView("game"));
     $("startManualGame").addEventListener("click", startManualGame);
+    $("startSkipGame").addEventListener("click", startAndSkipGame);
     $("resetManualGame").addEventListener("click", () => mutate("/api/game/reset"));
     $("cmdSwing").addEventListener("click", () => commandAtBat($("swingTypeSelect").value || "swing"));
     $("cmdBunt").addEventListener("click", () => commandAtBat($("buntTypeSelect").value));
@@ -3092,6 +3125,7 @@
     });
     $("cmdPickoff").addEventListener("click", commandPickoff);
     $("cmdSkipHalf").addEventListener("click", () => mutate("/api/game/skip-half"));
+    $("cmdSkipGame").addEventListener("click", () => mutate("/api/game/skip-game"));
     $("cmdDefense").addEventListener("click", runDefense);
     $("autoTrain").addEventListener("click", autoTrain);
     $("rosterFilter").addEventListener("change", renderRoster);

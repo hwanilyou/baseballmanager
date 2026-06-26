@@ -15,6 +15,8 @@ const HAND_DATA_VERSION = "2026-06-26-bats-throws";
 const DRAFT_DAY = 120;
 const DRAFT_ROUNDS = 11;
 const HS_DRAFT_POOL_SIZE = 60;
+const ACTIVE_VISITOR_WINDOW_MS = 2 * 60 * 1000;
+const activeVisitors = new Map();
 
 fs.mkdirSync(SAVES_DIR, { recursive: true });
 
@@ -201,6 +203,22 @@ function sessionUser(req) {
   const users = readUsers();
   const userId = users.sessions?.[token];
   return users.accounts.find((account) => account.id === userId) || null;
+}
+
+function visitorKey(req, user) {
+  if (user?.id) return `user:${user.id}`;
+  const ip = String(req.headers["x-forwarded-for"] || req.socket.remoteAddress || "").split(",")[0].trim();
+  const agent = String(req.headers["user-agent"] || "").slice(0, 80);
+  return `anon:${ip}:${agent}`;
+}
+
+function touchVisitor(req, user) {
+  const now = Date.now();
+  activeVisitors.set(visitorKey(req, user), now);
+  for (const [key, seenAt] of activeVisitors) {
+    if (now - seenAt > ACTIVE_VISITOR_WINDOW_MS) activeVisitors.delete(key);
+  }
+  return activeVisitors.size;
 }
 
 function setSessionCookie(res, token) {
@@ -2640,6 +2658,32 @@ function skipCurrentHalfInning(state) {
   return state;
 }
 
+function skipFullGame(state) {
+  const game = state.activeGame;
+  if (!game || game.complete) return state;
+  game.pendingSteal = null;
+  game.tactic = "swing";
+  game.runnerTactic = game.runnerTactic || "normal";
+  game.log.unshift("경기 전체 자동 진행 시작. 라인업과 선발은 그대로 두고 감독 개입 없이 시뮬레이션합니다.");
+  let guard = 0;
+  while (!game.complete && guard < 36) {
+    const before = `${game.inning}-${game.half}-${game.outs}-${game.lineupIndex}-${game.opponentLineupIndex}-${game.score.user}-${game.score.opp}`;
+    skipCurrentHalfInning(state);
+    guard += 1;
+    const after = `${game.inning}-${game.half}-${game.outs}-${game.lineupIndex}-${game.opponentLineupIndex}-${game.score.user}-${game.score.opp}`;
+    if (!game.complete && before === after) {
+      advanceOnePlay(state);
+      guard += 1;
+    }
+  }
+  if (game.complete) {
+    game.log.unshift("경기 전체 자동 진행 완료.");
+  } else {
+    game.log.unshift("경기 자동 진행이 길어져서 중단했습니다. 다음 플레이나 경기 스킵을 다시 눌러 이어갈 수 있습니다.");
+  }
+  return state;
+}
+
 function changePitcher(state, inId) {
   const game = state.activeGame;
   if (!game || game.complete) return state;
@@ -4954,7 +4998,8 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === "GET" && url.pathname === "/api/auth/me") {
     const user = sessionUser(req);
-    sendJson(res, 200, { authenticated: Boolean(user), user: user ? { id: user.id, username: user.username } : null });
+    const onlineCount = touchVisitor(req, user);
+    sendJson(res, 200, { authenticated: Boolean(user), user: user ? { id: user.id, username: user.username } : null, onlineCount });
     return;
   }
 
@@ -4989,12 +5034,15 @@ const server = http.createServer(async (req, res) => {
     users.sessions[token] = account.id;
     writeUsers(users);
     setSessionCookie(res, token);
-    sendJson(res, 200, { user: { id: account.id, username: account.username } });
+    const onlineCount = touchVisitor(req, account);
+    sendJson(res, 200, { user: { id: account.id, username: account.username }, onlineCount });
     return;
   }
 
   if (req.method === "POST" && url.pathname === "/api/auth/logout") {
     const token = parseCookies(req).bm_session;
+    const user = sessionUser(req);
+    if (user?.id) activeVisitors.delete(`user:${user.id}`);
     if (token) {
       const users = readUsers();
       delete users.sessions[token];
@@ -5015,7 +5063,8 @@ const server = http.createServer(async (req, res) => {
     const state = readState(user);
     const visibleState = state ? publicState(state) : null;
     if (state) saveState(state, user);
-    sendJson(res, 200, { hasSave: Boolean(state), state: visibleState, teams: teamTemplates, user: { id: user.id, username: user.username } });
+    const onlineCount = touchVisitor(req, user);
+    sendJson(res, 200, { hasSave: Boolean(state), state: visibleState, teams: teamTemplates, user: { id: user.id, username: user.username }, onlineCount });
     return;
   }
 
@@ -5041,7 +5090,7 @@ const server = http.createServer(async (req, res) => {
     state = createState(body.teamId);
     await syncExternalPlayerData(state);
     saveState(state, user);
-    sendJson(res, 200, publicState(state));
+    sendJson(res, 200, { ...publicState(state), onlineCount: touchVisitor(req, user) });
     return;
   }
 
@@ -5053,6 +5102,7 @@ const server = http.createServer(async (req, res) => {
     "/api/game/reset": () => resetActiveGame(state),
     "/api/game/next": () => advanceOnePlay(state),
     "/api/game/skip-half": () => skipCurrentHalfInning(state),
+    "/api/game/skip-game": () => skipFullGame(state),
     "/api/game/tactic": () => setGameTactic(state, body.tactic || "swing"),
     "/api/game/runner-tactic": () => setRunnerTactic(state, body.tactic || "normal"),
     "/api/game/steal": () => commandSteal(state, body.steal),
@@ -5095,7 +5145,7 @@ const server = http.createServer(async (req, res) => {
   if (req.method === "POST" && routes[url.pathname]) {
     await routes[url.pathname]();
     saveState(state, user);
-    sendJson(res, 200, publicState(state));
+    sendJson(res, 200, { ...publicState(state), onlineCount: touchVisitor(req, user) });
     return;
   }
 
