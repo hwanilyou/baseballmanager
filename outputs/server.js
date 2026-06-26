@@ -11,6 +11,7 @@ const SAVES_DIR = path.join(ROOT, "saves");
 const BOARD_PATH = path.join(ROOT, "board.json");
 const DATA_IMPORT_PATH = path.join(ROOT, "data", "kbo_players.csv");
 const DATA_SOURCE_URL_PATH = path.join(ROOT, "data", "source-url.txt");
+const HAND_DATA_VERSION = "2026-06-26-bats-throws";
 const DRAFT_DAY = 120;
 const DRAFT_ROUNDS = 11;
 const HS_DRAFT_POOL_SIZE = 60;
@@ -3560,7 +3561,52 @@ function teamStatRows(state) {
   });
 }
 
+function enrichHandsFromCsv(state) {
+  if (!state || state.handDataVersion === HAND_DATA_VERSION || !fs.existsSync(DATA_IMPORT_PATH)) return state;
+  const rows = parseCsv(fs.readFileSync(DATA_IMPORT_PATH, "utf8"));
+  if (rows.length < 2) return state;
+  const headers = rows[0].map((h) => h.trim());
+  const idx = (name) => headers.indexOf(name);
+  const teamIdIndex = idx("teamId");
+  const jerseyIndex = idx("jerseyNumber");
+  const nameIndex = idx("name");
+  const handIndex = idx("batsThrows") >= 0 ? idx("batsThrows") : idx("hand");
+  if (teamIdIndex < 0 || handIndex < 0) return state;
+
+  const byTeamJersey = new Map();
+  const byTeamName = new Map();
+  rows.slice(1).forEach((row) => {
+    const teamId = row[teamIdIndex];
+    const hand = row[handIndex];
+    const jersey = jerseyIndex >= 0 ? Number(row[jerseyIndex]) : 0;
+    const name = nameIndex >= 0 ? row[nameIndex] : "";
+    if (!teamId || !hand) return;
+    if (Number.isFinite(jersey) && jersey > 0) byTeamJersey.set(`${teamId}:${jersey}`, hand);
+    if (name) byTeamName.set(`${teamId}:${name}`, hand);
+  });
+
+  let changed = false;
+  const applyTo = (players = []) => {
+    players.forEach((player) => {
+      if (!player || player.batsThrows) return;
+      const teamId = player.teamId || state.selectedTeamId;
+      const jersey = Number(player.jerseyNumber);
+      const hand = byTeamJersey.get(`${teamId}:${jersey}`) || byTeamName.get(`${teamId}:${player.name}`);
+      if (!hand) return;
+      applyBatsThrows(player, hand);
+      changed = true;
+    });
+  };
+  applyTo(state.players);
+  applyTo(state.leaguePlayers);
+  applyTo(state.tradeTargets);
+  state.handDataVersion = HAND_DATA_VERSION;
+  if (changed) saveState(state);
+  return state;
+}
+
 function publicState(state) {
+  enrichHandsFromCsv(state);
   ensureActiveGameDetails(state);
   ensureLeaguePlayers(state);
   backfillStandingsGames(state);
