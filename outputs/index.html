@@ -1394,6 +1394,15 @@
                   <option value="SS">내야</option>
                   <option value="CF">외야</option>
                 </select>
+                <select id="devBatsThrows">
+                  <option value="우투우타">우투우타</option>
+                  <option value="우투좌타">우투좌타</option>
+                  <option value="좌투좌타">좌투좌타</option>
+                  <option value="좌투우타">좌투우타</option>
+                  <option value="우투양타">우투양타</option>
+                  <option value="우언우타">우언우타</option>
+                  <option value="우언좌타">우언좌타</option>
+                </select>
                 <button id="createDev" class="primary">육성선수 등록</button>
               </div>
               <div class="small" id="devCreateStatus"></div>
@@ -1683,6 +1692,7 @@
       state = await api("/api/player/create-dev", {
         name: $("devName").value,
         pos: $("devPos").value,
+        batsThrows: $("devBatsThrows").value,
         age: $("devAge").value,
         ovr: $("devOvr").value,
         pot: $("devPot").value,

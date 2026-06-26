@@ -4379,6 +4379,7 @@ function createDevelopmentPlayer(state, body) {
   const pot = Math.max(ovr, clamp(body.pot, 45, 95, rnd(Math.max(62, ovr + 10), 86)));
   const age = clamp(body.age, 16, 45, rnd(18, 23));
   const p = makePlayer([name, pos, isPitcher ? "PIT" : "BAT", age, ovr, pot, "육성선수"], id - 1);
+  applyBatsThrows(p, body.batsThrows || "우투우타");
   p.id = id;
   p.hit = clamp(body.hit, 20, 90, p.hit);
   p.pow = clamp(body.pow, 20, 90, p.pow);
