@@ -24,9 +24,10 @@ const KNOWN_CONTRACTS = {
   "daejeon-orange-eagles::류현진": { yearsLeft: 6, kind: "실계약 8년 170억", total: 170, source: "2024 FA 복귀 계약" },
   "daejeon-orange-eagles::채은성": { yearsLeft: 3, kind: "실계약 6년 90억", total: 90, source: "2023 FA 계약" },
   "daejeon-orange-eagles::안치홍": { yearsLeft: 4, kind: "실계약 4+2년 72억", total: 72, source: "2024 FA 계약" },
-  "daejeon-orange-eagles::엄상백": { yearsLeft: 3, kind: "실계약 4년 78억", total: 78, source: "2025 FA 계약" },
+  "daejeon-orange-eagles::엄상백": { yearsLeft: 3, kind: "실계약 4년 78억", total: 78, contractYears: 4, startYear: 2025, endYear: 2028, source: "2025 FA 계약" },
   "daejeon-orange-eagles::심우준": { yearsLeft: 3, kind: "실계약 4년 50억", total: 50, source: "2025 FA 계약" },
-  "daejeon-orange-eagles::노시환": { yearsLeft: 1, kind: "연봉계약", source: "공개 다년계약 미확인" },
+  "daejeon-orange-eagles::노시환": { yearsLeft: 10, kind: "비FA 다년계약", total: 307, contractYears: 11, startYear: 2026, endYear: 2036, guaranteed: 307, note: "사용자 검수 데이터", source: "사용자 검수 계약 데이터" },
+  "daejeon-orange-eagles::강백호": { yearsLeft: 4, kind: "FA 계약", total: 100, contractYears: 4, startYear: 2026, endYear: 2029, note: "사용자 검수 데이터", source: "사용자 검수 계약 데이터", signedTeam: "daejeon-orange-eagles" },
 
   "seoul-twin-stars::오지환": { yearsLeft: 4, kind: "실계약 6년 124억", total: 124, source: "2024 비FA 다년계약" },
   "seoul-twin-stars::김현수": { yearsLeft: 2, kind: "실계약 4+2년 115억", total: 115, source: "2022 FA 계약" },
@@ -73,8 +74,18 @@ const KNOWN_CONTRACTS = {
   "gocheok-heroes::최주환": { yearsLeft: 1, kind: "실계약 4년 42억", total: 42, source: "2021 FA 계약" }
 };
 
+const KNOWN_INJURIES = {
+  // 장기 부상/시즌아웃 데이터는 source를 붙여 검증 가능한 항목만 단계적으로 채운다.
+  "daejeon-orange-eagles::문동주": { injuryStatus: "INJURED", injuryName: "시즌아웃", injuryDays: 999, rehab: 0, returnSeasonYear: 2, returnDay: 1, injurySource: "사용자 검수 부상 데이터" },
+  "daejeon-orange-eagles::엄상백": { injuryStatus: "INJURED", injuryName: "시즌아웃", injuryDays: 999, rehab: 0, returnSeasonYear: 2, returnDay: 1, injurySource: "사용자 검수 부상 데이터" }
+};
+
 function knownContractFor(teamId, name) {
   return KNOWN_CONTRACTS[`${teamId}::${name}`] || null;
+}
+
+function knownInjuryFor(teamId, name) {
+  return KNOWN_INJURIES[`${teamId}::${name}`] || null;
 }
 
 const roleByKind = {
@@ -471,6 +482,14 @@ function contractShape(row, detail, ratings, age, foreignPlayer, rosterStatus) {
   let yearsLeft = 1;
   let kind = foreignPlayer ? "외국인 단년계약" : "연봉계약";
   let contractSource = realAnnual ? "공시 연봉 · 서비스타임 반영" : "추정 연봉 · 서비스타임 반영";
+  let contractTotal = "";
+  let contractYears = "";
+  let contractStartYear = "";
+  let contractEndYear = "";
+  let guaranteedMoney = "";
+  let optionMoney = "";
+  let contractNote = "";
+  let signedTeam = "";
   if (foreignPlayer) {
     contractSource = realAnnual ? "공시 연봉 · 외국인 단년계약" : "외국인 단년계약 추정";
   } else {
@@ -479,6 +498,14 @@ function contractShape(row, detail, ratings, age, foreignPlayer, rosterStatus) {
       yearsLeft = known.yearsLeft;
       kind = known.kind;
       contractSource = known.source || "공개 계약 보도 반영";
+      contractTotal = known.total || "";
+      contractYears = known.contractYears || known.years || "";
+      contractStartYear = known.startYear || "";
+      contractEndYear = known.endYear || "";
+      guaranteedMoney = known.guaranteed || "";
+      optionMoney = known.optionMoney || "";
+      contractNote = known.note || "";
+      signedTeam = known.signedTeam || "";
     } else {
       yearsLeft = 1;
       kind = rosterStatus === "FARM" && annual < 1 ? "퓨처스/최저연봉권" : "연봉계약";
@@ -499,6 +526,14 @@ function contractShape(row, detail, ratings, age, foreignPlayer, rosterStatus) {
     yearsLeft,
     contractKind: kind,
     contractSource,
+    contractTotal,
+    contractYears,
+    contractStartYear,
+    contractEndYear,
+    guaranteedMoney,
+    optionMoney,
+    contractNote,
+    signedTeam,
     controlYears,
     controlKind
   };
@@ -592,6 +627,7 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
         ? pitcherRatings(stat, { ...base, pos }, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer)
         : hitterRatings(stat, { ...base, pos }, teamId, name, jerseyNumber, rosterStatus, age, foreignPlayer);
       const contract = contractShape({ type: base.type, teamId, name }, detail, ratings, age, foreignPlayer, rosterStatus);
+      const injury = knownInjuryFor(teamId, name) || {};
       const trait = playerTrait({ ...base, pos }, stat, ratings, age, foreignPlayer, rosterStatus);
       const durability = durabilityFromReality({ ...base, pos }, stat, ratings, age, rosterStatus);
       players.push({
@@ -610,6 +646,14 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
         yearsLeft: contract.yearsLeft,
         contractKind: contract.contractKind,
         contractSource: contract.contractSource,
+        contractTotal: contract.contractTotal,
+        contractYears: contract.contractYears,
+        contractStartYear: contract.contractStartYear,
+        contractEndYear: contract.contractEndYear,
+        guaranteedMoney: contract.guaranteedMoney,
+        optionMoney: contract.optionMoney,
+        contractNote: contract.contractNote,
+        signedTeam: contract.signedTeam,
         controlYears: contract.controlYears,
         controlKind: contract.controlKind,
         faGrade: ratings.ovr >= 78 ? "A" : ratings.ovr >= 70 ? "B" : "C",
@@ -618,6 +662,13 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
         durability,
         trait,
         foreignPlayer: foreignPlayer ? "Y" : "",
+        injuryStatus: injury.injuryStatus || "",
+        injuryName: injury.injuryName || "",
+        injuryDays: injury.injuryDays || "",
+        rehab: injury.rehab || "",
+        returnSeasonYear: injury.returnSeasonYear || "",
+        returnDay: injury.returnDay || "",
+        injurySource: injury.injurySource || "",
         source: `${sourceLabel} 공시 연봉/기록 기반 ${SOURCE_DATE}`
       });
     }
@@ -638,7 +689,7 @@ async function parsePlayers(html, rosterStatus, teamId, sourceLabel, officialSta
     rows.push(...active, ...farm);
     console.log(`${code} ${teamId}: active ${active.length}, farm ${farm.length}`);
   }
-  const header = ["teamId","name","jerseyNumber","batsThrows","pos","type","age","rosterStatus","annualSalary","signingBonus","serviceYears","serviceDays","yearsLeft","contractKind","contractSource","controlYears","controlKind","faGrade","pitcherRole","ovr","pot","hit","pow","spd","def","arm","pit","form","stamina","durability","trait","foreignPlayer","source"];
+  const header = ["teamId","name","jerseyNumber","batsThrows","pos","type","age","rosterStatus","annualSalary","signingBonus","serviceYears","serviceDays","yearsLeft","contractKind","contractSource","controlYears","controlKind","faGrade","pitcherRole","ovr","pot","hit","pow","spd","def","arm","pit","form","stamina","durability","trait","foreignPlayer","source","contractTotal","contractYears","contractStartYear","contractEndYear","guaranteedMoney","optionMoney","contractNote","signedTeam","injuryStatus","injuryName","injuryDays","rehab","returnSeasonYear","returnDay","injurySource"];
   const text = [header.join(","), ...rows.map((row) => header.map((key) => csv(row[key])).join(","))].join("\n") + "\n";
   fs.writeFileSync(OUT, text, "utf8");
   console.log(`wrote ${rows.length} players to ${OUT}`);

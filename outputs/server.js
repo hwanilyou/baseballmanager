@@ -384,6 +384,106 @@ function estimateContractForPlayer(p, index = 0) {
   return { yearsLeft, annual, kind, signingBonus };
 }
 
+function csvNumber(row, headers, name) {
+  const index = headers.indexOf(name);
+  if (index < 0 || row[index] === undefined || row[index] === "") return null;
+  const value = Number(row[index]);
+  return Number.isFinite(value) ? value : null;
+}
+
+function csvText(row, headers, name) {
+  const index = headers.indexOf(name);
+  return index >= 0 && row[index] !== undefined ? String(row[index]).trim() : "";
+}
+
+function applyDetailedContractFromCsv(p, row, headers) {
+  if (!p) return;
+  const total = csvNumber(row, headers, "contractTotal");
+  const years = csvNumber(row, headers, "contractYears");
+  const startYear = csvNumber(row, headers, "contractStartYear");
+  const endYear = csvNumber(row, headers, "contractEndYear");
+  const guarantee = csvNumber(row, headers, "guaranteedMoney");
+  const optionMoney = csvNumber(row, headers, "optionMoney");
+  const note = csvText(row, headers, "contractNote");
+  const source = csvText(row, headers, "contractSource");
+  const signedTeam = csvText(row, headers, "signedTeam");
+  p.contract ||= {};
+  if (total !== null) p.contract.total = total;
+  if (years !== null) p.contract.contractYears = years;
+  if (startYear !== null) p.contract.startYear = startYear;
+  if (endYear !== null) p.contract.endYear = endYear;
+  if (guarantee !== null) p.contract.guaranteed = guarantee;
+  if (optionMoney !== null) p.contract.optionMoney = optionMoney;
+  if (note) p.contract.note = note;
+  if (source) p.contract.source = source;
+  if (signedTeam) p.contract.signedTeam = signedTeam;
+  if (years !== null && total !== null && (!p.contract.annual || p.contract.annual <= 0)) {
+    p.contract.annual = Math.round((total / Math.max(1, years)) * 10) / 10;
+    p.salary = p.contract.annual;
+  }
+}
+
+function applyDetailedHealthFromCsv(p, row, headers, state) {
+  if (!p) return;
+  const status = csvText(row, headers, "injuryStatus") || csvText(row, headers, "healthStatus");
+  const injury = csvText(row, headers, "injuryName") || csvText(row, headers, "injury");
+  const days = csvNumber(row, headers, "injuryDays");
+  const rehab = csvNumber(row, headers, "rehab");
+  const returnSeasonYear = csvNumber(row, headers, "returnSeasonYear");
+  const returnDay = csvNumber(row, headers, "returnDay");
+  const source = csvText(row, headers, "injurySource") || csvText(row, headers, "healthSource");
+  if (!status && !injury && days === null && returnSeasonYear === null && returnDay === null) return;
+  const normalized = status
+    ? status.toUpperCase()
+    : returnSeasonYear !== null || returnDay !== null || days !== null
+      ? "INJURED"
+      : "OK";
+  p.health = {
+    status: normalized,
+    injury: injury || (normalized === "INJURED" ? "부상" : null),
+    days: Math.max(0, days ?? 0),
+    rehab: Math.max(0, Math.min(100, rehab ?? 0)),
+    returnSeasonYear: returnSeasonYear ?? null,
+    returnDay: returnDay ?? null,
+    source: source || ""
+  };
+  if (normalized === "INJURED") {
+    p.rosterStatus = "FARM";
+    p.form = Math.min(Number(p.form) || 65, 45);
+    const currentSeason = Number(state?.seasonYear) || 1;
+    const currentDay = Number(state?.day) || 1;
+    if (returnSeasonYear !== null && returnSeasonYear > currentSeason) p.health.days = Math.max(p.health.days, 999);
+    if (returnSeasonYear === currentSeason && returnDay !== null) p.health.days = Math.max(p.health.days, Math.max(0, returnDay - currentDay));
+  }
+}
+
+function progressScheduledInjuryReturns(state) {
+  const seasonYear = Number(state?.seasonYear) || 1;
+  const day = Number(state?.day) || 1;
+  for (const p of state?.players || []) {
+    const health = p.health;
+    if (!health || health.status !== "INJURED") continue;
+    const returnSeasonYear = Number(health.returnSeasonYear);
+    const returnDay = Number(health.returnDay);
+    const seasonDue = Number.isFinite(returnSeasonYear) && returnSeasonYear <= seasonYear;
+    const dayDue = !Number.isFinite(returnDay) || returnDay <= day;
+    if (seasonDue && dayDue) {
+      p.health = {
+        status: "REHAB",
+        injury: health.injury || null,
+        days: 0,
+        rehab: Math.max(60, Number(health.rehab) || 60),
+        returnSeasonYear,
+        returnDay: Number.isFinite(returnDay) ? returnDay : null,
+        source: health.source || ""
+      };
+      p.form = Math.min(70, Math.max(45, Number(p.form) || 55));
+      addNews(state, "재활조 복귀", `${p.name}이 장기 부상에서 돌아와 재활 단계에 들어갔다.`, "의료");
+    }
+  }
+  return state;
+}
+
 function gameContractYears(p, annual = Number(p?.contract?.annual || p?.salary || 0)) {
   if (!p || p.rosterStatus === "DEV" || p.development || p.foreignPlayer === true || isLikelyForeignName(p.name || "")) return 1;
   const ovr = Number(p.ovr) || 60;
@@ -602,6 +702,7 @@ function migrateState(state) {
       if (!p.complaint) p.complaint = complaintFor(p);
       ensurePositionData(p);
     }
+    progressScheduledInjuryReturns(state);
   }
   if (!state.seasonGames || state.seasonGames < 144) state.seasonGames = 144;
   state.seasonGames = 144;
@@ -1653,6 +1754,7 @@ function finishManualGame(state) {
   accrueServiceDays(state);
   simulateOtherTeams(state);
   state.day += 1;
+  progressScheduledInjuryReturns(state);
   recoverPitcherRest(state);
   game.complete = true;
   game.log.unshift(`경기 종료: ${me.short} ${game.score.user}-${game.score.opp} ${opp.short}`);
@@ -3334,6 +3436,7 @@ function refreshTradeTargets(state, silent = false) {
           kind: idx("contractKind") >= 0 && row[idx("contractKind")] ? row[idx("contractKind")] : estimated.kind,
           source: idx("contractSource") >= 0 && row[idx("contractSource")] ? row[idx("contractSource")] : ""
         };
+        applyDetailedContractFromCsv(p, row, headers);
         p.controlYears = idx("controlYears") >= 0 && row[idx("controlYears")] !== "" ? Number(row[idx("controlYears")]) : Math.max(0, Math.ceil(((p.age <= 27 ? 9 : 8) * KBO_SERVICE_DAYS_PER_YEAR - (p.serviceDays || 0)) / KBO_SERVICE_DAYS_PER_YEAR));
         p.controlKind = idx("controlKind") >= 0 && row[idx("controlKind")] ? row[idx("controlKind")] : (p.controlYears <= 0 ? "FA 자격권" : "구단 보류권");
         p.jerseyNumber = Number(jersey) || p.jerseyNumber;
@@ -3783,6 +3886,7 @@ function playGame(state) {
   simulateOtherTeams(state);
   recoverOpponentBullpenFatigue(state);
   state.day += 1;
+  progressScheduledInjuryReturns(state);
   recoverPitcherRest(state);
   if (state.day > state.seasonGames) finalizeSeasonAwards(state);
   return state;
@@ -4882,6 +4986,7 @@ function importPlayersFromCsv(state, csv, source) {
       kind: idx("contractKind") >= 0 && row[idx("contractKind")] ? row[idx("contractKind")] : estimated.kind,
       source: idx("contractSource") >= 0 && row[idx("contractSource")] ? row[idx("contractSource")] : ""
     };
+    applyDetailedContractFromCsv(p, row, headers);
     p.controlYears = idx("controlYears") >= 0 && row[idx("controlYears")] !== "" ? Number(row[idx("controlYears")]) : Math.max(0, Math.ceil(((p.age <= 27 ? 9 : 8) * KBO_SERVICE_DAYS_PER_YEAR - (p.serviceDays || 0)) / KBO_SERVICE_DAYS_PER_YEAR));
     p.controlKind = idx("controlKind") >= 0 && row[idx("controlKind")] ? row[idx("controlKind")] : (p.controlYears <= 0 ? "FA 자격권" : "구단 보류권");
     p.jerseyNumber = Number(row[idx("jerseyNumber")]) || p.jerseyNumber;
@@ -4905,6 +5010,7 @@ function importPlayersFromCsv(state, csv, source) {
       p.contract.source = p.contract.annual ? "공시 연봉 · 서비스타임 반영" : "추정 연봉 · 서비스타임 반영";
     }
     normalizeContractReality(p);
+    applyDetailedHealthFromCsv(p, row, headers, state);
     if (isTargetTeam) imported.push(p);
     else importedLeague.push(p);
   }

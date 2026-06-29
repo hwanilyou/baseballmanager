@@ -1582,10 +1582,14 @@
       const annual = contract.annual || p.salary || 0;
       const bonus = p.signingBonus ? ` · 계약금 ${money(p.signingBonus)}` : "";
       const source = contract.source ? ` · ${contract.source}` : "";
+      const total = contract.total ? ` · 총액 ${money(contract.total)}` : "";
+      const term = contract.contractYears ? ` · 원계약 ${contract.contractYears}년` : "";
+      const period = contract.startYear || contract.endYear ? ` · ${contract.startYear || "?"}-${contract.endYear || "?"}` : "";
+      const note = contract.note ? ` · ${contract.note}` : "";
       const isRealTerm = kind.includes("실계약") || kind.includes("장기계약") || kind.includes("다년계약");
-      if (p.foreignPlayer || kind.includes("외국인")) return `외국인 단년계약 · 올해연봉 ${money(annual)}${bonus}${source}`;
-      if (isRealTerm) return `${kind} · 잔여 ${contract.yearsLeft || p.years || 1}년 · 올해연봉 ${money(annual)}${bonus}${source}`;
-      return `${kind} · 올해연봉 ${money(annual)} · ${controlText(p)}${bonus}${source}`;
+      if (p.foreignPlayer || kind.includes("외국인")) return `외국인 단년계약 · 올해연봉 ${money(annual)}${total}${bonus}${source}${note}`;
+      if (isRealTerm) return `${kind}${term}${total}${period} · 잔여 ${contract.yearsLeft || p.years || 1}년 · 올해연봉 ${money(annual)}${bonus}${source}${note}`;
+      return `${kind}${term}${total}${period} · 올해연봉 ${money(annual)} · ${controlText(p)}${bonus}${source}${note}`;
     };
     const faTimeText = (p) => {
       if (p.foreignPlayer) return "외국인 FA 제외";
@@ -2837,8 +2841,9 @@
 
     function healthLabel(health) {
       if (!health || health.status === "OK") return "건강";
-      if (health.status === "INJURED") return `${health.injury || "부상"} ${health.days || 0}일`;
-      if (health.status === "REHAB") return `재활 ${health.rehab || 0}%`;
+      const schedule = health.returnSeasonYear ? ` · ${health.returnSeasonYear}시즌 Day ${health.returnDay || "?"} 복귀예정` : "";
+      if (health.status === "INJURED") return `${health.injury || "부상"} ${health.days || 0}일${schedule}`;
+      if (health.status === "REHAB") return `재활 ${health.rehab || 0}%${schedule}`;
       return health.status;
     }
 

@@ -1,4 +1,4 @@
-teamId,name,jerseyNumber,batsThrows,pos,type,age,rosterStatus,annualSalary,signingBonus,serviceYears,serviceDays,yearsLeft,contractKind,contractSource,controlYears,controlKind,faGrade,pitcherRole,ovr,pot,hit,pow,spd,def,arm,pit,form,stamina,durability,trait,foreignPlayer,source
+teamId,name,jerseyNumber,batsThrows,pos,type,age,rosterStatus,annualSalary,signingBonus,serviceYears,serviceDays,yearsLeft,contractKind,contractSource,controlYears,controlKind,faGrade,pitcherRole,ovr,pot,hit,pow,spd,def,arm,pit,form,stamina,durability,trait,foreignPlayer,source,contractTotal,contractYears,contractStartYear,contractEndYear,guaranteedMoney,optionMoney,contractNote,signedTeam,injuryStatus,injuryName,injuryDays,rehab,returnSeasonYear,returnDay,injurySource
 seoul-twin-stars,임찬훈,1,우투우타,SP,PIT,34,ACTIVE,2,3,12,1830,2,실계약 4년 50억,2024 FA 계약,0,FA 자격권,B,SP,70,74,10,10,50,78,71,73,76,96,88,이닝이터 · 베테랑,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
 seoul-twin-stars,함덕형,11,좌투좌타,SP,PIT,31,ACTIVE,8,0.6,12,1817,2,실계약 4년 38억,2024 FA 계약,0,FA 자격권,C,SP,60,69,10,10,35,68,64,57,84,86,71,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
 seoul-twin-stars,우강현,20,우언우타,SP,PIT,24,ACTIVE,0.4,0.4,3,525,1,연봉계약,공시 연봉 · 서비스타임 반영,6,구단 보류권,C,SP,60,70,10,10,39,63,60,61,73,87,73,이닝이터,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
@@ -232,8 +232,8 @@ daejeon-orange-eagles,최재원,13,우투우타,C,BAT,37,ACTIVE,4,0,12,1830,1,�
 daejeon-orange-eagles,허인영,59,우투우타,C,BAT,23,ACTIVE,0.4,1.1,5,815,1,연봉계약,공시 연봉 · 서비스타임 반영,4,구단 보류권,C,,69,80,72,57,75,69,79,18,75,63,60,성장형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
 daejeon-orange-eagles,이도형,5,우투좌타,SS,BAT,30,ACTIVE,1.2,0.8,12,1830,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,B,,72,78,80,80,85,82,79,15,80,85,64,주루형 · 수비핵심,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
 daejeon-orange-eagles,심우수,7,우투우타,SS,BAT,31,ACTIVE,4,1.3,12,1830,3,실계약 4년 50억,2025 FA 계약,0,FA 자격권,C,,60,66,67,56,51,60,55,14,83,64,64,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
-daejeon-orange-eagles,노시율,8,우투우타,3B,BAT,26,ACTIVE,10,2,8,1240,1,연봉계약,공개 다년계약 미확인,1,FA 임박,B,,73,81,76,83,55,77,82,10,67,56,60,장타형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
-daejeon-orange-eagles,강백서,50,우투좌타,1B,BAT,27,ACTIVE,9,4.5,9,1395,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,A,,84,88,96,98,62,65,66,16,76,78,94,프랜차이즈급 · 교타자 · 장타형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
+daejeon-orange-eagles,노시율,8,우투우타,3B,BAT,26,ACTIVE,10,2,8,1240,10,비FA 다년계약,사용자 검수 계약 데이터,1,FA 임박,B,,73,81,76,83,55,77,82,10,67,56,60,장타형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23,307,11,2026,2036,307,0,사용자 검수 데이터,daejeon-orange-eagles,,,,,,,
+daejeon-orange-eagles,강백서,50,우투좌타,1B,BAT,27,ACTIVE,9,4.5,9,1395,4,FA 계약,사용자 검수 계약 데이터,0,FA 자격권,A,,84,88,96,98,62,65,66,16,76,78,94,프랜차이즈급 · 교타자 · 장타형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23,100,4,2026,2029,,,사용자 검수 데이터,daejeon-orange-eagles,,,,,,,
 daejeon-orange-eagles,박정준,63,우투우타,2B,BAT,25,ACTIVE,0.4,0.4,7,1069,1,연봉계약,공시 연봉 · 서비스타임 반영,2,구단 보류권,C,,68,79,60,57,83,61,79,24,67,48,72,주루형,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
 daejeon-orange-eagles,황영서,95,우투좌타,2B,BAT,27,ACTIVE,1,0.8,2,370,1,연봉계약,공시 연봉 · 서비스타임 반영,7,구단 보류권,C,,60,69,64,61,56,53,60,8,76,50,61,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
 daejeon-orange-eagles,이진겸,10,우투우타,RF,BAT,29,ACTIVE,1.1,0.5,11,1669,1,연봉계약,공시 연봉 · 서비스타임 반영,0,FA 자격권,C,,61,64,65,64,78,70,63,24,80,79,74,1군 등록 선수,,공시 1군 등록 공시 연봉/기록 기반 2026-06-23
