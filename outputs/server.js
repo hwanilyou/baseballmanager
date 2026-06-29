@@ -1749,6 +1749,7 @@ function finishManualGame(state) {
   const playedIds = [...(game.lineup || []), ...(game.usedPitchers || []), game.pitcherId].filter(Boolean);
   maybeAutomaticInjury(state, playedIds.map((id) => state.players.find((p) => p.id === id)), "manual-game");
   if (state.day % 6 === 0 || Math.random() < 0.18) generateOffer(state);
+  maybeAutomaticTradeInquiry(state, "game");
   progressPitchTraining(state);
   progressTrainingAssignments(state);
   accrueServiceDays(state);
@@ -3581,7 +3582,7 @@ function proposeTrade(state, outgoingId, targetId, cash) {
   return state;
 }
 
-function generateTradeOffer(state, playerId) {
+function generateTradeOffer(state, playerId, source = "manual") {
   if (state.day > tradeDeadlineDay(state)) {
     addNews(state, "트레이드 마감", "트레이드 마감일이 지나 더 이상 새 제안을 만들 수 없다.", "트레이드");
     return state;
@@ -3600,6 +3601,11 @@ function generateTradeOffer(state, playerId) {
   const needType = outgoing.type === "PIT" ? "BAT" : "PIT";
   let targetPool = registeredTradeTargetPool(state, null, needType);
   if (!targetPool.length) targetPool = registeredTradeTargetPool(state);
+  const alreadyOfferedTargetIds = new Set((state.tradeOffers || []).flatMap((offer) => {
+    const incoming = Array.isArray(offer.incoming) ? offer.incoming : [offer.incoming].filter(Boolean);
+    return incoming.map((p) => Number(p.id)).filter(Number.isFinite);
+  }));
+  targetPool = targetPool.filter((p) => !alreadyOfferedTargetIds.has(Number(p.id)));
   if (!targetPool.length) {
     addNews(state, "트레이드 제안 없음", "상대팀 등록 선수 명단을 불러오지 못해 새 제안을 만들 수 없다.", "트레이드");
     return state;
@@ -3625,8 +3631,39 @@ function generateTradeOffer(state, playerId) {
   };
   state.tradeOffers.unshift(offer);
   state.tradeOffers = state.tradeOffers.slice(0, 5);
-  addNews(state, "트레이드 제안", `${offer.fromTeam}가 ${outgoing.name} ↔ ${incoming.name} 딜을 문의했다. ${offer.note}.`, "트레이드");
+  addNews(state, source === "auto" ? "타 구단 트레이드 문의" : "트레이드 제안", `${offer.fromTeam}가 ${outgoing.name} ↔ ${incoming.name} 딜을 문의했다. ${offer.note}.`, "트레이드");
   return state;
+}
+
+function maybeAutomaticTradeInquiry(state, reason = "day") {
+  if (!state || state.day > tradeDeadlineDay(state)) return state;
+  if ((state.tradeOffers || []).length >= 5) return state;
+  if (state.lastAutoTradeInquiryDay && state.day - state.lastAutoTradeInquiryDay < 3) return state;
+  ensureTradeTargets(state);
+  if (!registeredTradeTargetPool(state).length) return state;
+  const deadlinePressure = state.day >= tradeDeadlineDay(state) - 18 ? 0.16 : 0;
+  const chance = reason === "game" ? 0.18 + deadlinePressure : 0.10 + deadlinePressure;
+  if (Math.random() > chance) return state;
+  const lineupIds = new Set([
+    ...((state.lastLineup && state.lastLineup.lineup) || []),
+    ...((state.activeGame && state.activeGame.lineup) || [])
+  ].map(Number));
+  const existingOutgoingIds = new Set((state.tradeOffers || []).flatMap((offer) => uniqueNumbers(offer.outgoingIds || offer.outgoingId)));
+  const candidates = state.players
+    .filter((p) => p.rosterStatus !== "DEV" && !isForeignPlayer(p) && p.health?.status !== "INJURED" && !existingOutgoingIds.has(Number(p.id)))
+    .filter((p) => !String(p.trait || "").includes("프랜차이즈"))
+    .map((p) => {
+      const benchBonus = p.rosterStatus === "FARM" ? 18 : lineupIds.has(Number(p.id)) ? -12 : 8;
+      const unhappyBonus = Math.max(0, 68 - (p.happy || 68)) * 0.35;
+      const upsideBonus = Math.max(0, (p.pot || p.ovr || 50) - (p.ovr || 50)) * 0.9;
+      const ageFit = (p.age || 25) <= 25 ? 5 : (p.age || 25) >= 33 ? -6 : 0;
+      return { p, score: tradeValue(p) + benchBonus + unhappyBonus + upsideBonus + ageFit + Math.random() * 12 };
+    })
+    .sort((a, b) => b.score - a.score);
+  const selected = candidates[0]?.p;
+  if (!selected) return state;
+  state.lastAutoTradeInquiryDay = state.day;
+  return generateTradeOffer(state, selected.id, "auto");
 }
 
 function acceptTradeOffer(state, id) {
@@ -3889,6 +3926,7 @@ function playGame(state) {
   const playedPlayers = state.players.filter((p) => lineupSet.has(p.id) || usedPitcherSet.has(p.id));
   maybeAutomaticInjury(state, playedPlayers, "game");
   if (state.day % 6 === 0 || Math.random() < 0.18) generateOffer(state);
+  maybeAutomaticTradeInquiry(state, "game");
   if (state.day % 12 === 0) ageAndDevelop(state);
   progressPitchTraining(state);
   progressTrainingAssignments(state);
