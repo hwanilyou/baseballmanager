@@ -774,6 +774,7 @@ function ensureActiveGameDetails(state) {
   if (!Number.isFinite(game.opponentPitcher.hitsAllowed)) game.opponentPitcher.hitsAllowed = 0;
   if (!Number.isFinite(game.opponentPitcher.walksAllowed)) game.opponentPitcher.walksAllowed = 0;
   if (!Number.isFinite(game.opponentLineupIndex)) game.opponentLineupIndex = 0;
+  fillOpponentJerseyNumbers(game, opp);
   if (!Number.isFinite(game.pitchCount)) game.pitchCount = 0;
   if (!game.pitcherMood) game.pitcherMood = "정상";
   if (!Array.isArray(game.usedPitchers)) game.usedPitchers = [game.pitcherId].filter(Boolean);
@@ -1303,9 +1304,11 @@ function makeOpponentLineup(opp) {
   const surnames = ["김", "이", "박", "최", "정", "강", "윤", "조", "한"];
   const names = ["도윤", "서준", "민재", "지후", "태오", "현우", "준서", "시온", "라온"];
   const positions = ["CF", "SS", "RF", "1B", "LF", "3B", "DH", "C", "2B"];
+  const numbers = [37, 5, 30, 50, 65, 8, 25, 13, 51];
   return positions.map((pos, i) => ({
     order: i + 1,
     name: `${opp.short}${surnames[i]}${names[i]}`,
+    jerseyNumber: numbers[i],
     pos,
     hand: i % 3 === 0 ? "좌" : "우",
     contact: Math.max(45, Math.min(88, opp.power + rnd(-10, 10))),
@@ -1349,6 +1352,7 @@ function makeOpponentPitcher(opp, seed = "") {
   const stamina = roll(72, 98);
   return {
     name: `${opp.short}${names[roll(0, names.length - 1)]}`,
+    jerseyNumber: roll(11, 99),
     role: "SP",
     power,
     command,
@@ -1365,6 +1369,7 @@ function makeOpponentBullpen(opp, seed = "") {
   const roll = seed ? seededRndFactory(`${opp.id}-pen-${seed}`) : rnd;
   const roles = ["LR", "MR", "MR", "MR", "SU", "SU", "CL"];
   const names = ["강민재", "윤태성", "오시현", "한도윤", "문서준", "조하람", "배건우", "임태겸"];
+  const numbers = [18, 21, 34, 46, 52, 61, 67];
   return roles.map((role, index) => {
     const leverageBoost = role === "CL" ? 8 : role === "SU" ? 5 : role === "MR" ? 1 : -4;
     const power = Math.max(42, Math.min(88, opp.power + leverageBoost + roll(-9, 8)));
@@ -1373,6 +1378,7 @@ function makeOpponentBullpen(opp, seed = "") {
     const restDays = fatigue >= 24 ? roll(1, 2) : roll(0, 1);
     return {
       name: `${opp.short}${names[(index + roll(0, names.length - 1)) % names.length]}`,
+      jerseyNumber: numbers[index] || roll(11, 99),
       role,
       power,
       command,
@@ -1385,6 +1391,22 @@ function makeOpponentBullpen(opp, seed = "") {
       pitchCount: 0,
       mood: fatigue >= 24 || restDays > 0 ? "피로" : "정상"
     };
+  });
+}
+
+function fillOpponentJerseyNumbers(game, opp) {
+  if (!game) return;
+  const seedRoll = seededRndFactory(`${opp?.id || "opp"}-numbers`);
+  if (game.opponentPitcher && !game.opponentPitcher.jerseyNumber) {
+    game.opponentPitcher.jerseyNumber = seedRoll(11, 99);
+  }
+  const lineupNumbers = [37, 5, 30, 50, 65, 8, 25, 13, 51];
+  (game.opponentLineup || []).forEach((batter, index) => {
+    if (batter && !batter.jerseyNumber) batter.jerseyNumber = lineupNumbers[index % lineupNumbers.length];
+  });
+  const bullpenNumbers = [18, 21, 34, 46, 52, 61, 67];
+  (game.opponentBullpen || []).forEach((pitcher, index) => {
+    if (pitcher && !pitcher.jerseyNumber) pitcher.jerseyNumber = bullpenNumbers[index % bullpenNumbers.length] || seedRoll(11, 99);
   });
 }
 
@@ -1553,6 +1575,10 @@ function ensureProbableOpponentPitcher(state) {
   const opp = currentOpponent(state);
   const key = `${state.day}-${opp.id}`;
   if (!state.opponentProbables[key]) state.opponentProbables[key] = makeOpponentPitcher(opp, key);
+  if (!state.opponentProbables[key].jerseyNumber) {
+    const roll = seededRndFactory(`${opp.id}-${key}-probable-number`);
+    state.opponentProbables[key].jerseyNumber = roll(11, 99);
+  }
   return state.opponentProbables[key];
 }
 

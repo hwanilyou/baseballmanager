@@ -1822,6 +1822,11 @@
       return p.dataSource === "league-rival" && p.teamName ? `${base} · ${p.teamName}` : base;
     }
 
+    function opponentName(p) {
+      if (!p) return "-";
+      return `${p.name || "상대 선수"}${p.jerseyNumber ? ` #${p.jerseyNumber}` : ""}`;
+    }
+
     function searchText(value) {
       return String(value || "").toLowerCase().replace(/\s+/g, "");
     }
@@ -2237,7 +2242,7 @@
         <div class="news-item">
           <div class="bio">
             <div>
-              <div class="news-title">${handTag(pitcherHandLabel(probable), probable)} 상대 예고 선발 · ${probable.name}</div>
+              <div class="news-title">${handTag(pitcherHandLabel(probable), probable)} 상대 예고 선발 · ${opponentName(probable)}</div>
               <div class="small">${pitcherHandLabel(probable)} · ${probable.style || "밸런스형"} · 경기 시작 시 이 투수가 그대로 등판합니다.</div>
             </div>
             <span class="badge">${probable.power}</span>
@@ -2292,7 +2297,7 @@
       const userBatting = isUserBatting(active);
       const opponentBatting = isOpponentBatting(active);
       const displayPitcherName = userBatting
-        ? [active?.opponentPitcher ? `${pitcherHandLabel(active.opponentPitcher)} ${active.opponentPitcher.name}` : "", active?.opponentPitcher?.role].filter(Boolean).join(" · ")
+        ? [active?.opponentPitcher ? `${pitcherHandLabel(active.opponentPitcher)} ${opponentName(active.opponentPitcher)}` : "", active?.opponentPitcher?.role].filter(Boolean).join(" · ")
         : currentPitcher ? `${pitcherHandLabel(currentPitcher)} ${currentPitcher.name}` : "";
       const displayPitchCount = userBatting ? active?.opponentPitcher?.pitchCount : active?.pitchCount;
       const displayPitchMood = userBatting ? active?.opponentPitcher?.mood : active?.pitcherMood;
@@ -2381,7 +2386,7 @@
         $("countStrikes").textContent = active.count?.strikes || 0;
         $("countOuts").textContent = active.outs || 0;
         $("manualOrder").textContent = opponentBatting && oppBatter ? `${oppBatter.order}번` : "-";
-        $("manualOppBatter").textContent = opponentBatting && oppBatter ? `${batterHandLabel(oppBatter)} ${oppBatter.name} · ${oppBatter.pos}` : "-";
+        $("manualOppBatter").textContent = opponentBatting && oppBatter ? `${batterHandLabel(oppBatter)} ${opponentName(oppBatter)} · ${oppBatter.pos}` : "-";
         $("manualOppProfile").textContent = opponentBatting && oppBatter ? `${batterHandLabel(oppBatter)} / 컨택 ${oppBatter.contact} / 파워 ${oppBatter.power}` : "-";
         $("manualPitcher").textContent = displayPitcherName || "-";
         $("manualPitchCount").textContent = displayPitchCount || 0;
