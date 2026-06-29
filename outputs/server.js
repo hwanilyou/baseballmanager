@@ -1576,6 +1576,41 @@ function resolveGroundDoublePlay(game) {
   return { runs, bases: basesLabel(game.bases), first, second, third };
 }
 
+function resolveGroundOut(game, batterName) {
+  const [first, second, third] = game.bases;
+  const outsBefore = game.outs;
+  let runs = 0;
+  let text = `${batterName} 1루 아웃`;
+
+  if (first) {
+    const nextBases = [batterName, null, null];
+    if (second) {
+      if (third) {
+        nextBases[1] = first;
+        nextBases[2] = second;
+        text = `3루 주자 홈 포스아웃, ${batterName} 1루 출루`;
+      } else {
+        nextBases[1] = first;
+        text = `2루 주자 3루 포스아웃, ${batterName} 1루 출루`;
+      }
+    } else {
+      nextBases[2] = third || null;
+      text = `1루 주자 2루 포스아웃, ${batterName} 1루 출루`;
+    }
+    game.bases = nextBases;
+  } else {
+    const nextBases = [null, null, null];
+    if (third && outsBefore < 2) runs += 1;
+    else if (third) nextBases[2] = third;
+    if (second) nextBases[2] = second;
+    game.bases = nextBases;
+    text = `${batterName} 1루 아웃${runs ? ", 3루 주자 득점" : ""}`;
+  }
+
+  game.outs = Math.min(3, outsBefore + 1);
+  return { runs, bases: basesLabel(game.bases), text };
+}
+
 function createActiveGame(state, lineup, starterId, lineupPositions) {
   const rawLineup = Array.isArray(lineup) ? lineup.map(Number).slice(0, 9) : [];
   if (rawLineup.length !== 9 || new Set(rawLineup).size !== 9) {
@@ -2095,9 +2130,18 @@ function resolveUserAtBat(state, tactic) {
       } else {
         game.outs += 1;
         const great = rnd(1, 100) < fielding.greatChance;
-        const sac = fielding.outType.includes("뜬공") ? trySacrificeFly(game, "user", 64) : { text: "" };
-        recordPlateAppearance(batter, { countsAtBat: !sac.scored, out: true, rbi: sac.scored ? 1 : 0, sacFly: Boolean(sac.scored) });
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${battedText}. ${great ? `${fielding.name} 호수비! ` : ""}${fielding.name} ${fielding.outType}${sac.scored ? " · 희생플라이" : ""}${sac.text}. ${game.outs}아웃`;
+        if (fielding.isAir) {
+          const sac = trySacrificeFly(game, "user", 64);
+          recordPlateAppearance(batter, { countsAtBat: !sac.scored, out: true, rbi: sac.scored ? 1 : 0, sacFly: Boolean(sac.scored) });
+          text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${battedText}. ${great ? `${fielding.name} 호수비! ` : ""}${fielding.name} ${fielding.outType}${sac.scored ? " · 희생플라이" : ""}${sac.text}. ${game.outs}아웃`;
+        } else {
+          game.outs -= 1;
+          const ground = resolveGroundOut(game, batter.name);
+          game.score.user += ground.runs;
+          const batterOut = ground.text.includes("1루 아웃");
+          recordPlateAppearance(batter, { out: batterOut, rbi: ground.runs });
+          text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${battedText}. ${great ? `${fielding.name} 호수비! ` : ""}${fielding.name} ${fielding.outType}, ${ground.text}${ground.runs ? `, ${ground.runs}득점` : ""}. ${game.outs}아웃, 주자 ${ground.bases}`;
+        }
       }
       game.count = { balls: 0, strikes: 0 };
       game.lineupIndex += 1;
@@ -2516,8 +2560,15 @@ function resolveOpponentPlateAppearance(state) {
           game.outs += 1;
           const great = rnd(1, 100) < fielding.greatChance;
           const prefix = great ? `${fielding.name} 호수비! ` : "";
-          const sac = fielding.isAir ? trySacrificeFly(game, "opp", fielding.arm) : { text: "" };
-          game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${battedText}. ${prefix}${fielding.pos} ${fielding.name} ${fielding.outType}${sac.scored ? " · 희생플라이 허용" : ""}${sac.text}. ${game.outs}아웃`);
+          if (fielding.isAir) {
+            const sac = trySacrificeFly(game, "opp", fielding.arm);
+            game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${battedText}. ${prefix}${fielding.pos} ${fielding.name} ${fielding.outType}${sac.scored ? " · 희생플라이 허용" : ""}${sac.text}. ${game.outs}아웃`);
+          } else {
+            game.outs -= 1;
+            const ground = resolveGroundOut(game, `${opp.short} 타자`);
+            game.score.opp += ground.runs;
+            game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${battedText}. ${prefix}${fielding.pos} ${fielding.name} ${fielding.outType}, ${ground.text}${ground.runs ? `, ${ground.runs}실점` : ""}. ${game.outs}아웃, 주자 ${ground.bases}`);
+          }
         }
       }
       finishAtBatPitchTax(game, pitcher);
