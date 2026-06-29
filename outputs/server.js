@@ -1890,6 +1890,7 @@ function resolveBuntAttempt(state, game, batter, opponentPitcher, pitcherEdge, t
   const label = tacticLabel(tactic);
   const startText = buntStartText(game, tactic);
   const startPrefix = startText ? `${startText}. ` : "";
+  const pitchNo = Math.max(1, Number(game.paPitchCount) || 1);
   if (roll < 14) {
     game.count.balls += 1;
     if (game.count.balls >= 4) {
@@ -1897,13 +1898,14 @@ function resolveBuntAttempt(state, game, batter, opponentPitcher, pitcherEdge, t
       game.score.user += result.runs;
       recordPlateAppearance(batter, { countsAtBat: false, walk: true, rbi: result.runs });
       finishBuntPlay(game);
-      return `${startPrefix}${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${label} 지시였지만 볼넷. ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
+      game.paPitchCount = 0;
+      return `${startPrefix}${opponentPitcher.name} ${pitchNo}구, ${label} 지시였지만 볼넷. ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
     }
-    return `${startPrefix}${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${label} 지시였지만 볼. 카운트 ${game.count.balls}-${game.count.strikes}`;
+    return `${startPrefix}${opponentPitcher.name} ${pitchNo}구, ${label} 지시였지만 볼. 카운트 ${game.count.balls}-${game.count.strikes}`;
   }
   if (roll < 32 && game.count.strikes < 2) {
     game.count.strikes += 1;
-    return `${startPrefix}${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${label} 시도 중 ${foulBallDescription()}. 카운트 ${game.count.balls}-${game.count.strikes}`;
+    return `${startPrefix}${opponentPitcher.name} ${pitchNo}구, ${label} 시도 중 ${foulBallDescription()}. 카운트 ${game.count.balls}-${game.count.strikes}`;
   }
   if (tactic === "safetyBunt" || tactic === "dragBunt") {
     const hitChance = Math.max(12, Math.min(58, buntSkill - 26 + (batter.spd || 55) * 0.18));
@@ -1912,11 +1914,13 @@ function resolveBuntAttempt(state, game, batter, opponentPitcher, pitcherEdge, t
       game.score.user += result.runs;
       recordPlateAppearance(batter, { hitBases: 1, rbi: result.runs });
       finishBuntPlay(game);
+      game.paPitchCount = 0;
       return `${startPrefix}${batter.name} ${label} 성공, ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
     }
     game.outs += 1;
     recordPlateAppearance(batter, { out: true });
     finishBuntPlay(game);
+    game.paPitchCount = 0;
     return `${startPrefix}${batter.name} ${label} 실패. 타자 아웃, 주자 ${basesLabel(game.bases)}`;
   }
   if (tactic === "squeezeBunt") {
@@ -1933,12 +1937,14 @@ function resolveBuntAttempt(state, game, batter, opponentPitcher, pitcherEdge, t
       game.outs += 1;
       recordPlateAppearance(batter, { countsAtBat: false, rbi: 1 + extraRun });
       finishBuntPlay(game);
+      game.paPitchCount = 0;
       return `${startPrefix}${batter.name} 스퀴즈 번트 성공. 3루 주자 홈인, ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`;
     }
     game.bases[2] = null;
     game.outs += 1;
     recordPlateAppearance(batter, { out: true });
     finishBuntPlay(game);
+    game.paPitchCount = 0;
     return `${startPrefix}${batter.name} 스퀴즈 실패. 3루 주자 홈에서 아웃, ${game.outs}아웃`;
   }
   if (hasRunner && roll < buntSkill) {
@@ -1947,11 +1953,13 @@ function resolveBuntAttempt(state, game, batter, opponentPitcher, pitcherEdge, t
     game.outs += 1;
     recordPlateAppearance(batter, { countsAtBat: false, rbi: runs });
     finishBuntPlay(game);
+    game.paPitchCount = 0;
     return `${startPrefix}${batter.name} 희생번트 성공${runs ? `, ${runs}득점` : ""}. ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`;
   }
   game.outs += 1;
   recordPlateAppearance(batter, { out: true });
   finishBuntPlay(game);
+  game.paPitchCount = 0;
   return `${startPrefix}${batter.name} 희생번트 실패. ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`;
 }
 
@@ -1985,6 +1993,14 @@ function resolveUserAtBat(state, tactic) {
   let text = "";
   let stealText = "";
   let pitchThrown = false;
+  const throwOpponentPitch = () => {
+    if (!pitchThrown) {
+      opponentPitcher.pitchCount = (opponentPitcher.pitchCount || 0) + 1;
+      game.paPitchCount = (Number(game.paPitchCount) || 0) + 1;
+    }
+    pitchThrown = true;
+  };
+  const paPitchNo = () => Math.max(1, Number(game.paPitchCount) || 1);
 
   if (runnerIndexes.length && !stealAttempts.length && rnd(1, 100) < Math.max(2, Math.min(8, (opponentPitcher.pickoff || 55) * 0.08))) {
     const pickoffTargets = runnerIndexes.filter((index) => !(index === 0 && game.bases[1]));
@@ -2007,8 +2023,7 @@ function resolveUserAtBat(state, tactic) {
   }
 
   if (stealAttempts.length) {
-    if (!pitchThrown) opponentPitcher.pitchCount = (opponentPitcher.pitchCount || 0) + 1;
-    pitchThrown = true;
+    throwOpponentPitch();
     const results = [];
     for (const stealFrom of stealAttempts) {
       if (game.outs >= 3 || !game.bases[stealFrom]) continue;
@@ -2045,7 +2060,7 @@ function resolveUserAtBat(state, tactic) {
       }
     }
     const startKind = stealSource === "runner" ? `${runnerTacticLabel(game.runnerTactic)} 자율 스타트` : "스타트";
-    text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 ${startKind}, ${results.join(" / ")}. ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`;
+    text = `${opponentPitcher.name} ${paPitchNo()}구 ${startKind}, ${results.join(" / ")}. ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`;
     stealText = text;
     if (game.outs >= 3) game.count = { balls: 0, strikes: 0 };
     game.pendingSteal = null;
@@ -2053,12 +2068,10 @@ function resolveUserAtBat(state, tactic) {
   if (game.outs >= 3) {
     // 도루 실패로 이닝이 끝난 경우 타격 결과는 진행하지 않는다.
   } else if (isBuntTactic(tactic)) {
-    if (!pitchThrown) opponentPitcher.pitchCount = (opponentPitcher.pitchCount || 0) + 1;
-    pitchThrown = true;
+    throwOpponentPitch();
     text = resolveBuntAttempt(state, game, batter, opponentPitcher, pitcherEdge, tactic);
   } else if (false && tactic === "bunt" && game.bases.some(Boolean)) {
-    if (!pitchThrown) opponentPitcher.pitchCount = (opponentPitcher.pitchCount || 0) + 1;
-    pitchThrown = true;
+    throwOpponentPitch();
     const roll = rnd(1, 100);
     const buntSkill = Math.max(28, Math.min(82, batter.hit * 0.35 + batter.spd * 0.18 + batter.form * 0.22 - pitcherEdge * 0.12));
     if (roll < 18) {
@@ -2066,15 +2079,16 @@ function resolveUserAtBat(state, tactic) {
       if (game.count.balls >= 4) {
         const result = walkBatter(game, batter.name);
         game.score.user += result.runs;
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, 번트 지시였지만 볼넷. ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
+        text = `${opponentPitcher.name} ${paPitchNo()}구, 번트 지시였지만 볼넷. ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
         game.count = { balls: 0, strikes: 0 };
         game.lineupIndex += 1;
+        game.paPitchCount = 0;
       } else {
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, 번트 지시였지만 볼. 카운트 ${game.count.balls}-${game.count.strikes}`;
+        text = `${opponentPitcher.name} ${paPitchNo()}구, 번트 지시였지만 볼. 카운트 ${game.count.balls}-${game.count.strikes}`;
       }
     } else if (roll < 36 && game.count.strikes < 2) {
       game.count.strikes += 1;
-      text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, 번트 시도 중 ${foulBallDescription()}. 카운트 ${game.count.balls}-${game.count.strikes}`;
+      text = `${opponentPitcher.name} ${paPitchNo()}구, 번트 시도 중 ${foulBallDescription()}. 카운트 ${game.count.balls}-${game.count.strikes}`;
     } else if (roll < buntSkill) {
       const runnerNames = [...game.bases];
       game.bases = [null, game.bases[0], game.bases[1]];
@@ -2083,21 +2097,22 @@ function resolveUserAtBat(state, tactic) {
       text = `${batter.name} 희생번트 성공. ${game.outs}아웃, 주자 ${basesLabel(game.bases)}`;
       game.count = { balls: 0, strikes: 0 };
       game.lineupIndex += 1;
+      game.paPitchCount = 0;
     } else {
       game.outs += 1;
       text = `${batter.name} 번트 실패. ${game.outs}아웃`;
       game.count = { balls: 0, strikes: 0 };
       game.lineupIndex += 1;
+      game.paPitchCount = 0;
     }
   } else {
-    if (!pitchThrown) opponentPitcher.pitchCount = (opponentPitcher.pitchCount || 0) + 1;
-    pitchThrown = true;
+    throwOpponentPitch();
     const wildChance = Math.max(0.2, Math.min(2.1, 1.65 - opponentEffectiveCommand(opponentPitcher) * 0.016 + game.count.balls * 0.14));
     if (game.bases.some(Boolean) && rnd(1, 100) <= wildChance) {
       game.count.balls += 1;
       const passed = advanceOnPassedBall(game);
       game.score.user += passed.runs;
-      text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 폭투. 주자 ${passed.bases}${passed.runs ? `, ${passed.runs}득점` : ""}. 카운트 ${game.count.balls}-${game.count.strikes}`;
+      text = `${opponentPitcher.name} ${paPitchNo()}구 폭투. 주자 ${passed.bases}${passed.runs ? `, ${passed.runs}득점` : ""}. 카운트 ${game.count.balls}-${game.count.strikes}`;
       if (game.count.balls >= 4) {
         const result = walkBatter(game, batter.name);
         game.score.user += result.runs;
@@ -2105,6 +2120,7 @@ function resolveUserAtBat(state, tactic) {
         text += ` / ${result.text}${result.runs ? `, ${result.runs}득점` : ""}`;
         game.count = { balls: 0, strikes: 0 };
         game.lineupIndex += 1;
+        game.paPitchCount = 0;
       }
     } else {
     const contact = batter.hit * 0.5 + batter.pow * 0.2 + batter.form * 0.16 + batter.happy * 0.08 - pitcherEdge * 0.22;
@@ -2116,27 +2132,29 @@ function resolveUserAtBat(state, tactic) {
         const result = walkBatter(game, batter.name);
         game.score.user += result.runs;
         recordPlateAppearance(batter, { countsAtBat: false, walk: true, rbi: result.runs });
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 볼넷. ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
+        text = `${opponentPitcher.name} ${paPitchNo()}구 볼넷. ${result.text}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
         game.count = { balls: 0, strikes: 0 };
         game.lineupIndex += 1;
+        game.paPitchCount = 0;
       } else {
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 볼. 카운트 ${game.count.balls}-${game.count.strikes}`;
+        text = `${opponentPitcher.name} ${paPitchNo()}구 볼. 카운트 ${game.count.balls}-${game.count.strikes}`;
       }
     } else if (pitchRoll < tacticProfile.strikeLimit) {
       game.count.strikes += 1;
       if (game.count.strikes >= 3) {
         game.outs += 1;
         recordPlateAppearance(batter, { out: true, strikeout: true });
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${batter.name} 삼진. ${game.outs}아웃`;
+        text = `${opponentPitcher.name} ${paPitchNo()}구, ${batter.name} 삼진. ${game.outs}아웃`;
         game.count = { balls: 0, strikes: 0 };
         game.lineupIndex += 1;
+        game.paPitchCount = 0;
       } else {
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구 ${tacticProfile.strikeWord}. 카운트 ${game.count.balls}-${game.count.strikes}`;
+        text = `${opponentPitcher.name} ${paPitchNo()}구 ${tacticProfile.strikeWord}. 카운트 ${game.count.balls}-${game.count.strikes}`;
       }
     } else if ((game.count.strikes >= 2 && pitchRoll < tacticProfile.foulLimit + Math.max(0, batter.hit - 65) * 0.18) || (pitchRoll < Math.min(tacticProfile.foulLimit, 59) && game.count.strikes < 2)) {
       const wasTwoStrike = game.count.strikes >= 2;
       game.count.strikes = wasTwoStrike ? 2 : game.count.strikes + 1;
-      text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${foulBallDescription()}. 카운트 ${game.count.balls}-${game.count.strikes}`;
+      text = `${opponentPitcher.name} ${paPitchNo()}구, ${foulBallDescription()}. 카운트 ${game.count.balls}-${game.count.strikes}`;
     } else {
       const event = userBattedBallEvent(batter, opponentPitcher, tactic);
       const fielding = opponentFielderDetail(event, batter);
@@ -2147,30 +2165,31 @@ function resolveUserAtBat(state, tactic) {
         recordPlateAppearance(batter, { hitBases: event.bases, error: event.error, rbi: event.error ? 0 : result.runs, runs: !event.error && event.bases >= 4 ? 1 : 0 });
         const errorText = event.error ? ` (${fielding.name} ${fielding.errorType})` : "";
         const touchText = event.bases < 4 ? `, ${fielding.name} 처리 시도` : "";
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${battedText}. ${result.text}${errorText}${touchText}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
+        text = `${opponentPitcher.name} ${paPitchNo()}구, ${battedText}. ${result.text}${errorText}${touchText}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
       } else if (game.bases[0] && game.outs <= 1 && rnd(1, 100) < Math.max(5, Math.min(24, 28 - (batter.spd || 55) * 0.2 + opponentEffectiveCommand(opponentPitcher) * 0.05))) {
         const result = resolveGroundDoublePlay(game);
         game.score.user += result.runs;
         recordPlateAppearance(batter, { out: true, rbi: result.runs });
-        text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${battedText}. ${batter.name} 병살타. 상대 유격수-2루수-1루수 처리, ${game.outs}아웃${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${result.bases}`;
+        text = `${opponentPitcher.name} ${paPitchNo()}구, ${battedText}. ${batter.name} 병살타. 상대 유격수-2루수-1루수 처리, ${game.outs}아웃${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${result.bases}`;
       } else {
         game.outs += 1;
         const great = rnd(1, 100) < fielding.greatChance;
         if (fielding.isAir) {
           const sac = trySacrificeFly(game, "user", 64);
           recordPlateAppearance(batter, { countsAtBat: !sac.scored, out: true, rbi: sac.scored ? 1 : 0, sacFly: Boolean(sac.scored) });
-          text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${battedText}. ${great ? `${fielding.name} 호수비! ` : ""}${fielding.name} ${fielding.outType}${sac.scored ? " · 희생플라이" : ""}${sac.text}. ${game.outs}아웃`;
+          text = `${opponentPitcher.name} ${paPitchNo()}구, ${battedText}. ${great ? `${fielding.name} 호수비! ` : ""}${fielding.name} ${fielding.outType}${sac.scored ? " · 희생플라이" : ""}${sac.text}. ${game.outs}아웃`;
         } else {
           game.outs -= 1;
           const ground = resolveGroundOut(game, batter.name);
           game.score.user += ground.runs;
           const batterOut = ground.text.includes("1루 아웃");
           recordPlateAppearance(batter, { out: batterOut, rbi: ground.runs });
-          text = `${opponentPitcher.name} ${opponentPitcher.pitchCount}구, ${battedText}. ${great ? `${fielding.name} 호수비! ` : ""}${fielding.name} ${fielding.outType}, ${ground.text}${ground.runs ? `, ${ground.runs}득점` : ""}. ${game.outs}아웃, 주자 ${ground.bases}`;
+          text = `${opponentPitcher.name} ${paPitchNo()}구, ${battedText}. ${great ? `${fielding.name} 호수비! ` : ""}${fielding.name} ${fielding.outType}, ${ground.text}${ground.runs ? `, ${ground.runs}득점` : ""}. ${game.outs}아웃, 주자 ${ground.bases}`;
         }
       }
       game.count = { balls: 0, strikes: 0 };
       game.lineupIndex += 1;
+      game.paPitchCount = 0;
     }
     }
   }
@@ -2466,7 +2485,7 @@ function resolveOpponentPlateAppearance(state) {
   let strikeoutAdded = 0;
   addPitchToActivePitcher(game, pitcher, 1);
   if (!game.count) game.count = { balls: 0, strikes: 0 };
-  const pitchSummary = () => `${pitcher?.name || "우리 투수"} ${game.pitchCount}구, ${batter.order}번 ${batter.name}`;
+  const pitchSummary = () => `${pitcher?.name || "우리 투수"} ${Math.max(1, Number(game.paPitchCount) || 1)}구, ${batter.order}번 ${batter.name}`;
   const wildChance = Math.max(
     0.2,
     Math.min(2.0, 1.55 - (pitcher?.pit || 60) * 0.014 + game.count.balls * 0.13 + Math.max(0, game.pitchCount - (pitcher?.stamina || 65)) * 0.012)
