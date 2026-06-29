@@ -1971,6 +1971,7 @@ function resolveUserAtBat(state, tactic) {
   if (!batter) return state;
   const opp = state.teams.find((t) => t.id === game.opponentId) || currentOpponent(state);
   if (!game.count) game.count = { balls: 0, strikes: 0 };
+  if ((game.count.balls || 0) === 0 && (game.count.strikes || 0) === 0 && Number(game.paPitchCount) > 0) game.paPitchCount = 0;
   if (!game.opponentPitcher) game.opponentPitcher = makeOpponentPitcher(opp);
   ensureOpponentBullpen(state, game, opp);
   const opponentPitcher = game.opponentPitcher;
@@ -2377,6 +2378,7 @@ function opponentFielderDetail(event = {}, batter = {}) {
   return {
     pos,
     name: `상대 ${posKo}`,
+    isAir,
     outType: isAir ? "뜬공 처리" : "땅볼 처리",
     errorType: isAir ? "포구 실책" : (rnd(1, 100) > 55 ? "송구 실책" : "포구 실책"),
     errorChance: Math.max(1, Math.min(12, 7 + hard * 0.04 - 4)),
@@ -2485,6 +2487,7 @@ function resolveOpponentPlateAppearance(state) {
   let strikeoutAdded = 0;
   addPitchToActivePitcher(game, pitcher, 1);
   if (!game.count) game.count = { balls: 0, strikes: 0 };
+  if ((game.count.balls || 0) === 0 && (game.count.strikes || 0) === 0 && Number(game.paPitchCount) > 1) game.paPitchCount = 1;
   const pitchSummary = () => `${pitcher?.name || "우리 투수"} ${Math.max(1, Number(game.paPitchCount) || 1)}구, ${batter.order}번 ${batter.name}`;
   const wildChance = Math.max(
     0.2,
