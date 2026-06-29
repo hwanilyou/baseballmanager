@@ -2165,7 +2165,7 @@ function resolveUserAtBat(state, tactic) {
         game.score.user += result.runs;
         recordPlateAppearance(batter, { hitBases: event.bases, error: event.error, rbi: event.error ? 0 : result.runs, runs: !event.error && event.bases >= 4 ? 1 : 0 });
         const errorText = event.error ? ` (${fielding.name} ${fielding.errorType})` : "";
-        const touchText = event.bases < 4 ? `, ${fielding.name} 처리 시도` : "";
+        const touchText = hitDefenseTouchText(event, fielding);
         text = `${opponentPitcher.name} ${paPitchNo()}구, ${battedText}. ${result.text}${errorText}${touchText}${result.runs ? `, ${result.runs}득점` : ""}. 주자 ${basesLabel(game.bases)}`;
       } else if (game.bases[0] && game.outs <= 1 && rnd(1, 100) < Math.max(5, Math.min(24, 28 - (batter.spd || 55) * 0.2 + opponentEffectiveCommand(opponentPitcher) * 0.05))) {
         const result = resolveGroundDoublePlay(game);
@@ -2416,20 +2416,26 @@ function battedBallDescription(event = {}, fielding = {}, batter = {}) {
     ]);
   }
   if (event.bases === 2) {
-    return sampleText([
-      "좌중간을 가르는 2루타",
-      "1루수 옆을 빠져 우익선상으로 흐르는 장타",
-      "중견수 앞에서 크게 튀어 담장 쪽으로 갑니다"
-    ]);
+    const byPos = {
+      LF: ["좌익선상 깊숙한 2루타", "좌중간을 가르는 2루타", "좌익수 뒤쪽으로 뻗는 장타"],
+      CF: ["중견수 키를 넘기는 2루타", "중견수 앞에서 크게 튀어 담장 쪽으로 갑니다", "가운데 펜스까지 굴러가는 2루타"],
+      RF: ["우익선상으로 흐르는 2루타", "우중간을 가르는 장타", "우익수 뒤로 떨어지는 2루타"]
+    };
+    return sampleText(byPos[pos] || byPos.CF);
   }
   if (event.bases === 1) {
-    return sampleText([
-      "유격수 키 살짝 넘기는 안타",
-      "1·2간을 깨끗하게 빠져나가는 안타",
-      "3·유간 사이로 빠지는 좌전 안타",
-      "중견수 앞에 떨어지는 깨끗한 안타",
-      "먹힌 타구지만 2루수 뒤에 떨어집니다"
-    ]);
+    const byPos = {
+      P: ["투수 옆을 스치고 빠지는 내야안타성 타구", "마운드 맞고 굴절되는 안타"],
+      C: ["포수 앞에 멈춘 빗맞은 타구, 타자주자 빠르게 1루", "홈 앞에서 크게 튄 타구가 안타가 됩니다"],
+      "1B": ["1루수 옆을 빠져나가는 우전 안타", "1루 선상 안쪽으로 빠지는 안타"],
+      "2B": ["1·2간을 깨끗하게 빠져나가는 안타", "먹힌 타구지만 2루수 뒤에 떨어집니다"],
+      "3B": ["3루수 옆을 빠져 좌익수 앞으로 굴러가는 안타", "3루 선상 안쪽으로 빠지는 좌전 안타"],
+      SS: ["유격수 키 살짝 넘기는 안타", "3·유간 사이로 빠지는 좌전 안타"],
+      LF: ["좌익수 앞에 떨어지는 좌전 안타", "3·유간을 지나 좌익수 앞으로 굴러갑니다"],
+      CF: ["중견수 앞에 떨어지는 깨끗한 중전 안타", "2루 베이스 뒤쪽을 지나 중견수 앞으로 굴러갑니다"],
+      RF: ["우익수 앞에 떨어지는 우전 안타", "1·2간을 빠져 우익수 앞으로 갑니다"]
+    };
+    return sampleText(byPos[pos] || byPos.CF);
   }
   if (fielding.isAir) {
     return sampleText([
@@ -2445,6 +2451,20 @@ function battedBallDescription(event = {}, fielding = {}, batter = {}) {
     `빗맞은 땅볼이 ${posKo} 쪽으로 갑니다`,
     `강한 땅볼, ${posKo}가 몸으로 막아냅니다`
   ]);
+}
+
+function hitDefenseTouchText(event = {}, fielding = {}) {
+  if ((event.bases || 0) >= 4) return "";
+  const pos = fielding.pos || "";
+  const name = fielding.name || "야수";
+  if ((event.bases || 0) >= 2) {
+    if (["LF", "CF", "RF"].includes(pos)) return `, ${name}이 펜스 쪽 타구를 쫓아갑니다`;
+    return `, ${name}이 중계 플레이를 준비합니다`;
+  }
+  if (["LF", "CF", "RF"].includes(pos)) return `, ${name}이 전진해 잡아 중계`;
+  if (["SS", "2B", "3B", "1B", "P"].includes(pos)) return `, ${name}이 글러브를 뻗었지만 통과`;
+  if (pos === "C") return `, ${name}이 잡아 던지기엔 늦었습니다`;
+  return `, ${name}이 타구를 따라갑니다`;
 }
 
 function foulBallDescription() {
@@ -2585,7 +2605,7 @@ function resolveOpponentPlateAppearance(state) {
         throwText = `, ${thrower?.name || "외야수"} 송구로 추가 주자 아웃`;
       }
       const errorText = event.error ? ` (${fielding.name} ${fielding.errorType})` : "";
-      const touchText = event.bases < 4 ? `, ${fielding.pos} ${fielding.name} 처리 시도` : "";
+      const touchText = hitDefenseTouchText(event, { ...fielding, name: `${fielding.pos} ${fielding.name}` });
       game.log.unshift(`${game.inning}회말 ${pitchSummary()}, ${battedText}. ${result.text}${errorText}${touchText}${result.runs ? `, ${result.runs}실점` : ""}${throwText}`);
       finishAtBatPitchTax(game, pitcher);
       game.count = { balls: 0, strikes: 0 };
