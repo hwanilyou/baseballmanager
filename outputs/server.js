@@ -3463,38 +3463,35 @@ function refreshTradeTargets(state, silent = false) {
       return state;
     }
   }
-  const cards = [];
-  const idBase = Date.now() * 1000;
-  opponents(state).forEach((team) => {
-    const teamBase = (team.power || 72) * 1.75;
-    const rosterPlan = [
-      ...Array.from({ length: 15 }, (_, i) => ({ type: "BAT", status: "ACTIVE", bump: i < 9 ? 10 : 0 })),
-      ...Array.from({ length: 13 }, (_, i) => ({ type: "PIT", status: "ACTIVE", bump: i < 5 ? 10 : 0 })),
-      ...Array.from({ length: 14 }, (_, i) => ({ type: "BAT", status: "FARM", bump: i < 4 ? -4 : -12 })),
-      ...Array.from({ length: 10 }, (_, i) => ({ type: "PIT", status: "FARM", bump: i < 4 ? -4 : -12 }))
-    ];
-    rosterPlan.forEach((slot, idx) => {
-      const p = makeTradeTarget(team, teamBase + slot.bump + rnd(-18, 20) + (idx % 5) * 2, slot.type);
-      p.id = idBase + cards.length + 1;
-      p.dataSource = "trade-target";
-      p.rosterStatus = slot.status;
-      p.trait = `${slot.status === "ACTIVE" ? "1군" : "2군"} 트레이드 후보`;
-      cards.push(p);
-    });
-  });
-  state.tradeTargets = cards.sort((a, b) => a.teamId.localeCompare(b.teamId) || (a.rosterStatus === "ACTIVE" ? -1 : 1) || tradeValue(b) - tradeValue(a));
-  if (!silent) addNews(state, "트레이드 로스터 갱신", "상대 9개 구단의 1군/2군 트레이드 후보 전체를 다시 확인했다.", "트레이드");
+  state.tradeTargets = [];
+  if (!silent) addNews(state, "트레이드 로스터 없음", "상대팀 등록 선수 명단을 불러오지 못했다. 가상 매물은 생성하지 않는다.", "트레이드");
   return state;
 }
 
 function ensureTradeTargets(state) {
   if (!Array.isArray(state.tradeTargets)) state.tradeTargets = [];
   const ids = new Set(state.tradeTargets.map((p) => Number(p.id)));
-  const usesImportedTargets = state.tradeTargets.every((p) => p.dataSource === "trade-target-import");
+  const usesImportedTargets = state.tradeTargets.length > 0 && state.tradeTargets.every((p) => p.dataSource === "trade-target-import");
   if (state.day <= tradeDeadlineDay(state) && (state.tradeTargets.length < 200 || ids.size !== state.tradeTargets.length || !usesImportedTargets)) refreshTradeTargets(state, true);
   if (state.day > tradeDeadlineDay(state)) state.tradeTargets = [];
   for (const p of state.tradeTargets) normalizeContractReality(p);
   return state;
+}
+
+function registeredTradeTargetPool(state, partnerId = null, needType = null) {
+  ensureTradeTargets(state);
+  return (state.tradeTargets || []).filter((p) => {
+    if (!p || p.dataSource !== "trade-target-import") return false;
+    if (String(p.teamId) === String(state.selectedTeamId)) return false;
+    if (partnerId && String(p.teamId) !== String(partnerId)) return false;
+    if (needType && p.type !== needType) return false;
+    if (p.rosterStatus === "DEV" || isForeignPlayer(p) || p.health?.status === "INJURED") return false;
+    return true;
+  });
+}
+
+function cloneTradeCard(card) {
+  return JSON.parse(JSON.stringify(card));
 }
 
 function proposeTrade(state, outgoingId, targetId, cash) {
@@ -3600,14 +3597,25 @@ function generateTradeOffer(state, playerId) {
     addNews(state, "트레이드 불가", "외국인 선수, 육성선수, 부상자는 트레이드 카드로 사용할 수 없다.", "규칙");
     return state;
   }
-  const partner = opponents(state).slice().sort(() => Math.random() - 0.5)[0];
-  const incoming = makeTradeTarget(partner, tradeValue(outgoing), outgoing.type === "PIT" ? "BAT" : "PIT");
+  const needType = outgoing.type === "PIT" ? "BAT" : "PIT";
+  let targetPool = registeredTradeTargetPool(state, null, needType);
+  if (!targetPool.length) targetPool = registeredTradeTargetPool(state);
+  if (!targetPool.length) {
+    addNews(state, "트레이드 제안 없음", "상대팀 등록 선수 명단을 불러오지 못해 새 제안을 만들 수 없다.", "트레이드");
+    return state;
+  }
+  const outgoingValue = tradeValue(outgoing);
+  const incomingSource = targetPool
+    .slice()
+    .sort((a, b) => Math.abs(tradeValue(a) - outgoingValue) - Math.abs(tradeValue(b) - outgoingValue) || Math.random() - 0.5)[0];
+  const partner = (state.teams || []).find((team) => String(team.id) === String(incomingSource.teamId)) || opponents(state).find((team) => String(team.id) === String(incomingSource.teamId));
+  const incoming = cloneTradeCard(incomingSource);
   const gap = tradeValue(incoming) - tradeValue(outgoing);
   const cash = Math.max(0, Math.round(gap * 0.12 * 10) / 10);
   const offer = {
     id: Date.now() + Math.random(),
-    fromTeamId: partner.id,
-    fromTeam: `${partner.city} ${partner.name}`,
+    fromTeamId: incomingSource.teamId,
+    fromTeam: partner ? `${partner.city} ${partner.name}` : incomingSource.teamName,
     outgoingId: outgoing.id,
     outgoingIds: [outgoing.id],
     incoming,
@@ -3632,6 +3640,7 @@ function acceptTradeOffer(state, id) {
   const outgoingIds = uniqueNumbers(offer.outgoingIds || offer.outgoingId);
   const outgoingPlayers = outgoingIds.map((pid) => state.players.find((p) => p.id === pid)).filter(Boolean);
   const incomingPlayers = Array.isArray(offer.incoming) ? offer.incoming : [offer.incoming].filter(Boolean);
+  const incomingTargetIds = incomingPlayers.map((p) => Number(p.id)).filter(Number.isFinite);
   if (!outgoingPlayers.length || outgoingPlayers.length !== outgoingIds.length || outgoingPlayers.some((p) => p.rosterStatus === "DEV" || isForeignPlayer(p) || p.health?.status === "INJURED")) {
     addNews(state, "트레이드 무효", "외국인 선수, 육성선수, 부상자는 트레이드할 수 없다.", "규칙");
     return state;
@@ -3651,6 +3660,7 @@ function acceptTradeOffer(state, id) {
   state.morale += sumTradeValue(incomingPlayers) >= sumTradeValue(outgoingPlayers) ? 2 : -3;
   transactionReaction(state, outgoingPlayers, incomingPlayers, offer.counter ? "역제안 수락" : "트레이드");
   state.tradeOffers = state.tradeOffers.filter((o) => o.id !== offer.id);
+  state.tradeTargets = (state.tradeTargets || []).filter((p) => !incomingTargetIds.includes(Number(p.id)));
   ensureRosterDepth(state);
   addNews(state, "트레이드 성사", `${outgoingPlayers.map((p) => p.name).join(", ")}을 보내고 ${offer.fromTeam}에서 ${incomingPlayers.map((p) => p.name).join(", ")}을 영입했다.`, "트레이드");
   return state;
