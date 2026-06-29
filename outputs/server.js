@@ -762,8 +762,9 @@ function ensureActiveGameDetails(state) {
   if (!game.count) game.count = { balls: 0, strikes: 0 };
   if (!game.runnerTactic) game.runnerTactic = "normal";
   if (!Number.isFinite(game.paPitchCount)) game.paPitchCount = 0;
-  if (!Array.isArray(game.opponentLineup) || game.opponentLineup.length < 9) game.opponentLineup = makeOpponentLineup(opp);
-  if (!game.opponentPitcher) game.opponentPitcher = makeOpponentPitcher(opp);
+  ensureOpponentPersonnel(state, game, opp);
+  if (!Array.isArray(game.opponentLineup) || game.opponentLineup.length < 9) game.opponentLineup = makeOpponentLineup(state, opp);
+  if (!game.opponentPitcher) game.opponentPitcher = selectOpponentStarter(state, opp);
   if (!Array.isArray(game.opponentBullpen) || game.opponentBullpen.length < 5) game.opponentBullpen = makeOpponentBullpen(opp, opp.id);
   game.opponentBullpen = applyOpponentBullpenHistory(state, opp, game.opponentBullpen);
   if (!Array.isArray(game.opponentUsedPitchers)) game.opponentUsedPitchers = [game.opponentPitcher?.name].filter(Boolean);
@@ -1300,7 +1301,65 @@ function finishWalkoffIfNeeded(state) {
   return true;
 }
 
-function makeOpponentLineup(opp) {
+function opponentRoster(state, teamId) {
+  return (state?.leaguePlayers || [])
+    .filter((p) => p && String(p.teamId) === String(teamId) && p.health?.status !== "INJURED")
+    .slice();
+}
+
+function rosterBackedOpponentName(state, opp, name) {
+  if (!name) return false;
+  return opponentRoster(state, opp?.id).some((p) => p.name === name);
+}
+
+function opponentBatterFromPlayer(p, order, fallbackPos = "DH") {
+  const contact = Math.max(35, Math.min(99, Number(p.hit || p.ovr || 60)));
+  const power = Math.max(30, Math.min(99, Number(p.pow || p.ovr || 55)));
+  return {
+    playerId: p.id,
+    order,
+    name: p.name,
+    jerseyNumber: p.jerseyNumber || p.no || defaultJerseyNumber(order),
+    pos: p.pos || fallbackPos,
+    hand: p.batHand || p.hand || "우",
+    contact,
+    power,
+    speed: Number(p.spd || 55),
+    defense: Number(p.def || 55),
+    arm: Number(p.arm || 55)
+  };
+}
+
+function makeOpponentLineup(state, opp) {
+  const batters = opponentRoster(state, opp?.id)
+    .filter((p) => p.type === "BAT")
+    .sort((a, b) => {
+      const activeDiff = (b.rosterStatus === "ACTIVE" ? 1 : 0) - (a.rosterStatus === "ACTIVE" ? 1 : 0);
+      const offenseDiff = ((b.hit || b.ovr || 0) + (b.pow || 0) * 0.55 + (b.spd || 0) * 0.18) - ((a.hit || a.ovr || 0) + (a.pow || 0) * 0.55 + (a.spd || 0) * 0.18);
+      return activeDiff || offenseDiff;
+    });
+
+  if (batters.length >= 9) {
+    const needed = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
+    const picked = [];
+    const used = new Set();
+    for (const pos of needed) {
+      const exact = batters.find((p) => !used.has(p.id) && (p.pos === pos || (p.secondaryPositions || []).includes(pos)));
+      if (exact) {
+        picked.push({ player: exact, pos });
+        used.add(exact.id);
+      }
+    }
+    for (const p of batters) {
+      if (picked.length >= 9) break;
+      if (!used.has(p.id)) {
+        picked.push({ player: p, pos: picked.length >= 8 ? "DH" : p.pos || "DH" });
+        used.add(p.id);
+      }
+    }
+    return picked.slice(0, 9).map((entry, index) => opponentBatterFromPlayer(entry.player, index + 1, entry.pos));
+  }
+
   const surnames = ["김", "이", "박", "최", "정", "강", "윤", "조", "한"];
   const names = ["도윤", "서준", "민재", "지후", "태오", "현우", "준서", "시온", "라온"];
   const positions = ["CF", "SS", "RF", "1B", "LF", "3B", "DH", "C", "2B"];
@@ -1344,13 +1403,13 @@ function seededRndFactory(seed) {
   };
 }
 
-function makeOpponentPitcher(opp, seed = "") {
+function makeOpponentPitcher(opp, seed = "", sourcePlayer = null) {
   const roll = seed ? seededRndFactory(`${opp.id}-${seed}`) : rnd;
   const names = ["김도현", "이준서", "박민준", "최시온", "정태오"];
   const power = Math.max(48, Math.min(90, opp.power + roll(-8, 10)));
   const command = Math.max(45, Math.min(90, power + roll(-10, 10)));
   const stamina = roll(72, 98);
-  return {
+  const generated = {
     name: `${opp.short}${names[roll(0, names.length - 1)]}`,
     jerseyNumber: roll(11, 99),
     role: "SP",
@@ -1363,6 +1422,58 @@ function makeOpponentPitcher(opp, seed = "") {
     pitchCount: 0,
     mood: "정상"
   };
+  if (!sourcePlayer) return generated;
+  const pit = Math.max(35, Math.min(99, Number(sourcePlayer.pit || sourcePlayer.ovr || generated.power)));
+  const commandFromPlayer = Math.max(35, Math.min(99, Math.round((Number(sourcePlayer.form || 65) * 0.45) + (pit * 0.55))));
+  return {
+    ...generated,
+    playerId: sourcePlayer.id,
+    name: sourcePlayer.name,
+    jerseyNumber: sourcePlayer.jerseyNumber || sourcePlayer.no || generated.jerseyNumber,
+    role: sourcePlayer.pitcherRole || sourcePlayer.pos || generated.role,
+    power: pit,
+    command: commandFromPlayer,
+    pickoff: Math.max(25, Math.min(95, Number(sourcePlayer.pickoff || sourcePlayer.arm || commandFromPlayer))),
+    stamina: Math.max(25, Math.min(110, Number(sourcePlayer.stamina || generated.stamina))),
+    hand: sourcePlayer.throwHand || sourcePlayer.hand || generated.hand,
+    style: sourcePlayer.trait || generated.style,
+    mood: "정상"
+  };
+}
+
+function selectOpponentStarter(state, opp) {
+  const pitchers = opponentRoster(state, opp?.id)
+    .filter((p) => p.type === "PIT" && (p.pitcherRole === "SP" || p.pos === "SP"))
+    .sort((a, b) => {
+      const activeDiff = (b.rosterStatus === "ACTIVE" ? 1 : 0) - (a.rosterStatus === "ACTIVE" ? 1 : 0);
+      const restDiff = (Number(a.restDays) || 0) - (Number(b.restDays) || 0);
+      const valueDiff = (Number(b.ovr || b.pit || 0) + Number(b.stamina || 0) * 0.16) - (Number(a.ovr || a.pit || 0) + Number(a.stamina || 0) * 0.16);
+      return activeDiff || restDiff || valueDiff;
+    });
+  const seed = `${state?.day || 1}-${opp?.id || "opp"}`;
+  const starter = pitchers.length ? pitchers[(Math.max(0, (Number(state?.day) || 1) - 1)) % Math.min(5, pitchers.length)] : null;
+  return makeOpponentPitcher(opp, seed, starter);
+}
+
+function ensureOpponentPersonnel(state, game, opp) {
+  if (!game || !opp) return;
+  const generatedPitcher = !game.opponentPitcher || !rosterBackedOpponentName(state, opp, game.opponentPitcher.name);
+  const generatedLineup = !Array.isArray(game.opponentLineup)
+    || game.opponentLineup.length < 9
+    || game.opponentLineup.some((b) => !rosterBackedOpponentName(state, opp, b?.name));
+  if (generatedPitcher) {
+    game.opponentPitcher = {
+      ...selectOpponentStarter(state, opp),
+      pitchCount: Number(game.opponentPitcher?.pitchCount) || 0,
+      mood: game.opponentPitcher?.mood || "정상",
+      battersFaced: Number(game.opponentPitcher?.battersFaced) || 0,
+      runsAllowed: Number(game.opponentPitcher?.runsAllowed) || 0,
+      runnersAllowed: Number(game.opponentPitcher?.runnersAllowed) || 0,
+      hitsAllowed: Number(game.opponentPitcher?.hitsAllowed) || 0,
+      walksAllowed: Number(game.opponentPitcher?.walksAllowed) || 0
+    };
+  }
+  if (generatedLineup) game.opponentLineup = makeOpponentLineup(state, opp);
 }
 
 function makeOpponentBullpen(opp, seed = "") {
@@ -1574,7 +1685,9 @@ function ensureProbableOpponentPitcher(state) {
   if (!state.opponentProbables || typeof state.opponentProbables !== "object") state.opponentProbables = {};
   const opp = currentOpponent(state);
   const key = `${state.day}-${opp.id}`;
-  if (!state.opponentProbables[key]) state.opponentProbables[key] = makeOpponentPitcher(opp, key);
+  if (!state.opponentProbables[key] || !rosterBackedOpponentName(state, opp, state.opponentProbables[key].name)) {
+    state.opponentProbables[key] = selectOpponentStarter(state, opp);
+  }
   if (!state.opponentProbables[key].jerseyNumber) {
     const roll = seededRndFactory(`${opp.id}-${key}-probable-number`);
     state.opponentProbables[key].jerseyNumber = roll(11, 99);
@@ -1688,7 +1801,7 @@ function createActiveGame(state, lineup, starterId, lineupPositions) {
     pendingSteal: null,
     runnerTactic: "normal",
     count: { balls: 0, strikes: 0 },
-    opponentLineup: makeOpponentLineup(opp),
+    opponentLineup: makeOpponentLineup(state, opp),
     opponentLineupIndex: 0,
     inning: 1,
     half: "top",
@@ -1972,7 +2085,8 @@ function resolveUserAtBat(state, tactic) {
   const opp = state.teams.find((t) => t.id === game.opponentId) || currentOpponent(state);
   if (!game.count) game.count = { balls: 0, strikes: 0 };
   if ((game.count.balls || 0) === 0 && (game.count.strikes || 0) === 0 && Number(game.paPitchCount) > 0) game.paPitchCount = 0;
-  if (!game.opponentPitcher) game.opponentPitcher = makeOpponentPitcher(opp);
+  ensureOpponentPersonnel(state, game, opp);
+  if (!game.opponentPitcher) game.opponentPitcher = selectOpponentStarter(state, opp);
   ensureOpponentBullpen(state, game, opp);
   const opponentPitcher = game.opponentPitcher;
   const pitcherEdge = Math.max(38, opponentEffectivePower(opponentPitcher));
