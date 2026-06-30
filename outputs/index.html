@@ -2233,6 +2233,11 @@
       const lineup = liveGame && active.lineup?.length ? active.lineup : lineupFromLastGame(hitters);
       const lineupPositions = liveGame && active.lineupPositions?.length ? active.lineupPositions : positionsFromLastGame(lineup);
       const safeLineupPositions = lineupPositions.map((pos, i) => fieldPositions.includes(pos) ? pos : defaultLineupPosition(i));
+      const usedPositionPlayers = active?.usedPositionPlayers || [];
+      const removedPositionPlayers = active?.removedPositionPlayers || [];
+      const lineupChoices = liveGame
+        ? hitters.filter((p) => lineup.includes(p.id) || (p.health?.status !== "INJURED" && !usedPositionPlayers.includes(p.id) && !removedPositionPlayers.includes(p.id)))
+        : hitters;
       const savedStarterId = Number(state.lastLineup?.starterId || 0);
       const defaultStarterId = liveGame
         ? active?.pitcherId
@@ -2268,17 +2273,25 @@
         <label class="lineup-row">
           <span class="badge">${i + 1}</span>
           <div class="lineup-assignment">
-            <select class="lineupSelect" data-slot="${i}" ${liveGame ? "disabled" : ""}>
-              ${lineupPlayerOptions(hitters, lineup[i], lineup, i)}
+            <select class="lineupSelect" data-slot="${i}">
+              ${lineupPlayerOptions(lineupChoices, lineup[i], lineup, i)}
             </select>
-            <select class="lineupPosSelect" data-slot="${i}" ${liveGame ? "disabled" : ""}>
+            <select class="lineupPosSelect" data-slot="${i}">
               ${lineupPositionOptions(safeLineupPositions[i] || defaultLineupPosition(i), safeLineupPositions, i)}
             </select>
           </div>
         </label>
       `).join("");
-      if (!liveGame) {
-        rememberLineupSelections();
+      rememberLineupSelections();
+      if (liveGame) {
+        document.querySelectorAll(".lineupSelect").forEach((select) => {
+          select.addEventListener("change", () => liveLineupSubstitute(Number(select.dataset.slot), Number(select.value)));
+        });
+        document.querySelectorAll(".lineupPosSelect").forEach((select) => {
+          bindSwapSelect(select, ".lineupPosSelect");
+          select.addEventListener("change", () => submitLineupPositionsFromMain());
+        });
+      } else {
         document.querySelectorAll(".lineupSelect").forEach((select) => {
           bindSwapSelect(select, ".lineupSelect");
         });
@@ -2305,36 +2318,23 @@
       const bullpen = state.players
         .filter((p) => p.type === "PIT" && p.rosterStatus === "ACTIVE" && p.id !== active?.pitcherId && !(active?.usedPitchers || []).includes(p.id) && p.health?.status !== "INJURED")
         .sort((a, b) => roleOrder(a.pitcherRole) - roleOrder(b.pitcherRole) || (Number(a.restDays) || 0) - (Number(b.restDays) || 0) || b.ovr - a.ovr);
-      const usedPositionPlayers = active?.usedPositionPlayers || [];
-      const removedPositionPlayers = active?.removedPositionPlayers || [];
       const availableBench = bench.filter((p) => !usedPositionPlayers.includes(p.id) && !removedPositionPlayers.includes(p.id));
       const occupiedBases = (active?.bases || []).map((runner, index) => ({ runner, index })).filter((base) => base.runner);
-      $("benchBox").innerHTML = active ? `
+      const defaultSubOutId = userBatting ? currentBatterId : activeLineupPlayers[0]?.id;
+      const defaultSubOutSlot = Math.max(0, activeLineupPlayers.findIndex((p) => p.id === defaultSubOutId));
+      const lineupOptions = activeLineupPlayers.map((p, i) => `<option value="${p.id}" ${p.id === defaultSubOutId ? "selected" : ""}>${i + 1}번 [${batterHandLabel(p)}] ${playerName(p)} · ${active.lineupPositions?.[i] || p.pos} · 현재 ${p.ovr}</option>`).join("");
+      const benchOptions = availableBench.map((p) => `<option value="${p.id}">[${batterHandLabel(p)}] ${playerName(p)} · ${p.pos} · 현재 ${p.ovr} · 주루 ${p.spd} · 컨디션 ${Math.round(p.form)}</option>`).join("");
+      const benchRunnerOptions = availableBench.slice().sort((a, b) => b.spd - a.spd || b.ovr - a.ovr).map((p) => `<option value="${p.id}">[${batterHandLabel(p)}] ${playerName(p)} · ${p.pos} · 주루 ${p.spd} · 현재 ${p.ovr}</option>`).join("");
+      const defensiveSubSection = `
         <div class="news-item">
-          <div class="news-title">1군 야수 교체</div>
+          <div class="news-title">대수비</div>
           <div class="toolbar">
-            <select id="pinchOutSelect">
-              ${activeLineupPlayers.map((p, i) => `<option value="${p.id}" ${p.id === currentBatterId ? "selected" : ""}>${i + 1}번 [${batterHandLabel(p)}] ${playerName(p)} · ${active.lineupPositions?.[i] || p.pos} · ${p.ovr}</option>`).join("")}
-            </select>
-            <select id="pinchInSelect">
-              ${availableBench.map((p) => `<option value="${p.id}">[${batterHandLabel(p)}] ${playerName(p)} · ${p.pos} · ${p.ovr} · 주루 ${p.spd} · 컨디션 ${Math.round(p.form)}</option>`).join("")}
-            </select>
-            <button class="secondary" onclick="pinchHitFromSelect()" ${!availableBench.length || active.complete ? "disabled" : ""}>대타/수비교체</button>
+            <select id="defenseOutSelect">${lineupOptions}</select>
+            <select id="defenseInSelect">${benchOptions}</select>
+            <select id="defensePosSelect">${lineupPositionOptions(active?.lineupPositions?.[defaultSubOutSlot] || "RF", [], -1)}</select>
+            <button class="secondary" onclick="defensiveSubFromSelect()" ${!availableBench.length || active.complete ? "disabled" : ""}>대수비 투입</button>
           </div>
-          <div class="small">1군 등록 야수 중 현재 라인업에 없는 선수만 교체 투입할 수 있습니다.</div>
-        </div>
-        <div class="news-item">
-          <div class="news-title">대주자</div>
-          <div class="toolbar">
-            <select id="pinchRunBaseSelect">
-              ${occupiedBases.map((base) => `<option value="${base.index}">${base.index + 1}루 주자 · ${base.runner}</option>`).join("")}
-            </select>
-            <select id="pinchRunnerSelect">
-              ${availableBench.slice().sort((a, b) => b.spd - a.spd || b.ovr - a.ovr).map((p) => `<option value="${p.id}">[${batterHandLabel(p)}] ${playerName(p)} · ${p.pos} · 주루 ${p.spd} · 현재 ${p.ovr}</option>`).join("")}
-            </select>
-            <button class="secondary" onclick="pinchRunFromSelect()" ${!occupiedBases.length || !availableBench.length || active.complete ? "disabled" : ""}>대주자 투입</button>
-          </div>
-          <div class="small">대주자는 해당 베이스 주자를 대신하고 그 선수의 타순을 이어받습니다.</div>
+          <div class="small">선수를 교체하면 왼쪽 라인업 타순과 수비 위치에도 바로 반영됩니다.</div>
         </div>
         <div class="news-item">
           <div class="news-title">수비 위치 변경</div>
@@ -2350,9 +2350,30 @@
             `).join("")}
           </div>
           <button class="secondary" onclick="submitLivePositions()" ${active.complete ? "disabled" : ""}>수비 위치 적용</button>
-          <div class="small">대타/대주자 투입 후에도 C, 1B, 2B, 3B, SS, LF, CF, RF, DH를 다시 배치할 수 있습니다.</div>
+          <div class="small">왼쪽 라인업 포지션 드롭다운에서도 같은 변경을 할 수 있습니다.</div>
+        </div>`;
+      const offenseSubSection = `
+        <div class="news-item">
+          <div class="news-title">대타</div>
+          <div class="toolbar">
+            <select id="pinchOutSelect">${lineupOptions}</select>
+            <select id="pinchInSelect">${benchOptions}</select>
+            <button class="secondary" onclick="pinchHitFromSelect()" ${!availableBench.length || active.complete ? "disabled" : ""}>대타 투입</button>
+          </div>
+          <div class="small">교체 선수는 선택한 타순을 이어받고 이후 수비 위치를 다시 조정할 수 있습니다.</div>
         </div>
-      ` : `<div class="empty">경기가 시작되면 1군 선수단에서 교체 선수를 고를 수 있습니다.</div>`;
+        <div class="news-item">
+          <div class="news-title">대주자</div>
+          <div class="toolbar">
+            <select id="pinchRunBaseSelect">
+              ${occupiedBases.map((base) => `<option value="${base.index}">${base.index + 1}루 주자 · ${base.runner}</option>`).join("")}
+            </select>
+            <select id="pinchRunnerSelect">${benchRunnerOptions}</select>
+            <button class="secondary" onclick="pinchRunFromSelect()" ${!occupiedBases.length || !availableBench.length || active.complete ? "disabled" : ""}>대주자 투입</button>
+          </div>
+          <div class="small">대주자는 해당 베이스 주자를 대신하고 그 선수의 타순을 이어받습니다.</div>
+        </div>`;
+      $("benchBox").innerHTML = active ? (userBatting ? offenseSubSection : defensiveSubSection) : `<div class="empty">경기가 시작되면 1군 선수단에서 교체 선수를 고를 수 있습니다.</div>`;
 
       if (!active) {
         $("manualScore").innerHTML = `<div class="score-line"><span>${teamName()}</span><span>vs</span></div><div class="score-line"><span>${teamName(state.opponent)}</span><span>${state.opponent.power}</span></div>`;
@@ -2409,6 +2430,14 @@
         document.querySelectorAll(".livePosSelect").forEach((select) => {
           bindSwapSelect(select, ".livePosSelect");
         });
+        const defenseOutSelect = $("defenseOutSelect");
+        const defensePosSelect = $("defensePosSelect");
+        if (defenseOutSelect && defensePosSelect) {
+          defenseOutSelect.addEventListener("change", () => {
+            const slot = (state.activeGame?.lineup || []).indexOf(Number(defenseOutSelect.value));
+            defensePosSelect.value = state.activeGame?.lineupPositions?.[slot] || defensePosSelect.value;
+          });
+        }
       }
 
       const canManage = active && !active.complete;
@@ -2623,6 +2652,44 @@
       const inSelect = $("pinchInSelect");
       if (!outSelect?.value || !inSelect?.value) return;
       await pinchHit(Number(outSelect.value), Number(inSelect.value));
+    }
+
+    async function substituteWithPosition(outId, inId, position) {
+      await mutate("/api/game/substitute", { outId, inId, position });
+    }
+
+    async function liveLineupSubstitute(slot, inId) {
+      const game = state.activeGame;
+      if (!game || game.complete) return;
+      const outId = Number(game.lineup?.[slot] || 0);
+      if (!outId || outId === inId) return;
+      if ((game.lineup || []).includes(inId)) {
+        showToast("경기 중에는 타순 교환 대신 수비 위치 변경만 가능합니다.");
+        renderGame();
+        return;
+      }
+      const position = document.querySelector(`.lineupPosSelect[data-slot="${slot}"]`)?.value || game.lineupPositions?.[slot];
+      await substituteWithPosition(outId, inId, position);
+    }
+
+    async function submitLineupPositionsFromMain() {
+      const positions = selectedLineupPositions();
+      const missing = fieldPositions.filter((pos) => !positions.includes(pos));
+      const duplicatePosition = positions.find((pos, index) => positions.indexOf(pos) !== index);
+      if (positions.length !== 9 || missing.length || duplicatePosition) {
+        showToast(`수비 포지션은 C, 1B, 2B, 3B, SS, LF, CF, RF, DH를 각각 한 번씩 써야 합니다. 빠진 포지션: ${missing.join(", ") || "없음"}`);
+        renderGame();
+        return;
+      }
+      await mutate("/api/game/positions", { positions });
+    }
+
+    async function defensiveSubFromSelect() {
+      const outSelect = $("defenseOutSelect");
+      const inSelect = $("defenseInSelect");
+      const posSelect = $("defensePosSelect");
+      if (!outSelect?.value || !inSelect?.value) return;
+      await substituteWithPosition(Number(outSelect.value), Number(inSelect.value), posSelect?.value || null);
     }
 
     async function pinchRunFromSelect() {

@@ -3048,7 +3048,7 @@ function changePitcher(state, inId) {
   return state;
 }
 
-function substituteBatter(state, outId, inId) {
+function substituteBatter(state, outId, inId, position = null) {
   const game = state.activeGame;
   if (!game || game.complete) return state;
   outId = Number(outId);
@@ -3057,11 +3057,21 @@ function substituteBatter(state, outId, inId) {
   const incoming = state.players.find((p) => p.id === inId && p.type === "BAT" && p.rosterStatus === "ACTIVE" && p.health?.status !== "INJURED");
   if (idx < 0 || !incoming || game.lineup.includes(inId) || game.usedPositionPlayers?.includes(inId) || game.removedPositionPlayers?.includes(inId)) return state;
   const outgoing = state.players.find((p) => p.id === outId);
+  const oldPosition = game.lineupPositions?.[idx] || outgoing?.pos || incoming.pos;
   game.lineup[idx] = inId;
   game.usedPositionPlayers = [...new Set([...(game.usedPositionPlayers || []), inId])];
   game.removedPositionPlayers = [...new Set([...(game.removedPositionPlayers || []), outId])];
   game.lineupPositions = normalizeLineupPositions(game.lineup, game.lineupPositions, state);
-  game.log.unshift(`대타/수비 교체: ${outgoing?.name || "선수"} 대신 ${incoming.name} ${game.lineupPositions[idx] || incoming.pos}`);
+  if (position && FIELD_POSITIONS.includes(position)) {
+    const swapIdx = game.lineupPositions.indexOf(position);
+    if (swapIdx >= 0 && swapIdx !== idx) {
+      game.lineupPositions[swapIdx] = oldPosition;
+    }
+    game.lineupPositions[idx] = position;
+  } else {
+    game.lineupPositions[idx] = oldPosition;
+  }
+  game.log.unshift(`대타/수비 교체: ${idx + 1}번 ${outgoing?.name || "선수"} 대신 ${incoming.name} · 수비 ${game.lineupPositions[idx] || incoming.pos}`);
   return state;
 }
 
@@ -5498,7 +5508,7 @@ const server = http.createServer(async (req, res) => {
     "/api/game/change-pitcher": () => changePitcher(state, body.inId),
     "/api/game/at-bat": () => resolveUserAtBat(state, body.tactic || "swing"),
     "/api/game/defense": () => resolveOpponentHalf(state),
-    "/api/game/substitute": () => substituteBatter(state, body.outId, body.inId),
+    "/api/game/substitute": () => substituteBatter(state, body.outId, body.inId, body.position),
     "/api/game/pinch-run": () => pinchRun(state, body.baseIndex, body.inId),
     "/api/game/positions": () => changeDefensivePositions(state, body.positions),
     "/api/roster/status": () => setRosterStatus(state, body.id, body.status),
