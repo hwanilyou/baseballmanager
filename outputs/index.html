@@ -3357,35 +3357,44 @@
         }).join("") || `<div class="empty">검색 결과가 없습니다.</div>`
         : `<div class="empty">이름 앞 두 글자, 등번호, 팀명, 포지션으로 전체 선수단을 검색할 수 있습니다.</div>`;
       const leaderPool = recordPlayers.filter((p) => playerMatchesFilters(p, leaderStatus, leaderType) && playerMatchesSearch(p, leaderQuery));
-      const leaderRows = (players, valueFn) => players.map((p, index) => `
+      const leaderRows = (players, valueFn) => players.length ? players.map((p, index) => `
         <tr>
           <td>${index + 1}</td>
           <td><div class="leader-player"><strong>${playerName(p)}</strong><div class="small">${playerTeamLabel(p) || "소속 미상"}</div></div></td>
           <td>${valueFn(p)}</td>
         </tr>
-      `).join("");
-      const hitters = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.hr || 0) - (a.stats.hr || 0)).slice(0, 5);
-      const pitchers = leaderPool.filter((p) => p.type === "PIT").sort((a, b) => (b.stats.so || 0) - (a.stats.so || 0)).slice(0, 5);
+      `).join("") : `<tr><td colspan="3" class="small">후보 선수 없음</td></tr>`;
+      const emptyLeaderRows = (text = "후보 선수 없음") => `<tr><td colspan="3" class="small">${text}</td></tr>`;
+      const asLeaderRows = (players, valueFn, text) => players.length ? leaderRows(players, valueFn) : emptyLeaderRows(text);
+      const playedGamesForLeaders = Math.max(1, (Number(state.day) || 1) - 1);
+      const minTitlePa = Math.max(12, Math.floor(playedGamesForLeaders * 2.7));
+      const minRatePa = Math.max(10, Math.floor(playedGamesForLeaders * 2.2));
+      const minTitleIp = Math.max(8, Math.floor(playedGamesForLeaders * 0.85));
+      const minDecision = Math.max(3, Math.floor(playedGamesForLeaders / 5));
+      const qualifiedBat = (p, minPa = minTitlePa) => p.type === "BAT" && (Number(p.stats?.pa) || 0) >= minPa;
+      const qualifiedPitch = (p, minIp = minTitleIp) => p.type === "PIT" && (Number(p.stats?.ip) || 0) >= minIp;
+      const hitters = leaderPool.filter((p) => p.type === "BAT" && (p.stats.hr || 0) > 0).sort((a, b) => (b.stats.hr || 0) - (a.stats.hr || 0)).slice(0, 5);
+      const pitchers = leaderPool.filter((p) => qualifiedPitch(p)).sort((a, b) => (b.stats.so || 0) - (a.stats.so || 0)).slice(0, 5);
       const eraValue = (p) => Number.isFinite(Number(p.stats?.era)) ? Number(p.stats.era) : 9;
-      const avgLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.avg || 0) - (a.stats.avg || 0)).slice(0, 5);
-      const stealLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.sb || 0) - (a.stats.sb || 0)).slice(0, 5);
-      const rbiLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.rbi || 0) - (a.stats.rbi || 0)).slice(0, 5);
-      const hitLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => (b.stats.h || 0) - (a.stats.h || 0)).slice(0, 5);
-      const eraLeaders = leaderPool.filter((p) => p.type === "PIT" && ((p.stats?.ip || 0) > 0 || (p.stats?.so || 0) > 0 || (p.stats?.win || 0) > 0)).sort((a, b) => eraValue(a) - eraValue(b)).slice(0, 5);
-      const saveLeaders = leaderPool.filter((p) => p.type === "PIT").sort((a, b) => (b.stats.sv || 0) - (a.stats.sv || 0)).slice(0, 5);
-      const winLeaders = leaderPool.filter((p) => p.type === "PIT").sort((a, b) => (b.stats.win || 0) - (a.stats.win || 0) || eraValue(a) - eraValue(b)).slice(0, 5);
-      const holdLeaders = leaderPool.filter((p) => p.type === "PIT").sort((a, b) => (b.stats.hold || 0) - (a.stats.hold || 0) || eraValue(a) - eraValue(b)).slice(0, 5);
+      const avgLeaders = leaderPool.filter((p) => qualifiedBat(p)).sort((a, b) => (b.stats.avg || 0) - (a.stats.avg || 0)).slice(0, 5);
+      const stealLeaders = leaderPool.filter((p) => p.type === "BAT" && (p.stats.sb || 0) > 0).sort((a, b) => (b.stats.sb || 0) - (a.stats.sb || 0)).slice(0, 5);
+      const rbiLeaders = leaderPool.filter((p) => p.type === "BAT" && (p.stats.rbi || 0) > 0).sort((a, b) => (b.stats.rbi || 0) - (a.stats.rbi || 0)).slice(0, 5);
+      const hitLeaders = leaderPool.filter((p) => p.type === "BAT" && (p.stats.h || 0) > 0).sort((a, b) => (b.stats.h || 0) - (a.stats.h || 0)).slice(0, 5);
+      const eraLeaders = leaderPool.filter((p) => qualifiedPitch(p)).sort((a, b) => eraValue(a) - eraValue(b)).slice(0, 5);
+      const saveLeaders = leaderPool.filter((p) => p.type === "PIT" && (p.stats.sv || 0) > 0).sort((a, b) => (b.stats.sv || 0) - (a.stats.sv || 0)).slice(0, 5);
+      const winLeaders = leaderPool.filter((p) => p.type === "PIT" && ((p.stats.win || 0) > 0 || (p.stats.loss || 0) > 0)).sort((a, b) => (b.stats.win || 0) - (a.stats.win || 0) || eraValue(a) - eraValue(b)).slice(0, 5);
+      const holdLeaders = leaderPool.filter((p) => p.type === "PIT" && (p.stats.hold || 0) > 0).sort((a, b) => (b.stats.hold || 0) - (a.stats.hold || 0) || eraValue(a) - eraValue(b)).slice(0, 5);
       const winPct = (p) => (p.stats?.win || 0) / Math.max(1, (p.stats?.win || 0) + (p.stats?.loss || 0));
       const winPctLeaders = leaderPool
-        .filter((p) => p.type === "PIT" && (((p.stats?.win || 0) + (p.stats?.loss || 0)) >= 3 || (p.stats?.win || 0) >= 3))
+        .filter((p) => p.type === "PIT" && (((p.stats?.win || 0) + (p.stats?.loss || 0)) >= minDecision || (p.stats?.win || 0) >= minDecision))
         .sort((a, b) => winPct(b) - winPct(a) || (b.stats.win || 0) - (a.stats.win || 0))
         .slice(0, 5);
-      const hitterWarLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => hitterAdvancedStats(b).war - hitterAdvancedStats(a).war).slice(0, 5);
-      const opsLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => hitterAdvancedStats(b).ops - hitterAdvancedStats(a).ops).slice(0, 5);
-      const opsPlusLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => hitterAdvancedStats(b).opsPlus - hitterAdvancedStats(a).opsPlus).slice(0, 5);
-      const pitcherWarLeaders = leaderPool.filter((p) => p.type === "PIT").sort((a, b) => pitcherAdvancedStats(b).war - pitcherAdvancedStats(a).war).slice(0, 5);
-      const whipLeaders = leaderPool.filter((p) => p.type === "PIT" && ((p.stats?.ip || 0) > 0 || (p.stats?.so || 0) > 0 || (p.stats?.win || 0) > 0)).sort((a, b) => pitcherAdvancedStats(a).whip - pitcherAdvancedStats(b).whip).slice(0, 5);
-      const k9Leaders = leaderPool.filter((p) => p.type === "PIT" && ((p.stats?.ip || 0) > 0 || (p.stats?.so || 0) > 0)).sort((a, b) => pitcherAdvancedStats(b).k9 - pitcherAdvancedStats(a).k9).slice(0, 5);
+      const hitterWarLeaders = leaderPool.filter((p) => qualifiedBat(p, minRatePa)).sort((a, b) => hitterAdvancedStats(b).war - hitterAdvancedStats(a).war).slice(0, 5);
+      const opsLeaders = leaderPool.filter((p) => qualifiedBat(p, minRatePa)).sort((a, b) => hitterAdvancedStats(b).ops - hitterAdvancedStats(a).ops).slice(0, 5);
+      const opsPlusLeaders = leaderPool.filter((p) => qualifiedBat(p, minRatePa)).sort((a, b) => hitterAdvancedStats(b).opsPlus - hitterAdvancedStats(a).opsPlus).slice(0, 5);
+      const pitcherWarLeaders = leaderPool.filter((p) => qualifiedPitch(p)).sort((a, b) => pitcherAdvancedStats(b).war - pitcherAdvancedStats(a).war).slice(0, 5);
+      const whipLeaders = leaderPool.filter((p) => qualifiedPitch(p)).sort((a, b) => pitcherAdvancedStats(a).whip - pitcherAdvancedStats(b).whip).slice(0, 5);
+      const k9Leaders = leaderPool.filter((p) => qualifiedPitch(p)).sort((a, b) => pitcherAdvancedStats(b).k9 - pitcherAdvancedStats(a).k9).slice(0, 5);
       $("leaders").innerHTML = `
         <h3>타격왕 경쟁</h3><table><tbody>${leaderRows(avgLeaders, (p) => (p.stats.avg || 0).toFixed(3))}</tbody></table>
         <h3 style="margin-top:14px;">도루왕 경쟁</h3><table><tbody>${leaderRows(stealLeaders, (p) => p.stats.sb || 0)}</tbody></table>

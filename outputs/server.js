@@ -3332,7 +3332,7 @@ function pickSkipStarter(state, preferredId = null) {
 }
 
 function buildSkipPitchingPlan(state, starter, myRuns, oppRuns) {
-  const activePitchers = state.players
+  let activePitchers = state.players
     .filter((p) => p.rosterStatus === "ACTIVE" && p.type === "PIT" && p.health?.status !== "INJURED" && p.id !== starter?.id)
     .sort((a, b) => pitcherGameValue(b) - pitcherGameValue(a));
   const usage = {};
@@ -3346,6 +3346,10 @@ function buildSkipPitchingPlan(state, starter, myRuns, oppRuns) {
   if (!activePitchers.length) return usage;
   const starterPitches = starter ? usage[starter.id] : 0;
   const needRelievers = starterPitches < 70 || closeGame || oppRuns >= 5;
+  if (closeGame) {
+    const leverageRank = (p) => p.pitcherRole === "CL" ? 0 : p.pitcherRole === "SU" ? 1 : p.pitcherRole === "MR" ? 2 : 3;
+    activePitchers = activePitchers.slice().sort((a, b) => leverageRank(a) - leverageRank(b) || pitcherGameValue(b) - pitcherGameValue(a));
+  }
   const minSlots = Math.min(activePitchers.length, needRelievers ? 2 : 1);
   const maxSlots = Math.min(activePitchers.length, needRelievers ? 5 : 3);
   const relieverSlots = rnd(minSlots, maxSlots);
@@ -3529,6 +3533,11 @@ function finalizeSeasonAwards(state) {
   const recordPlayers = leagueRecordPlayers(state);
   const hitters = recordPlayers.filter((p) => p.type === "BAT");
   const pitchers = recordPlayers.filter((p) => p.type === "PIT");
+  const qualifiedHitters = hitters.filter((p) => (p.stats?.pa || 0) >= Math.floor((state.seasonGames || 144) * 2.7));
+  const qualifiedPitchers = pitchers.filter((p) => (p.stats?.ip || 0) >= Math.floor((state.seasonGames || 144) * 0.8));
+  const decisionPitchers = pitchers.filter((p) => ((p.stats?.win || 0) + (p.stats?.loss || 0)) >= 8 || (p.stats?.win || 0) >= 8);
+  const savePitchers = pitchers.filter((p) => (p.stats?.sv || 0) > 0);
+  const holdPitchers = pitchers.filter((p) => (p.stats?.hold || 0) > 0);
   const mvp = topPlayer(recordPlayers, playerScoreForMvp);
   const rookie = topPlayer(recordPlayers.filter((p) => (p.age || 99) <= 24 && (p.serviceYears || 0) <= 2), playerScoreForMvp);
   const goldGloves = FIELD_POSITIONS
@@ -3715,18 +3724,19 @@ function simulateTeamPlayerStats(state, team) {
   const closer = pitchers.find((p) => p.pitcherRole === "CL" || p.pos === "CL");
   for (const p of hitters) {
     const pa = rnd(3, 5);
-    const contact = Math.max(0.18, Math.min(0.36, 0.19 + (p.hit || p.ovr || 62) / 620 + rnd(-2, 2) / 100));
+    const contact = Math.max(0.16, Math.min(0.34, 0.16 + (p.hit || p.ovr || 62) / 820 + rnd(-2, 2) / 100));
     const hits = Math.max(0, Math.min(pa, Math.round(contact * pa + rnd(-1, 1))));
+    const homers = Math.random() < Math.max(0.006, (p.pow || 60) / 2400) ? 1 : 0;
     p.stats.pa = (p.stats.pa || 0) + pa;
-    p.stats.h = (p.stats.h || 0) + hits;
-    p.stats.hr = (p.stats.hr || 0) + (Math.random() < Math.max(0.015, (p.pow || 60) / 1500) ? 1 : 0);
+    p.stats.h = (p.stats.h || 0) + Math.max(hits, homers);
+    p.stats.hr = (p.stats.hr || 0) + homers;
     p.stats.rbi = (p.stats.rbi || 0) + rnd(0, Math.max(1, Math.round((p.hit || 60) / 42)));
     p.stats.r = (p.stats.r || 0) + rnd(0, hits + ((p.spd || 55) > 72 ? 1 : 0));
     p.stats.sb = (p.stats.sb || 0) + (Math.random() < Math.max(0.005, (p.spd || 55) / 1600) ? 1 : 0);
     p.stats.bb = (p.stats.bb || 0) + (Math.random() < Math.max(0.04, (p.hit || 60) / 1700) ? 1 : 0);
     p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round(pa * Math.max(0.12, 0.31 - (p.hit || 60) / 500)) + rnd(-1, 1));
     p.stats.ab = Math.max(p.stats.ab || 0, p.stats.pa - (p.stats.bb || 0));
-    p.stats.tb = Math.max(p.stats.tb || 0, (p.stats.h || 0) + (p.stats.hr || 0) * 3);
+    p.stats.tb = (p.stats.tb || 0) + Math.max(hits, homers) + homers * 3;
     updateRateStats(p);
   }
   if (starter) {
@@ -4368,7 +4378,11 @@ function playGame(state) {
   const activeBatters = lineupInfo.players;
   const pitcherUsage = buildSkipPitchingPlan(state, starter, finalMe, finalOpp);
   const lineupSet = new Set(activeBatters.map((p) => p.id));
-  const usedPitcherSet = new Set(Object.keys(pitcherUsage).map(Number));
+  const usedPitcherIds = Object.keys(pitcherUsage).map(Number);
+  const usedPitcherSet = new Set(usedPitcherIds);
+  const reliefPitcherIds = usedPitcherIds.filter((id) => id !== starter?.id);
+  const lastPitcherId = reliefPitcherIds[reliefPitcherIds.length - 1] || starter?.id;
+  const setupPitcherIds = new Set(reliefPitcherIds.slice(0, -1));
 
   for (const p of state.players) {
     if (p.rosterStatus !== "ACTIVE") continue;
@@ -4376,18 +4390,22 @@ function playGame(state) {
     p.happy = Math.max(30, Math.min(96, p.happy + (won ? 1 : -1) + (played ? 0 : -0.2)));
     if (p.type === "BAT") {
       if (!lineupSet.has(p.id)) continue;
-      p.stats.hr += Math.random() < p.pow / 900 ? 1 : 0;
-      p.stats.rbi += rnd(0, Math.max(1, Math.round(p.hit / 35)));
-      p.stats.sb = (p.stats.sb || 0) + (Math.random() < p.spd / 1200 ? 1 : 0);
-      const pa = rnd(2, 5);
-      const hits = Math.max(0, Math.min(pa, Math.round((p.hit / 100) * pa + rnd(-1, 1))));
+      const pa = rnd(3, 5);
+      const contact = Math.max(0.16, Math.min(0.35, 0.165 + (p.hit || 60) / 850 + rnd(-2, 2) / 100));
+      const hits = Math.max(0, Math.min(pa, Math.round(contact * pa + rnd(-1, 1))));
+      const homers = Math.random() < Math.max(0.006, (p.pow || 60) / 2300) ? 1 : 0;
+      const creditedHits = Math.max(hits, homers);
+      const walks = Math.random() < Math.max(0.04, (p.hit || 60) / 1700) ? 1 : 0;
+      p.stats.hr = (p.stats.hr || 0) + homers;
+      p.stats.rbi = (p.stats.rbi || 0) + rnd(0, homers ? 3 : Math.max(1, Math.round((p.hit || 60) / 55)));
+      p.stats.sb = (p.stats.sb || 0) + (Math.random() < (p.spd || 55) / 1550 ? 1 : 0);
       p.stats.pa = (p.stats.pa || 0) + pa;
-      p.stats.h = (p.stats.h || 0) + hits;
-      p.stats.r = (p.stats.r || 0) + rnd(0, hits + (p.spd > 70 ? 1 : 0));
-      p.stats.bb = (p.stats.bb || 0) + (Math.random() < Math.max(0.04, p.hit / 1700) ? 1 : 0);
-      p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round(pa * Math.max(0.12, 0.31 - p.hit / 500)) + rnd(-1, 1));
+      p.stats.h = (p.stats.h || 0) + creditedHits;
+      p.stats.r = (p.stats.r || 0) + rnd(0, creditedHits + ((p.spd || 55) > 70 ? 1 : 0));
+      p.stats.bb = (p.stats.bb || 0) + walks;
+      p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round(pa * Math.max(0.12, 0.31 - (p.hit || 60) / 500)) + rnd(-1, 1));
       p.stats.ab = Math.max(p.stats.ab || 0, p.stats.pa - (p.stats.bb || 0));
-      p.stats.tb = Math.max(p.stats.tb || 0, (p.stats.h || 0) + (p.stats.hr || 0) * 3);
+      p.stats.tb = (p.stats.tb || 0) + creditedHits + homers * 3;
       updateRateStats(p);
     } else {
       const pitches = pitcherUsage[p.id] || 0;
@@ -4398,8 +4416,10 @@ function playGame(state) {
       if (won && p.id === starter?.id) p.stats.win += 1;
       if (!won && p.id === starter?.id) p.stats.loss = (p.stats.loss || 0) + 1;
       const closeWin = won && Math.abs(finalMe - finalOpp) <= 3;
-      if (p.pitcherRole === "CL" && won && (closeWin || Math.random() < 0.18)) p.stats.sv = (p.stats.sv || 0) + 1;
-      if (["MR","SU"].includes(p.pitcherRole) && won && (closeWin ? Math.random() < 0.72 : Math.random() < 0.32)) p.stats.hold = (p.stats.hold || 0) + 1;
+      const saveChance = closeWin && p.id === lastPitcherId && p.id !== starter?.id;
+      const holdChance = won && setupPitcherIds.has(p.id) && (closeWin ? Math.random() < 0.75 : Math.random() < 0.25);
+      if (saveChance || (p.pitcherRole === "CL" && won && Math.random() < 0.08)) p.stats.sv = (p.stats.sv || 0) + 1;
+      if (holdChance || (["MR","SU"].includes(p.pitcherRole) && won && (closeWin ? Math.random() < 0.35 : Math.random() < 0.12))) p.stats.hold = (p.stats.hold || 0) + 1;
     }
   }
   applyPostGameFatigue(state, pitcherUsage, activeBatters.map((p) => p.id), lineupPositions);
