@@ -2343,6 +2343,44 @@
         refreshLineupConstraints();
       }
 
+      if (!active) {
+        $("benchBox").innerHTML = `<div class="empty">경기가 시작되면 벤치, 대타, 대주자, 대수비 선택이 표시됩니다.</div>`;
+        $("manualScore").innerHTML = `<div class="score-line"><span>${teamName()}</span><span>vs</span></div><div class="score-line"><span>${teamName(state.opponent)}</span><span>${state.opponent.power}</span></div>`;
+        $("manualInning").textContent = "대기";
+        $("manualOuts").textContent = "-";
+        $("manualBases").textContent = "---";
+        $("manualBatter").textContent = "-";
+        $("manualCount").textContent = "0-0";
+        updateFieldBases([null, null, null]);
+        $("countBalls").textContent = "0";
+        $("countStrikes").textContent = "0";
+        $("countOuts").textContent = "0";
+        $("manualOrder").textContent = "-";
+        $("manualOppBatter").textContent = "-";
+        $("manualOppProfile").textContent = "-";
+        $("manualPitcher").textContent = "-";
+        $("manualPitchCount").textContent = "-";
+        $("manualPitchMood").textContent = "-";
+        $("manualTactic").textContent = "강공";
+        $("gameLog").innerHTML = `<div class="empty">라인업을 제출하면 선수들이 자동으로 플레이합니다. 감독은 작전과 교체 타이밍을 지시합니다.</div>`;
+        $("bullpenBox").innerHTML = `<div class="empty">경기가 시작되면 불펜 대기 선수가 표시됩니다.</div>`;
+        $("startManualGame").disabled = false;
+        $("startSkipGame").disabled = false;
+        $("resetManualGame").disabled = true;
+        $("cmdSwing").disabled = true;
+        $("swingTypeSelect").disabled = true;
+        $("cmdBunt").disabled = true;
+        $("buntTypeSelect").disabled = true;
+        $("cmdRunnerTactic").disabled = true;
+        $("runnerTacticSelect").disabled = true;
+        $("pickoffBaseSelect").disabled = true;
+        $("cmdPickoff").disabled = true;
+        $("cmdSkipHalf").disabled = true;
+        $("cmdSkipGame").disabled = true;
+        $("cmdDefense").disabled = true;
+        return;
+      }
+
       const bench = hitters.filter((p) => !lineup.includes(p.id) && p.health?.status !== "INJURED");
       const activeLineupPlayers = lineup.map((id) => state.players.find((p) => p.id === id)).filter(Boolean);
       const currentBatterId = active?.lineup?.[active.lineupIndex % active.lineup.length];
@@ -2364,6 +2402,8 @@
       const occupiedBases = (active?.bases || []).map((runner, index) => ({ runner, index })).filter((base) => base.runner);
       const defaultSubOutId = userBatting ? currentBatterId : activeLineupPlayers[0]?.id;
       const defaultSubOutSlot = Math.max(0, activeLineupPlayers.findIndex((p) => p.id === defaultSubOutId));
+      const activePositions = active?.lineupPositions || safeLineupPositions;
+      const gameComplete = Boolean(active?.complete);
       const lineupOptions = activeLineupPlayers.map((p, i) => `<option value="${p.id}" ${p.id === defaultSubOutId ? "selected" : ""}>${i + 1}번 [${batterHandLabel(p)}] ${playerName(p)} · ${active.lineupPositions?.[i] || p.pos} · 현재 ${p.ovr}</option>`).join("");
       const benchOptions = availableBench.map((p) => `<option value="${p.id}">[${batterHandLabel(p)}] ${playerName(p)} · ${p.pos} · 현재 ${p.ovr} · 주루 ${p.spd} · 컨디션 ${Math.round(p.form)}</option>`).join("");
       const benchRunnerOptions = availableBench.slice().sort((a, b) => b.spd - a.spd || b.ovr - a.ovr).map((p) => `<option value="${p.id}">[${batterHandLabel(p)}] ${playerName(p)} · ${p.pos} · 주루 ${p.spd} · 현재 ${p.ovr}</option>`).join("");
