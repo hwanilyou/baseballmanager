@@ -3239,14 +3239,17 @@
       const currentDraftTeamId = draftOrder.length ? draftOrder[(state.draftPick || 0) % draftOrder.length] : null;
       const currentDraftTeam = state.teams.find((t) => t.id === currentDraftTeamId);
       const isMyDraftTurn = currentDraftTeamId === state.selectedTeamId;
-      const draftDay = state.draftDay || 120;
+      const currentDay = Number(state.day || 1);
+      const draftDay = Number(state.draftDay || 120);
+      const draftRemaining = Math.max(0, draftDay - currentDay);
+      const draftCountdown = draftRemaining > 0 ? `Day ${draftDay} 개막 · ${draftRemaining}경기 남음` : "드래프트 개막 가능";
       const draftOpen = Boolean(state.draftWindowOpen);
-      $("generateDraft").disabled = state.day < draftDay || draftOpen;
-      $("generateDraft").textContent = state.day < draftDay ? `Day ${draftDay} 개막` : draftOpen ? "드래프트 진행중" : "드래프트 개막";
+      $("generateDraft").disabled = currentDay < draftDay || draftOpen;
+      $("generateDraft").textContent = currentDay < draftDay ? `${draftRemaining}경기 남음` : draftOpen ? "드래프트 진행중" : "드래프트 개막";
       $("advanceDraft").disabled = !draftOpen || !state.draftClass?.length;
       $("draftMeta").innerHTML = state.draftClass?.length
         ? `<strong>${state.seasonYear || state.draftCycle || 1}시즌 신인 드래프트 · ${state.draftRound || 1}라운드 ${(state.draftPick || 0) + 1}번째 지명</strong><br><span class="small">참가 대상: 고교 3학년만 · 현재 순번: ${currentDraftTeam ? teamName(currentDraftTeam) : "종료"} · 지명 순서 ${draftOrder.map((id) => teamName(state.teams.find((t) => t.id === id) || { name: id })).join(" → ")}</span>`
-        : `<strong>드래프트 대기 · Day ${draftDay}</strong><br><span class="small">드래프트 날짜가 오면 자동으로 이 창이 열립니다. 올해는 고교 3학년만 참가하고, 다음 시즌에는 현재 2학년이 3학년 후보로 올라옵니다.</span>`;
+        : `<strong>드래프트 대기 · ${draftCountdown}</strong><br><span class="small">현재 Day ${currentDay}. 드래프트 날짜가 오면 자동으로 이 창이 열립니다. 올해는 고교 3학년만 참가하고, 다음 시즌에는 현재 2학년이 3학년 후보로 올라옵니다.</span>`;
       $("draftBoard").innerHTML = state.draftClass?.length ? state.draftClass.slice(0, 30).map((p) => `
         <div class="news-item">
           <div class="bio">

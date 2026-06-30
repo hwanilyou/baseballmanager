@@ -4692,7 +4692,10 @@ function generateDraftClass(state) {
   ensureHighSchoolCohorts(state);
   const seasonYear = Number(state.seasonYear) || 1;
   if ((state.day || 1) < (state.draftDay || DRAFT_DAY)) {
-    addNews(state, "드래프트 일정 전", `신인 드래프트는 Day ${state.draftDay || DRAFT_DAY}에 열린다. 현재는 고교 선수 스카우팅 기간이다.`, "드래프트");
+    const currentDay = Number(state.day || 1);
+    const draftDay = Number(state.draftDay || DRAFT_DAY);
+    const remaining = Math.max(0, draftDay - currentDay);
+    addNews(state, "드래프트 일정 전", `신인 드래프트는 Day ${draftDay}에 열린다. 현재 Day ${currentDay}라 ${remaining}경기 남았다. 지금은 고교 선수 스카우팅 기간이다.`, "드래프트");
     return state;
   }
   if (state.draftCompletedSeason === seasonYear) {
