@@ -735,6 +735,7 @@ function migrateState(state) {
         if (!p.stats.ab && p.stats.pa) p.stats.ab = Math.max(0, (Number(p.stats.pa) || 0) - (Number(p.stats.bb) || 0));
         if (!p.stats.tb && p.stats.h) p.stats.tb = (Number(p.stats.h) || 0) + (Number(p.stats.hr) || 0) * 3;
         updateRateStats(p);
+        repairBattingRunRbiFloor(p);
       }
       if (p.type === "PIT" && p.stats) {
         ["era","win","loss","so","sv","hold","ip"].forEach((key) => {
@@ -2159,21 +2160,40 @@ function updateRateStats(player) {
   stats.slg = atBats > 0 ? (stats.tb || stats.h || 0) / atBats : 0;
 }
 
+function repairBattingRunRbiFloor(player) {
+  if (!player || player.type !== "BAT" || !player.stats) return;
+  const stats = ensureBattingStats(player);
+  const hr = Math.max(0, Math.round(Number(stats.hr) || 0));
+  const hits = Math.max(hr, Math.round(Number(stats.h) || 0));
+  const walks = Math.max(0, Math.round(Number(stats.bb) || 0));
+  const nonHomerTimesOn = Math.max(0, hits + walks - hr);
+  const speedBonus = Math.max(0, Math.round(((Number(player.spd) || 55) - 60) / 18));
+  const runFloor = hr + Math.round(nonHomerTimesOn * 0.22) + speedBonus;
+  const rbiFloor = hr + Math.round(Math.max(0, hits - hr) * 0.16);
+  stats.h = Math.max(hits, stats.h || 0);
+  stats.r = Math.max(Number(stats.r) || 0, runFloor);
+  stats.rbi = Math.max(Number(stats.rbi) || 0, rbiFloor);
+  stats.tb = Math.max(Number(stats.tb) || 0, stats.h + hr * 3);
+  updateRateStats(player);
+}
+
 function recordPlateAppearance(player, result = {}) {
   if (!player || player.type !== "BAT") return;
   const stats = ensureBattingStats(player);
   const countsAtBat = result.countsAtBat !== false;
+  const hitBases = Number(result.hitBases) || 0;
+  const isHomer = hitBases >= 4 && !result.error;
   stats.pa += 1;
   if (countsAtBat) stats.ab += 1;
-  if (result.hitBases && !result.error) stats.h += 1;
-  if (result.hitBases && !result.error) stats.tb += Math.max(1, Number(result.hitBases) || 1);
-  if (result.hitBases >= 4 && !result.error) stats.hr += 1;
+  if (hitBases && !result.error) stats.h += 1;
+  if (hitBases && !result.error) stats.tb += Math.max(1, hitBases);
+  if (isHomer) stats.hr += 1;
   if (result.walk) stats.bb += 1;
   if (result.hitByPitch) stats.hbp += 1;
   if (result.sacFly) stats.sf += 1;
   if (result.strikeout) stats.so += 1;
-  stats.rbi += Math.max(0, Number(result.rbi) || 0);
-  stats.r += Math.max(0, Number(result.runs) || 0);
+  stats.rbi += Math.max(isHomer ? 1 : 0, Number(result.rbi) || 0);
+  stats.r += Math.max(isHomer ? 1 : 0, Number(result.runs) || 0);
   updateRateStats(player);
 }
 
@@ -4090,8 +4110,8 @@ function simulateTeamPlayerStats(state, team) {
     p.stats.pa = (p.stats.pa || 0) + pa;
     p.stats.h = (p.stats.h || 0) + Math.max(hits, homers);
     p.stats.hr = (p.stats.hr || 0) + homers;
-    p.stats.rbi = (p.stats.rbi || 0) + rnd(0, Math.max(1, Math.round((p.hit || 60) / 42)));
-    p.stats.r = (p.stats.r || 0) + rnd(0, hits + ((p.spd || 55) > 72 ? 1 : 0));
+    p.stats.rbi = (p.stats.rbi || 0) + homers + rnd(0, homers ? 2 : Math.max(1, Math.round((p.hit || 60) / 48)));
+    p.stats.r = (p.stats.r || 0) + homers + rnd(0, Math.max(0, hits - homers) + ((p.spd || 55) > 72 ? 1 : 0));
     p.stats.sb = (p.stats.sb || 0) + (Math.random() < Math.max(0.005, (p.spd || 55) / 1600) ? 1 : 0);
     p.stats.bb = (p.stats.bb || 0) + (Math.random() < Math.max(0.04, (p.hit || 60) / 1700) ? 1 : 0);
     p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round(pa * Math.max(0.12, 0.31 - (p.hit || 60) / 500)) + rnd(-1, 1));
@@ -4760,11 +4780,11 @@ function playGame(state) {
       const creditedHits = Math.max(hits, homers);
       const walks = Math.random() < Math.max(0.04, (p.hit || 60) / 1700) ? 1 : 0;
       p.stats.hr = (p.stats.hr || 0) + homers;
-      p.stats.rbi = (p.stats.rbi || 0) + rnd(0, homers ? 3 : Math.max(1, Math.round((p.hit || 60) / 55)));
+      p.stats.rbi = (p.stats.rbi || 0) + homers + rnd(0, homers ? 2 : Math.max(1, Math.round((p.hit || 60) / 55)));
       p.stats.sb = (p.stats.sb || 0) + (Math.random() < (p.spd || 55) / 1550 ? 1 : 0);
       p.stats.pa = (p.stats.pa || 0) + pa;
       p.stats.h = (p.stats.h || 0) + creditedHits;
-      p.stats.r = (p.stats.r || 0) + rnd(0, creditedHits + ((p.spd || 55) > 70 ? 1 : 0));
+      p.stats.r = (p.stats.r || 0) + homers + rnd(0, Math.max(0, creditedHits - homers) + ((p.spd || 55) > 70 ? 1 : 0));
       p.stats.bb = (p.stats.bb || 0) + walks;
       p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round(pa * Math.max(0.12, 0.31 - (p.hit || 60) / 500)) + rnd(-1, 1));
       p.stats.ab = Math.max(p.stats.ab || 0, p.stats.pa - (p.stats.bb || 0));
