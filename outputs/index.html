@@ -2717,6 +2717,68 @@
       return Number(value || 0).toFixed(3);
     }
 
+    function safeDivide(numerator, denominator) {
+      return denominator ? numerator / denominator : 0;
+    }
+
+    function clampMetric(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function hitterAdvancedStats(p) {
+      const s = p.stats || {};
+      const pa = Number(s.pa || 0);
+      const ab = Number(s.ab || 0);
+      const h = Number(s.h || 0);
+      const bb = Number(s.bb || 0);
+      const so = Number(s.so || 0);
+      const tb = Number(s.tb || 0);
+      const hr = Number(s.hr || 0);
+      const sb = Number(s.sb || 0);
+      const hbp = Number(s.hbp || 0);
+      const sf = Number(s.sf || 0);
+      const avg = Number(s.avg || 0) || safeDivide(h, ab);
+      const obp = Number(s.obp || 0) || safeDivide(h + bb + hbp, ab + bb + hbp + sf);
+      const slg = Number(s.slg || 0) || safeDivide(tb, ab);
+      const ops = obp + slg;
+      const iso = Math.max(0, slg - avg);
+      const bbPct = safeDivide(bb, pa) * 100;
+      const kPct = safeDivide(so, pa) * 100;
+      const opsPlus = Math.round(clampMetric(safeDivide(ops, 0.720) * 100 + ((p.ovr || 65) - 65) * 0.35, 20, 230));
+      const warRaw = (ops - 0.650) * 8.4 + ((p.def || 55) - 55) / 38 + ((p.spd || 55) - 55) / 48 + hr * 0.055 + sb * 0.018 + pa * 0.002;
+      return {
+        war: Math.round(clampMetric(warRaw, -1.5, 10.5) * 10) / 10,
+        ops,
+        iso,
+        bbPct,
+        kPct,
+        opsPlus
+      };
+    }
+
+    function pitcherAdvancedStats(p) {
+      const s = p.stats || {};
+      const ip = Number(s.ip || 0);
+      const era = Number.isFinite(Number(s.era)) ? Number(s.era) : 4.50;
+      const so = Number(s.so || 0);
+      const wins = Number(s.win || 0);
+      const losses = Number(s.loss || 0);
+      const k9 = safeDivide(so * 9, ip);
+      const whip = clampMetric(1.42 - ((p.pit || 60) - 60) / 115 + Math.max(0, era - 3.8) / 18 - k9 / 80, 0.75, 2.25);
+      const eraPlus = Math.round(clampMetric(safeDivide(4.35, Math.max(1.2, era || 4.35)) * 100 + ((p.ovr || 65) - 65) * 0.25, 30, 240));
+      const fip = clampMetric((era || 4.50) + 0.50 - (k9 - 7.2) * 0.15 - ((p.pit || 60) - 60) * 0.012, 1.50, 7.80);
+      const leverage = Number(s.sv || 0) * 0.22 + Number(s.hold || 0) * 0.12;
+      const warRaw = safeDivide(ip, 55) * safeDivide(4.65 - Math.min(era || 4.65, 7.5), 1.7) + safeDivide(so, 82) + leverage + ((p.ovr || 65) - 65) / 85;
+      return {
+        war: Math.round(clampMetric(warRaw, -1.5, 9.5) * 10) / 10,
+        whip,
+        k9,
+        eraPlus,
+        fip,
+        winPct: safeDivide(wins, wins + losses)
+      };
+    }
+
     function statGrid(items) {
       return `<div class="stat-grid">${items.map(([label, value]) => `<div class="stat-card"><strong>${value}</strong><span>${label}</span></div>`).join("")}</div>`;
     }
@@ -2750,6 +2812,62 @@
         ["출루율", formatRate(s.obp)],
         ["장타율", formatRate(s.slg)],
         ["OPS", formatRate(ops)],
+        ["타석", s.pa || 0],
+        ["타수", s.ab || Math.max(0, (s.pa || 0) - (s.bb || 0))],
+        ["안타", s.h || 0],
+        ["홈런", s.hr || 0],
+        ["타점", s.rbi || 0],
+        ["득점", s.r || 0],
+        ["도루", s.sb || 0],
+        ["볼넷", s.bb || 0],
+        ["삼진", s.so || 0]
+      ]);
+    }
+
+    function playerStatsSummary(p) {
+      const s = p.stats || {};
+      if (p.type === "PIT") {
+        const adv = pitcherAdvancedStats(p);
+        return `WAR ${adv.war.toFixed(1)} · ERA ${Number(s.era || 0).toFixed(2)} · WHIP ${adv.whip.toFixed(2)} · ${s.win || 0}승 ${s.loss || 0}패 · ${s.so || 0}K`;
+      }
+      const adv = hitterAdvancedStats(p);
+      return `WAR ${adv.war.toFixed(1)} · AVG ${formatRate(s.avg)} · OPS ${formatRate(adv.ops)} · ${s.hr || 0}홈런 · ${s.rbi || 0}타점`;
+    }
+
+    function playerStatCards(p) {
+      const s = p.stats || {};
+      if (p.type === "PIT") {
+        const wins = Number(s.win) || 0;
+        const losses = Number(s.loss) || 0;
+        const winRate = wins + losses ? formatRate(wins / (wins + losses)) : "0.000";
+        const adv = pitcherAdvancedStats(p);
+        return statGrid([
+          ["추정 WAR", adv.war.toFixed(1)],
+          ["평균자책", Number(s.era || 0).toFixed(2)],
+          ["WHIP", adv.whip.toFixed(2)],
+          ["K/9", adv.k9.toFixed(1)],
+          ["ERA+", adv.eraPlus],
+          ["FIP", adv.fip.toFixed(2)],
+          ["승-패", `${wins}-${losses}`],
+          ["승률", winRate],
+          ["이닝", Number(s.ip || 0).toFixed(1)],
+          ["탈삼진", s.so || 0],
+          ["세이브", s.sv || 0],
+          ["홀드", s.hold || 0],
+          ["최근 투구수", p.lastPitchCount || 0]
+        ]);
+      }
+      const adv = hitterAdvancedStats(p);
+      return statGrid([
+        ["추정 WAR", adv.war.toFixed(1)],
+        ["타율", formatRate(s.avg)],
+        ["출루율", formatRate(s.obp)],
+        ["장타율", formatRate(s.slg)],
+        ["OPS", formatRate(adv.ops)],
+        ["OPS+", adv.opsPlus],
+        ["ISO", formatRate(adv.iso)],
+        ["BB%", `${adv.bbPct.toFixed(1)}%`],
+        ["K%", `${adv.kPct.toFixed(1)}%`],
         ["타석", s.pa || 0],
         ["타수", s.ab || Math.max(0, (s.pa || 0) - (s.bb || 0))],
         ["안타", s.h || 0],
@@ -3216,8 +3334,14 @@
       $("leagueSearchResults").innerHTML = leagueQuery
         ? searchedPlayers.map((p) => {
           const stats = p.type === "PIT"
-            ? `ERA ${(p.stats?.era || 0).toFixed(2)} · ${p.stats?.win || 0}승 ${p.stats?.loss || 0}패 · ${p.stats?.so || 0}K`
-            : `AVG ${(p.stats?.avg || 0).toFixed(3)} · ${p.stats?.hr || 0}HR · ${p.stats?.h || 0}H · ${p.stats?.sb || 0}SB`;
+            ? (() => {
+              const adv = pitcherAdvancedStats(p);
+              return `WAR ${adv.war.toFixed(1)} · ERA ${(p.stats?.era || 0).toFixed(2)} · WHIP ${adv.whip.toFixed(2)} · ${p.stats?.win || 0}승 ${p.stats?.loss || 0}패 · ${p.stats?.so || 0}K`;
+            })()
+            : (() => {
+              const adv = hitterAdvancedStats(p);
+              return `WAR ${adv.war.toFixed(1)} · AVG ${(p.stats?.avg || 0).toFixed(3)} · OPS ${adv.ops.toFixed(3)} · ${p.stats?.hr || 0}HR · ${p.stats?.sb || 0}SB`;
+            })();
           return `<div class="news-item">
             <div class="bio">
               <div>
@@ -3253,6 +3377,12 @@
         .filter((p) => p.type === "PIT" && (((p.stats?.win || 0) + (p.stats?.loss || 0)) >= 3 || (p.stats?.win || 0) >= 3))
         .sort((a, b) => winPct(b) - winPct(a) || (b.stats.win || 0) - (a.stats.win || 0))
         .slice(0, 5);
+      const hitterWarLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => hitterAdvancedStats(b).war - hitterAdvancedStats(a).war).slice(0, 5);
+      const opsLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => hitterAdvancedStats(b).ops - hitterAdvancedStats(a).ops).slice(0, 5);
+      const opsPlusLeaders = leaderPool.filter((p) => p.type === "BAT").sort((a, b) => hitterAdvancedStats(b).opsPlus - hitterAdvancedStats(a).opsPlus).slice(0, 5);
+      const pitcherWarLeaders = leaderPool.filter((p) => p.type === "PIT").sort((a, b) => pitcherAdvancedStats(b).war - pitcherAdvancedStats(a).war).slice(0, 5);
+      const whipLeaders = leaderPool.filter((p) => p.type === "PIT" && ((p.stats?.ip || 0) > 0 || (p.stats?.so || 0) > 0 || (p.stats?.win || 0) > 0)).sort((a, b) => pitcherAdvancedStats(a).whip - pitcherAdvancedStats(b).whip).slice(0, 5);
+      const k9Leaders = leaderPool.filter((p) => p.type === "PIT" && ((p.stats?.ip || 0) > 0 || (p.stats?.so || 0) > 0)).sort((a, b) => pitcherAdvancedStats(b).k9 - pitcherAdvancedStats(a).k9).slice(0, 5);
       $("leaders").innerHTML = `
         <h3>타격왕 경쟁</h3><table><tbody>${leaderRows(avgLeaders, (p) => (p.stats.avg || 0).toFixed(3))}</tbody></table>
         <h3 style="margin-top:14px;">도루왕 경쟁</h3><table><tbody>${leaderRows(stealLeaders, (p) => p.stats.sb || 0)}</tbody></table>
@@ -3266,6 +3396,14 @@
         <h3 style="margin-top:14px;">세이브</h3><table><tbody>${leaderRows(saveLeaders, (p) => p.stats.sv || 0)}</tbody></table>
         <h3 style="margin-top:14px;">홀드</h3><table><tbody>${leaderRows(holdLeaders, (p) => p.stats.hold || 0)}</tbody></table>
         <h3 style="margin-top:14px;">시즌 시상</h3>${state.awards?.length ? `<table><tbody>${state.awards.map((a) => `<tr><td>${a.title}</td><td>${a.name}</td><td>${a.detail}</td></tr>`).join("")}</tbody></table>` : `<div class="empty">시즌 종료 후 MVP, 타격왕, 도루왕, 다승왕, 승률왕, 평균자책점왕, 골든글러브가 발표됩니다.</div>`}
+      `;
+      $("leaders").innerHTML += `
+        <h3 style="margin-top:14px;">타자 추정 WAR</h3><table><tbody>${leaderRows(hitterWarLeaders, (p) => hitterAdvancedStats(p).war.toFixed(1))}</tbody></table>
+        <h3 style="margin-top:14px;">OPS</h3><table><tbody>${leaderRows(opsLeaders, (p) => hitterAdvancedStats(p).ops.toFixed(3))}</tbody></table>
+        <h3 style="margin-top:14px;">OPS+</h3><table><tbody>${leaderRows(opsPlusLeaders, (p) => hitterAdvancedStats(p).opsPlus)}</tbody></table>
+        <h3 style="margin-top:14px;">투수 추정 WAR</h3><table><tbody>${leaderRows(pitcherWarLeaders, (p) => pitcherAdvancedStats(p).war.toFixed(1))}</tbody></table>
+        <h3 style="margin-top:14px;">WHIP</h3><table><tbody>${leaderRows(whipLeaders, (p) => pitcherAdvancedStats(p).whip.toFixed(2))}</tbody></table>
+        <h3 style="margin-top:14px;">K/9</h3><table><tbody>${leaderRows(k9Leaders, (p) => pitcherAdvancedStats(p).k9.toFixed(1))}</tbody></table>
       `;
     }
 
