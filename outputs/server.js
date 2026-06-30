@@ -3260,6 +3260,104 @@ function teamPower(state) {
   );
 }
 
+function clampNumber(value, min, max) {
+  return Math.max(min, Math.min(max, Number(value) || 0));
+}
+
+function sampleRuns(lambda) {
+  const target = Math.max(0.8, Math.min(9.5, Number(lambda) || 4.2));
+  const limit = Math.exp(-target);
+  let product = 1;
+  let count = 0;
+  while (product > limit && count < 18) {
+    count += 1;
+    product *= Math.random();
+  }
+  return Math.max(0, count - 1);
+}
+
+function positionFitScore(p, pos) {
+  if (!p || p.type !== "BAT") return 0;
+  ensurePositionData(p);
+  if (pos === "DH") return 1;
+  if (p.pos === pos) return 1;
+  const trained = Number(p.positionTraining?.[pos]) || 0;
+  if ((p.secondaryPositions || []).includes(pos)) return Math.max(0.64, Math.min(0.96, trained / 100 || 0.72));
+  const outfield = ["LF", "CF", "RF"];
+  const infield = ["1B", "2B", "3B", "SS"];
+  if (outfield.includes(p.pos) && outfield.includes(pos)) return pos === "CF" ? 0.58 : 0.68;
+  if (infield.includes(p.pos) && infield.includes(pos)) return ["SS", "2B"].includes(pos) ? 0.48 : 0.58;
+  if (pos === "C" || p.pos === "C") return 0.18;
+  return 0.34;
+}
+
+function lineupBalance(state, lineupIds = [], lineupPositions = []) {
+  const players = lineupIds
+    .map((id) => state.players.find((p) => p.id === Number(id)))
+    .filter((p) => p && p.type === "BAT" && p.rosterStatus === "ACTIVE" && p.health?.status !== "INJURED");
+  const offense = avg(players.map((p) => (p.hit || 55) * 0.42 + (p.pow || 55) * 0.22 + (p.spd || 55) * 0.1 + (p.form || 65) * 0.18 + (p.happy || 65) * 0.08));
+  const weights = { C: 2.2, SS: 2.0, CF: 1.8, "2B": 1.35, "3B": 1.25, RF: 1.05, LF: 1.0, "1B": 0.85, DH: 0 };
+  const defensivePenalty = players.reduce((sum, p, index) => {
+    const pos = lineupPositions[index] || p.pos || "DH";
+    const fit = positionFitScore(p, pos);
+    return sum + (1 - fit) * (weights[pos] || 1.1) * 5.2;
+  }, Math.max(0, 9 - players.length) * 9);
+  const conditionPenalty = players.reduce((sum, p) => sum + Math.max(0, 58 - (Number(p.form) || 65)) * 0.05, 0);
+  return {
+    players,
+    offense: Math.max(35, offense - conditionPenalty),
+    defensivePenalty: Math.round(defensivePenalty * 10) / 10,
+    missing: Math.max(0, 9 - players.length)
+  };
+}
+
+function pitcherGameValue(p) {
+  if (!p || p.type !== "PIT" || p.health?.status === "INJURED") return 35;
+  const starterLike = p.pitcherRole === "SP" || p.pos === "SP";
+  const restPenalty = Math.max(0, Number(p.restDays) || 0) * (starterLike ? 10.5 : 8);
+  const recentLoadPenalty = Math.max(0, (Number(p.lastPitchCount) || 0) - (starterLike ? 82 : 18)) * (starterLike ? 0.06 : 0.14);
+  const formPenalty = Math.max(0, 58 - (Number(p.form) || 65)) * 0.35;
+  return Math.max(22, (p.ovr || 55) * 0.48 + (p.pit || p.ovr || 55) * 0.24 + (p.stamina || 55) * 0.12 + (p.form || 65) * 0.16 - restPenalty - recentLoadPenalty - formPenalty);
+}
+
+function pickSkipStarter(state, preferredId = null) {
+  const activePitchers = state.players
+    .filter((p) => p.rosterStatus === "ACTIVE" && p.type === "PIT" && p.health?.status !== "INJURED");
+  const preferred = activePitchers.find((p) => p.id === Number(preferredId));
+  if (preferred) return preferred;
+  return activePitchers
+    .slice()
+    .sort((a, b) => pitcherGameValue(b) - pitcherGameValue(a))
+    .find((p) => p.pitcherRole === "SP" || p.pos === "SP") || activePitchers.sort((a, b) => pitcherGameValue(b) - pitcherGameValue(a))[0] || null;
+}
+
+function buildSkipPitchingPlan(state, starter, myRuns, oppRuns) {
+  const activePitchers = state.players
+    .filter((p) => p.rosterStatus === "ACTIVE" && p.type === "PIT" && p.health?.status !== "INJURED" && p.id !== starter?.id)
+    .sort((a, b) => pitcherGameValue(b) - pitcherGameValue(a));
+  const usage = {};
+  const closeGame = Math.abs(myRuns - oppRuns) <= 3;
+  if (starter) {
+    const restPenalty = Math.max(0, Number(starter.restDays) || 0) * 17;
+    const lowFormPenalty = Math.max(0, 55 - (Number(starter.form) || 65)) * 0.7;
+    const base = rnd(78, 103) + Math.round(((starter.stamina || 76) - 76) * 0.25) - restPenalty - lowFormPenalty;
+    usage[starter.id] = Math.max(34, Math.min(112, Math.round(base)));
+  }
+  if (!activePitchers.length) return usage;
+  const starterPitches = starter ? usage[starter.id] : 0;
+  const needRelievers = starterPitches < 70 || closeGame || oppRuns >= 5;
+  const minSlots = Math.min(activePitchers.length, needRelievers ? 2 : 1);
+  const maxSlots = Math.min(activePitchers.length, needRelievers ? 5 : 3);
+  const relieverSlots = rnd(minSlots, maxSlots);
+  activePitchers.slice(0, relieverSlots).forEach((p, index) => {
+    const highLeverage = closeGame && ["CL", "SU"].includes(p.pitcherRole);
+    const min = highLeverage ? 8 : 10;
+    const max = p.pitcherRole === "CL" ? 22 : index === 0 && starterPitches < 62 ? 38 : 28;
+    usage[p.id] = rnd(min, max);
+  });
+  return usage;
+}
+
 function isInternalNews(title, body, kind = "") {
   const text = `${title || ""} ${body || ""} ${kind || ""}`.toLowerCase();
   return (
@@ -4210,13 +4308,40 @@ function playGame(state) {
   if (state.day > state.seasonGames) return state;
   const me = currentTeam(state);
   const opp = currentOpponent(state);
-  const myPower = teamPower(state) + rnd(-8, 8);
-  const oppPower = opp.power + rnd(-8, 8);
+  const plan = state.activeGame || state.lastLineup || {};
+  const plannedIds = Array.isArray(plan.lineup) && plan.lineup.length === 9 ? plan.lineup.map(Number) : defaultLineup(state);
+  const healthyActiveBatters = state.players
+    .filter((p) => p.rosterStatus === "ACTIVE" && p.type === "BAT" && p.health?.status !== "INJURED")
+    .sort((a, b) => b.ovr - a.ovr);
+  const cleanIds = [];
+  for (const id of plannedIds) {
+    const player = healthyActiveBatters.find((p) => p.id === Number(id));
+    if (player && !cleanIds.includes(player.id)) cleanIds.push(player.id);
+  }
+  for (const player of healthyActiveBatters) {
+    if (cleanIds.length >= 9) break;
+    if (!cleanIds.includes(player.id)) cleanIds.push(player.id);
+  }
+  const lineupIds = cleanIds.slice(0, 9);
+  const lineupPositions = normalizeLineupPositions(lineupIds, plan.lineupPositions, state);
+  const lineupInfo = lineupBalance(state, lineupIds, lineupPositions);
+  const starter = pickSkipStarter(state, plan.starterId || plan.pitcherId);
+  const relieverPool = state.players
+    .filter((p) => p.rosterStatus === "ACTIVE" && p.type === "PIT" && p.health?.status !== "INJURED" && p.id !== starter?.id)
+    .sort((a, b) => pitcherGameValue(b) - pitcherGameValue(a));
+  const bullpenValue = avg(relieverPool.slice(0, 5).map((p) => pitcherGameValue(p))) || 46;
+  const starterValue = pitcherGameValue(starter);
+  const myPitching = starterValue * 0.62 + bullpenValue * 0.38;
+  const myManagementPenalty = lineupInfo.defensivePenalty + lineupInfo.missing * 7 + Math.max(0, Number(starter?.restDays) || 0) * 3.5;
+  const myPower = lineupInfo.offense * 0.45 + myPitching * 0.55 - myManagementPenalty * 0.48 + rnd(-7, 7);
+  const oppPower = (Number(opp.power) || 66) + rnd(-7, 7);
   const scoringEnvironment = rnd(1, 100);
-  const runNoise = scoringEnvironment > 92 ? rnd(4, 7) : scoringEnvironment < 12 ? rnd(0, 1) : rnd(1, 5);
-  const myRuns = Math.max(0, Math.min(13, Math.round((myPower - 60) / 14 + runNoise + rnd(-1, 2))));
-  const oppRuns = Math.max(0, Math.min(13, Math.round((oppPower - 60) / 15 + runNoise + rnd(-2, 2))));
-  const finalMe = myRuns === oppRuns ? myRuns + (Math.random() > 0.5 ? 1 : 0) : myRuns;
+  const weatherBoost = scoringEnvironment > 92 ? 1.15 : scoringEnvironment < 10 ? -0.75 : 0;
+  const myExpectedRuns = clampNumber(4.35 + (myPower - oppPower) / 20 + weatherBoost, 1.4, 8.7);
+  const oppExpectedRuns = clampNumber(4.35 + (oppPower - myPower) / 20 + weatherBoost + lineupInfo.defensivePenalty / 24, 1.4, 8.9);
+  const myRuns = Math.min(16, sampleRuns(myExpectedRuns));
+  const oppRuns = Math.min(16, sampleRuns(oppExpectedRuns));
+  const finalMe = myRuns === oppRuns ? myRuns + (Math.random() > 0.52 ? 1 : 0) : myRuns;
   const finalOpp = myRuns === oppRuns && finalMe === myRuns ? oppRuns + 1 : oppRuns;
   const won = finalMe > finalOpp;
 
@@ -4240,27 +4365,8 @@ function playGame(state) {
   recordTeamGame(me, finalMe, finalOpp, estimateTeamErrors(me, finalOpp));
   recordTeamGame(opp, finalOpp, finalMe, estimateTeamErrors(opp, finalMe));
 
-  const activeBatters = state.players
-    .filter((p) => p.rosterStatus === "ACTIVE" && p.type === "BAT" && p.health?.status !== "INJURED")
-    .sort((a, b) => b.ovr - a.ovr)
-    .slice(0, 9);
-  const autoPositions = FIELD_POSITIONS.slice(0, activeBatters.length);
-  const activePitchers = state.players
-    .filter((p) => p.rosterStatus === "ACTIVE" && p.type === "PIT" && p.health?.status !== "INJURED")
-    .sort((a, b) => ((Number(a.restDays) || 0) - (Number(b.restDays) || 0)) || b.ovr - a.ovr);
-  const starter = activePitchers.find((p) => p.pitcherRole === "SP" || p.pos === "SP") || activePitchers[0];
-  const relievers = activePitchers.filter((p) => p.id !== starter?.id);
-  const pitcherUsage = {};
-  if (starter) {
-    const stamina = Number(starter.stamina) || 78;
-    const tiredCut = Math.max(0, Number(starter.restDays) || 0) * 8;
-    pitcherUsage[starter.id] = Math.max(62, Math.min(122, rnd(86, 112) + Math.round((stamina - 78) * 0.35) - tiredCut));
-  }
-  const maxRelievers = Math.min(relievers.length, Math.abs(finalMe - finalOpp) <= 3 ? 3 : 4);
-  const relieverCount = maxRelievers > 0 ? rnd(1, maxRelievers) : 0;
-  relievers.slice(0, relieverCount).forEach((p) => {
-    pitcherUsage[p.id] = rnd(p.pitcherRole === "CL" ? 8 : 12, p.pitcherRole === "CL" ? 22 : 31);
-  });
+  const activeBatters = lineupInfo.players;
+  const pitcherUsage = buildSkipPitchingPlan(state, starter, finalMe, finalOpp);
   const lineupSet = new Set(activeBatters.map((p) => p.id));
   const usedPitcherSet = new Set(Object.keys(pitcherUsage).map(Number));
 
@@ -4296,7 +4402,8 @@ function playGame(state) {
       if (["MR","SU"].includes(p.pitcherRole) && won && (closeWin ? Math.random() < 0.72 : Math.random() < 0.32)) p.stats.hold = (p.stats.hold || 0) + 1;
     }
   }
-  applyPostGameFatigue(state, pitcherUsage, activeBatters.map((p) => p.id), autoPositions);
+  applyPostGameFatigue(state, pitcherUsage, activeBatters.map((p) => p.id), lineupPositions);
+  state.activeGame = null;
 
   state.lastGame = { opp: `${opp.city} ${opp.name}`, me: finalMe, them: finalOpp, won };
   state.games.unshift({ day: state.day, text: `${won ? "승" : "패"} · ${me.city} ${me.name} ${finalMe}-${finalOpp} ${opp.city} ${opp.name}` });
