@@ -484,6 +484,48 @@ function progressScheduledInjuryReturns(state) {
   return state;
 }
 
+function progressInjuryRecovery(state) {
+  const seasonYear = Number(state?.seasonYear) || 1;
+  const day = Number(state?.day) || 1;
+  for (const p of state?.players || []) {
+    if (Number(p.reinjuryWatchDays) > 0) p.reinjuryWatchDays = Math.max(0, Number(p.reinjuryWatchDays) - 1);
+    const health = p.health;
+    if (!health || health.status === "OK") continue;
+    const returnSeasonYear = Number(health.returnSeasonYear);
+    const returnDay = Number(health.returnDay);
+    const nextSeasonOut = Number.isFinite(returnSeasonYear) && returnSeasonYear > seasonYear;
+    if (nextSeasonOut) continue;
+
+    if (health.status === "INJURED") {
+      const totalDays = Math.max(1, Number(health.totalDays) || Number(health.days) || 1);
+      health.days = Math.max(0, (Number(health.days) || 0) - 1);
+      const elapsedRatio = Math.max(0, Math.min(1, (totalDays - health.days) / totalDays));
+      if (elapsedRatio >= 0.45) {
+        const target = Math.max(Number(health.rehabTarget) || 35, Math.round(elapsedRatio * 70));
+        health.rehab = Math.min(95, Math.max(Number(health.rehab) || 0, target + rnd(0, 3)));
+      }
+      if (health.days <= 0 || (Number.isFinite(returnDay) && returnDay <= day)) {
+        p.health = {
+          ...health,
+          status: "REHAB",
+          days: 0,
+          rehab: Math.max(Number(health.rehab) || 0, 62)
+        };
+        p.form = Math.min(72, Math.max(42, Number(p.form) || 55));
+        addNews(state, "재활 단계 전환", `${p.name}이 ${health.injury || "부상"} 치료를 마치고 재활 단계로 넘어갔다.`, "의료");
+      }
+    } else if (health.status === "REHAB") {
+      const before = Number(health.rehab) || 0;
+      health.rehab = Math.min(100, before + rnd(2, 5));
+      p.form = Math.min(78, (Number(p.form) || 55) + 1);
+      if (before < 100 && health.rehab >= 100) {
+        addNews(state, "복귀 승인 대기", `${p.name}의 재활이 100%에 도달했다. 복귀 승인 버튼으로 1군/2군 운영에 다시 넣을 수 있다.`, "의료");
+      }
+    }
+  }
+  return state;
+}
+
 function gameContractYears(p, annual = Number(p?.contract?.annual || p?.salary || 0)) {
   if (!p || p.rosterStatus === "DEV" || p.development || p.foreignPlayer === true || isLikelyForeignName(p.name || "")) return 1;
   const ovr = Number(p.ovr) || 60;
@@ -1931,6 +1973,7 @@ function finishManualGame(state) {
   simulateOtherTeams(state);
   state.day += 1;
   progressScheduledInjuryReturns(state);
+  progressInjuryRecovery(state);
   recoverPitcherRest(state);
   game.complete = true;
   game.log.unshift(`경기 종료: ${me.short} ${game.score.user}-${game.score.opp} ${opp.short}`);
@@ -4442,6 +4485,7 @@ function playGame(state) {
   recoverOpponentBullpenFatigue(state);
   state.day += 1;
   progressScheduledInjuryReturns(state);
+  progressInjuryRecovery(state);
   recoverPitcherRest(state);
   if (state.day > state.seasonGames) finalizeSeasonAwards(state);
   return state;
@@ -5257,16 +5301,23 @@ function pitcherRoleLabel(role) {
 
 function injuryRisk(p, context = "game") {
   if (!p || p.health?.status !== "OK") return 0;
-  let risk = context === "training" ? 0.006 : 0.01;
-  if (p.type === "PIT") risk += 0.004;
-  if (p.pitcherRole === "SP") risk += 0.004;
-  if ((p.form || 70) < 55) risk += 0.012;
-  if ((p.stamina || 70) < 55) risk += 0.008;
-  if ((p.age || 25) >= 35) risk += 0.006;
+  let risk = context === "training" ? 0.0016 : 0.0028;
+  if (context === "manual-game") risk += 0.0012;
+  if (p.type === "PIT") risk += 0.0011;
+  if (p.pitcherRole === "SP") risk += 0.0008;
+  const lastPitches = Number(p.lastPitchCount) || 0;
+  if (p.type === "PIT" && lastPitches >= 105) risk += 0.006;
+  else if (p.type === "PIT" && lastPitches >= 85) risk += 0.003;
+  if ((Number(p.restDays) || 0) > 0) risk += 0.0025;
+  if ((p.form || 70) < 45) risk += 0.007;
+  else if ((p.form || 70) < 58) risk += 0.0035;
+  if ((p.stamina || 70) < 52) risk += 0.0025;
+  if ((p.age || 25) >= 37) risk += 0.0035;
+  else if ((p.age || 25) >= 33) risk += 0.0015;
   const durability = Number(p.durability) || 65;
-  risk += Math.max(-0.008, Math.min(0.022, (65 - durability) / 1800));
-  if (context === "manual-game") risk += 0.004;
-  return Math.min(0.055, Math.max(0, risk));
+  risk += Math.max(-0.0015, Math.min(0.009, (68 - durability) / 4500));
+  if (Number(p.reinjuryWatchDays) > 0) risk += 0.006;
+  return Math.min(0.035, Math.max(0.0004, risk));
 }
 
 function maybeAutomaticInjury(state, candidates, context = "game") {
@@ -5282,16 +5333,61 @@ function maybeAutomaticInjury(state, candidates, context = "game") {
 function randomInjury(state, id, context = "game") {
   const p = state.players.find((x) => x.id === Number(id)) || state.players.filter((x) => x.health?.status !== "INJURED").sort(() => Math.random() - 0.5)[0];
   if (!p) return state;
-  const pool = p.type === "PIT"
-    ? [["어깨 염증", 18], ["팔꿈치 통증", 28], ["등 근육 긴장", 12], ["손가락 물집", 7]]
-    : [["햄스트링", 16], ["손목 염좌", 14], ["허리 담 증세", 10], ["발목 염좌", 12]];
-  const picked = pool[rnd(0, pool.length - 1)];
-  p.health = { status: "INJURED", injury: picked[0], days: picked[1] + rnd(-3, 8), rehab: 0 };
+  const pitcherPool = [
+    { name: "손가락 물집", min: 4, max: 9, weight: 20, rehab: 15 },
+    { name: "등 근육 긴장", min: 8, max: 18, weight: 18, rehab: 20 },
+    { name: "전완부 염좌", min: 14, max: 32, weight: 18, rehab: 30 },
+    { name: "햄스트링 통증", min: 18, max: 38, weight: 10, rehab: 35 },
+    { name: "어깨 충돌 증후군", min: 35, max: 80, weight: 9, rehab: 45 },
+    { name: "팔꿈치 인대 손상", min: 80, max: 180, weight: 4, rehab: 55 },
+    { name: "팔꿈치 수술 재활", min: 190, max: 260, weight: 1, rehab: 60, nextSeason: true }
+  ];
+  const hitterPool = [
+    { name: "손목 염좌", min: 7, max: 18, weight: 17, rehab: 20 },
+    { name: "발목 염좌", min: 10, max: 24, weight: 17, rehab: 25 },
+    { name: "허벅지 근육통", min: 7, max: 15, weight: 18, rehab: 15 },
+    { name: "햄스트링 부상", min: 21, max: 55, weight: 16, rehab: 35 },
+    { name: "옆구리 통증", min: 18, max: 45, weight: 11, rehab: 30 },
+    { name: "무릎 통증", min: 28, max: 70, weight: 8, rehab: 40 },
+    { name: "손가락 골절", min: 45, max: 85, weight: 4, rehab: 45 },
+    { name: "무릎 수술 재활", min: 160, max: 230, weight: 1, rehab: 55, nextSeason: true }
+  ];
+  const pool = p.type === "PIT" ? pitcherPool : hitterPool;
+  const totalWeight = pool.reduce((sum, item) => sum + item.weight, 0);
+  let ticket = rnd(1, totalWeight);
+  let picked = pool[0];
+  for (const item of pool) {
+    ticket -= item.weight;
+    if (ticket <= 0) {
+      picked = item;
+      break;
+    }
+  }
+  let days = rnd(picked.min, picked.max);
+  if ((p.durability || 65) < 52) days += rnd(3, 12);
+  if ((p.age || 25) >= 35) days += rnd(2, 10);
+  const seasonGames = Number(state.seasonGames) || 144;
+  const day = Number(state.day) || 1;
+  const remaining = Math.max(0, seasonGames - day);
+  const seasonYear = Number(state.seasonYear) || 1;
+  const nextSeason = picked.nextSeason || days > remaining + 25;
+  p.health = {
+    status: "INJURED",
+    injury: picked.name,
+    days,
+    totalDays: days,
+    rehab: 0,
+    rehabTarget: picked.rehab,
+    returnSeasonYear: nextSeason ? seasonYear + 1 : seasonYear,
+    returnDay: nextSeason ? rnd(8, 35) : Math.min(seasonGames, day + days),
+    source: context === "training" ? "훈련 중 발생" : "경기 중 발생"
+  };
   p.rosterStatus = "FARM";
-  p.form = Math.max(30, p.form - 12);
-  p.happy = Math.max(30, p.happy - 5);
+  p.form = Math.max(25, (Number(p.form) || 65) - (days >= 80 ? 22 : days >= 30 ? 15 : 9));
+  p.happy = Math.max(25, (Number(p.happy) || 70) - (days >= 60 ? 9 : 4));
   const prefix = context === "training" ? "훈련 중" : "경기 중";
-  addNews(state, "부상 발생", `${p.name}이 ${prefix} ${picked[0]}으로 이탈했다. 예상 공백은 ${p.health.days}일.`, "의료");
+  const schedule = nextSeason ? `다음 시즌 Day ${p.health.returnDay} 복귀 목표` : `예상 공백 ${p.health.days}일`;
+  addNews(state, "부상 발생", `${p.name}이 ${prefix} ${picked.name}으로 이탈했다. ${schedule}.`, "의료");
   updateComplaints(state);
   return state;
 }
@@ -5300,15 +5396,15 @@ function advanceRehab(state, id) {
   const p = state.players.find((x) => x.id === Number(id));
   if (!p || p.health?.status === "OK") return state;
   state.selectedId = p.id;
-  const gain = rnd(5, 11);
+  const gain = p.health.status === "INJURED" ? rnd(3, 7) : rnd(6, 12);
   p.health.rehab = Math.min(100, (p.health.rehab || 0) + gain);
   p.health.days = Math.max(0, (p.health.days || 0) - rnd(2, 5));
   if (p.health.rehab >= 100 || p.health.days <= 0) {
-    p.health = { status: "REHAB", injury: null, days: 0, rehab: 100 };
-    p.form = Math.min(72, p.form + 8);
-    addNews(state, "재활 경기 가능", `${p.name}이 재활 경기 단계에 들어갔다. 2군에서 실전 감각을 확인하세요.`, "의료");
+    p.health = { ...p.health, status: "REHAB", days: 0, rehab: Math.max(70, p.health.rehab || 70) };
+    p.form = Math.min(72, (Number(p.form) || 55) + 8);
+    addNews(state, "재활 경기 가능", `${p.name}이 재활 경기 단계에 들어갔다. 2군에서 실전 감각을 확인할 수 있다.`, "의료");
   } else {
-    addNews(state, "재활 리포트", `${p.name} 재활 진행률 ${p.health.rehab}%.`, "의료");
+    addNews(state, "재활 리포트", `${p.name} 재활 진행률 ${p.health.rehab}%, 남은 치료 ${p.health.days}일.`, "의료");
   }
   updateComplaints(state);
   return state;
@@ -5318,13 +5414,18 @@ function clearRehab(state, id) {
   const p = state.players.find((x) => x.id === Number(id));
   if (!p || p.health?.status === "OK") return state;
   state.selectedId = p.id;
-  if ((p.health.rehab || 0) < 80) {
-    addNews(state, "복귀 보류", `${p.name}의 재활 진행률이 낮아 복귀를 보류했다.`, "의료");
-    return state;
-  }
+  const earlyReturn = (p.health.rehab || 0) < 80 || (p.health.days || 0) > 0;
+  const rehabRate = Number(p.health.rehab) || 0;
   p.health = { status: "OK", injury: null, days: 0, rehab: 0 };
-  p.form = Math.min(88, p.form + 6);
-  addNews(state, "부상 복귀", `${p.name}이 정상 훈련에 복귀했다.`, "의료");
+  p.form = earlyReturn
+    ? Math.max(38, Math.min(68, Number(p.form) || 55))
+    : Math.min(88, (Number(p.form) || 60) + 6);
+  if (earlyReturn) {
+    p.reinjuryWatchDays = Math.max(5, Math.ceil((80 - rehabRate) / 5));
+    addNews(state, "치트 복귀", `${p.name}을 재활 ${rehabRate}%에서 즉시 복귀시켰다. 당분간 컨디션과 재발 위험을 조심해야 한다.`, "의료");
+  } else {
+    addNews(state, "부상 복귀", `${p.name}이 정상 훈련에 복귀했다.`, "의료");
+  }
   updateComplaints(state);
   return state;
 }

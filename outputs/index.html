@@ -2963,7 +2963,7 @@
             <button class="secondary" onclick="train(${p.id}, 'arm')">송구 과제</button>
             <button class="secondary" onclick="mutate('/api/offer', { id: ${p.id} })">시장 반응 확인</button>
             <button class="secondary" onclick="mutate('/api/player/rehab', { id: ${p.id} })" ${p.health?.status === "OK" ? "disabled" : ""}>재활 진행</button>
-            <button class="secondary" onclick="mutate('/api/player/clear-rehab', { id: ${p.id} })" ${p.health?.status === "OK" ? "disabled" : ""}>복귀 승인</button>
+            <button class="secondary" onclick="mutate('/api/player/clear-rehab', { id: ${p.id} })" ${p.health?.status === "OK" ? "disabled" : ""}>즉시 복귀</button>
             <button class="secondary" onclick="mutate('/api/roster/status', { id: ${p.id}, status: 'ACTIVE' })" ${p.rosterStatus === "ACTIVE" || p.rosterStatus === "DEV" ? "disabled" : ""}>1군 등록</button>
             <button class="secondary" onclick="mutate('/api/roster/status', { id: ${p.id}, status: 'FARM' })" ${p.rosterStatus !== "ACTIVE" ? "disabled" : ""}>2군 말소</button>
             <button class="secondary" onclick="mutate('/api/player/convert-dev', { id: ${p.id} })" ${p.rosterStatus !== "DEV" ? "disabled" : ""}>정식 전환</button>
@@ -3032,8 +3032,9 @@
     function healthLabel(health) {
       if (!health || health.status === "OK") return "건강";
       const schedule = health.returnSeasonYear ? ` · ${health.returnSeasonYear}시즌 Day ${health.returnDay || "?"} 복귀예정` : "";
-      if (health.status === "INJURED") return `${health.injury || "부상"} ${health.days || 0}일${schedule}`;
-      if (health.status === "REHAB") return `재활 ${health.rehab || 0}%${schedule}`;
+      const source = health.source ? ` · ${health.source}` : "";
+      if (health.status === "INJURED") return `${health.injury || "부상"} · 치료 ${health.days || 0}일 남음${schedule}${source}`;
+      if (health.status === "REHAB") return `재활 ${health.rehab || 0}% · 복귀 승인 대기${schedule}${source}`;
       return health.status;
     }
 
