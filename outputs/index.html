@@ -3273,7 +3273,7 @@
       $("draftMeta").innerHTML = state.draftClass?.length
         ? `<strong>${state.seasonYear || state.draftCycle || 1}시즌 신인 드래프트 · ${state.draftRound || 1}라운드 ${(state.draftPick || 0) + 1}번째 지명</strong><br><span class="small">참가 대상: 고교 3학년만 · 현재 순번: ${currentDraftTeam ? teamName(currentDraftTeam) : "종료"} · 지명 순서 ${draftOrder.map((id) => teamName(state.teams.find((t) => t.id === id) || { name: id })).join(" → ")}</span>`
         : `<strong>드래프트 대기 · ${draftCountdown}</strong><br><span class="small">현재 Day ${currentDay}. 드래프트 날짜가 오면 자동으로 이 창이 열립니다. 올해는 고교 3학년만 참가하고, 다음 시즌에는 현재 2학년이 3학년 후보로 올라옵니다.</span>`;
-      $("draftBoard").innerHTML = state.draftClass?.length ? state.draftClass.slice(0, 30).map((p) => `
+      $("draftBoard").innerHTML = state.draftClass?.length ? state.draftClass.map((p) => `
         <div class="news-item">
           <div class="bio">
             <div>

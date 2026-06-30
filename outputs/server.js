@@ -14,7 +14,7 @@ const DATA_SOURCE_URL_PATH = path.join(ROOT, "data", "source-url.txt");
 const HAND_DATA_VERSION = "2026-06-26-bats-throws";
 const DRAFT_DAY = 120;
 const DRAFT_ROUNDS = 11;
-const HS_DRAFT_POOL_SIZE = 60;
+const HS_DRAFT_POOL_SIZE = 120;
 const ACTIVE_VISITOR_WINDOW_MS = 2 * 60 * 1000;
 const activeVisitors = new Map();
 
@@ -4841,6 +4841,24 @@ function seniorHighSchoolPool(state) {
   return (senior?.players || []).filter((p) => !p.drafted);
 }
 
+function fillDraftClassToFullRounds(state) {
+  if (!state || !Array.isArray(state.draftClass)) return state;
+  const targetSize = DRAFT_ROUNDS * 10;
+  const seasonYear = Number(state.seasonYear) || 1;
+  while (state.draftClass.length < targetSize) {
+    const index = state.draftClass.length;
+    const extra = makeRandomDevelopmentProspect(index + seasonYear * 1000);
+    state.draftClass.push({
+      ...extra,
+      grade: 3,
+      rank: index + 1,
+      projectedRound: Math.floor(index / 10) + 1,
+      supplementalDraft: true
+    });
+  }
+  return state;
+}
+
 function promoteHighSchoolCohorts(state) {
   ensureHighSchoolCohorts(state);
   const seasonYear = (Number(state.seasonYear) || 1) + 1;
@@ -4916,17 +4934,22 @@ function generateDraftClass(state) {
     return state;
   }
   if (state.draftWindowOpen && Array.isArray(state.draftClass) && state.draftClass.length) return state;
-  const prospects = seniorHighSchoolPool(state)
-    .sort((a, b) => b.rankScore - a.rankScore)
-    .map((p, index) => ({ ...p, rank: index + 1, projectedRound: Math.floor(index / 10) + 1 }));
-  state.draftClass = prospects;
+  const draftTargetSize = DRAFT_ROUNDS * 10;
+  const prospects = seniorHighSchoolPool(state).sort((a, b) => b.rankScore - a.rankScore);
+  while (prospects.length < draftTargetSize) {
+    const extra = makeRandomDevelopmentProspect(prospects.length + seasonYear * 1000);
+    prospects.push({ ...extra, grade: 3, school: extra.school || "추가 테스트", supplementalDraft: true });
+  }
+  prospects.sort((a, b) => b.rankScore - a.rankScore);
+  const rankedProspects = prospects.map((p, index) => ({ ...p, rank: index + 1, projectedRound: Math.floor(index / 10) + 1 }));
+  state.draftClass = rankedProspects;
   state.draftCycle = seasonYear;
   state.draftSeason = seasonYear;
   state.draftWindowOpen = true;
   state.draftOrder = draftOrderForState(state);
   state.draftRound = 1;
   state.draftPick = 0;
-  addNews(state, "신인 드래프트 개막", `${seasonYear}시즌 고교 3학년 지명 후보 ${prospects.length}명이 공개됐다. 1~2학년은 다음 시즌 이후 드래프트로 넘어간다.`, "드래프트");
+  addNews(state, "신인 드래프트 개막", `${seasonYear}시즌 고교 3학년 지명 후보 ${rankedProspects.length}명이 공개됐다. 1~2학년은 다음 시즌 이후 드래프트로 넘어간다.`, "드래프트");
   advanceDraftToUser(state);
   return state;
 }
@@ -5004,13 +5027,21 @@ function markCohortProspectDrafted(state, prospect, teamId) {
 
 function advanceDraftToUser(state) {
   if (!Array.isArray(state.draftClass) || !state.draftClass.length) generateDraftClass(state);
+  fillDraftClassToFullRounds(state);
   let picks = 0;
   while (currentDraftTeamId(state) && currentDraftTeamId(state) !== state.selectedTeamId && picks < 120) {
     const teamId = currentDraftTeamId(state);
     const picked = autoDraftForTeam(state, teamId);
-    if (!picked) break;
+    if (!picked) {
+      completeDraftSeason(state);
+      return state;
+    }
     advanceDraftSlot(state);
     picks += 1;
+  }
+  if (state.draftWindowOpen && !(state.draftClass || []).some((p) => !p.drafted)) {
+    completeDraftSeason(state);
+    return state;
   }
   addNews(state, "드래프트 진행", currentDraftTeamId(state) === state.selectedTeamId ? `${state.draftRound}라운드 ${state.draftPick + 1}번째, 우리 구단 지명 차례다.` : "드래프트가 종료됐다.", "드래프트");
   return state;
@@ -5018,6 +5049,7 @@ function advanceDraftToUser(state) {
 
 function draftProspect(state, id) {
   if (!Array.isArray(state.draftClass) || !state.draftClass.length) generateDraftClass(state);
+  fillDraftClassToFullRounds(state);
   if (currentDraftTeamId(state) !== state.selectedTeamId) {
     addNews(state, "지명 순번 대기", "아직 우리 구단 지명 차례가 아니다. 내 순번까지 진행을 눌러야 한다.", "드래프트");
     return state;
@@ -5061,6 +5093,9 @@ function draftProspect(state, id) {
   state.selectedId = p.id;
   addNews(state, "신인 지명 완료", `${state.draftRound}라운드 ${state.draftPick + 1}번째로 ${p.name}(${prospect.school}, ${p.pos})을 지명했다. 계약금 ${money(prospect.signBonus)}.`, "드래프트");
   advanceDraftSlot(state);
+  if (state.draftWindowOpen && !(state.draftClass || []).some((candidate) => !candidate.drafted)) {
+    completeDraftSeason(state);
+  }
   return state;
 }
 
