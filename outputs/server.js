@@ -2327,6 +2327,77 @@ function resolveUserAtBat(state, tactic) {
   return state;
 }
 
+function userRelieverPriority(role, inning, closeGame, trouble) {
+  if (trouble && inning <= 5) return role === "LR" ? 36 : role === "MR" ? 22 : role === "SU" ? 8 : 0;
+  if (inning >= 9 && closeGame) return role === "CL" ? 42 : role === "SU" ? 24 : role === "MR" ? 8 : 0;
+  if (inning >= 7 && closeGame) return role === "SU" ? 34 : role === "CL" ? 20 : role === "MR" ? 14 : 0;
+  if (inning >= 6) return role === "MR" ? 24 : role === "SU" ? 14 : role === "LR" ? 8 : 0;
+  return role === "LR" ? 22 : role === "MR" ? 14 : 0;
+}
+
+function chooseUserReliever(state, game, trouble = false) {
+  const used = new Set((game.usedPitchers || []).map(Number));
+  const diff = Math.abs((Number(game.score?.user) || 0) - (Number(game.score?.opp) || 0));
+  const closeGame = diff <= 3;
+  const pool = (state.players || [])
+    .filter((p) => (p.teamId === state.selectedTeamId || !p.teamId) && p.type === "PIT" && p.rosterStatus === "ACTIVE")
+    .filter((p) => p.health?.status !== "INJURED" && p.id !== game.pitcherId && !used.has(Number(p.id)));
+  if (!pool.length) return null;
+  return pool
+    .map((p) => {
+      const role = p.pitcherRole || (p.pos === "SP" ? "SP" : p.pos === "CL" ? "CL" : "MR");
+      const starterPenalty = role === "SP" ? (trouble && game.inning <= 4 ? 8 : 34) : 0;
+      const restPenalty = Math.max(0, Number(p.restDays) || 0) * 8;
+      const staminaFit = role === "LR" && game.inning <= 5 ? 9 : role === "CL" && game.inning < 8 ? -12 : 0;
+      return {
+        p,
+        score:
+          (Number(p.ovr) || 60) * 0.55 +
+          (Number(p.pit) || 60) * 0.34 +
+          (Number(p.form) || 65) * 0.18 +
+          (Number(p.stamina) || 45) * 0.08 +
+          userRelieverPriority(role, game.inning, closeGame, trouble) +
+          staminaFit -
+          restPenalty -
+          starterPenalty
+      };
+    })
+    .sort((a, b) => b.score - a.score)[0]?.p || null;
+}
+
+function maybeAutoChangeUserPitcher(state) {
+  const game = state.activeGame;
+  if (!game || game.complete || !isOpponentBattingHalf(game) || game.outs >= 3) return false;
+  if ((game.count?.balls || 0) !== 0 || (game.count?.strikes || 0) !== 0) return false;
+  const current = state.players.find((p) => p.id === game.pitcherId);
+  if (!current) return false;
+  const role = current.pitcherRole || (current.pos === "SP" ? "SP" : current.pos === "CL" ? "CL" : "MR");
+  const starter = role === "SP";
+  const pitches = Number(game.pitchCount) || 0;
+  const stamina = Number(current.stamina) || (starter ? 78 : 36);
+  const runs = Number(game.pitcherRuns?.[current.id]) || 0;
+  const runners = countBasesOccupied(game.bases);
+  const scoreDiff = Math.abs((Number(game.score?.user) || 0) - (Number(game.score?.opp) || 0));
+  const closeGame = scoreDiff <= 3;
+  const trouble = runs >= (game.inning <= 4 ? 5 : 3) || runners >= 2 || game.pitcherMood === "난조";
+  const fatigueLine = starter
+    ? Math.max(78, Math.min(104, stamina + 14))
+    : Math.max(17, Math.min(34, Math.round(stamina * 0.62)));
+  const tired = pitches >= fatigueLine || (starter && game.inning >= 6 && pitches >= Math.max(72, stamina + 2));
+  const forced = pitches >= fatigueLine + (starter ? 15 : 8);
+  const leverageHook = !starter && game.inning >= 7 && closeGame && pitches >= Math.max(16, fatigueLine - 4);
+  const earlyPatience = starter && game.inning <= 4 && pitches < 82 && runs < 5;
+  if (!forced && earlyPatience) return false;
+  if (!forced && !tired && !trouble && !leverageHook) return false;
+  const next = chooseUserReliever(state, game, trouble || forced);
+  if (!next) return false;
+  const oldName = current.name;
+  const reason = forced ? "한계 투구수" : trouble ? "실점 위기" : tired ? "피로 누적" : "승부처";
+  changePitcher(state, next.id);
+  game.log.unshift(`${halfLabel(game)} 자동 불펜 운영(${reason}): ${oldName} ${pitches}구 ${runs}실점 -> ${next.name}(${pitcherRoleLabel(next.pitcherRole || next.pos)})`);
+  return true;
+}
+
 function resolveOpponentHalf(state) {
   const game = state.activeGame;
   if (!game || game.complete || !isOpponentBattingHalf(game)) return state;
@@ -2984,15 +3055,21 @@ function advanceOnePlay(state) {
   return resolveOpponentPlateAppearance(state);
 }
 
-function skipCurrentHalfInning(state) {
+function skipCurrentHalfInning(state, options = {}) {
   const game = state.activeGame;
   if (!game || game.complete) return state;
+  const autoManagePitchers = options.autoManagePitchers !== false;
   const inning = game.inning;
   const half = game.half;
   let guard = 0;
   while (!game.complete && game.inning === inning && game.half === half && guard < 90) {
     if (isUserBattingHalf(game)) resolveUserAtBat(state, "swing");
-    else resolveOpponentPlateAppearance(state);
+    else {
+      resolveOpponentPlateAppearance(state);
+      if (autoManagePitchers && !game.complete && game.inning === inning && game.half === half) {
+        maybeAutoChangeUserPitcher(state);
+      }
+    }
     guard += 1;
   }
   game.log.unshift(`${inning}회${half === "top" ? "초" : "말"} 반이닝 스킵 완료`);
@@ -3009,7 +3086,7 @@ function skipFullGame(state) {
   let guard = 0;
   while (!game.complete && guard < 36) {
     const before = `${game.inning}-${game.half}-${game.outs}-${game.lineupIndex}-${game.opponentLineupIndex}-${game.score.user}-${game.score.opp}`;
-    skipCurrentHalfInning(state);
+    skipCurrentHalfInning(state, { autoManagePitchers: true });
     guard += 1;
     const after = `${game.inning}-${game.half}-${game.outs}-${game.lineupIndex}-${game.opponentLineupIndex}-${game.score.user}-${game.score.opp}`;
     if (!game.complete && before === after) {
