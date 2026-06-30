@@ -1354,6 +1354,12 @@ function rosterBackedOpponentName(state, opp, name) {
   return opponentRoster(state, opp?.id).some((p) => p.name === name);
 }
 
+function activeOpponentPitcherName(state, opp, game, name) {
+  if (!name) return false;
+  if (rosterBackedOpponentName(state, opp, name)) return true;
+  return Array.isArray(game?.opponentBullpen) && game.opponentBullpen.some((p) => p?.name === name);
+}
+
 function opponentBatterFromPlayer(p, order, fallbackPos = "DH") {
   const contact = Math.max(35, Math.min(99, Number(p.hit || p.ovr || 60)));
   const power = Math.max(30, Math.min(99, Number(p.pow || p.ovr || 55)));
@@ -1499,7 +1505,8 @@ function selectOpponentStarter(state, opp) {
 
 function ensureOpponentPersonnel(state, game, opp) {
   if (!game || !opp) return;
-  const generatedPitcher = !game.opponentPitcher || !rosterBackedOpponentName(state, opp, game.opponentPitcher.name);
+  ensureOpponentBullpen(state, game, opp);
+  const generatedPitcher = !game.opponentPitcher || !activeOpponentPitcherName(state, opp, game, game.opponentPitcher.name);
   const generatedLineup = !Array.isArray(game.opponentLineup)
     || game.opponentLineup.length < 9
     || game.opponentLineup.some((b) => !rosterBackedOpponentName(state, opp, b?.name));
@@ -1543,6 +1550,38 @@ function makeOpponentBullpen(opp, seed = "") {
       restDays,
       pitchCount: 0,
       mood: fatigue >= 24 || restDays > 0 ? "피로" : "정상"
+    };
+  });
+}
+
+function makeOpponentBullpenFromRoster(state, opp, seed = "") {
+  const roleRank = { CL: 0, SU: 1, MR: 2, LR: 3, RP: 4, SP: 5 };
+  const rosterPitchers = opponentRoster(state, opp?.id)
+    .filter((p) => p.type === "PIT")
+    .sort((a, b) => {
+      const activeDiff = (b.rosterStatus === "ACTIVE" ? 1 : 0) - (a.rosterStatus === "ACTIVE" ? 1 : 0);
+      const roleDiff = (roleRank[a.pitcherRole || a.pos] ?? 6) - (roleRank[b.pitcherRole || b.pos] ?? 6);
+      const valueDiff = Number(b.ovr || b.pit || 0) - Number(a.ovr || a.pit || 0);
+      return activeDiff || roleDiff || valueDiff;
+    });
+  const relievers = rosterPitchers
+    .filter((p) => p.pitcherRole !== "SP" && p.pos !== "SP")
+    .concat(rosterPitchers.filter((p) => p.pitcherRole === "SP" || p.pos === "SP"))
+    .filter((p, index, arr) => arr.findIndex((x) => x.id === p.id) === index)
+    .slice(0, 7);
+  if (relievers.length < 4) return makeOpponentBullpen(opp, seed || opp?.id);
+  return relievers.map((source, index) => {
+    const pitcher = makeOpponentPitcher(opp, `${seed || opp?.id}-pen-${index}`, source);
+    const sourceRole = source.pitcherRole || source.pos || pitcher.role;
+    const role = sourceRole === "SP" ? "LR" : sourceRole;
+    return {
+      ...pitcher,
+      role,
+      stamina: role === "LR" ? Math.max(34, Math.min(54, pitcher.stamina || 44)) : Math.max(16, Math.min(36, pitcher.stamina || 26)),
+      pitchCount: 0,
+      mood: (Number(source.restDays) || 0) > 0 ? "피로" : "정상",
+      restDays: Number(source.restDays) || 0,
+      fatigue: Math.max(0, 20 - (Number(source.form) || 65) / 4)
     };
   });
 }
@@ -1628,8 +1667,11 @@ function opponentEffectiveCommand(p) {
 }
 
 function ensureOpponentBullpen(state, game, opp) {
-  if (!Array.isArray(game.opponentBullpen) || game.opponentBullpen.length < 5) {
-    game.opponentBullpen = makeOpponentBullpen(opp, opp.id);
+  const invalidBullpen = !Array.isArray(game.opponentBullpen)
+    || game.opponentBullpen.length < 5
+    || game.opponentBullpen.some((p) => p?.name && !rosterBackedOpponentName(state, opp, p.name));
+  if (invalidBullpen) {
+    game.opponentBullpen = makeOpponentBullpenFromRoster(state, opp, opp.id);
   }
   game.opponentBullpen = applyOpponentBullpenHistory(state, opp, game.opponentBullpen);
   if (!Array.isArray(game.opponentUsedPitchers)) {
