@@ -1791,6 +1791,7 @@ function createActiveGame(state, lineup, starterId, lineupPositions) {
     pitcherOuts: pitcherId ? { [pitcherId]: 0 } : {},
     pitcherRuns: pitcherId ? { [pitcherId]: 0 } : {},
     pitcherStrikeouts: pitcherId ? { [pitcherId]: 0 } : {},
+    pitcherEntries: pitcherId ? { [pitcherId]: { inning: 1, half: "top", outs: 0, userScore: 0, oppScore: 0 } } : {},
     pitchCount: 0,
     pitcherMood: "정상",
     opponentPitcher: opponentStarter,
@@ -2463,8 +2464,63 @@ function ensurePitchingStats(player) {
   return player.stats;
 }
 
+function pitcherEntrySnapshot(game) {
+  return {
+    inning: Number(game?.inning) || 1,
+    half: game?.half || "top",
+    outs: Number(game?.outs) || 0,
+    userScore: Number(game?.score?.user) || 0,
+    oppScore: Number(game?.score?.opp) || 0
+  };
+}
+
+function ensurePitcherEntryTracking(game) {
+  if (!game) return {};
+  if (!game.pitcherEntries) game.pitcherEntries = {};
+  const starterId = Number((game.usedPitchers || [])[0] || game.pitcherId);
+  if (starterId && !game.pitcherEntries[starterId]) {
+    game.pitcherEntries[starterId] = { inning: 1, half: "top", outs: 0, userScore: 0, oppScore: 0 };
+  }
+  return game.pitcherEntries;
+}
+
+function applyManualSaveHoldStats(state, game, outsMap) {
+  if (!game || !state || (Number(game.score?.user) || 0) <= (Number(game.score?.opp) || 0)) return;
+  const used = [...new Set((game.usedPitchers || []).map(Number).filter(Boolean))];
+  if (used.length < 2) return;
+  const entries = ensurePitcherEntryTracking(game);
+  const starterId = used[0];
+  const finalId = Number(game.pitcherId || used[used.length - 1]);
+  const finalLead = (Number(game.score?.user) || 0) - (Number(game.score?.opp) || 0);
+  const finalOuts = Number(outsMap[finalId]) || 0;
+  const finalEntry = entries[finalId] || {};
+  const finalEntryLead = (Number(finalEntry.userScore) || 0) - (Number(finalEntry.oppScore) || 0);
+  const finalInning = Number(finalEntry.inning) || Number(game.inning) || 9;
+  const saveEligible = finalId !== starterId
+    && finalOuts > 0
+    && (finalLead <= 3 || (finalEntryLead > 0 && finalEntryLead <= 3) || finalOuts >= 9 || finalInning >= 8);
+  if (saveEligible) {
+    const closer = state.players.find((p) => p.id === finalId && p.type === "PIT");
+    if (closer) ensurePitchingStats(closer).sv += 1;
+  }
+  used.forEach((id) => {
+    if (id === starterId || id === finalId) return;
+    const outs = Number(outsMap[id]) || 0;
+    if (outs <= 0) return;
+    const entry = entries[id] || {};
+    const entryLead = (Number(entry.userScore) || 0) - (Number(entry.oppScore) || 0);
+    const inning = Number(entry.inning) || 6;
+    if (entryLead <= 0) return;
+    if (entryLead <= 3 || inning >= 6 || finalLead <= 3) {
+      const reliever = state.players.find((p) => p.id === id && p.type === "PIT");
+      if (reliever) ensurePitchingStats(reliever).hold += 1;
+    }
+  });
+}
+
 function updateManualPitchingStats(state, game, won) {
   if (!game) return;
+  ensurePitcherEntryTracking(game);
   const outsMap = { ...(game.pitcherOuts || {}) };
   const runsMap = { ...(game.pitcherRuns || {}) };
   const soMap = { ...(game.pitcherStrikeouts || {}) };
@@ -2499,6 +2555,7 @@ function updateManualPitchingStats(state, game, won) {
   const starter = state.players.find((p) => p.id === Number(starterId));
   if (starter?.type === "PIT" && won) ensurePitchingStats(starter).win += 1;
   if (starter?.type === "PIT" && !won && (Number(game.score?.user) || 0) < (Number(game.score?.opp) || 0)) ensurePitchingStats(starter).loss += 1;
+  if (won) applyManualSaveHoldStats(state, game, outsMap);
 }
 
 function defensiveUnit(state, game) {
@@ -3109,6 +3166,8 @@ function changePitcher(state, inId) {
   const incoming = state.players.find((p) => p.id === inId && p.type === "PIT" && p.rosterStatus === "ACTIVE");
   if (!incoming || game.usedPitchers?.includes(inId) || incoming.health?.status === "INJURED") return state;
   const outgoing = state.players.find((p) => p.id === game.pitcherId);
+  const entries = ensurePitcherEntryTracking(game);
+  entries[inId] = pitcherEntrySnapshot(game);
   game.pitcherId = inId;
   game.usedPitchers = [...(game.usedPitchers || []), inId];
   game.pitchCount = 0;
@@ -3588,9 +3647,9 @@ function simulateTeamPlayerStats(state, team) {
     p.stats.ip = (p.stats.ip || 0) + rnd(6, 16) / 10;
     p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round((p.pit || 58) / 28) + rnd(0, 1));
     p.stats.era = Math.min(7.5, Math.max(1.7, (p.stats.era || 3.8) + rnd(-10, 10) / 100));
-    if (["MR", "SU"].includes(p.pitcherRole) && Math.random() < 0.17) p.stats.hold = (p.stats.hold || 0) + 1;
+    if (["MR", "SU"].includes(p.pitcherRole) && Math.random() < 0.34) p.stats.hold = (p.stats.hold || 0) + 1;
   });
-  if (closer && Math.random() < Math.max(0.16, (team.power || 65) / 360)) closer.stats.sv = (closer.stats.sv || 0) + 1;
+  if (closer && Math.random() < Math.max(0.28, (team.power || 65) / 240)) closer.stats.sv = (closer.stats.sv || 0) + 1;
 }
 
 function ageAndDevelop(state) {
@@ -4232,8 +4291,9 @@ function playGame(state) {
       p.stats.era = Math.min(7.5, Math.max(1.8, (p.stats.era || 3.8) + (Math.random() - 0.52) / 3));
       if (won && p.id === starter?.id) p.stats.win += 1;
       if (!won && p.id === starter?.id) p.stats.loss = (p.stats.loss || 0) + 1;
-      if (p.pitcherRole === "CL" && won && Math.random() < 0.28) p.stats.sv = (p.stats.sv || 0) + 1;
-      if (["MR","SU"].includes(p.pitcherRole) && won && Math.random() < 0.18) p.stats.hold = (p.stats.hold || 0) + 1;
+      const closeWin = won && Math.abs(finalMe - finalOpp) <= 3;
+      if (p.pitcherRole === "CL" && won && (closeWin || Math.random() < 0.18)) p.stats.sv = (p.stats.sv || 0) + 1;
+      if (["MR","SU"].includes(p.pitcherRole) && won && (closeWin ? Math.random() < 0.72 : Math.random() < 0.32)) p.stats.hold = (p.stats.hold || 0) + 1;
     }
   }
   applyPostGameFatigue(state, pitcherUsage, activeBatters.map((p) => p.id), autoPositions);
