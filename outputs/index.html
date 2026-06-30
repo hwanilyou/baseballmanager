@@ -2201,7 +2201,14 @@
       $("clubName").textContent = teamName(me);
       $("clubMeta").textContent = "Korea Baseball League · 감독 겸 단장";
       const scheduleInfo = state.scheduleInfo || {};
-      $("dateLabel").textContent = `시즌 ${Math.min(state.day, state.seasonGames)} / ${state.seasonGames} · ${scheduleInfo.seriesNo || "-"}번째 3연전 ${scheduleInfo.seriesGame || "-"}차전 · ${scheduleInfo.venue || "-"}`;
+      const postseasonInfo = scheduleInfo.postseason;
+      if (postseasonInfo?.completed) {
+        $("dateLabel").textContent = `시즌 종료 · ${postseasonInfo.teamNames?.[0] || "우승팀"} 우승 · 다음 시즌 준비`;
+      } else if (postseasonInfo) {
+        $("dateLabel").textContent = `포스트시즌 · ${postseasonInfo.name} ${postseasonInfo.game}차전 · ${postseasonInfo.targetWins}선승`;
+      } else {
+        $("dateLabel").textContent = `시즌 ${Math.min(state.day, state.seasonGames)} / ${state.seasonGames} · ${scheduleInfo.seriesNo || "-"}번째 3연전 ${scheduleInfo.seriesGame || "-"}차전 · ${scheduleInfo.venue || "-"}`;
+      }
       $("budgetLabel").textContent = `예산 ${money(state.budget)}`;
       $("wins").textContent = me.w;
       $("losses").textContent = me.l;
@@ -2232,10 +2239,23 @@
     function renderDashboard() {
       const opp = state.opponent;
       const scheduleText = state.scheduleInfo ? `<div class="small" style="color: rgba(255,255,255,0.82);">${state.scheduleInfo.seriesNo}번째 3연전 · ${state.scheduleInfo.seriesGame}/3차전</div>` : "";
-      $("matchup").innerHTML = state.lastGame
-        ? `<div class="score-line"><span>${teamName()}</span><span>${state.lastGame.me}</span></div><div class="score-line"><span>${state.lastGame.opp}</span><span>${state.lastGame.them}</span></div>${scheduleText}`
-        : `<div class="score-line"><span>${teamName()}</span><span>vs</span></div><div class="score-line"><span>${teamName(opp)}</span><span>${opp.power}</span></div>${scheduleText}`;
-      $("playGame").disabled = state.day > state.seasonGames || state.players.length < 9;
+      const postseasonInfo = state.scheduleInfo?.postseason;
+      if (postseasonInfo?.completed) {
+        $("matchup").innerHTML = `<div class="small" style="color: rgba(255,255,255,0.82);">시즌 종료</div><div class="score-line"><span>${postseasonInfo.teamNames?.[0] || "우승팀"}</span><span>우승</span></div><div class="small" style="color: rgba(255,255,255,0.82);">경기 스킵을 누르면 다음 시즌 준비로 넘어갑니다.</div>`;
+      } else if (postseasonInfo) {
+        const seriesRows = postseasonInfo.teamIds.map((id, index) => {
+          const name = postseasonInfo.teamNames[index] || "-";
+          const wins = postseasonInfo.wins?.[id] || 0;
+          return `<div class="score-line"><span>${name}</span><span>${wins}승</span></div>`;
+        }).join("");
+        $("matchup").innerHTML = `<div class="small" style="color: rgba(255,255,255,0.82);">포스트시즌 · ${postseasonInfo.name} ${postseasonInfo.game}차전 · ${postseasonInfo.targetWins}선승</div>${seriesRows}`;
+      } else {
+        $("matchup").innerHTML = state.lastGame
+          ? `<div class="score-line"><span>${teamName()}</span><span>${state.lastGame.me}</span></div><div class="score-line"><span>${state.lastGame.opp}</span><span>${state.lastGame.them}</span></div>${scheduleText}`
+          : `<div class="score-line"><span>${teamName()}</span><span>vs</span></div><div class="score-line"><span>${teamName(opp)}</span><span>${opp.power}</span></div>${scheduleText}`;
+      }
+      $("playGame").disabled = (state.day > state.seasonGames && state.postseason?.completed) || state.players.length < 9;
+      $("playGame").textContent = state.day > state.seasonGames && state.postseason?.active ? "포스트시즌 운영 열기" : "경기 운영 열기";
       $("urgentBox").innerHTML = state.offers.length
         ? `<strong>${state.offers.length}건의 해외 오퍼</strong><br><span class="small">이적 시장 탭에서 수락 또는 거절을 결정하세요.</span>`
         : `<strong>운영 이슈 없음</strong><br><span class="small">육성 센터에서 선수별 훈련 과제를 지시하고 일정 진행으로 성장을 확인하세요.</span>`;

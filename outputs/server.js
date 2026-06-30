@@ -763,6 +763,9 @@ function migrateState(state) {
   if (!Array.isArray(state.tradeOffers)) state.tradeOffers = [];
   if (!Array.isArray(state.tradeTargets)) state.tradeTargets = [];
   if (!Array.isArray(state.awards)) state.awards = [];
+  if (!state.postseason || typeof state.postseason !== "object") {
+    state.postseason = { active: false, completed: false, seasonYear: state.seasonYear || 1, series: [], roundIndex: 0, championId: null };
+  }
   if (!Array.isArray(state.draftClass)) state.draftClass = [];
   if (!Array.isArray(state.draftHistory)) state.draftHistory = [];
   if (!Array.isArray(state.draftOrder)) state.draftOrder = [];
@@ -786,7 +789,8 @@ function migrateState(state) {
   backfillStandingsGames(state);
   ensureTeamStats(state);
   ensureDraftWindow(state);
-  if (state.seasonAwarded !== true && state.day > state.seasonGames) finalizeSeasonAwards(state);
+  if (state.day > state.seasonGames && !state.postseason?.active && !state.postseason?.completed) startPostseason(state);
+  if (state.seasonAwarded !== true && state.postseason?.completed) finalizeSeasonAwards(state);
   if (!Array.isArray(state.freeAgents)) state.freeAgents = [];
   pruneInvalidOffers(state);
   if (state.activeGame?.lineup) {
@@ -1280,11 +1284,60 @@ function currentScheduleEntry(state) {
 }
 
 function currentOpponent(state) {
+  const postseasonOpp = currentPostseasonOpponent(state);
+  if (postseasonOpp) return postseasonOpp;
   const entry = currentScheduleEntry(state);
   return state.teams.find((t) => t.id === entry?.opponentId) || opponents(state)[0];
 }
 
 function currentScheduleInfo(state) {
+  const postseason = currentPostseasonSeries(state);
+  if (postseason) {
+    const opp = currentPostseasonOpponent(state);
+    return {
+      day: state.seasonGames || 144,
+      totalGames: state.seasonGames || 144,
+      seriesNo: postseason.name,
+      seriesGame: (postseason.games?.length || 0) + 1,
+      isHome: true,
+      venue: "postseason",
+      opponentId: opp?.id,
+      opponentName: opp ? `${opp.city} ${opp.name}` : "-",
+      postseason: {
+        name: postseason.name,
+        game: (postseason.games?.length || 0) + 1,
+        wins: postseason.wins || {},
+        targetWins: postseason.targetWins || 1,
+        teamIds: postseason.teamIds || [],
+        teamNames: postseason.teamNames || [],
+        championId: state.postseason?.championId || null,
+        completed: Boolean(state.postseason?.completed)
+      }
+    };
+  }
+  if (state.postseason?.completed) {
+    const champion = state.teams.find((t) => t.id === state.postseason.championId);
+    return {
+      day: state.seasonGames || 144,
+      totalGames: state.seasonGames || 144,
+      seriesNo: "season-finished",
+      seriesGame: "-",
+      isHome: true,
+      venue: "offseason",
+      opponentId: null,
+      opponentName: champion ? `${champion.city} ${champion.name}` : "-",
+      postseason: {
+        name: "시즌 종료",
+        game: "-",
+        wins: {},
+        targetWins: 0,
+        teamIds: [],
+        teamNames: champion ? [`${champion.city} ${champion.name}`] : [],
+        championId: state.postseason.championId,
+        completed: true
+      }
+    };
+  }
   const entry = currentScheduleEntry(state);
   const opp = currentOpponent(state);
   const scheduleEntry = currentScheduleEntry(state);
@@ -1835,6 +1888,19 @@ function resolveGroundOut(game, batterName) {
 }
 
 function createActiveGame(state, lineup, starterId, lineupPositions) {
+  if ((state.day || 1) > (state.seasonGames || 144) && !state.postseason?.active && !state.postseason?.completed) {
+    startPostseason(state);
+  }
+  if (state.postseason?.completed) {
+    addNews(state, "새 시즌 준비", "한국시리즈까지 끝났습니다. 리그 화면에서 다음 시즌 시작을 진행하세요.", "구단");
+    return state;
+  }
+  const currentSeries = currentPostseasonSeries(state);
+  if (currentSeries && !currentSeries.teamIds.includes(state.selectedTeamId)) {
+    addNews(state, "포스트시즌 대기", `${currentSeries.name}은 우리 팀 경기가 아닙니다. 경기 스킵으로 해당 라운드를 자동 진행합니다.`, "포스트시즌");
+    advancePostseasonGame(state);
+    return state;
+  }
   const rawLineup = Array.isArray(lineup) ? lineup.map(Number).slice(0, 9) : [];
   if (rawLineup.length !== 9 || new Set(rawLineup).size !== 9) {
     addNews(state, "라인업 제출 실패", "타순에는 1군 야수 9명이 중복 없이 들어가야 한다.", "경기");
@@ -1853,6 +1919,7 @@ function createActiveGame(state, lineup, starterId, lineupPositions) {
     return state;
   }
   const opp = currentOpponent(state);
+  const postseasonSeries = currentPostseasonSeries(state);
   const scheduleEntry = currentScheduleEntry(state);
   const pitcherId = startingPitcher(state, starterId);
   const opponentStarter = { ...ensureProbableOpponentPitcher(state), pitchCount: 0, mood: "정상", battersFaced: 0, runsAllowed: 0, runnersAllowed: 0, hitsAllowed: 0, walksAllowed: 0 };
@@ -1864,7 +1931,7 @@ function createActiveGame(state, lineup, starterId, lineupPositions) {
   };
   state.activeGame = {
     opponentId: opp.id,
-    isHome: Boolean(scheduleEntry?.isHome),
+    isHome: postseasonSeries ? true : Boolean(scheduleEntry?.isHome),
     lineup: cleanLineup,
     lineupPositions: cleanPositions,
     usedPositionPlayers: [...cleanLineup],
@@ -1972,6 +2039,36 @@ function finishManualGame(state) {
   const opp = state.teams.find((t) => t.id === game.opponentId) || currentOpponent(state);
   const won = game.score.user > game.score.opp;
   const tied = game.score.user === game.score.opp;
+  if (state.postseason?.active) {
+    if (tied) game.score.user += 1;
+    const finalWon = game.score.user > game.score.opp;
+    const winnerId = finalWon ? me.id : opp.id;
+    const loserId = finalWon ? opp.id : me.id;
+    const scoreText = finalWon
+      ? `${me.city} ${me.name} ${game.score.user}-${game.score.opp} ${opp.city} ${opp.name}`
+      : `${opp.city} ${opp.name} ${game.score.opp}-${game.score.user} ${me.city} ${me.name}`;
+    state.morale += finalWon ? 4 : -3;
+    state.fanInterest += finalWon ? 3 : -2;
+    state.trainingPts += 2;
+    state.morale = Math.max(20, Math.min(95, state.morale));
+    state.fanInterest = Math.max(25, Math.min(98, state.fanInterest));
+    updateManualPitchingStats(state, game, finalWon);
+    game.pitchingStatsApplied = true;
+    recoverOpponentBullpenFatigue(state);
+    applyOpponentGamePitcherFatigue(state, game, opp);
+    applyPostGameFatigue(state, game.pitcherUsage, game.lineup, game.lineupPositions);
+    const playedIds = [...(game.lineup || []), ...(game.usedPitchers || []), game.pitcherId].filter(Boolean);
+    maybeAutomaticInjury(state, playedIds.map((id) => state.players.find((p) => p.id === id)), "postseason-game");
+    progressPitchTraining(state);
+    progressTrainingAssignments(state);
+    progressScheduledInjuryReturns(state);
+    progressInjuryRecovery(state);
+    recoverPitcherRest(state);
+    game.complete = true;
+    game.log.unshift(`포스트시즌 경기 종료: ${scoreText}`);
+    registerPostseasonGame(state, winnerId, loserId, scoreText, true);
+    return;
+  }
   if (won) {
     me.w += 1;
     opp.l += 1;
@@ -3219,6 +3316,9 @@ function skipCurrentHalfInning(state, options = {}) {
 }
 
 function skipFullGame(state) {
+  if (!state.activeGame && (state.day || 1) > (state.seasonGames || 144)) {
+    return playGame(state);
+  }
   const game = state.activeGame;
   if (!game || game.complete) return state;
   game.pendingSteal = null;
@@ -3691,6 +3791,181 @@ function updateRanks(state) {
     const bp = b.w / Math.max(1, b.w + b.l);
     return bp - ap || b.power - a.power;
   });
+}
+
+function postseasonSeeds(state) {
+  updateRanks(state);
+  return state.teams.slice(0, 5).map((t, index) => ({ ...t, seed: index + 1 }));
+}
+
+function makePostseasonSeries(name, teams, targetWins, carryWins = {}) {
+  return {
+    name,
+    teamIds: teams.map((t) => t.id),
+    teamNames: teams.map((t) => `${t.city} ${t.name}`),
+    seeds: teams.map((t) => t.seed || 0),
+    wins: Object.fromEntries(teams.map((t) => [t.id, Number(carryWins[t.id]) || 0])),
+    targetWins,
+    games: [],
+    winnerId: null
+  };
+}
+
+function startPostseason(state) {
+  if (state.postseason?.active || state.postseason?.completed) return state;
+  const seeds = postseasonSeeds(state);
+  if (seeds.length < 5) return state;
+  const fourth = seeds[3];
+  const fifth = seeds[4];
+  state.postseason = {
+    active: true,
+    completed: false,
+    seasonYear: Number(state.seasonYear) || 1,
+    seeds: seeds.map((t) => ({ id: t.id, name: `${t.city} ${t.name}`, seed: t.seed })),
+    roundIndex: 0,
+    series: [makePostseasonSeries("와일드카드 결정전", [fourth, fifth], 2, { [fourth.id]: 1 })],
+    championId: null
+  };
+  state.activeGame = null;
+  addNews(state, "포스트시즌 개막", `정규시즌 종료. ${fourth.city} ${fourth.name}와 ${fifth.city} ${fifth.name}의 와일드카드 결정전부터 시작한다.`, "포스트시즌");
+  return state;
+}
+
+function currentPostseasonSeries(state) {
+  if (!state.postseason?.active) return null;
+  return state.postseason.series[state.postseason.roundIndex || 0] || null;
+}
+
+function currentPostseasonOpponent(state) {
+  const series = currentPostseasonSeries(state);
+  if (!series) return null;
+  if (!series.teamIds.includes(state.selectedTeamId)) return null;
+  const opponentId = series.teamIds.find((id) => id !== state.selectedTeamId) || series.teamIds[0];
+  return state.teams.find((t) => t.id === opponentId) || null;
+}
+
+function teamPlayoffPower(state, team) {
+  if (!team) return 60;
+  const base = team.id === state.selectedTeamId ? teamPower(state) : Number(team.power) || 66;
+  const winRate = (Number(team.w) || 0) / Math.max(1, (Number(team.w) || 0) + (Number(team.l) || 0));
+  const form = (winRate - 0.5) * 10;
+  return base + form + rnd(-5, 5);
+}
+
+function simulatePostseasonScore(state, homeTeam, awayTeam) {
+  const homePower = teamPlayoffPower(state, homeTeam) + 1.2;
+  const awayPower = teamPlayoffPower(state, awayTeam);
+  const homeRuns = Math.min(13, sampleRuns(clampNumber(4.1 + (homePower - awayPower) / 24, 1.2, 7.8)));
+  const awayRuns = Math.min(13, sampleRuns(clampNumber(4.1 + (awayPower - homePower) / 24, 1.2, 7.8)));
+  if (homeRuns === awayRuns) return Math.random() < 0.53 ? [homeRuns + 1, awayRuns] : [homeRuns, awayRuns + 1];
+  return [homeRuns, awayRuns];
+}
+
+function seedTeam(state, seedNo) {
+  const seed = state.postseason?.seeds?.find((s) => s.seed === seedNo);
+  return seed ? state.teams.find((t) => t.id === seed.id) : null;
+}
+
+function appendNextPostseasonSeries(state, winnerId) {
+  const winner = state.teams.find((t) => t.id === winnerId);
+  if (!winner) return state;
+  const count = state.postseason.series.length;
+  if (count === 1) {
+    const third = seedTeam(state, 3);
+    state.postseason.series.push(makePostseasonSeries("준플레이오프", [third, winner].filter(Boolean), 3));
+  } else if (count === 2) {
+    const second = seedTeam(state, 2);
+    state.postseason.series.push(makePostseasonSeries("플레이오프", [second, winner].filter(Boolean), 3));
+  } else if (count === 3) {
+    const first = seedTeam(state, 1);
+    state.postseason.series.push(makePostseasonSeries("한국시리즈", [first, winner].filter(Boolean), 4));
+  } else {
+    state.postseason.active = false;
+    state.postseason.completed = true;
+    state.postseason.championId = winnerId;
+    const championName = `${winner.city} ${winner.name}`;
+    addNews(state, "한국시리즈 종료", `${championName}이 한국시리즈 우승을 차지했다. 이제 시즌 시상과 다음 시즌 준비를 진행할 수 있다.`, "포스트시즌");
+  }
+  if (state.postseason.active) {
+    state.postseason.roundIndex = state.postseason.series.length - 1;
+    const next = currentPostseasonSeries(state);
+    addNews(state, `${next.name} 개막`, `${next.teamNames.join(" vs ")} 시리즈가 시작된다.`, "포스트시즌");
+  }
+  return state;
+}
+
+function registerPostseasonGame(state, winnerId, loserId, scoreText, manual = false) {
+  const series = currentPostseasonSeries(state);
+  if (!series || series.winnerId) return state;
+  series.wins[winnerId] = (series.wins[winnerId] || 0) + 1;
+  const winner = state.teams.find((t) => t.id === winnerId);
+  const loser = state.teams.find((t) => t.id === loserId);
+  const gameNo = series.games.length + 1;
+  series.games.push({ gameNo, winnerId, loserId, score: scoreText });
+  state.lastGame = {
+    opp: loser?.id === state.selectedTeamId ? `${winner.city} ${winner.name}` : `${loser?.city || ""} ${loser?.name || ""}`.trim(),
+    me: scoreText,
+    them: series.name,
+    won: winnerId === state.selectedTeamId,
+    postseason: true
+  };
+  state.games.unshift({ day: state.day, text: `${series.name} ${gameNo}차전 · ${scoreText}` });
+  state.games = state.games.slice(0, 12);
+  addNews(state, `${series.name} ${gameNo}차전`, `${scoreText}. 시리즈 ${series.teamNames.map((name, i) => `${name} ${series.wins[series.teamIds[i]] || 0}승`).join(" / ")}.`, "포스트시즌");
+  if ((series.wins[winnerId] || 0) >= series.targetWins) {
+    series.winnerId = winnerId;
+    addNews(state, `${series.name} 종료`, `${winner.city} ${winner.name}이 다음 라운드로 진출했다.`, "포스트시즌");
+    appendNextPostseasonSeries(state, winnerId);
+  }
+  if (manual) state.activeGame = null;
+  return state;
+}
+
+function advancePostseasonGame(state) {
+  startPostseason(state);
+  const series = currentPostseasonSeries(state);
+  if (!series) return state;
+  const a = state.teams.find((t) => t.id === series.teamIds[0]);
+  const b = state.teams.find((t) => t.id === series.teamIds[1]);
+  if (!a || !b) return state;
+  const gameNo = series.games.length + 1;
+  const higherSeedHosts = gameNo <= Math.ceil(series.targetWins / 2) + 1;
+  const home = higherSeedHosts ? a : b;
+  const away = home.id === a.id ? b : a;
+  const [homeRuns, awayRuns] = simulatePostseasonScore(state, home, away);
+  const winner = homeRuns > awayRuns ? home : away;
+  const loser = winner.id === home.id ? away : home;
+  const scoreText = `${winner.city} ${winner.name} ${Math.max(homeRuns, awayRuns)}-${Math.min(homeRuns, awayRuns)} ${loser.city} ${loser.name}`;
+  registerPostseasonGame(state, winner.id, loser.id, scoreText);
+  return state;
+}
+
+function startNextSeason(state) {
+  if (!state.postseason?.completed) return state;
+  const champion = state.teams.find((t) => t.id === state.postseason.championId);
+  finalizeSeasonAwards(state);
+  state.seasonYear = Number(state.seasonYear) || 1;
+  promoteHighSchoolCohorts(state);
+  state.day = 1;
+  state.seasonAwarded = false;
+  state.awards = [];
+  state.postseason = { active: false, completed: false, seasonYear: state.seasonYear, series: [], roundIndex: 0, championId: null };
+  state.lastGame = null;
+  state.activeGame = null;
+  state.schedule = buildSeasonSchedule(state.teams || teamTemplates, state.selectedTeamId, 144);
+  state.teams.forEach((t) => {
+    t.w = 0;
+    t.l = 0;
+    t.t = 0;
+    t.teamStats = emptyTeamStats();
+  });
+  state.players.forEach((p) => {
+    p.stats = p.type === "PIT" ? makePitcherStats() : makeBatterStats();
+    p.form = clampNumber((Number(p.form) || 70) + rnd(-8, 8), 45, 96);
+    if (p.contract?.yearsLeft) p.contract.yearsLeft = Math.max(0, Number(p.contract.yearsLeft) - 1);
+  });
+  addNews(state, "새 시즌 개막", `${champion ? `${champion.city} ${champion.name} 우승 시즌을 마치고 ` : ""}${state.seasonYear}시즌이 시작됐다. 정규시즌 144경기 뒤 포스트시즌이 열린다.`, "구단");
+  return state;
 }
 
 function emptyTeamStats() {
@@ -4400,7 +4675,10 @@ function publicState(state) {
 }
 
 function playGame(state) {
-  if (state.day > state.seasonGames) return state;
+  if (state.day > state.seasonGames) {
+    if (state.postseason?.completed) return startNextSeason(state);
+    return advancePostseasonGame(state);
+  }
   const me = currentTeam(state);
   const opp = currentOpponent(state);
   const plan = state.activeGame || state.lastLineup || {};
@@ -4529,7 +4807,7 @@ function playGame(state) {
   progressScheduledInjuryReturns(state);
   progressInjuryRecovery(state);
   recoverPitcherRest(state);
-  if (state.day > state.seasonGames) finalizeSeasonAwards(state);
+  if (state.day > state.seasonGames) startPostseason(state);
   return state;
 }
 
