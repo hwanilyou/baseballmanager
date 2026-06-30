@@ -748,6 +748,28 @@
       color: var(--ink);
     }
 
+    .live-defense-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .live-defense-row {
+      grid-template-columns: 34px minmax(130px, 1fr) minmax(92px, 118px);
+      min-height: 52px;
+    }
+
+    .live-defense-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .live-defense-row select {
+      width: 100%;
+      min-width: 92px;
+    }
+
     .lineup-row input {
       min-width: 0;
       min-height: 36px;
@@ -2338,11 +2360,11 @@
         </div>
         <div class="news-item">
           <div class="news-title">수비 위치 변경</div>
-          <div class="lineup-grid">
+          <div class="lineup-grid live-defense-grid">
             ${activeLineupPlayers.map((p, i) => `
-              <label class="lineup-row">
+              <label class="lineup-row live-defense-row">
                 <span class="badge">${i + 1}</span>
-                <span>${playerName(p)}</span>
+                <span class="live-defense-name">${playerName(p)}</span>
                 <select class="livePosSelect" data-slot="${i}">
                   ${lineupPositionOptions(active.lineupPositions?.[i] || p.pos, active.lineupPositions || [], i)}
                 </select>
@@ -3408,7 +3430,6 @@
         <h3 style="margin-top:14px;">탈삼진</h3><table><tbody>${leaderRows(pitchers, (p) => p.stats.so || 0)}</tbody></table>
         <h3 style="margin-top:14px;">세이브</h3><table><tbody>${leaderRows(saveLeaders, (p) => p.stats.sv || 0)}</tbody></table>
         <h3 style="margin-top:14px;">홀드</h3><table><tbody>${leaderRows(holdLeaders, (p) => p.stats.hold || 0)}</tbody></table>
-        <h3 style="margin-top:14px;">시즌 시상</h3>${state.awards?.length ? `<table><tbody>${state.awards.map((a) => `<tr><td>${a.title}</td><td>${a.name}</td><td>${a.detail}</td></tr>`).join("")}</tbody></table>` : `<div class="empty">시즌 종료 후 MVP, 타격왕, 도루왕, 다승왕, 승률왕, 평균자책점왕, 골든글러브가 발표됩니다.</div>`}
       `;
       $("leaders").innerHTML += `
         <h3 style="margin-top:14px;">타자 추정 WAR</h3><table><tbody>${leaderRows(hitterWarLeaders, (p) => hitterAdvancedStats(p).war.toFixed(1))}</tbody></table>
@@ -3417,6 +3438,7 @@
         <h3 style="margin-top:14px;">투수 추정 WAR</h3><table><tbody>${leaderRows(pitcherWarLeaders, (p) => pitcherAdvancedStats(p).war.toFixed(1))}</tbody></table>
         <h3 style="margin-top:14px;">WHIP</h3><table><tbody>${leaderRows(whipLeaders, (p) => pitcherAdvancedStats(p).whip.toFixed(2))}</tbody></table>
         <h3 style="margin-top:14px;">K/9</h3><table><tbody>${leaderRows(k9Leaders, (p) => pitcherAdvancedStats(p).k9.toFixed(1))}</tbody></table>
+        <h3 style="margin-top:20px;">시즌 시상</h3>${state.awards?.length ? `<table><tbody>${state.awards.map((a) => `<tr><td>${a.title}</td><td>${a.name}</td><td>${a.detail}</td></tr>`).join("")}</tbody></table>` : `<div class="empty">시즌 종료 후 MVP, 신인상, 타격왕, 홈런왕, 도루왕, 다승왕, 승률왕, 평균자책점왕, 세이브왕, 홀드왕, 골든글러브가 발표됩니다.</div>`}
       `;
     }
 
