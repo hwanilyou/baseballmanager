@@ -764,6 +764,9 @@ function migrateState(state) {
   if (!Array.isArray(state.tradeOffers)) state.tradeOffers = [];
   if (!Array.isArray(state.tradeTargets)) state.tradeTargets = [];
   if (!Array.isArray(state.awards)) state.awards = [];
+  if (state.postseason?.completed && state.seasonAwarded === true && state.awardsVersion !== 2) {
+    state.seasonAwarded = false;
+  }
   if (!state.postseason || typeof state.postseason !== "object") {
     state.postseason = { active: false, completed: false, seasonYear: state.seasonYear || 1, series: [], roundIndex: 0, championId: null };
   }
@@ -3706,9 +3709,63 @@ function applyPostGameFatigue(state, pitcherUsage = {}, lineupIds = [], lineupPo
   }
 }
 
+function estimatedPlayerWar(p) {
+  const stats = p.stats || {};
+  if (p.type === "PIT") {
+    const ip = Number(stats.ip) || 0;
+    const era = Number.isFinite(Number(stats.era)) ? Number(stats.era) : 4.5;
+    const so = Number(stats.so) || 0;
+    const wins = Number(stats.win) || 0;
+    const saves = Number(stats.sv) || 0;
+    const holds = Number(stats.hold) || 0;
+    return Math.max(0, ip * 0.035 + so * 0.024 + wins * 0.16 + saves * 0.05 + holds * 0.035 + Math.max(-1.5, 4.7 - era) * 0.85);
+  }
+  const pa = Number(stats.pa) || 0;
+  const ops = (Number(stats.obp) || 0) + (Number(stats.slg) || 0);
+  const avg = Number(stats.avg) || 0;
+  const hr = Number(stats.hr) || 0;
+  const rbi = Number(stats.rbi) || 0;
+  const runs = Number(stats.r) || 0;
+  const sb = Number(stats.sb) || 0;
+  const defense = ((Number(p.def) || 60) - 60) * 0.018 + ((Number(p.arm) || 60) - 60) * 0.01;
+  return Math.max(0, (ops - 0.67) * 8.5 + (avg - 0.25) * 4 + hr * 0.12 + rbi * 0.035 + runs * 0.03 + sb * 0.04 + pa * 0.002 + defense);
+}
+
 function playerScoreForMvp(p) {
-  if (p.type === "PIT") return (p.stats.win || 0) * 5 + (p.stats.so || 0) * 0.9 + Math.max(0, 6 - (p.stats.era || 4.5)) * 14 + p.ovr * 0.25;
-  return (p.stats.hr || 0) * 4 + (p.stats.rbi || 0) * 1.2 + (p.stats.sb || 0) * 1.1 + (p.stats.avg || 0.25) * 180 + p.ovr * 0.2;
+  const stats = p.stats || {};
+  if (p.type === "PIT") return estimatedPlayerWar(p) * 80 + (stats.win || 0) * 2.2 + (stats.so || 0) * 0.28 + Math.max(0, 4.2 - (stats.era || 4.5)) * 10 + p.ovr * 0.12;
+  return estimatedPlayerWar(p) * 75 + (stats.hr || 0) * 1.8 + (stats.rbi || 0) * 0.55 + (stats.h || 0) * 0.18 + (stats.sb || 0) * 0.7 + p.ovr * 0.12;
+}
+
+function isRookieEligible(p, seasonGames = 144) {
+  const serviceYears = Number(p.serviceYears) || 0;
+  const serviceDays = Number(p.serviceDays) || 0;
+  const youngEnough = (Number(p.age) || 99) <= 25;
+  const rookieService = serviceYears <= 2 || serviceDays < 290;
+  if (!youngEnough || !rookieService) return false;
+  const stats = p.stats || {};
+  if (p.type === "PIT") {
+    const ip = Number(stats.ip) || 0;
+    const decisions = (Number(stats.win) || 0) + (Number(stats.loss) || 0);
+    return ip >= Math.max(25, seasonGames * 0.18) || decisions >= 5 || (Number(stats.sv) || 0) >= 8 || (Number(stats.hold) || 0) >= 10;
+  }
+  const pa = Number(stats.pa) || 0;
+  return pa >= Math.max(90, seasonGames * 0.75) || (Number(stats.h) || 0) >= 35 || (Number(stats.hr) || 0) >= 5;
+}
+
+function playerScoreForRookie(p) {
+  const stats = p.stats || {};
+  if (p.type === "PIT") return estimatedPlayerWar(p) * 120 + (stats.win || 0) * 3 + (stats.so || 0) * 0.18 + (stats.sv || 0) * 1.2 + (stats.hold || 0) * 0.8 + Math.max(0, 4.5 - (stats.era || 4.5)) * 8;
+  return estimatedPlayerWar(p) * 120 + (stats.hr || 0) * 2.4 + (stats.rbi || 0) * 0.75 + (stats.h || 0) * 0.25 + (stats.r || 0) * 0.25 + (stats.sb || 0) * 0.6;
+}
+
+function rookieAwardDetail(p) {
+  const stats = p.stats || {};
+  const war = estimatedPlayerWar(p).toFixed(1);
+  if (p.type === "PIT") {
+    return `추정 WAR ${war} · ERA ${(stats.era || 0).toFixed(2)} · ${stats.win || 0}승 · ${stats.so || 0}K`;
+  }
+  return `추정 WAR ${war} · 타율 ${(stats.avg || 0).toFixed(3)} · ${stats.hr || 0}홈런 · ${stats.rbi || 0}타점`;
 }
 
 function topPlayer(players, scoreFn) {
@@ -3725,7 +3782,7 @@ function goalMet(state) {
 }
 
 function finalizeSeasonAwards(state) {
-  if (state.seasonAwarded) return state;
+  if (state.seasonAwarded && state.awardsVersion === 2) return state;
   if (state.draftWindowOpen) {
     let guard = 0;
     while (currentDraftTeamId(state) && guard < DRAFT_ROUNDS * 10) {
@@ -3744,7 +3801,8 @@ function finalizeSeasonAwards(state) {
   const savePitchers = pitchers.filter((p) => (p.stats?.sv || 0) > 0);
   const holdPitchers = pitchers.filter((p) => (p.stats?.hold || 0) > 0);
   const mvp = topPlayer(recordPlayers, playerScoreForMvp);
-  const rookie = topPlayer(recordPlayers.filter((p) => (p.age || 99) <= 24 && (p.serviceYears || 0) <= 2), playerScoreForMvp);
+  const rookiePool = recordPlayers.filter((p) => isRookieEligible(p, state.seasonGames || 144));
+  const rookie = topPlayer(rookiePool, playerScoreForRookie);
   const goldGloves = FIELD_POSITIONS
     .filter((pos) => pos !== "DH")
     .map((pos) => topPlayer(hitters.filter((p) => p.pos === pos || p.secondaryPositions?.includes(pos)), (p) => (p.def || 0) * 1.2 + (p.arm || 0) * 0.4 + (p.ovr || 0) * 0.35))
@@ -3753,7 +3811,7 @@ function finalizeSeasonAwards(state) {
   if (pitcherGold) goldGloves.unshift(pitcherGold);
   const awardDefs = [
     ["MVP", recordPlayers, playerScoreForMvp, (p) => `${p.pos} · 종합 기여도 ${Math.round(playerScoreForMvp(p))}`],
-    ["신인상", rookie ? [rookie] : [], playerScoreForMvp, (p) => `${p.age}세 · 현재 ${p.ovr} · 잠재 ${p.pot}`],
+    ["신인상", rookie ? [rookie] : [], playerScoreForRookie, rookieAwardDetail],
     ["타격왕", hitters, (p) => p.stats.avg || 0, (p) => `타율 ${(p.stats.avg || 0).toFixed(3)}`],
     ["홈런왕", hitters, (p) => p.stats.hr || 0, (p) => `${p.stats.hr || 0}홈런`],
     ["타점왕", hitters, (p) => p.stats.rbi || 0, (p) => `${p.stats.rbi || 0}타점`],
@@ -3782,6 +3840,7 @@ function finalizeSeasonAwards(state) {
   addNews(state, "시즌 종료 시상식", state.awards.slice(0, 10).map((a) => `${a.title}: ${a.name} (${a.detail})`).join(" / "), "시상");
   addNews(state, met ? "구단 목표 달성" : "구단 목표 미달", `${state.seasonGoal.label} 목표를 ${met ? "달성했다" : "달성하지 못했다"}.`, "구단");
   state.seasonAwarded = true;
+  state.awardsVersion = 2;
   return state;
 }
 
