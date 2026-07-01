@@ -3484,6 +3484,12 @@ function sampleRuns(lambda) {
   return Math.max(0, count - 1);
 }
 
+function compressedSkill(value, center = 67) {
+  const n = Number(value) || center;
+  const diff = n - center;
+  return center + (diff >= 0 ? diff * 0.58 : diff * 1.12);
+}
+
 function positionFitScore(p, pos) {
   if (!p || p.type !== "BAT") return 0;
   ensurePositionData(p);
@@ -3503,14 +3509,20 @@ function lineupBalance(state, lineupIds = [], lineupPositions = []) {
   const players = lineupIds
     .map((id) => state.players.find((p) => p.id === Number(id)))
     .filter((p) => p && p.type === "BAT" && p.rosterStatus === "ACTIVE" && p.health?.status !== "INJURED");
-  const offense = avg(players.map((p) => (p.hit || 55) * 0.42 + (p.pow || 55) * 0.22 + (p.spd || 55) * 0.1 + (p.form || 65) * 0.18 + (p.happy || 65) * 0.08));
+  const offense = avg(players.map((p) =>
+    compressedSkill(p.hit || 55) * 0.42 +
+    compressedSkill(p.pow || 55) * 0.2 +
+    compressedSkill(p.spd || 55) * 0.08 +
+    (p.form || 65) * 0.2 +
+    (p.happy || 65) * 0.1
+  ));
   const weights = { C: 2.2, SS: 2.0, CF: 1.8, "2B": 1.35, "3B": 1.25, RF: 1.05, LF: 1.0, "1B": 0.85, DH: 0 };
   const defensivePenalty = players.reduce((sum, p, index) => {
     const pos = lineupPositions[index] || p.pos || "DH";
     const fit = positionFitScore(p, pos);
     return sum + (1 - fit) * (weights[pos] || 1.1) * 5.2;
   }, Math.max(0, 9 - players.length) * 9);
-  const conditionPenalty = players.reduce((sum, p) => sum + Math.max(0, 58 - (Number(p.form) || 65)) * 0.05, 0);
+  const conditionPenalty = players.reduce((sum, p) => sum + Math.max(0, 62 - (Number(p.form) || 65)) * 0.22, 0);
   return {
     players,
     offense: Math.max(35, offense - conditionPenalty),
@@ -3522,10 +3534,10 @@ function lineupBalance(state, lineupIds = [], lineupPositions = []) {
 function pitcherGameValue(p) {
   if (!p || p.type !== "PIT" || p.health?.status === "INJURED") return 35;
   const starterLike = p.pitcherRole === "SP" || p.pos === "SP";
-  const restPenalty = Math.max(0, Number(p.restDays) || 0) * (starterLike ? 10.5 : 8);
-  const recentLoadPenalty = Math.max(0, (Number(p.lastPitchCount) || 0) - (starterLike ? 82 : 18)) * (starterLike ? 0.06 : 0.14);
-  const formPenalty = Math.max(0, 58 - (Number(p.form) || 65)) * 0.35;
-  return Math.max(22, (p.ovr || 55) * 0.48 + (p.pit || p.ovr || 55) * 0.24 + (p.stamina || 55) * 0.12 + (p.form || 65) * 0.16 - restPenalty - recentLoadPenalty - formPenalty);
+  const restPenalty = Math.max(0, Number(p.restDays) || 0) * (starterLike ? 15 : 10);
+  const recentLoadPenalty = Math.max(0, (Number(p.lastPitchCount) || 0) - (starterLike ? 74 : 16)) * (starterLike ? 0.13 : 0.22);
+  const formPenalty = Math.max(0, 62 - (Number(p.form) || 65)) * 0.8;
+  return Math.max(18, compressedSkill(p.ovr || 55) * 0.44 + compressedSkill(p.pit || p.ovr || 55) * 0.25 + (p.stamina || 55) * 0.1 + (p.form || 65) * 0.21 - restPenalty - recentLoadPenalty - formPenalty);
 }
 
 function pickSkipStarter(state, preferredId = null) {
@@ -4103,10 +4115,11 @@ function simulateOtherTeams(state) {
 }
 
 function simulateTeamResult(a, b) {
-  const chance = a.power / Math.max(1, a.power + b.power);
-  const base = rnd(2, 6);
-  let aRuns = Math.max(0, Math.min(13, Math.round(base + (a.power - 65) / 18 + rnd(-2, 3))));
-  let bRuns = Math.max(0, Math.min(13, Math.round(base + (b.power - 65) / 18 + rnd(-2, 3))));
+  const powerGap = Math.max(-22, Math.min(22, (Number(a.power) || 65) - (Number(b.power) || 65)));
+  const chance = Math.max(0.38, Math.min(0.62, 0.5 + powerGap / 120));
+  const base = rnd(2, 5);
+  let aRuns = Math.max(0, Math.min(12, Math.round(base + powerGap / 34 + rnd(-2, 3))));
+  let bRuns = Math.max(0, Math.min(12, Math.round(base - powerGap / 34 + rnd(-2, 3))));
   const aWon = Math.random() < chance;
   if (aWon && aRuns <= bRuns) aRuns = bRuns + 1;
   if (!aWon && bRuns <= aRuns) bRuns = aRuns + 1;
@@ -4163,28 +4176,29 @@ function simulateTeamPlayerStats(state, team) {
   const closer = pitchers.find((p) => p.pitcherRole === "CL" || p.pos === "CL");
   for (const p of hitters) {
     const pa = rnd(3, 5);
-    const contact = Math.max(0.16, Math.min(0.34, 0.16 + (p.hit || p.ovr || 62) / 820 + rnd(-2, 2) / 100));
+    const contact = Math.max(0.15, Math.min(0.33, 0.17 + compressedSkill(p.hit || p.ovr || 62) / 1000 + rnd(-2, 2) / 100));
     const hits = Math.max(0, Math.min(pa, Math.round(contact * pa + rnd(-1, 1))));
-    const homers = Math.random() < Math.max(0.006, (p.pow || 60) / 2400) ? 1 : 0;
+    const homers = Math.random() < Math.max(0.004, (compressedSkill(p.pow || 60) - 42) / 2300) ? 1 : 0;
     p.stats.pa = (p.stats.pa || 0) + pa;
     p.stats.h = (p.stats.h || 0) + Math.max(hits, homers);
     p.stats.hr = (p.stats.hr || 0) + homers;
-    p.stats.rbi = (p.stats.rbi || 0) + homers + rnd(0, homers ? 2 : Math.max(1, Math.round((p.hit || 60) / 48)));
-    p.stats.r = (p.stats.r || 0) + homers + rnd(0, Math.max(0, hits - homers) + ((p.spd || 55) > 72 ? 1 : 0));
     p.stats.sb = (p.stats.sb || 0) + (Math.random() < Math.max(0.005, (p.spd || 55) / 1600) ? 1 : 0);
-    p.stats.bb = (p.stats.bb || 0) + (Math.random() < Math.max(0.04, (p.hit || 60) / 1700) ? 1 : 0);
-    p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round(pa * Math.max(0.12, 0.31 - (p.hit || 60) / 500)) + rnd(-1, 1));
+    const drewWalk = Math.random() < Math.max(0.04, compressedSkill(p.hit || 60) / 1900) ? 1 : 0;
+    p.stats.bb = (p.stats.bb || 0) + drewWalk;
+    p.stats.rbi = (p.stats.rbi || 0) + homers + (hits && Math.random() < 0.38 ? 1 : 0) + (homers && Math.random() < 0.25 ? 1 : 0);
+    p.stats.r = (p.stats.r || 0) + homers + ((hits || drewWalk) && Math.random() < ((p.spd || 55) > 72 ? 0.42 : 0.29) ? 1 : 0);
+    p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round(pa * Math.max(0.13, 0.32 - compressedSkill(p.hit || 60) / 520)) + rnd(-1, 1));
     p.stats.ab = Math.max(p.stats.ab || 0, p.stats.pa - (p.stats.bb || 0));
     p.stats.tb = (p.stats.tb || 0) + Math.max(hits, homers) + homers * 3;
     updateRateStats(p);
   }
   if (starter) {
     const stats = ensurePitchingStats(starter);
-    starter.stats.ip = (starter.stats.ip || 0) + rnd(45, 68) / 10;
-    starter.stats.so = (starter.stats.so || 0) + Math.max(1, Math.round((starter.pit || 62) / 16) + rnd(-1, 2));
-    starter.stats.era = Math.min(7.2, Math.max(1.6, (starter.stats.era || 3.9) + rnd(-8, 8) / 100));
-    const winChance = Math.max(0.28, (team.power || 65) / 160);
-    const lossChance = Math.max(0.18, (78 - (team.power || 65)) / 160);
+    starter.stats.ip = (starter.stats.ip || 0) + rnd(42, 62) / 10;
+    starter.stats.so = (starter.stats.so || 0) + Math.max(1, Math.round(compressedSkill(starter.pit || 62) / 22) + rnd(-1, 2));
+    starter.stats.era = Math.min(7.2, Math.max(2.1, (starter.stats.era || 4.1) + rnd(-9, 11) / 100));
+    const winChance = Math.max(0.22, Math.min(0.48, (team.power || 65) / 185));
+    const lossChance = Math.max(0.18, Math.min(0.42, (82 - (team.power || 65)) / 150));
     const decision = Math.random();
     if (decision < winChance) stats.win += 1;
     else if (decision < winChance + lossChance) stats.loss += 1;
@@ -4192,11 +4206,11 @@ function simulateTeamPlayerStats(state, team) {
   const bullpen = pitchers.filter((p) => p.id !== starter?.id).slice(0, 3);
   bullpen.forEach((p) => {
     p.stats.ip = (p.stats.ip || 0) + rnd(6, 16) / 10;
-    p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round((p.pit || 58) / 28) + rnd(0, 1));
+    p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round(compressedSkill(p.pit || 58) / 34) + rnd(0, 1));
     p.stats.era = Math.min(7.5, Math.max(1.7, (p.stats.era || 3.8) + rnd(-10, 10) / 100));
-    if (["MR", "SU"].includes(p.pitcherRole) && Math.random() < 0.34) p.stats.hold = (p.stats.hold || 0) + 1;
+    if (["MR", "SU"].includes(p.pitcherRole) && Math.random() < 0.26) p.stats.hold = (p.stats.hold || 0) + 1;
   });
-  if (closer && Math.random() < Math.max(0.28, (team.power || 65) / 240)) closer.stats.sv = (closer.stats.sv || 0) + 1;
+  if (closer && Math.random() < Math.max(0.18, Math.min(0.42, (team.power || 65) / 250))) closer.stats.sv = (closer.stats.sv || 0) + 1;
 }
 
 function ageAndDevelop(state) {
@@ -4785,12 +4799,13 @@ function playGame(state) {
   const starterValue = pitcherGameValue(starter);
   const myPitching = starterValue * 0.62 + bullpenValue * 0.38;
   const myManagementPenalty = lineupInfo.defensivePenalty + lineupInfo.missing * 7 + Math.max(0, Number(starter?.restDays) || 0) * 3.5;
-  const myPower = lineupInfo.offense * 0.45 + myPitching * 0.55 - myManagementPenalty * 0.48 + rnd(-7, 7);
-  const oppPower = (Number(opp.power) || 66) + rnd(-7, 7);
+  const myPower = lineupInfo.offense * 0.42 + myPitching * 0.5 - myManagementPenalty * 0.72 + rnd(-10, 10);
+  const oppPower = (Number(opp.power) || 66) + rnd(-10, 10);
   const scoringEnvironment = rnd(1, 100);
-  const weatherBoost = scoringEnvironment > 92 ? 1.15 : scoringEnvironment < 10 ? -0.75 : 0;
-  const myExpectedRuns = clampNumber(4.35 + (myPower - oppPower) / 20 + weatherBoost, 1.4, 8.7);
-  const oppExpectedRuns = clampNumber(4.35 + (oppPower - myPower) / 20 + weatherBoost + lineupInfo.defensivePenalty / 24, 1.4, 8.9);
+  const weatherBoost = scoringEnvironment > 92 ? 0.95 : scoringEnvironment < 10 ? -0.65 : 0;
+  const fatigueLeak = Math.max(0, 60 - (Number(starter?.form) || 65)) / 18 + Math.max(0, Number(starter?.restDays) || 0) * 0.32;
+  const myExpectedRuns = clampNumber(4.25 + (myPower - oppPower) / 33 + weatherBoost, 1.6, 7.6);
+  const oppExpectedRuns = clampNumber(4.25 + (oppPower - myPower) / 33 + weatherBoost + lineupInfo.defensivePenalty / 18 + fatigueLeak, 1.6, 8.2);
   const myRuns = Math.min(16, sampleRuns(myExpectedRuns));
   const oppRuns = Math.min(16, sampleRuns(oppExpectedRuns));
   const finalMe = myRuns === oppRuns ? myRuns + (Math.random() > 0.52 ? 1 : 0) : myRuns;
@@ -4826,6 +4841,9 @@ function playGame(state) {
   const lastPitcherId = reliefPitcherIds[reliefPitcherIds.length - 1] || starter?.id;
   const setupPitcherIds = new Set(reliefPitcherIds.slice(0, -1));
 
+  let runCreditsLeft = Math.max(0, finalMe);
+  let rbiCreditsLeft = Math.max(0, finalMe);
+  const offenseContext = clampNumber(0.72 + finalMe / 12, 0.68, 1.32);
   for (const p of state.players) {
     if (p.rosterStatus !== "ACTIVE") continue;
     const played = lineupSet.has(p.id) || usedPitcherSet.has(p.id);
@@ -4833,21 +4851,27 @@ function playGame(state) {
     if (p.type === "BAT") {
       if (!lineupSet.has(p.id)) continue;
       const pa = rnd(3, 5);
-      const contact = Math.max(0.16, Math.min(0.35, 0.165 + (p.hit || 60) / 850 + rnd(-2, 2) / 100));
+      const tiredPenalty = Math.max(0, 60 - (Number(p.form) || 65)) / 900;
+      const contact = Math.max(0.14, Math.min(0.34, (0.17 + compressedSkill(p.hit || 60) / 980 + rnd(-2, 2) / 100 - tiredPenalty) * offenseContext));
       const hits = Math.max(0, Math.min(pa, Math.round(contact * pa + rnd(-1, 1))));
-      const homers = Math.random() < Math.max(0.006, (p.pow || 60) / 2300) ? 1 : 0;
+      const homerChance = Math.max(0.004, (compressedSkill(p.pow || 60) - 42) / 2200) * clampNumber(0.75 + finalMe / 14, 0.72, 1.25);
+      const homers = Math.random() < homerChance ? 1 : 0;
       const creditedHits = Math.max(hits, homers);
-      const walks = Math.random() < Math.max(0.04, (p.hit || 60) / 1700) ? 1 : 0;
+      const walks = Math.random() < Math.max(0.035, compressedSkill(p.hit || 60) / 1900) ? 1 : 0;
+      const maxRbi = Math.min(rbiCreditsLeft, homers + (creditedHits ? rnd(0, Math.min(2, Math.max(0, rbiCreditsLeft))) : 0));
+      const maxRuns = Math.min(runCreditsLeft, homers + (creditedHits || walks ? rnd(0, Math.min(2, Math.max(0, runCreditsLeft))) : 0));
       p.stats.hr = (p.stats.hr || 0) + homers;
-      p.stats.rbi = (p.stats.rbi || 0) + homers + rnd(0, homers ? 2 : Math.max(1, Math.round((p.hit || 60) / 55)));
+      p.stats.rbi = (p.stats.rbi || 0) + maxRbi;
       p.stats.sb = (p.stats.sb || 0) + (Math.random() < (p.spd || 55) / 1550 ? 1 : 0);
       p.stats.pa = (p.stats.pa || 0) + pa;
       p.stats.h = (p.stats.h || 0) + creditedHits;
-      p.stats.r = (p.stats.r || 0) + homers + rnd(0, Math.max(0, creditedHits - homers) + ((p.spd || 55) > 70 ? 1 : 0));
+      p.stats.r = (p.stats.r || 0) + maxRuns;
       p.stats.bb = (p.stats.bb || 0) + walks;
-      p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round(pa * Math.max(0.12, 0.31 - (p.hit || 60) / 500)) + rnd(-1, 1));
+      p.stats.so = (p.stats.so || 0) + Math.max(0, Math.round(pa * Math.max(0.13, 0.32 - compressedSkill(p.hit || 60) / 520)) + rnd(-1, 1));
       p.stats.ab = Math.max(p.stats.ab || 0, p.stats.pa - (p.stats.bb || 0));
       p.stats.tb = (p.stats.tb || 0) + creditedHits + homers * 3;
+      runCreditsLeft -= maxRuns;
+      rbiCreditsLeft -= maxRbi;
       updateRateStats(p);
     } else {
       const pitches = pitcherUsage[p.id] || 0;
