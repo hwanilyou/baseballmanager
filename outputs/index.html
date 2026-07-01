@@ -1854,6 +1854,7 @@
       if (latest && (latestId !== previousNewsId || (state?.news?.length || 0) !== previousNewsCount)) {
         showToast(`${latest.title}: ${latest.body}`);
       }
+      return state;
     }
 
     function showToast(message) {
@@ -2775,9 +2776,16 @@
     }
 
     async function startNextSeason() {
-      await mutate("/api/season/next");
-      showToast("다음 시즌이 시작됐습니다.");
-      openView("dashboard");
+      const beforeYear = Number(state?.seasonYear) || 1;
+      const nextState = await mutate("/api/season/next");
+      const afterYear = Number(nextState?.seasonYear) || beforeYear;
+      if (afterYear > beforeYear || ((Number(nextState?.day) || 1) === 1 && !nextState?.postseason?.active && !nextState?.postseason?.completed)) {
+        showToast("다음 시즌이 시작됐습니다.");
+        openView("dashboard");
+        return;
+      }
+      showToast("포스트시즌을 먼저 마무리해야 다음 시즌을 시작할 수 있습니다.");
+      openView("league");
     }
 
     async function commandAtBat(tactic) {

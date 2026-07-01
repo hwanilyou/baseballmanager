@@ -4032,7 +4032,30 @@ function advancePostseasonGame(state) {
 }
 
 function startNextSeason(state) {
-  if (!state.postseason?.completed) return state;
+  const regularSeasonDone = (Number(state.day) || 1) > (Number(state.seasonGames) || 144);
+  if (!state.postseason?.completed) {
+    if (!regularSeasonDone && !state.postseason?.active) {
+      addNews(state, "다음 시즌 대기", "정규시즌과 포스트시즌을 먼저 마쳐야 다음 시즌을 시작할 수 있다.", "구단");
+      return state;
+    }
+    if (!state.postseason?.active) startPostseason(state);
+    let guard = 40;
+    while (!state.postseason?.completed && guard > 0) {
+      const beforeSeries = currentPostseasonSeries(state);
+      const beforeRound = state.postseason?.roundIndex || 0;
+      const beforeGames = beforeSeries?.games?.length || 0;
+      advancePostseasonGame(state);
+      const afterSeries = currentPostseasonSeries(state);
+      const afterRound = state.postseason?.roundIndex || 0;
+      const afterGames = afterSeries?.games?.length || 0;
+      guard -= 1;
+      if (!state.postseason?.completed && beforeRound === afterRound && beforeGames === afterGames) break;
+    }
+  }
+  if (!state.postseason?.completed) {
+    addNews(state, "포스트시즌 진행 중", "남은 포스트시즌 경기를 먼저 진행해야 다음 시즌을 시작할 수 있다.", "포스트시즌");
+    return state;
+  }
   const champion = state.teams.find((t) => t.id === state.postseason.championId);
   finalizeSeasonAwards(state);
   state.seasonYear = Number(state.seasonYear) || 1;
