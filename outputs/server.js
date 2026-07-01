@@ -4032,7 +4032,10 @@ function advancePostseasonGame(state) {
 }
 
 function startNextSeason(state) {
-  const regularSeasonDone = (Number(state.day) || 1) > (Number(state.seasonGames) || 144);
+  const seasonGames = Number(state.seasonGames) || 144;
+  const selectedTeam = state.teams.find((t) => t.id === state.selectedTeamId) || state.teams[0];
+  const selectedPlayed = selectedTeam ? (Number(selectedTeam.w) || 0) + (Number(selectedTeam.l) || 0) + (Number(selectedTeam.t) || 0) : 0;
+  const regularSeasonDone = (Number(state.day) || 1) >= seasonGames || selectedPlayed >= seasonGames;
   if (!state.postseason?.completed) {
     if (!regularSeasonDone && !state.postseason?.active) {
       addNews(state, "다음 시즌 대기", "정규시즌과 포스트시즌을 먼저 마쳐야 다음 시즌을 시작할 수 있다.", "구단");
@@ -4078,7 +4081,43 @@ function startNextSeason(state) {
     p.form = clampNumber((Number(p.form) || 70) + rnd(-8, 8), 45, 96);
     if (p.contract?.yearsLeft) p.contract.yearsLeft = Math.max(0, Number(p.contract.yearsLeft) - 1);
   });
+  advanceOffseasonHealth(state, 120);
   addNews(state, "새 시즌 개막", `${champion ? `${champion.city} ${champion.name} 우승 시즌을 마치고 ` : ""}${state.seasonYear}시즌이 시작됐다. 정규시즌 144경기 뒤 포스트시즌이 열린다.`, "구단");
+  return state;
+}
+
+function advanceOffseasonHealth(state, days = 120) {
+  const elapsed = Math.max(1, Number(days) || 120);
+  for (const p of state.players || []) {
+    if (Number(p.reinjuryWatchDays) > 0) p.reinjuryWatchDays = Math.max(0, Number(p.reinjuryWatchDays) - elapsed);
+    if (p.type === "PIT") {
+      p.restDays = 0;
+      p.lastPitchCount = 0;
+      p.consecutivePitchingDays = 0;
+    }
+    const health = p.health;
+    if (health && health.status !== "OK") {
+      const returnSeasonYear = Number(health.returnSeasonYear);
+      const returnDay = Number(health.returnDay);
+      const currentSeasonYear = Number(state.seasonYear) || 1;
+      if (Number.isFinite(returnSeasonYear) && returnSeasonYear <= currentSeasonYear && (!Number.isFinite(returnDay) || returnDay <= 1)) {
+        p.health = { status: "REHAB", injury: health.injury || "부상", days: 0, rehab: Math.max(Number(health.rehab) || 0, 82), source: health.source };
+      } else if (health.status === "INJURED") {
+        health.days = Math.max(0, (Number(health.days) || 0) - elapsed);
+        if (health.days <= 0) {
+          p.health = { ...health, status: "REHAB", days: 0, rehab: Math.max(Number(health.rehab) || 0, 72) };
+        }
+      } else if (health.status === "REHAB") {
+        health.rehab = Math.min(100, (Number(health.rehab) || 0) + Math.round(elapsed * 0.45));
+      }
+      if (p.health?.status === "REHAB" && Number(p.health.rehab) >= 100) {
+        p.health = { status: "OK", injury: null, days: 0, rehab: 0 };
+        p.form = clampNumber((Number(p.form) || 55) + rnd(6, 14), 55, 88);
+      }
+    }
+    p.form = clampNumber((Number(p.form) || 70) + rnd(3, 12), 45, 98);
+  }
+  addNews(state, "오프시즌 회복", `다음 시즌 개막까지 ${elapsed}일이 지나 부상 치료, 재활, 투수 피로가 반영됐다.`, "의료");
   return state;
 }
 
@@ -4449,7 +4488,7 @@ function registeredTradeTargetPool(state, partnerId = null, needType = null) {
     if (String(p.teamId) === String(state.selectedTeamId)) return false;
     if (partnerId && String(p.teamId) !== String(partnerId)) return false;
     if (needType && p.type !== needType) return false;
-    if (p.rosterStatus === "DEV" || isForeignPlayer(p) || p.health?.status === "INJURED") return false;
+    if (p.rosterStatus === "DEV" || p.rosterStatus === "RELEASED" || isForeignPlayer(p) || p.health?.status === "INJURED") return false;
     return true;
   });
 }
@@ -4469,7 +4508,7 @@ function proposeTrade(state, outgoingId, targetId, cash) {
   const outgoingPlayers = outgoingIds.map((id) => state.players.find((p) => p.id === id)).filter(Boolean);
   const targetPlayers = targetIds.map((id) => state.tradeTargets.find((p) => p.id === id)).filter(Boolean);
   const cashOffer = Math.max(0, Math.round((Number(cash) || 0) * 10) / 10);
-  if (!outgoingPlayers.length || outgoingPlayers.length !== outgoingIds.length || outgoingPlayers.some((p) => p.rosterStatus === "DEV" || isForeignPlayer(p) || p.health?.status === "INJURED")) {
+  if (!outgoingPlayers.length || outgoingPlayers.length !== outgoingIds.length || outgoingPlayers.some((p) => p.rosterStatus === "DEV" || p.rosterStatus === "RELEASED" || isForeignPlayer(p) || p.health?.status === "INJURED")) {
     addNews(state, "트레이드 제안 실패", "외국인 선수, 육성선수, 부상자는 트레이드 카드로 쓸 수 없다.", "규칙");
     return state;
   }
@@ -4505,7 +4544,7 @@ function proposeTrade(state, outgoingId, targetId, cash) {
     const already = new Set(outgoingPlayers.map((p) => p.id));
     const shortage = targetValue - outgoingValue;
     const extras = state.players
-      .filter((p) => !already.has(p.id) && p.rosterStatus !== "DEV" && !isForeignPlayer(p) && p.health?.status !== "INJURED")
+      .filter((p) => !already.has(p.id) && p.rosterStatus !== "DEV" && p.rosterStatus !== "RELEASED" && !isForeignPlayer(p) && p.health?.status !== "INJURED")
       .sort((a, b) => Math.abs(tradeValue(a) - shortage) - Math.abs(tradeValue(b) - shortage))
       .slice(0, shortage > 45 ? 2 : 1);
     const counterOutgoing = extras.length ? [...outgoingPlayers, ...extras] : outgoingPlayers;
@@ -5562,13 +5601,18 @@ function rosterCounts(state) {
     active: state.players.filter((p) => p.rosterStatus === "ACTIVE").length,
     farm: state.players.filter((p) => p.rosterStatus === "FARM").length,
     development: state.players.filter((p) => p.rosterStatus === "DEV").length,
-    registered: state.players.filter((p) => p.rosterStatus !== "DEV").length
+    registered: state.players.filter((p) => p.rosterStatus !== "DEV" && p.rosterStatus !== "RELEASED").length,
+    released: state.players.filter((p) => p.rosterStatus === "RELEASED").length
   };
 }
 
 function setRosterStatus(state, id, status) {
   const p = state.players.find((x) => x.id === Number(id));
   if (!p) return state;
+  if (p.rosterStatus === "RELEASED") {
+    addNews(state, "등록 불가", `${p.name}은 이미 방출되어 선수단에 등록할 수 없다.`, "프런트");
+    return state;
+  }
   state.selectedId = p.id;
   const counts = rosterCounts(state);
   if (status === "ACTIVE") {
@@ -5594,6 +5638,31 @@ function setRosterStatus(state, id, status) {
   if (status === "FARM" && p.rosterStatus === "DEV") return state;
   p.rosterStatus = status;
   addNews(state, "엔트리 변동", `${p.name}의 소속이 ${status === "ACTIVE" ? "1군" : status === "FARM" ? "2군" : "육성"}으로 변경됐다.`, "프런트");
+  return state;
+}
+
+function releasePlayer(state, id) {
+  const p = state.players.find((x) => x.id === Number(id));
+  if (!p || p.rosterStatus === "RELEASED") return state;
+  if (state.activeGame) {
+    addNews(state, "방출 보류", "경기 진행 중에는 선수 방출을 처리할 수 없다. 경기 종료 후 다시 시도하세요.", "프런트");
+    state.selectedId = p.id;
+    return state;
+  }
+  const remainingYears = Math.max(0, Number(p.contract?.yearsLeft) || 0);
+  const annual = Math.max(0, Number(p.contract?.annual || p.salary) || 0);
+  const settlement = Math.round(remainingYears * annual * 0.35 * 10) / 10;
+  p.rosterStatus = "RELEASED";
+  p.releasedDay = Number(state.day) || 1;
+  p.releasedSeasonYear = Number(state.seasonYear) || 1;
+  p.contract = { ...(p.contract || {}), released: true, settlement };
+  if (state.lastLineup?.starterId === p.id || state.lastLineup?.lineup?.map(Number).includes(p.id)) {
+    state.lastLineup = null;
+  }
+  p.happy = Math.max(5, Math.min(Number(p.happy) || 50, 35));
+  const next = state.players.find((x) => String(x.teamId) === String(state.selectedTeamId) && x.rosterStatus !== "RELEASED");
+  state.selectedId = next?.id || null;
+  addNews(state, "선수 방출", `${p.name}을 방출했다.${settlement ? ` 잔여 계약 정산 예상액 ${settlement}억이 반영된다.` : ""}`, "프런트");
   return state;
 }
 
@@ -6362,6 +6431,7 @@ const server = http.createServer(async (req, res) => {
     "/api/game/pinch-run": () => pinchRun(state, body.baseIndex, body.inId),
     "/api/game/positions": () => changeDefensivePositions(state, body.positions),
     "/api/roster/status": () => setRosterStatus(state, body.id, body.status),
+    "/api/player/release": () => releasePlayer(state, body.id),
     "/api/player/create-dev": () => createDevelopmentPlayer(state, body),
     "/api/player/convert-dev": () => convertDevelopmentPlayer(state, body.id),
     "/api/player/pitcher-role": () => setPitcherRole(state, body.id, body.role),

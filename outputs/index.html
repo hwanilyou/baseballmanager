@@ -3067,6 +3067,9 @@
       const typeFilter = $("rosterTypeFilter")?.value || "all";
       const query = $("rosterSearch")?.value || "";
       const players = state.players.filter((p) =>
+        p.rosterStatus !== "RELEASED"
+        && String(p.teamId) === String(state.selectedTeamId)
+        &&
         playerMatchesFilters(p, filter, typeFilter)
         && playerMatchesSearch(p, query)
       ).sort(rosterSort);
@@ -3092,7 +3095,7 @@
           render();
         });
       });
-      const p = state.players.find((x) => x.id === state.selectedId) || state.players[0];
+      const p = players.find((x) => x.id === state.selectedId) || players[0];
       if (p && state.selectedId !== p.id) state.selectedId = p.id;
       if (!p) {
         $("playerDetail").innerHTML = `<div class="empty">선수가 없습니다.</div>`;
@@ -3149,6 +3152,7 @@
             <button class="secondary" onclick="mutate('/api/roster/status', { id: ${p.id}, status: 'ACTIVE' })" ${p.rosterStatus === "ACTIVE" || p.rosterStatus === "DEV" ? "disabled" : ""}>1군 등록</button>
             <button class="secondary" onclick="mutate('/api/roster/status', { id: ${p.id}, status: 'FARM' })" ${p.rosterStatus !== "ACTIVE" ? "disabled" : ""}>2군 말소</button>
             <button class="secondary" onclick="mutate('/api/player/convert-dev', { id: ${p.id} })" ${p.rosterStatus !== "DEV" ? "disabled" : ""}>정식 전환</button>
+            <button class="danger" onclick="releaseSelectedPlayer(${p.id})">방출</button>
           </div>
           <div>
             <div class="small">1:1 면담</div>
@@ -3197,7 +3201,12 @@
     }
 
     function statusLabel(status) {
-      return { ACTIVE: "1군", FARM: "2군", DEV: "육성" }[status] || status || "미정";
+      return { ACTIVE: "1군", FARM: "2군", DEV: "육성", RELEASED: "방출" }[status] || status || "미정";
+    }
+
+    async function releaseSelectedPlayer(id) {
+      if (!confirm("이 선수를 방출할까요? 방출하면 선수단, 라인업, 트레이드 후보에서 제외됩니다.")) return;
+      await mutate("/api/player/release", { id });
     }
 
     function pitcherRoleLabel(role) {
@@ -3367,11 +3376,11 @@
           </div>
         `;
       }).join("") : `<div class="empty">현재 도착한 해외 오퍼가 없습니다. 경기를 진행하거나 시장 반응을 확인해보세요.</div>`;
-      const tradeable = state.players.filter((p) => p.rosterStatus !== "DEV" && !p.foreignPlayer && p.health?.status !== "INJURED").sort((a, b) => b.ovr - a.ovr);
+      const tradeable = state.players.filter((p) => p.rosterStatus !== "DEV" && p.rosterStatus !== "RELEASED" && !p.foreignPlayer && p.health?.status !== "INJURED").sort((a, b) => b.ovr - a.ovr);
       const currentOutgoing = selectedValues("tradePlayerSelect");
       syncTradeSelect("tradePlayerSelect", tradeable, currentOutgoing);
       renderTradeCards("tradePlayerCards", "tradePlayerSelect", tradeable, "my");
-      const targets = (state.tradeTargets || []).filter((p) => !p.foreignPlayer);
+      const targets = (state.tradeTargets || []).filter((p) => p.rosterStatus !== "RELEASED" && !p.foreignPlayer);
       const teams = Array.from(new Map(targets.map((p) => [p.teamId, p.teamName])).entries());
       const currentTeam = $("tradeTeamSelect").value || teams[0]?.[0] || "";
       $("tradeTeamSelect").innerHTML = teams.map(([id, name]) => `<option value="${id}">${name}</option>`).join("");
