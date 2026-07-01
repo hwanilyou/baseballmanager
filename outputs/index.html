@@ -2327,7 +2327,7 @@
       const scheduleText = state.scheduleInfo ? `<div class="small" style="color: rgba(255,255,255,0.82);">${state.scheduleInfo.seriesNo}번째 3연전 · ${state.scheduleInfo.seriesGame}/3차전</div>` : "";
       const postseasonInfo = state.scheduleInfo?.postseason;
       if (postseasonInfo?.completed) {
-        $("matchup").innerHTML = `<div class="small" style="color: rgba(255,255,255,0.82);">시즌 종료</div><div class="score-line"><span>${postseasonInfo.teamNames?.[0] || "우승팀"}</span><span>우승</span></div><div class="small" style="color: rgba(255,255,255,0.82);">경기 스킵을 누르면 다음 시즌 준비로 넘어갑니다.</div>`;
+        $("matchup").innerHTML = `<div class="small" style="color: rgba(255,255,255,0.82);">시즌 종료</div><div class="score-line"><span>${postseasonInfo.teamNames?.[0] || "우승팀"}</span><span>우승</span></div><div class="small" style="color: rgba(255,255,255,0.82);">다음 시즌 시작을 누르면 로스터와 일정이 새 시즌으로 넘어갑니다.</div>`;
       } else if (postseasonInfo) {
         const seriesRows = postseasonInfo.teamIds.map((id, index) => {
           const name = postseasonInfo.teamNames[index] || "-";
@@ -2340,8 +2340,8 @@
           ? `<div class="score-line"><span>${teamName()}</span><span>${state.lastGame.me}</span></div><div class="score-line"><span>${state.lastGame.opp}</span><span>${state.lastGame.them}</span></div>${scheduleText}`
           : `<div class="score-line"><span>${teamName()}</span><span>vs</span></div><div class="score-line"><span>${teamName(opp)}</span><span>${opp.power}</span></div>${scheduleText}`;
       }
-      $("playGame").disabled = (state.day > state.seasonGames && state.postseason?.completed) || state.players.length < 9;
-      $("playGame").textContent = state.day > state.seasonGames && state.postseason?.active ? "포스트시즌 운영 열기" : "경기 운영 열기";
+      $("playGame").disabled = state.players.length < 9;
+      $("playGame").textContent = state.postseason?.completed ? "다음 시즌 시작" : (state.day > state.seasonGames && state.postseason?.active ? "포스트시즌 운영 열기" : "경기 운영 열기");
       $("urgentBox").innerHTML = state.offers.length
         ? `<strong>${state.offers.length}건의 해외 오퍼</strong><br><span class="small">이적 시장 탭에서 수락 또는 거절을 결정하세요.</span>`
         : `<strong>운영 이슈 없음</strong><br><span class="small">육성 센터에서 선수별 훈련 과제를 지시하고 일정 진행으로 성장을 확인하세요.</span>`;
@@ -2772,6 +2772,12 @@
       const lineup = selectedLineup();
       await mutate("/api/game/start", { lineup, lineupPositions: positions, starterId: selectedStarter() });
       await mutate("/api/game/skip-game");
+    }
+
+    async function startNextSeason() {
+      await mutate("/api/season/next");
+      showToast("다음 시즌이 시작됐습니다.");
+      openView("dashboard");
     }
 
     async function commandAtBat(tactic) {
@@ -3601,10 +3607,14 @@
         : postseason?.active
           ? "와일드카드부터 한국시리즈까지 승자가 다음 라운드로 올라옵니다."
           : "현재 순위 기준 예상 대진입니다. 정규시즌이 끝나면 실제 대진으로 확정됩니다.";
+      const nextSeasonButton = postseason?.completed
+        ? `<button class="primary" id="startNextSeason">다음 시즌 시작</button>`
+        : "";
       return `
         <div class="toolbar">
           <h2 style="margin-right:auto;">${title}</h2>
           <span class="badge">${Math.min(Number(state.day || 1) - 1, Number(state.seasonGames || 144))}/${state.seasonGames || 144}</span>
+          ${nextSeasonButton}
         </div>
         <div class="small" style="margin-bottom:10px;">${subtitle}</div>
         <div class="postseason-flow">
@@ -3636,6 +3646,7 @@
         </tr>`;
       }).join("");
       if ($("postseasonPanel")) $("postseasonPanel").innerHTML = renderPostseasonPanel();
+      $("startNextSeason")?.addEventListener("click", startNextSeason);
       const recordPlayers = [...(state.players || []), ...(state.leaguePlayers || [])];
       const leagueQuery = $("leaguePlayerSearch")?.value || "";
       const leaderQuery = $("leaderSearch")?.value || leagueQuery;
@@ -3789,7 +3800,13 @@
       if (event.key === "Enter") authSubmit("login");
     });
 
-    $("playGame").addEventListener("click", () => openView("game"));
+    $("playGame").addEventListener("click", () => {
+      if (state?.postseason?.completed) {
+        startNextSeason();
+        return;
+      }
+      openView("game");
+    });
     $("startManualGame").addEventListener("click", startManualGame);
     $("startSkipGame").addEventListener("click", startAndSkipGame);
     $("resetManualGame").addEventListener("click", () => mutate("/api/game/reset"));

@@ -6298,6 +6298,7 @@ const server = http.createServer(async (req, res) => {
 
   const routes = {
     "/api/play": () => playGame(state),
+    "/api/season/next": () => startNextSeason(state),
     "/api/game/start": () => createActiveGame(state, body.lineup, body.starterId, body.lineupPositions),
     "/api/game/reset": () => resetActiveGame(state),
     "/api/game/next": () => advanceOnePlay(state),
