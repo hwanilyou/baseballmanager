@@ -4125,6 +4125,14 @@ function emptyTeamStats() {
   return { games: 0, runsFor: 0, runsAgainst: 0, errors: 0 };
 }
 
+function makePitcherStats() {
+  return { era: 0, win: 0, loss: 0, so: 0, sv: 0, hold: 0, ip: 0 };
+}
+
+function makeBatterStats() {
+  return { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, ab: 0, obp: 0, slg: 0, bb: 0, so: 0, tb: 0, hbp: 0, sf: 0 };
+}
+
 function ensureTeamStats(state) {
   if (!Array.isArray(state?.teams)) return state;
   state.teams.forEach((team) => {
