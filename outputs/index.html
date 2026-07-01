@@ -435,6 +435,91 @@
     .leader-player { display: grid; gap: 2px; min-width: 0; }
     .leader-player strong { display: block; color: var(--ink); font-size: 14px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .leader-player .small { color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .postseason-flow {
+      display: grid;
+      gap: 10px;
+    }
+    .postseason-seeds {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .seed-card,
+    .series-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcff;
+      color: var(--ink);
+      padding: 10px;
+      min-width: 0;
+    }
+    .seed-card strong,
+    .series-title strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .series-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .series-card.pending {
+      background: #f7f9fc;
+      border-style: dashed;
+    }
+    .series-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .series-status {
+      flex: 0 0 auto;
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: #eef3f9;
+      color: var(--secondary);
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .series-team {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      padding: 7px 0;
+      border-top: 1px solid var(--line);
+    }
+    .series-team.winner {
+      color: var(--primary);
+      font-weight: 900;
+    }
+    .series-team-name {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .series-games {
+      display: grid;
+      gap: 5px;
+      margin-top: 8px;
+    }
+    .series-game {
+      border-radius: 6px;
+      background: #f1f5f9;
+      padding: 6px 8px;
+      font-size: 12px;
+      color: var(--secondary);
+    }
+    @media (max-width: 980px) {
+      .postseason-seeds,
+      .series-grid {
+        grid-template-columns: 1fr;
+      }
+    }
 
     .name-cell { display: grid; gap: 2px; }
     .bar { height: 8px; border-radius: 999px; background: #e6ebf2; overflow: hidden; }
@@ -1527,6 +1612,7 @@
                 </table>
               </div>
             </section>
+            <section class="panel" id="postseasonPanel"></section>
             <section class="panel">
               <div class="toolbar">
                 <h2 style="margin-right:auto;">개인 기록 상위</h2>
@@ -3385,6 +3471,149 @@
       }).join("") : `<div class="empty">FA 명단을 갱신하면 등급별 보상 규칙이 적용된 후보가 나타납니다.</div>`);
     }
 
+    function playoffTeamNameById(id, fallback = "-") {
+      const team = (state.teams || []).find((t) => t.id === id);
+      return team ? teamName(team) : fallback;
+    }
+
+    function playoffSeeds() {
+      if (state.postseason?.seeds?.length) {
+        return state.postseason.seeds.map((seed) => {
+          const team = (state.teams || []).find((t) => t.id === seed.id);
+          return {
+            ...seed,
+            name: seed.name || (team ? teamName(team) : "-"),
+            w: seed.w ?? team?.w ?? 0,
+            l: seed.l ?? team?.l ?? 0
+          };
+        });
+      }
+      return [...(state.teams || [])].slice(0, 5).map((t, index) => ({
+        id: t.id,
+        name: teamName(t),
+        seed: index + 1,
+        w: t.w || 0,
+        l: t.l || 0
+      }));
+    }
+
+    function playoffSeedName(seeds, seedNo) {
+      const seed = seeds.find((s) => Number(s.seed) === seedNo);
+      return seed ? `${seed.seed}위 ${seed.name}` : `${seedNo}위 대기`;
+    }
+
+    function playoffProjectedRounds(seeds) {
+      return [
+        { name: "와일드카드 결정전", text: `${playoffSeedName(seeds, 4)} vs ${playoffSeedName(seeds, 5)}`, note: "4위 팀 1승 어드밴티지, 5위는 2연승 필요" },
+        { name: "준플레이오프", text: `${playoffSeedName(seeds, 3)} vs 와일드카드 승자`, note: "3선승제" },
+        { name: "플레이오프", text: `${playoffSeedName(seeds, 2)} vs 준플레이오프 승자`, note: "3선승제" },
+        { name: "한국시리즈", text: `${playoffSeedName(seeds, 1)} vs 플레이오프 승자`, note: "4선승제, 최종 우승 결정" }
+      ];
+    }
+
+    function renderPostseasonSeries(series, index, postseason) {
+      const currentIndex = Number(postseason?.roundIndex || 0);
+      const isCurrent = postseason?.active && index === currentIndex && !series.winnerId;
+      const winnerName = series.winnerId ? playoffTeamNameById(series.winnerId) : "";
+      const status = series.winnerId ? "종료" : isCurrent ? "진행중" : "대기";
+      const teamRows = (series.teamIds || []).map((id, teamIndex) => {
+        const fallback = series.teamNames?.[teamIndex] || "-";
+        const seed = Number(series.seeds?.[teamIndex] || 0);
+        const wins = Number(series.wins?.[id] || 0);
+        const realWins = (series.games || []).filter((g) => g.winnerId === id).length;
+        const carry = wins > realWins ? `<span class="small">어드밴티지 ${wins - realWins}승</span>` : "";
+        return `
+          <div class="series-team ${series.winnerId === id ? "winner" : ""}">
+            <span class="badge">${seed ? `${seed}위` : "-"}</span>
+            <span class="series-team-name">${playoffTeamNameById(id, fallback)} ${carry}</span>
+            <strong>${wins}승</strong>
+          </div>
+        `;
+      }).join("");
+      const gameRows = (series.games || []).length
+        ? `<div class="series-games">${series.games.map((game) => `<div class="series-game">${game.gameNo}차전 · ${game.score || `${playoffTeamNameById(game.winnerId)} 승`}</div>`).join("")}</div>`
+        : `<div class="series-game">${isCurrent ? `${(series.games?.length || 0) + 1}차전 대기` : "아직 경기 없음"}</div>`;
+      const advanceText = series.winnerId
+        ? (postseason?.championId === series.winnerId && index === (postseason.series?.length || 1) - 1
+          ? `${winnerName} 한국시리즈 우승`
+          : `${winnerName} 다음 라운드 진출`)
+        : (isCurrent ? "현재 라운드 진행 중" : "앞 라운드 승자 대기");
+      return `
+        <article class="series-card">
+          <div class="series-title">
+            <strong>${series.name || `${index + 1}라운드`}</strong>
+            <span class="series-status">${status}</span>
+          </div>
+          ${teamRows}
+          ${gameRows}
+          <div class="small" style="margin-top:8px;">${advanceText}</div>
+        </article>
+      `;
+    }
+
+    function renderPostseasonPanel() {
+      const postseason = state.postseason || null;
+      const seeds = playoffSeeds();
+      const seedCards = seeds.length ? `
+        <div class="postseason-seeds">
+          ${seeds.map((seed) => `
+            <div class="seed-card">
+              <span class="badge">${seed.seed}위</span>
+              <strong>${seed.name}</strong>
+              <div class="small">${Number(seed.w || 0)}승 ${Number(seed.l || 0)}패</div>
+            </div>
+          `).join("")}
+        </div>
+      ` : `<div class="empty">포스트시즌 진출권 팀이 아직 없습니다.</div>`;
+      const started = postseason?.series?.length;
+      const projected = playoffProjectedRounds(seeds);
+      const existingCards = started
+        ? postseason.series.map((series, index) => renderPostseasonSeries(series, index, postseason)).join("")
+        : projected.map((round) => `
+          <article class="series-card pending">
+            <div class="series-title">
+              <strong>${round.name}</strong>
+              <span class="series-status">예상</span>
+            </div>
+            <div class="series-game">${round.text}</div>
+            <div class="small" style="margin-top:8px;">${round.note}</div>
+          </article>
+        `).join("");
+      const remainingCards = started
+        ? projected.slice(postseason.series.length).map((round) => `
+          <article class="series-card pending">
+            <div class="series-title">
+              <strong>${round.name}</strong>
+              <span class="series-status">대기</span>
+            </div>
+            <div class="series-game">${round.text}</div>
+            <div class="small" style="margin-top:8px;">아래 라운드 승자가 올라오면 대진이 확정됩니다.</div>
+          </article>
+        `).join("")
+        : "";
+      const title = postseason?.completed
+        ? "포스트시즌 결과"
+        : postseason?.active
+          ? "포스트시즌 진행표"
+          : "포스트시즌 예상표";
+      const subtitle = postseason?.completed
+        ? `${playoffTeamNameById(postseason.championId, "우승팀")} 우승`
+        : postseason?.active
+          ? "와일드카드부터 한국시리즈까지 승자가 다음 라운드로 올라옵니다."
+          : "현재 순위 기준 예상 대진입니다. 정규시즌이 끝나면 실제 대진으로 확정됩니다.";
+      return `
+        <div class="toolbar">
+          <h2 style="margin-right:auto;">${title}</h2>
+          <span class="badge">${Math.min(Number(state.day || 1) - 1, Number(state.seasonGames || 144))}/${state.seasonGames || 144}</span>
+        </div>
+        <div class="small" style="margin-bottom:10px;">${subtitle}</div>
+        <div class="postseason-flow">
+          ${seedCards}
+          <div class="series-grid">${existingCards}${remainingCards}</div>
+        </div>
+      `;
+    }
+
     function renderLeague() {
       const teamStats = new Map((state.teamStatRows || []).map((row) => [row.teamId, row]));
       $("standings").innerHTML = state.teams.map((t, i) => {
@@ -3406,6 +3635,7 @@
           <td>${Number(s.era || 0).toFixed(2)}</td>
         </tr>`;
       }).join("");
+      if ($("postseasonPanel")) $("postseasonPanel").innerHTML = renderPostseasonPanel();
       const recordPlayers = [...(state.players || []), ...(state.leaguePlayers || [])];
       const leagueQuery = $("leaguePlayerSearch")?.value || "";
       const leaderQuery = $("leaderSearch")?.value || leagueQuery;
