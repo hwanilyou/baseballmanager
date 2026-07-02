@@ -1877,6 +1877,28 @@
       }
     }
 
+    function onlineLineupPayload() {
+      const rawLineup = [...document.querySelectorAll(".lineupSelect")].map((select) => Number(select.value));
+      const positions = selectedLineupPositions();
+      const lineupError = validateManualLineup(rawLineup, positions);
+      if (lineupError) {
+        showToast(lineupError);
+        return null;
+      }
+      const starterId = selectedStarter();
+      if (!starterId) {
+        showToast("선발 투수를 먼저 선택하세요.");
+        return null;
+      }
+      return {
+        starterId,
+        battingOrder: rawLineup.slice(0, 9).map((playerId, index) => ({
+          playerId,
+          position: positions[index]
+        }))
+      };
+    }
+
     async function submitBoardPost() {
       $("boardStatus").textContent = "";
       const title = $("boardTitle").value.trim();
@@ -3972,21 +3994,39 @@
         list.innerHTML = `<div class="empty">아직 열린 온라인 대결 방이 없습니다. 방을 만들고 친구에게 주소를 보내주세요.</div>`;
         return;
       }
-      const statusLabel = (status) => ({ waiting: "상대 대기", lineup: "라인업 제출", live: "경기 운영", complete: "경기 종료" }[status] || status);
+      const statusLabel = (status) => ({ waiting: "상대 대기", starter: "선발 제출", lineup: "야수 라인업 제출", live: "경기 운영", complete: "경기 종료" }[status] || status);
+      const starterText = (starter, hiddenText = "비공개") => {
+        if (!starter) return hiddenText;
+        return `${starter.batsThrows || "-"} ${starter.name || "-"}${starter.jerseyNumber ? ` #${starter.jerseyNumber}` : ""} · ${starter.pos || "SP"} · 현재 ${starter.current || 0}`;
+      };
       list.innerHTML = onlineMatches.map((match) => {
         const home = match.home || {};
         const away = match.away || {};
-        const mySubmitted = match.mySide === "home" ? home.lineupSubmitted : match.mySide === "away" ? away.lineupSubmitted : false;
         const game = match.game || null;
+        const homeStarterVisible = home.starterSubmitted && (home.starter || match.status !== "starter");
+        const awayStarterVisible = away.starterSubmitted && (away.starter || match.status !== "starter");
         const result = match.result ? `
           <div class="metric" style="margin-top:8px;">
             <strong>${escapeHtml(home.teamName || "-")} ${match.result.homeRuns} : ${match.result.awayRuns} ${escapeHtml(away.teamName || "-")}</strong>
             <span>${escapeHtml(match.result.summary || "")}</span>
           </div>
         ` : "";
+        const starterMatchup = (home.starterSubmitted || away.starterSubmitted) ? `
+          <div class="grid two" style="margin-top:8px;">
+            <div class="metric">
+              <strong>홈 선발</strong>
+              <span>${escapeHtml(starterText(home.starter, home.starterSubmitted ? "제출 완료 · 상대 제출 전 비공개" : "대기"))}</span>
+            </div>
+            <div class="metric">
+              <strong>원정 선발</strong>
+              <span>${escapeHtml(starterText(away.starter, away.starterSubmitted ? "제출 완료 · 상대 제출 전 비공개" : "대기"))}</span>
+            </div>
+          </div>
+        ` : "";
         const actions = [
           match.canJoin ? `<button class="primary" onclick="onlineJoin('${match.id}')">참가</button>` : "",
-          match.mySide && !mySubmitted && match.status !== "complete" ? `<button class="good" onclick="onlineSubmit('${match.id}')">내 라인업 제출</button>` : "",
+          match.canSubmitStarter ? `<button class="good" onclick="onlineSubmitStarter('${match.id}')">선발 투수 제출</button>` : "",
+          match.canSubmitLineup ? `<button class="good" onclick="onlineSubmitLineup('${match.id}')">야수 라인업 제출</button>` : "",
           match.canCancel ? `<button class="danger" onclick="onlineCancel('${match.id}')">방 취소</button>` : ""
         ].filter(Boolean).join("");
         const livePanel = game ? renderOnlineLivePanel(match, game) : "";
@@ -3999,13 +4039,14 @@
             <div class="grid two" style="margin-top:8px;">
               <div class="metric">
                 <strong>${escapeHtml(home.username || "-")}</strong>
-                <span>${escapeHtml(home.teamName || "-")} · ${home.playerCount || 0}명 · 라인업 ${home.lineupSubmitted ? "제출" : "대기"}</span>
+                <span>${escapeHtml(home.teamName || "-")} · ${home.playerCount || 0}명 · 선발 ${home.starterSubmitted ? "제출" : "대기"} · 라인업 ${home.lineupSubmitted ? "제출" : "대기"}</span>
               </div>
               <div class="metric">
                 <strong>${escapeHtml(away.username || "대기 중")}</strong>
-                <span>${escapeHtml(away.teamName || "상대 감독 참가 필요")} · ${away.playerCount || 0}명 · 라인업 ${away.lineupSubmitted ? "제출" : "대기"}</span>
+                <span>${escapeHtml(away.teamName || "상대 감독 참가 필요")} · ${away.playerCount || 0}명 · 선발 ${away.starterSubmitted ? "제출" : "대기"} · 라인업 ${away.lineupSubmitted ? "제출" : "대기"}</span>
               </div>
             </div>
+            ${starterMatchup}
             ${result}
             ${livePanel}
             ${match.log?.length ? `<div class="small" style="margin-top:8px; white-space:pre-wrap;">${match.log.map(escapeHtml).join("\n")}</div>` : ""}
@@ -4189,7 +4230,20 @@
     $("changeTeam").addEventListener("click", () => $("teamSelect").classList.add("active"));
 
     window.onlineJoin = (id) => onlineAction("/api/online/join", { id });
-    window.onlineSubmit = (id) => onlineAction("/api/online/lineup", { id });
+    window.onlineSubmitStarter = (id) => {
+      const starterId = selectedStarter();
+      if (!starterId) {
+        showToast("선발 투수를 먼저 선택하세요.");
+        return;
+      }
+      onlineAction("/api/online/starter", { id, starterId });
+    };
+    window.onlineSubmitLineup = (id) => {
+      const lineup = onlineLineupPayload();
+      if (!lineup) return;
+      onlineAction("/api/online/lineup", { id, lineup });
+    };
+    window.onlineSubmit = (id) => window.onlineSubmitLineup(id);
     window.onlinePlay = (id, tactic) => onlineAction("/api/online/play", { id, tactic });
     window.onlineCancel = (id) => onlineAction("/api/online/cancel", { id });
 

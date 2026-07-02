@@ -249,7 +249,8 @@ function onlineRosterFromState(state) {
 
 function defaultOnlineLineup(side) {
   const players = side?.players || [];
-  const starter = players
+  const lockedStarter = players.find((p) => p.id === Number(side?.starterId) && p.type === "PIT");
+  const starter = lockedStarter || players
     .filter((p) => p.type === "PIT" && (p.pos === "SP" || p.role === "SP"))
     .sort((a, b) => (b.condition + b.stamina + b.pit + b.ovr) - (a.condition + a.stamina + a.pit + a.ovr))[0]
     || players.filter((p) => p.type === "PIT").sort((a, b) => (b.ovr || 0) - (a.ovr || 0))[0];
@@ -274,8 +275,75 @@ function onlineLineupPlayers(side, lineup) {
 }
 
 function onlineStarter(side, lineup) {
-  const id = Number(lineup?.starterId);
+  const id = Number(side?.starterId || lineup?.starterId);
   return side.players.find((p) => p.id === id) || side.players.find((p) => p.id === defaultOnlineLineup(side).starterId) || side.players.find((p) => p.type === "PIT");
+}
+
+function onlinePlayerLabel(player) {
+  if (!player) return "-";
+  return `${player.batsThrows ? `[${player.batsThrows}] ` : ""}${player.name}${player.jerseyNumber ? ` #${player.jerseyNumber}` : ""}`;
+}
+
+function onlineHalfLabel(game) {
+  return `${game.inning}회${game.half === "top" ? "초" : "말"}`;
+}
+
+function onlineSideKeyForUser(match, user) {
+  return match.home?.userId === user.id ? "home" : match.away?.userId === user.id ? "away" : null;
+}
+
+function validateOnlineStarter(side, starterId) {
+  const id = Number(starterId);
+  const starter = (side?.players || []).find((p) => p.id === id);
+  if (!starter) return { error: "선발 투수를 찾을 수 없습니다." };
+  if (starter.type !== "PIT") return { error: "선발에는 투수만 제출할 수 있습니다." };
+  return { starter };
+}
+
+function onlineWalkRunners(game, offense, batter) {
+  let runs = 0;
+  if (game.bases[0] && game.bases[1] && game.bases[2]) {
+    runs += 1;
+    game.bases[2] = null;
+  }
+  if (game.bases[0] && game.bases[1]) {
+    game.bases[2] = game.bases[1];
+    game.bases[1] = null;
+  }
+  if (game.bases[0]) {
+    game.bases[1] = game.bases[0];
+  }
+  game.bases[0] = batter;
+  if (runs) scoreOnlineRun(game, offense, runs);
+  return runs;
+}
+
+function onlineGroundDoublePlay(game) {
+  const removed = [];
+  if (game.bases[0]) {
+    removed.push(game.bases[0]);
+    game.bases[0] = null;
+  }
+  game.outs += removed.length ? 2 : 1;
+  return removed;
+}
+
+function onlineSacBunt(game, offense) {
+  let runs = 0;
+  if (game.bases[2]) {
+    runs += 1;
+    game.bases[2] = null;
+  }
+  if (game.bases[1]) {
+    game.bases[2] = game.bases[1];
+    game.bases[1] = null;
+  }
+  if (game.bases[0]) {
+    game.bases[1] = game.bases[0];
+    game.bases[0] = null;
+  }
+  if (runs) scoreOnlineRun(game, offense, runs);
+  return runs;
 }
 
 function onlineLineupCard(player, slot) {
@@ -491,6 +559,111 @@ function resolveOnlineLivePlay(user, matchId, tactic = "normal") {
   return { match };
 }
 
+function resolveOnlineLivePlayV3(user, matchId, tactic = "normal") {
+  const data = readOnlineMatches();
+  const match = data.matches.find((m) => m.id === String(matchId));
+  if (!match) return { error: "대결 방을 찾을 수 없습니다." };
+  if (![match.home?.userId, match.away?.userId].includes(user.id)) return { error: "이 대결 참가자가 아닙니다." };
+  if (match.status !== "live" || !match.game) return { error: "아직 경기 운영 상태가 아닙니다." };
+
+  const game = match.game;
+  const { offense, defense } = onlineCurrentSides(game);
+  if (user.id !== match[offense]?.userId) return { error: "현재 공격 팀만 타격/주루 지시를 낼 수 있습니다." };
+
+  const lineup = game.lineups[offense] || [];
+  const batterIndex = (game.battingIndex[offense] || 0) % Math.max(1, lineup.length);
+  const batter = lineup[batterIndex];
+  const pitcher = game.pitchers[defense];
+  if (!batter || !pitcher) return { error: "라인업 데이터가 부족합니다." };
+
+  const rng = seededRandom(`${match.id}-${Date.now()}-${game.inning}-${game.half}-${batter.id}-${pitcher.id}-${game.pitchCounts[defense] || 0}`);
+  const half = onlineHalfLabel(game);
+  const pitchCount = Math.max(3, Math.min(11, 3 + Math.floor(rng() * 5) + (tactic === "wait" ? 2 : 0) + (tactic === "bunt" ? -1 : 0)));
+  game.pitchCounts[defense] = (game.pitchCounts[defense] || 0) + pitchCount;
+  const pitchNote = `${pitchCount}구 승부`;
+  const runnerState = () => {
+    const parts = ["1루", "2루", "3루"].map((base, index) => game.bases[index] ? `${base} ${game.bases[index].name}` : null).filter(Boolean);
+    return parts.length ? `주자 ${parts.join(", ")}` : "주자 없음";
+  };
+
+  const batterScore = (batter.hit || 50) * 0.52 + (batter.pow || 50) * 0.28 + (batter.spd || 50) * 0.08 + (batter.condition || 65) * 0.12;
+  const pitcherScore = (pitcher.pit || 50) * 0.78 + (pitcher.condition || 65) * 0.22 - Math.max(0, (game.pitchCounts[defense] || 0) - 88) * 0.12;
+  let roll = rng() + (batterScore - pitcherScore) / 190;
+  if (tactic === "power") roll += 0.02;
+  if (tactic === "contact") roll += 0.012;
+  if (tactic === "wait") roll += 0.006;
+  if (tactic === "bunt") roll -= 0.05;
+
+  let text = "";
+  let plateAppearance = true;
+  if (tactic === "steal") {
+    plateAppearance = false;
+    const target = [
+      { from: 2, to: 3, label: "홈스틸" },
+      { from: 1, to: 2, label: "3루 도루" },
+      { from: 0, to: 1, label: "2루 도루" }
+    ].find((item) => game.bases[item.from] && (item.to === 3 || !game.bases[item.to]));
+    if (!target) {
+      text = `${half} ${onlinePlayerLabel(batter)} 타석, 도루 지시가 있었지만 뛸 수 있는 주자가 없습니다.`;
+    } else {
+      const runner = game.bases[target.from];
+      const chance = 0.56 + ((runner.spd || 60) - 60) / 180 - ((pitcher.def || pitcher.pit || 60) - 60) / 260;
+      if (rng() < chance) {
+        game.bases[target.from] = null;
+        if (target.to < 3) game.bases[target.to] = runner;
+        else scoreOnlineRun(game, offense, 1);
+        text = `${half} ${runner.name} ${target.label} 성공. ${runnerState()}`;
+      } else {
+        game.bases[target.from] = null;
+        game.outs += 1;
+        text = `${half} ${runner.name} ${target.label} 실패. 포수 송구가 정확했습니다. ${game.outs}아웃`;
+      }
+    }
+  } else if (tactic === "bunt") {
+    if (game.bases.some(Boolean) && game.outs < 2 && roll > 0.2) {
+      const runs = onlineSacBunt(game, offense);
+      game.outs += 1;
+      text = `${half} ${onlinePlayerLabel(batter)} 희생번트 성공. ${runs ? `${runs}득점, ` : ""}${runnerState()}. ${pitchNote}, ${game.outs}아웃`;
+    } else {
+      game.outs += 1;
+      text = `${half} ${onlinePlayerLabel(batter)} 번트 실패. 1루 쪽 뜬공이 되어 투수가 처리합니다. ${pitchNote}, ${game.outs}아웃`;
+    }
+  } else if (roll > 0.925) {
+    const runs = advanceOnlineRunners(game, offense, batter, 4);
+    text = `${half} ${onlinePlayerLabel(batter)} 좌중간 담장을 넘어가는 홈런. ${runs}득점, ${pitchNote}`;
+  } else if (roll > 0.825) {
+    const runs = advanceOnlineRunners(game, offense, batter, 2);
+    text = `${half} ${onlinePlayerLabel(batter)} 우중간을 가르는 2루타. ${runs ? `${runs}득점` : runnerState()}, ${pitchNote}`;
+  } else if (roll > 0.645) {
+    const runs = advanceOnlineRunners(game, offense, batter, 1);
+    text = `${half} ${onlinePlayerLabel(batter)} 투수 키를 살짝 넘기는 중전 안타. ${runs ? `${runs}득점` : runnerState()}, ${pitchNote}`;
+  } else if (roll > 0.555) {
+    const runs = onlineWalkRunners(game, offense, batter);
+    text = `${half} ${onlinePlayerLabel(batter)} 볼넷 출루. ${runs ? `${runs}득점, ` : ""}${runnerState()}, ${pitchNote}`;
+  } else if (roll > 0.47 && game.bases[0] && game.outs <= 1) {
+    const removed = onlineGroundDoublePlay(game);
+    text = `${half} ${onlinePlayerLabel(batter)} 유격수 정면 땅볼. ${removed[0]?.name || "1루 주자"} 2루 포스아웃, 1루 송구까지 이어지는 병살타. ${game.outs}아웃`;
+  } else {
+    game.outs += 1;
+    const outTexts = [
+      `${half} ${onlinePlayerLabel(batter)} 2루수 정면 땅볼. 1루 송구 아웃. ${pitchNote}, ${game.outs}아웃`,
+      `${half} ${onlinePlayerLabel(batter)} 파울 지역으로 높게 뜬 타구. 포수 파울플라이 처리. ${pitchNote}, ${game.outs}아웃`,
+      `${half} ${onlinePlayerLabel(batter)} 우익수 쪽 평범한 뜬공. 우익수가 처리합니다. ${pitchNote}, ${game.outs}아웃`
+    ];
+    text = outTexts[Math.floor(rng() * outTexts.length)];
+  }
+
+  if (plateAppearance) game.battingIndex[offense] = (game.battingIndex[offense] || 0) + 1;
+  game.balls = 0;
+  game.strikes = 0;
+  game.lastTactic = tactic;
+  game.log.unshift(text);
+  finishOnlineHalfOrGame(match, game);
+  match.updatedAt = new Date().toISOString();
+  writeOnlineMatches(data);
+  return { match };
+}
+
 function seededRandom(seedText) {
   let seed = hashText(seedText) || 1;
   return () => {
@@ -565,38 +738,57 @@ function publicOnlineMatches(user) {
     .slice()
     .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
     .slice(0, 80)
-    .map((match) => ({
-      id: match.id,
-      status: match.status,
-      createdAt: match.createdAt,
-      updatedAt: match.updatedAt,
-      canJoin: match.status === "waiting" && match.home?.userId !== user.id,
-      canCancel: match.status === "waiting" && match.home?.userId === user.id,
-      canSubmit: match.status === "lineup" && [match.home?.userId, match.away?.userId].includes(user.id),
-      mySide: match.home?.userId === user.id ? "home" : match.away?.userId === user.id ? "away" : null,
-      home: {
-        username: match.home?.username,
-        teamName: match.home?.teamName,
-        lineupSubmitted: Boolean(match.home?.lineup),
-        playerCount: match.home?.players?.length || 0,
-        lineup: match.game?.lineups?.home || null
-      },
-      away: match.away ? {
-        username: match.away.username,
-        teamName: match.away.teamName,
-        lineupSubmitted: Boolean(match.away.lineup),
-        playerCount: match.away.players?.length || 0,
-        lineup: match.game?.lineups?.away || null
-      } : null,
-      game: match.game || null,
-      result: match.result,
-      log: match.log || []
-    }));
+    .map((match) => {
+      const mySide = onlineSideKeyForUser(match, user);
+      const bothStarters = Boolean(match.home?.starterId && match.away?.starterId);
+      const showStarter = (sideKey) => bothStarters || match.status === "live" || match.status === "complete" || mySide === sideKey;
+      const starterCard = (sideKey) => {
+        const side = match[sideKey];
+        if (!side || !showStarter(sideKey)) return null;
+        const starter = onlineStarter(side, { starterId: side.starterId });
+        return starter ? onlineLineupCard(starter, { position: starter.pos || "SP" }) : null;
+      };
+      const canSubmitStarter = match.status === "starter" && Boolean(mySide) && !match[mySide]?.starterId;
+      const canSubmitLineup = match.status === "lineup" && Boolean(mySide) && !match[mySide]?.lineup;
+      return {
+        id: match.id,
+        status: match.status,
+        createdAt: match.createdAt,
+        updatedAt: match.updatedAt,
+        canJoin: match.status === "waiting" && match.home?.userId !== user.id,
+        canCancel: ["waiting", "starter"].includes(match.status) && match.home?.userId === user.id,
+        canSubmit: canSubmitLineup,
+        canSubmitStarter,
+        canSubmitLineup,
+        mySide,
+        home: {
+          username: match.home?.username,
+          teamName: match.home?.teamName,
+          starterSubmitted: Boolean(match.home?.starterId),
+          starter: starterCard("home"),
+          lineupSubmitted: Boolean(match.home?.lineup),
+          playerCount: match.home?.players?.length || 0,
+          lineup: match.game?.lineups?.home || null
+        },
+        away: match.away ? {
+          username: match.away.username,
+          teamName: match.away.teamName,
+          starterSubmitted: Boolean(match.away.starterId),
+          starter: starterCard("away"),
+          lineupSubmitted: Boolean(match.away.lineup),
+          playerCount: match.away.players?.length || 0,
+          lineup: match.game?.lineups?.away || null
+        } : null,
+        game: match.game || null,
+        result: match.result,
+        log: match.log || []
+      };
+    });
   return { matches };
 }
 
 function createOnlineMatch(user, state) {
-  const side = { userId: user.id, username: user.username, ...onlineRosterFromState(state), lineup: null };
+  const side = { userId: user.id, username: user.username, ...onlineRosterFromState(state), starterId: null, lineup: null };
   if ((side.players || []).length < 12) return { error: "온라인 대결에는 1군 등록 선수 12명 이상이 필요합니다." };
   const data = readOnlineMatches();
   const openMine = (data.matches || []).find((m) => m.status !== "complete" && (m.home?.userId === user.id || m.away?.userId === user.id));
@@ -625,13 +817,38 @@ function joinOnlineMatch(user, state, matchId) {
   if (match.home?.userId === user.id) return { error: "자기 방에는 참가할 수 없습니다." };
   const openMine = data.matches.find((m) => m.id !== match.id && m.status !== "complete" && (m.home?.userId === user.id || m.away?.userId === user.id));
   if (openMine) return { error: "이미 진행 중인 온라인 대결 방이 있습니다." };
-  const side = { userId: user.id, username: user.username, ...onlineRosterFromState(state), lineup: null };
+  const side = { userId: user.id, username: user.username, ...onlineRosterFromState(state), starterId: null, lineup: null };
   if ((side.players || []).length < 12) return { error: "온라인 대결에는 1군 등록 선수 12명 이상이 필요합니다." };
   match.away = side;
-  match.status = "lineup";
+  match.status = "starter";
   match.updatedAt = new Date().toISOString();
   match.log ||= [];
-  match.log.push(`${user.username} 감독이 ${side.teamName}으로 참가했습니다.`);
+  match.log.push(`${user.username} 감독이 ${side.teamName}으로 참가했습니다. 양쪽 감독은 선발 투수를 먼저 제출해야 합니다.`);
+  writeOnlineMatches(data);
+  return { match };
+}
+
+function submitOnlineStarter(user, state, matchId, starterId) {
+  const data = readOnlineMatches();
+  const match = data.matches.find((m) => m.id === String(matchId));
+  if (!match) return { error: "대결 방을 찾을 수 없습니다." };
+  if (match.status !== "starter") return { error: "지금은 선발 투수 제출 단계가 아닙니다." };
+  const sideKey = onlineSideKeyForUser(match, user);
+  if (!sideKey) return { error: "이 대결 참가자가 아닙니다." };
+  const latest = onlineRosterFromState(state);
+  match[sideKey].players = latest.players;
+  match[sideKey].teamName = latest.teamName;
+  const check = validateOnlineStarter(match[sideKey], starterId);
+  if (check.error) return check;
+  match[sideKey].starterId = Number(starterId);
+  match[sideKey].lineup = null;
+  match.updatedAt = new Date().toISOString();
+  match.log ||= [];
+  match.log.push(`${user.username} 감독이 선발 투수 ${onlinePlayerLabel(check.starter)}를 제출했습니다.`);
+  if (match.home?.starterId && match.away?.starterId) {
+    match.status = "lineup";
+    match.log.push("양쪽 선발이 공개됐습니다. 이제 상대 선발을 보고 야수 라인업을 제출하세요.");
+  }
   writeOnlineMatches(data);
   return { match };
 }
@@ -640,17 +857,21 @@ function submitOnlineLineup(user, state, matchId, lineup) {
   const data = readOnlineMatches();
   const match = data.matches.find((m) => m.id === String(matchId));
   if (!match) return { error: "대결 방을 찾을 수 없습니다." };
-  if (!["waiting", "lineup"].includes(match.status)) return { error: "이미 종료된 대결입니다." };
-  const sideKey = match.home?.userId === user.id ? "home" : match.away?.userId === user.id ? "away" : null;
+  if (match.status !== "lineup") return { error: "양쪽 선발 제출 후 야수 라인업을 제출할 수 있습니다." };
+  const sideKey = onlineSideKeyForUser(match, user);
   if (!sideKey) return { error: "이 대결 참가자가 아닙니다." };
   const latest = onlineRosterFromState(state);
+  const starterId = Number(match[sideKey].starterId);
   match[sideKey].players = latest.players;
   match[sideKey].teamName = latest.teamName;
-  match[sideKey].lineup = lineup?.starterId || lineup?.battingOrder ? lineup : defaultOnlineLineup(match[sideKey]);
-  match.status = match.away ? "lineup" : "waiting";
+  const starterCheck = validateOnlineStarter(match[sideKey], starterId);
+  if (starterCheck.error) return { error: "제출했던 선발 투수를 현재 1군 명단에서 찾을 수 없습니다." };
+  const fallback = defaultOnlineLineup(match[sideKey]);
+  const battingOrder = Array.isArray(lineup?.battingOrder) && lineup.battingOrder.length ? lineup.battingOrder : fallback.battingOrder;
+  match[sideKey].lineup = { starterId, battingOrder: battingOrder.slice(0, 9) };
   match.updatedAt = new Date().toISOString();
   match.log ||= [];
-  match.log.push(`${user.username} 감독이 라인업을 제출했습니다.`);
+  match.log.push(`${user.username} 감독이 야수 라인업을 제출했습니다.`);
   if (match.home?.lineup && match.away?.lineup) createOnlineLiveGame(match);
   writeOnlineMatches(data);
   return { match };
@@ -661,7 +882,7 @@ function cancelOnlineMatch(user, matchId) {
   const match = data.matches.find((m) => m.id === String(matchId));
   if (!match) return { error: "대결 방을 찾을 수 없습니다." };
   if (match.home?.userId !== user.id) return { error: "방장만 취소할 수 있습니다." };
-  if (match.status !== "waiting") return { error: "이미 참가자가 들어온 방은 취소할 수 없습니다." };
+  if (!["waiting", "starter"].includes(match.status)) return { error: "라인업 제출 이후에는 방을 취소할 수 없습니다." };
   data.matches = data.matches.filter((m) => m.id !== match.id);
   writeOnlineMatches(data);
   return { ok: true };
@@ -7392,10 +7613,12 @@ const server = http.createServer(async (req, res) => {
       result = createOnlineMatch(user, state);
     } else if (url.pathname === "/api/online/join") {
       result = joinOnlineMatch(user, state, body.id);
+    } else if (url.pathname === "/api/online/starter") {
+      result = submitOnlineStarter(user, state, body.id, body.starterId);
     } else if (url.pathname === "/api/online/lineup") {
       result = submitOnlineLineup(user, state, body.id, body.lineup);
     } else if (url.pathname === "/api/online/play") {
-      result = resolveOnlineLivePlay(user, body.id, body.tactic);
+      result = resolveOnlineLivePlayV3(user, body.id, body.tactic);
     } else if (url.pathname === "/api/online/cancel") {
       result = cancelOnlineMatch(user, body.id);
     } else {
