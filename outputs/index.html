@@ -2313,6 +2313,7 @@
       renderLeague();
       renderNews();
       maybeOpenDraftWindow();
+      maybeOpenOffseasonWindow();
     }
 
     function maybeOpenDraftWindow() {
@@ -2324,11 +2325,27 @@
       setTimeout(() => $("draftMeta")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
     }
 
+    function maybeOpenOffseasonWindow() {
+      const offseason = state?.offseason || {};
+      const needsWork = Boolean(offseason.active || (state?.postseason?.completed && !offseason.contractsResolved));
+      if (!needsWork) return;
+      const key = `${state.seasonYear || 1}-${offseason.preparedForSeason || 0}-${(offseason.contractTasks || []).length}-${(offseason.faPlayerIds || []).length}`;
+      if (sessionStorage.getItem("offseasonAutoOpen") === key) return;
+      sessionStorage.setItem("offseasonAutoOpen", key);
+      openView("market");
+      setTimeout(() => $("offseasonPanel")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
+    }
+
     function renderDashboard() {
       const opp = state.opponent;
       const scheduleText = state.scheduleInfo ? `<div class="small" style="color: rgba(255,255,255,0.82);">${state.scheduleInfo.seriesNo}번째 3연전 · ${state.scheduleInfo.seriesGame}/3차전</div>` : "";
       const postseasonInfo = state.scheduleInfo?.postseason;
-      if (postseasonInfo?.completed) {
+      const offseason = state.offseason || {};
+      const offseasonPending = (offseason.contractTasks || []).filter((task) => task.status === "PENDING").length;
+      const offseasonNeedsWork = Boolean(offseason.active || (postseasonInfo?.completed && !offseason.contractsResolved));
+      if (postseasonInfo?.completed && offseasonNeedsWork) {
+        $("matchup").innerHTML = `<div class="small" style="color: rgba(255,255,255,0.82);">시즌 종료</div><div class="score-line"><span>${postseasonInfo.teamNames?.[0] || "우승팀"}</span><span>우승</span></div><div class="small" style="color: rgba(255,255,255,0.82);">오프시즌 계약 처리 필요 · 미처리 ${offseasonPending}명</div>`;
+      } else if (postseasonInfo?.completed) {
         $("matchup").innerHTML = `<div class="small" style="color: rgba(255,255,255,0.82);">시즌 종료</div><div class="score-line"><span>${postseasonInfo.teamNames?.[0] || "우승팀"}</span><span>우승</span></div><div class="small" style="color: rgba(255,255,255,0.82);">다음 시즌 시작을 누르면 로스터와 일정이 새 시즌으로 넘어갑니다.</div>`;
       } else if (postseasonInfo) {
         const seriesRows = postseasonInfo.teamIds.map((id, index) => {
@@ -2344,9 +2361,13 @@
       }
       $("playGame").disabled = state.players.length < 9;
       $("playGame").textContent = state.postseason?.completed ? "다음 시즌 시작" : (state.day > state.seasonGames && state.postseason?.active ? "포스트시즌 운영 열기" : "경기 운영 열기");
+      if (offseasonNeedsWork) $("playGame").textContent = "오프시즌 계약센터 열기";
       $("urgentBox").innerHTML = state.offers.length
         ? `<strong>${state.offers.length}건의 해외 오퍼</strong><br><span class="small">이적 시장 탭에서 수락 또는 거절을 결정하세요.</span>`
         : `<strong>운영 이슈 없음</strong><br><span class="small">육성 센터에서 선수별 훈련 과제를 지시하고 일정 진행으로 성장을 확인하세요.</span>`;
+      if (offseasonNeedsWork) {
+        $("urgentBox").innerHTML = `<strong>계약 처리 필요</strong><br><span class="small">FA 전환 선수와 보류권 재계약 대상이 있습니다. 이적 시장의 오프시즌 계약 센터에서 먼저 처리하세요.</span>`;
+      }
       $("ownerGoal").textContent = `목표 ${state.seasonGoal?.label || "포스트시즌 진출"}`;
       $("seasonGoalSelect").value = state.seasonGoal?.level || "playoff";
       $("recentGames").innerHTML = state.games.length ? state.games.map((g) => `<div class="news-item"><div class="news-title">Day ${g.day}</div>${g.text}</div>`).join("") : `<div class="empty">아직 진행된 경기가 없습니다.</div>`;
@@ -3864,6 +3885,13 @@
     });
 
     $("playGame").addEventListener("click", () => {
+      const offseason = state?.offseason || {};
+      const needsOffseason = Boolean(offseason.active || (state?.postseason?.completed && !offseason.contractsResolved));
+      if (needsOffseason) {
+        openView("market");
+        setTimeout(() => $("offseasonPanel")?.scrollIntoView({ behavior: "smooth", block: "center" }), 80);
+        return;
+      }
       if (state?.postseason?.completed) {
         startNextSeason();
         return;

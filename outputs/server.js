@@ -811,6 +811,7 @@ function migrateState(state) {
   if (!Array.isArray(state.offseason.contractTasks)) state.offseason.contractTasks = [];
   if (!Array.isArray(state.offseason.faPlayerIds)) state.offseason.faPlayerIds = [];
   if (!Array.isArray(state.offseason.nonTendered)) state.offseason.nonTendered = [];
+  if (state.postseason?.completed && !state.offseason.contractsResolved) prepareOffseasonContracts(state);
   pruneInvalidOffers(state);
   if (state.activeGame?.lineup) {
     state.activeGame.lineup = state.activeGame.lineup.filter((id) => state.players.some((p) => p.id === id));
