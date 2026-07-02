@@ -803,6 +803,12 @@ function migrateState(state) {
   if (state.day > state.seasonGames && !state.postseason?.active && !state.postseason?.completed) startPostseason(state);
   if (state.seasonAwarded !== true && state.postseason?.completed) finalizeSeasonAwards(state);
   if (!Array.isArray(state.freeAgents)) state.freeAgents = [];
+  if (!state.offseason || typeof state.offseason !== "object") {
+    state.offseason = { active: false, preparedForSeason: 0, contractsResolved: false, contractTasks: [], faPlayerIds: [], nonTendered: [] };
+  }
+  if (!Array.isArray(state.offseason.contractTasks)) state.offseason.contractTasks = [];
+  if (!Array.isArray(state.offseason.faPlayerIds)) state.offseason.faPlayerIds = [];
+  if (!Array.isArray(state.offseason.nonTendered)) state.offseason.nonTendered = [];
   pruneInvalidOffers(state);
   if (state.activeGame?.lineup) {
     state.activeGame.lineup = state.activeGame.lineup.filter((id) => state.players.some((p) => p.id === id));
@@ -3842,6 +3848,199 @@ function handleForeignOffseasonMarket(state) {
   }
 }
 
+function contractAskForPlayer(p) {
+  const oldAnnual = Math.max(0.3, Number(p?.contract?.annual || p?.salary || 0.6));
+  const war = estimatedPlayerWar(p || {});
+  const ovr = Number(p?.ovr) || 60;
+  const potGap = Math.max(0, (Number(p?.pot) || ovr) - ovr);
+  const age = Number(p?.age) || 28;
+  let raise = 1.02 + Math.max(0, ovr - 66) * 0.012 + Math.min(0.28, war * 0.032) + Math.min(0.14, potGap * 0.009);
+  if (age >= 35) raise -= 0.1;
+  else if (age >= 32) raise -= 0.04;
+  if (p?.type === "PIT" && (p?.pitcherRole === "SP" || p?.pos === "SP")) raise += 0.04;
+  return Math.max(0.3, Math.round(oldAnnual * Math.max(0.78, raise) * 10) / 10);
+}
+
+function contractYearsForPlayer(p) {
+  const ovr = Number(p?.ovr) || 60;
+  const pot = Number(p?.pot) || ovr;
+  const age = Number(p?.age) || 28;
+  if (age <= 25 && pot >= 82) return 4;
+  if (ovr >= 80) return age >= 33 ? 2 : 4;
+  if (ovr >= 73) return age >= 34 ? 1 : 3;
+  return age >= 32 ? 1 : 2;
+}
+
+function isContractDueThisOffseason(p) {
+  if (!p || p.rosterStatus === "RELEASED" || p.rosterStatus === "DEV" || isForeignPlayer(p)) return false;
+  const yearsLeft = Number(p.contract?.yearsLeft ?? p.years ?? 1);
+  return yearsLeft <= 1;
+}
+
+function isSeasonFaPlayer(p) {
+  if (!isContractDueThisOffseason(p)) return false;
+  return (Number(p.controlYears) || 0) <= 0 || (Number(p.serviceDays) || 0) >= 1160 || (Number(p.serviceYears) || 0) >= 8;
+}
+
+function realFreeAgentEntryFromPlayer(p, originalTeamId, idSeed = 0) {
+  const askAnnual = contractAskForPlayer(p);
+  const ovr = Number(p.ovr) || recalcOvr(p);
+  const grade = ovr >= 78 ? "A" : ovr >= 70 ? "B" : "C";
+  return {
+    id: Number(p.id) + 900000 + idSeed,
+    sourcePlayerId: p.id,
+    realPlayer: true,
+    originalTeamId,
+    name: p.name,
+    pos: p.pos,
+    type: p.type,
+    age: p.age,
+    ovr,
+    pot: Math.max(ovr, Number(p.pot) || ovr),
+    grade,
+    previousSalary: Math.max(0.3, Number(p.contract?.annual || p.salary || askAnnual)),
+    askYears: contractYearsForPlayer(p),
+    askAnnual
+  };
+}
+
+function prepareOffseasonContracts(state) {
+  const seasonYear = Number(state.seasonYear) || 1;
+  if (state.offseason?.preparedForSeason === seasonYear && state.offseason?.active) return state;
+  if (state.offseason?.preparedForSeason === seasonYear && state.offseason?.contractsResolved) return state;
+  finalizeSeasonAwards(state);
+  if (!state.offseason?.foreignProcessedForSeason || state.offseason.foreignProcessedForSeason !== seasonYear) {
+    handleForeignOffseasonMarket(state);
+  }
+  const existingFaIds = new Set((state.freeAgents || []).map((fa) => Number(fa.sourcePlayerId || -1)));
+  const tasks = [];
+  const faPlayerIds = [];
+  for (const p of state.players || []) {
+    if (!isContractDueThisOffseason(p)) continue;
+    const oldAnnual = Math.max(0.3, Number(p.contract?.annual || p.salary || 0.6));
+    if (isSeasonFaPlayer(p)) {
+      if (!existingFaIds.has(Number(p.id))) {
+        const entry = realFreeAgentEntryFromPlayer(p, state.selectedTeamId);
+        state.freeAgents.push(entry);
+        existingFaIds.add(Number(p.id));
+      }
+      p.previousRosterStatus = p.rosterStatus;
+      p.rosterStatus = "RELEASED";
+      p.marketStatus = "FREE_AGENT";
+      p.contract = { ...(p.contract || {}), yearsLeft: 0, annual: oldAnnual, kind: "FA 자격 취득", source: "시즌 종료 후 FA" };
+      faPlayerIds.push(p.id);
+    } else {
+      tasks.push({
+        playerId: p.id,
+        name: p.name,
+        pos: p.pos,
+        age: p.age,
+        ovr: Number(p.ovr) || recalcOvr(p),
+        pot: Number(p.pot) || p.ovr,
+        oldAnnual,
+        askAnnual: contractAskForPlayer(p),
+        askYears: contractYearsForPlayer(p),
+        controlYears: Number(p.controlYears) || 0,
+        status: "PENDING"
+      });
+    }
+  }
+  state.offseason = {
+    active: true,
+    preparedForSeason: seasonYear,
+    contractsResolved: tasks.length === 0,
+    foreignProcessedForSeason: seasonYear,
+    contractTasks: tasks,
+    faPlayerIds,
+    nonTendered: []
+  };
+  state.lastLineup = null;
+  addNews(state, "오프시즌 계약 협상 시작", `FA ${faPlayerIds.length}명, 재계약 대상 ${tasks.length}명입니다. 계약 처리를 끝내야 다음 시즌을 시작할 수 있습니다.`, "계약");
+  return state;
+}
+
+function pendingOffseasonTasks(state) {
+  const tasks = state.offseason?.contractTasks || [];
+  return tasks.filter((task) => {
+    const p = (state.players || []).find((x) => x.id === Number(task.playerId));
+    return task.status === "PENDING" && p && p.rosterStatus !== "RELEASED";
+  });
+}
+
+function refreshOffseasonResolved(state) {
+  if (!state.offseason) return state;
+  state.offseason.contractsResolved = pendingOffseasonTasks(state).length === 0;
+  return state;
+}
+
+function resolveOffseasonContract(state, id, action = "renew") {
+  prepareOffseasonContracts(state);
+  const task = (state.offseason.contractTasks || []).find((x) => Number(x.playerId) === Number(id));
+  const p = (state.players || []).find((x) => x.id === Number(id));
+  if (!task || !p || task.status !== "PENDING") return state;
+  state.selectedId = p.id;
+  if (action === "nonTender") {
+    p.previousRosterStatus = p.rosterStatus;
+    p.rosterStatus = "RELEASED";
+    p.marketStatus = "NON_TENDER";
+    p.contract = { ...(p.contract || {}), yearsLeft: 0, annual: task.oldAnnual, kind: "보류 포기", source: "오프시즌 계약 미제시" };
+    task.status = "NON_TENDER";
+    state.offseason.nonTendered.push(p.id);
+    state.lastLineup = null;
+    addNews(state, "보류권 포기", `${p.name}에게 재계약을 제시하지 않았습니다. 선수는 시장으로 풀립니다.`, "계약");
+    refreshOffseasonResolved(state);
+    return state;
+  }
+  const delta = Math.max(0, Number(task.askAnnual) - Number(task.oldAnnual));
+  if (state.budget < delta) {
+    addNews(state, "재계약 보류", `${p.name} 재계약 인상분 ${money(delta)}을 감당할 예산이 부족합니다.`, "계약");
+    return state;
+  }
+  p.contract = {
+    yearsLeft: Number(task.askYears) || 1,
+    annual: Number(task.askAnnual) || Number(task.oldAnnual) || 0.3,
+    kind: "오프시즌 재계약",
+    source: "시즌 종료 후 보류권 계약",
+    signedOffseasonYear: Number(state.seasonYear) || 1
+  };
+  p.salary = p.contract.annual;
+  p.controlYears = Math.max(0, Number(p.controlYears) - 1);
+  p.happy = Math.min(98, (Number(p.happy) || 70) + 5);
+  state.budget -= delta;
+  task.status = "SIGNED";
+  addNews(state, "재계약 완료", `${p.name}과 ${p.contract.yearsLeft}년 ${money(p.contract.annual)} 조건으로 계약했습니다.`, "계약");
+  refreshOffseasonResolved(state);
+  return state;
+}
+
+function autoResolveOffseasonContracts(state) {
+  prepareOffseasonContracts(state);
+  const tasks = pendingOffseasonTasks(state).slice().sort((a, b) => (b.ovr + b.pot * 0.4) - (a.ovr + a.pot * 0.4));
+  for (const task of tasks) {
+    const expensive = Number(task.askAnnual) >= Math.max(2.5, Number(task.oldAnnual) * 1.75);
+    const lowCeiling = Number(task.ovr) < 58 && Number(task.pot) < 66;
+    const oldDepth = Number(task.age) >= 34 && Number(task.ovr) < 66;
+    if (expensive && (lowCeiling || oldDepth)) resolveOffseasonContract(state, task.playerId, "nonTender");
+    else resolveOffseasonContract(state, task.playerId, "renew");
+  }
+  refreshOffseasonResolved(state);
+  addNews(state, "오프시즌 계약 자동 처리", "구단 추천 기준으로 재계약과 보류 포기를 처리했습니다.", "계약");
+  return state;
+}
+
+function completeOffseasonContracts(state) {
+  prepareOffseasonContracts(state);
+  const pending = pendingOffseasonTasks(state);
+  if (pending.length) {
+    addNews(state, "계약 처리 필요", `아직 ${pending.length}명의 재계약 대상이 남아 있습니다.`, "계약");
+    return state;
+  }
+  state.offseason.active = false;
+  state.offseason.contractsResolved = true;
+  addNews(state, "오프시즌 계약 완료", "FA와 재계약 대상 정리가 끝났습니다. 이제 다음 시즌을 시작할 수 있습니다.", "계약");
+  return state;
+}
+
 function playerScoreForMvp(p) {
   const stats = p.stats || {};
   if (p.type === "PIT") return estimatedPlayerWar(p) * 80 + (stats.win || 0) * 2.2 + (stats.so || 0) * 0.28 + Math.max(0, 4.2 - (stats.era || 4.5)) * 10 + p.ovr * 0.12;
@@ -4160,13 +4359,19 @@ function startNextSeason(state) {
   }
   const champion = state.teams.find((t) => t.id === state.postseason.championId);
   finalizeSeasonAwards(state);
-  handleForeignOffseasonMarket(state);
-  state.seasonYear = Number(state.seasonYear) || 1;
+  prepareOffseasonContracts(state);
+  if (state.offseason?.active || !state.offseason?.contractsResolved) {
+    addNews(state, "오프시즌 계약 필요", "FA 선수와 재계약 대상 정리를 끝내야 다음 시즌 개막으로 넘어갈 수 있습니다.", "계약");
+    return state;
+  }
+  const completedSeasonYear = Number(state.seasonYear) || 1;
+  state.seasonYear = completedSeasonYear + 1;
   promoteHighSchoolCohorts(state);
   state.day = 1;
   state.seasonAwarded = false;
   state.awards = [];
   state.postseason = { active: false, completed: false, seasonYear: state.seasonYear, series: [], roundIndex: 0, championId: null };
+  state.offseason = { active: false, preparedForSeason: 0, contractsResolved: false, contractTasks: [], faPlayerIds: [], nonTendered: [] };
   state.lastGame = null;
   state.activeGame = null;
   state.schedule = buildSeasonSchedule(state.teams || teamTemplates, state.selectedTeamId, 144);
@@ -4179,7 +4384,10 @@ function startNextSeason(state) {
   state.players.forEach((p) => {
     p.stats = p.type === "PIT" ? makePitcherStats() : makeBatterStats();
     p.form = clampNumber((Number(p.form) || 70) + rnd(-8, 8), 45, 96);
-    if (p.contract?.yearsLeft) p.contract.yearsLeft = Math.max(0, Number(p.contract.yearsLeft) - 1);
+    if (p.contract?.yearsLeft && Number(p.contract.signedOffseasonYear) !== completedSeasonYear) {
+      p.contract.yearsLeft = Math.max(0, Number(p.contract.yearsLeft) - 1);
+    }
+    if (p.contract) delete p.contract.signedOffseasonYear;
   });
   advanceOffseasonHealth(state, 120);
   addNews(state, "새 시즌 개막", `${champion ? `${champion.city} ${champion.name} 우승 시즌을 마치고 ` : ""}${state.seasonYear}시즌이 시작됐다. 정규시즌 144경기 뒤 포스트시즌이 열린다.`, "구단");
@@ -5909,16 +6117,33 @@ function signFreeAgent(state, id, includePlayer) {
   const total = fa.askAnnual * fa.askYears + comp.cash;
   const counts = rosterCounts(state);
   if (counts.registered >= 65 || state.budget < total) return state;
-  const newId = Math.max(0, ...state.players.map((p) => p.id)) + 1;
-  const p = makePlayer([fa.name, fa.pos, fa.type, fa.age, fa.ovr, fa.pot, `FA ${fa.grade}등급`], newId - 1);
-  p.id = newId;
-  p.rosterStatus = counts.active < 28 ? "ACTIVE" : "FARM";
-  p.contract = { yearsLeft: fa.askYears, annual: fa.askAnnual };
-  p.salary = fa.askAnnual;
-  p.serviceYears = 8;
-  p.faGrade = fa.grade;
-  p.foreignPlayer = false;
-  state.players.push(p);
+  let p = fa.sourcePlayerId ? state.players.find((x) => x.id === Number(fa.sourcePlayerId)) : null;
+  if (p) {
+    p.teamId = state.selectedTeamId;
+    p.rosterStatus = counts.active < 28 ? "ACTIVE" : "FARM";
+    p.marketStatus = "FA_SIGNED";
+    p.contract = {
+      yearsLeft: fa.askYears,
+      annual: fa.askAnnual,
+      kind: "FA 계약",
+      source: "오프시즌 FA",
+      signedOffseasonYear: Number(state.seasonYear) || 1
+    };
+    p.salary = fa.askAnnual;
+    p.faGrade = fa.grade;
+    p.foreignPlayer = false;
+  } else {
+    const newId = Math.max(0, ...state.players.map((player) => player.id)) + 1;
+    p = makePlayer([fa.name, fa.pos, fa.type, fa.age, fa.ovr, fa.pot, `FA ${fa.grade}등급`], newId - 1);
+    p.id = newId;
+    p.rosterStatus = counts.active < 28 ? "ACTIVE" : "FARM";
+    p.contract = { yearsLeft: fa.askYears, annual: fa.askAnnual, kind: "FA 계약", source: "FA 시장" };
+    p.salary = fa.askAnnual;
+    p.serviceYears = 8;
+    p.faGrade = fa.grade;
+    p.foreignPlayer = false;
+    state.players.push(p);
+  }
   state.budget -= total;
   if (includePlayer && fa.grade !== "C") {
     const protectCount = comp.protected;
@@ -6523,6 +6748,10 @@ const server = http.createServer(async (req, res) => {
   const routes = {
     "/api/play": () => playGame(state),
     "/api/season/next": () => startNextSeason(state),
+    "/api/offseason/prepare": () => prepareOffseasonContracts(state),
+    "/api/offseason/contract": () => resolveOffseasonContract(state, body.id, body.action),
+    "/api/offseason/auto": () => autoResolveOffseasonContracts(state),
+    "/api/offseason/complete": () => completeOffseasonContracts(state),
     "/api/game/start": () => createActiveGame(state, body.lineup, body.starterId, body.lineupPositions),
     "/api/game/reset": () => resetActiveGame(state),
     "/api/game/next": () => advanceOnePlay(state),

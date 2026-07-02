@@ -1539,6 +1539,7 @@
                 <h2 style="margin-right:auto;">FA 시장</h2>
                 <button class="secondary" id="refreshFA">FA 명단 갱신</button>
               </div>
+              <div id="offseasonPanel" class="log"></div>
               <div id="faBoard" class="log"></div>
             </section>
             <section class="panel">
@@ -2779,6 +2780,11 @@
       const beforeYear = Number(state?.seasonYear) || 1;
       const nextState = await mutate("/api/season/next");
       const afterYear = Number(nextState?.seasonYear) || beforeYear;
+      if (nextState?.offseason?.active || (nextState?.postseason?.completed && !nextState?.offseason?.contractsResolved)) {
+        showToast("오프시즌 계약 정리를 먼저 끝내야 합니다.");
+        openView("market");
+        return;
+      }
       if (afterYear > beforeYear || ((Number(nextState?.day) || 1) === 1 && !nextState?.postseason?.active && !nextState?.postseason?.completed)) {
         showToast("다음 시즌이 시작됐습니다.");
         openView("dashboard");
@@ -3473,6 +3479,46 @@
           <div class="traits">${riskRows || `<span class="trait">위험 후보 없음</span>`}</div>
         </div>
       `;
+      const offseason = state.offseason || {};
+      const contractTasks = offseason.contractTasks || [];
+      const pendingContracts = contractTasks.filter((task) => task.status === "PENDING").length;
+      const contractRows = contractTasks.map((task) => {
+        const statusText = task.status === "SIGNED" ? "재계약 완료" : task.status === "NON_TENDER" ? "보류 포기" : "협상 필요";
+        return `
+          <div class="news-item">
+            <div class="bio">
+              <div>
+                <div class="news-title">${task.name} · ${task.pos} · 현재 ${task.ovr}/${task.pot}</div>
+                <div class="small">기존 ${money(task.oldAnnual || 0)} → 요구 ${task.askYears}년 ${money(task.askAnnual || 0)} · 보류권 ${task.controlYears || 0}시즌</div>
+              </div>
+              <span class="badge">${statusText}</span>
+            </div>
+            ${task.status === "PENDING" ? `
+              <div class="offer-actions" style="margin-top:8px;">
+                <button class="good" onclick="mutate('/api/offseason/contract', { id: ${task.playerId}, action: 'renew' })">재계약</button>
+                <button class="danger" onclick="mutate('/api/offseason/contract', { id: ${task.playerId}, action: 'nonTender' })">보류 포기</button>
+              </div>
+            ` : ""}
+          </div>
+        `;
+      }).join("");
+      $("offseasonPanel").innerHTML = state.postseason?.completed ? `
+        <div class="news-item">
+          <div class="bio">
+            <div>
+              <div class="news-title">오프시즌 계약 센터</div>
+              <div class="small">FA ${offseason.faPlayerIds?.length || 0}명 · 재계약 대상 ${contractTasks.length}명 · 미처리 ${pendingContracts}명</div>
+            </div>
+            <span class="badge">${offseason.active ? "진행중" : offseason.contractsResolved ? "완료" : "대기"}</span>
+          </div>
+          <div class="offer-actions" style="margin-top:8px;">
+            <button onclick="mutate('/api/offseason/prepare', {})">계약 대상 확정</button>
+            <button class="secondary" onclick="mutate('/api/offseason/auto', {})">구단 추천 자동 처리</button>
+            <button class="primary" onclick="mutate('/api/offseason/complete', {})">계약 처리 완료</button>
+          </div>
+        </div>
+        ${contractRows || `<div class="empty">재계약 대상이 없습니다. FA 명단을 확인하고 계약 처리 완료를 누르세요.</div>`}
+      ` : "";
       $("faBoard").innerHTML = protectPanel + (state.freeAgents?.length ? state.freeAgents.map((fa) => {
         const cashOnly = fa.grade === "A" ? fa.previousSalary * 3 : fa.grade === "B" ? fa.previousSalary * 2 : fa.previousSalary * 1.5;
         const withPlayer = fa.grade === "A" ? fa.previousSalary * 2 : fa.grade === "B" ? fa.previousSalary : null;
