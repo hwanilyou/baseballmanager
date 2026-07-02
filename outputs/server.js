@@ -210,11 +210,26 @@ function onlineTeamName(team) {
   return team ? `${team.city || ""} ${team.name || ""}`.trim() : "-";
 }
 
+function onlineHandLabel(p) {
+  if (!p) return "";
+  const raw = String(p.batsThrows || p.hand || "").trim();
+  const throwHand = String(p.throwHand || "").trim();
+  const batHand = String(p.batHand || "").trim();
+  if (raw) return raw;
+  if (p.type === "PIT") return throwHand ? `${throwHand}투` : "";
+  if (throwHand && batHand) return `${throwHand}투${batHand}타`;
+  if (batHand) return `${batHand}타`;
+  if (throwHand) return `${throwHand}투`;
+  return "";
+}
+
 function onlinePlayerCard(p) {
+  const batsThrows = onlineHandLabel(p);
   return {
     id: p.id,
     name: p.name,
     jerseyNumber: p.jerseyNumber,
+    batsThrows,
     pos: p.pos,
     type: p.type,
     role: p.pitcherRole,
@@ -740,6 +755,31 @@ function simulateOnlineBattle(match) {
   return match;
 }
 
+function onlinePublicPlayerCard(player) {
+  if (!player) return player;
+  return {
+    ...player,
+    name: player.name || "이름 미상",
+    batsThrows: onlineHandLabel(player)
+  };
+}
+
+function onlinePublicGame(game) {
+  if (!game) return null;
+  return {
+    ...game,
+    lineups: {
+      home: (game.lineups?.home || []).map(onlinePublicPlayerCard),
+      away: (game.lineups?.away || []).map(onlinePublicPlayerCard)
+    },
+    pitchers: {
+      home: onlinePublicPlayerCard(game.pitchers?.home),
+      away: onlinePublicPlayerCard(game.pitchers?.away)
+    },
+    bases: (game.bases || []).map(onlinePublicPlayerCard)
+  };
+}
+
 function publicOnlineMatches(user) {
   const data = readOnlineMatches();
   const matches = (data.matches || [])
@@ -748,6 +788,7 @@ function publicOnlineMatches(user) {
     .slice(0, 80)
     .map((match) => {
       const mySide = onlineSideKeyForUser(match, user);
+      const publicGame = onlinePublicGame(match.game);
       const bothStarters = Boolean(match.home?.starterId && match.away?.starterId);
       const showStarter = (sideKey) => bothStarters || match.status === "live" || match.status === "complete" || mySide === sideKey;
       const starterCard = (sideKey) => {
@@ -777,7 +818,7 @@ function publicOnlineMatches(user) {
           starter: starterCard("home"),
           lineupSubmitted: Boolean(match.home?.lineup),
           playerCount: match.home?.players?.length || 0,
-          lineup: match.game?.lineups?.home || null
+          lineup: publicGame?.lineups?.home || null
         },
         away: match.away ? {
           username: match.away.username,
@@ -786,9 +827,9 @@ function publicOnlineMatches(user) {
           starter: starterCard("away"),
           lineupSubmitted: Boolean(match.away.lineup),
           playerCount: match.away.players?.length || 0,
-          lineup: match.game?.lineups?.away || null
+          lineup: publicGame?.lineups?.away || null
         } : null,
-        game: match.game || null,
+        game: publicGame || null,
         lastAction: match.lastAction || null,
         result: match.result,
         log: match.log || []

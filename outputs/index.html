@@ -4150,11 +4150,31 @@
       return runner ? `${escapeHtml(runner.name)}${runner.jerseyNumber ? ` #${runner.jerseyNumber}` : ""}` : "-";
     }
 
+    function onlineHandLabel(p) {
+      if (!p) return "";
+      const raw = String(p.batsThrows || "").trim();
+      if (raw && raw !== "-") return raw;
+      const throwing = String(p.throwHand || "").trim();
+      const batting = String(p.batHand || "").trim();
+      if (p.type === "PIT") return throwing ? `${throwing}투` : "";
+      if (throwing && batting) return `${throwing}투${batting}타`;
+      if (batting) return `${batting}타`;
+      if (throwing) return `${throwing}투`;
+      return "";
+    }
+
+    function onlinePlayerNameLabel(p) {
+      if (!p) return "-";
+      const hand = onlineHandLabel(p);
+      const name = `${p.name || "이름 미상"}${p.jerseyNumber ? ` #${p.jerseyNumber}` : ""}`;
+      return hand ? `[${hand}] ${name}` : name;
+    }
+
     function renderOnlineLineup(title, lineup, activeIndex) {
       const rows = (lineup || []).slice(0, 9).map((p, i) => `
         <div class="opponent-lineup-row ${i === activeIndex ? "is-current" : ""}">
           <span class="badge">${i + 1}</span>
-          <span class="opponent-lineup-name">${escapeHtml(p.batsThrows || "-")} ${escapeHtml(p.name)}${p.jerseyNumber ? ` #${p.jerseyNumber}` : ""}</span>
+          <span class="opponent-lineup-name">${escapeHtml(onlinePlayerNameLabel(p))}</span>
           <span class="opponent-lineup-meta">${escapeHtml(p.pos || "-")} · 컨택 ${p.hit || 0} · 파워 ${p.pow || 0}</span>
         </div>
       `).join("");
