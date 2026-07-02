@@ -4807,8 +4807,7 @@ function refreshTradeTargets(state, silent = false) {
         const rawName = row[nameIndex];
         const rowSource = (idx("source") >= 0 && row[idx("source")]) || DATA_IMPORT_PATH;
         const jersey = idx("jerseyNumber") >= 0 ? row[idx("jerseyNumber")] : "";
-        const shouldAlias = (String(rowSource).startsWith("공시") || String(rowSource).startsWith("KBO")) && !String(rowSource).includes("Public Alias");
-        const name = shouldAlias ? publicAliasName(rawName, `${rowTeamId}-${jersey}`) : rawName;
+        const name = rawName;
         const pos = row[posIndex] || "CF";
         if (!name) return;
         const type = typeIndex >= 0 && row[typeIndex] ? row[typeIndex] : (["SP", "RP", "CL"].includes(pos) ? "PIT" : "BAT");
@@ -6627,8 +6626,7 @@ function importPlayersFromCsv(state, csv, source) {
     const isTargetTeam = !rowTeamId || rowTeamId === targetTeamId;
     const rawName = row[nameIndex];
     const rowSource = (idx("source") >= 0 && row[idx("source")]) || source || "user-import";
-    const shouldAlias = (String(rowSource).startsWith("공시") || String(rowSource).startsWith("KBO")) && !String(rowSource).includes("Public Alias");
-    const name = shouldAlias ? publicAliasName(rawName, `${rowTeamId}-${idx("jerseyNumber") >= 0 ? row[idx("jerseyNumber")] : ""}`) : rawName;
+    const name = rawName;
     const pos = row[posIndex] || "CF";
     if (!name) continue;
     const type = typeIndex >= 0 && row[typeIndex] ? row[typeIndex] : (["SP", "RP", "CL"].includes(pos) ? "PIT" : "BAT");

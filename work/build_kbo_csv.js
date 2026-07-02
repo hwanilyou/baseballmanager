@@ -543,18 +543,7 @@ const aliasSyllables = ["준","민","훈","윤","현","율","성","진","우","�
 const koreanSurnames = new Set([... "김이박최정강조윤장임한오서신권황안송전홍유고문양손배조백허남심노하곽성차주우구민류나진지엄채원천방공현함변염여추도소석선설마길연위표명기반라왕금옥육인맹제모탁국"]);
 
 function aliasName(name, salt = "") {
-  const chars = [...String(name || "").trim()];
-  if (!chars.length) return name;
-  const seed = `${name}-${salt}`;
-  let h = 0;
-  for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  const replaceAt = (index, offset) => {
-    let next = aliasSyllables[(h + offset) % aliasSyllables.length];
-    if (next === chars[index]) next = aliasSyllables[(h + offset + 1) % aliasSyllables.length];
-    chars[index] = next;
-  };
-  replaceAt(chars.length - 1, 0);
-  return chars.join("");
+  return String(name || "").trim();
 }
 
 function isLikelyForeignName(name) {
