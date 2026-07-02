@@ -440,6 +440,8 @@ function applyDetailedHealthFromCsv(p, row, headers, state) {
   const returnDay = csvNumber(row, headers, "returnDay");
   const source = csvText(row, headers, "injurySource") || csvText(row, headers, "healthSource");
   if (!status && !injury && days === null && returnSeasonYear === null && returnDay === null) return;
+  const currentSeason = Number(state?.seasonYear) || 1;
+  const currentDay = Number(state?.day) || 1;
   const normalized = status
     ? status.toUpperCase()
     : returnSeasonYear !== null || returnDay !== null || days !== null
@@ -452,13 +454,13 @@ function applyDetailedHealthFromCsv(p, row, headers, state) {
     rehab: Math.max(0, Math.min(100, rehab ?? 0)),
     returnSeasonYear: returnSeasonYear ?? null,
     returnDay: returnDay ?? null,
+    seasonEnding: normalized === "INJURED" && returnSeasonYear !== null && returnSeasonYear > currentSeason,
     source: source || ""
   };
   if (normalized === "INJURED") {
-    p.rosterStatus = "FARM";
+    if (!p.preInjuryRosterStatus) p.preInjuryRosterStatus = p.rosterStatus || "FARM";
+    p.injuredList = true;
     p.form = Math.min(Number(p.form) || 65, 45);
-    const currentSeason = Number(state?.seasonYear) || 1;
-    const currentDay = Number(state?.day) || 1;
     if (returnSeasonYear !== null && returnSeasonYear > currentSeason) p.health.days = Math.max(p.health.days, 999);
     if (returnSeasonYear === currentSeason && returnDay !== null) p.health.days = Math.max(p.health.days, Math.max(0, returnDay - currentDay));
   }
@@ -4408,6 +4410,15 @@ function advanceOffseasonHealth(state, days = 120) {
       const returnSeasonYear = Number(health.returnSeasonYear);
       const returnDay = Number(health.returnDay);
       const currentSeasonYear = Number(state.seasonYear) || 1;
+      if (health.seasonEnding && Number.isFinite(returnSeasonYear) && returnSeasonYear <= currentSeasonYear) {
+        p.health = { status: "OK", injury: null, days: 0, rehab: 0 };
+        p.injuredList = false;
+        delete p.preInjuryRosterStatus;
+        p.form = clampNumber((Number(p.form) || 50) + rnd(12, 24), 58, 86);
+        p.reinjuryWatchDays = Math.max(Number(p.reinjuryWatchDays) || 0, rnd(12, 28));
+        addNews(state, "부상 복귀", `${p.name}이 시즌아웃 부상에서 복귀했다. 개막 초반에는 컨디션과 재발 위험을 관리해야 한다.`, "의료");
+        continue;
+      }
       if (Number.isFinite(returnSeasonYear) && returnSeasonYear <= currentSeasonYear && (!Number.isFinite(returnDay) || returnDay <= 1)) {
         p.health = { status: "REHAB", injury: health.injury || "부상", days: 0, rehab: Math.max(Number(health.rehab) || 0, 82), source: health.source };
       } else if (health.status === "INJURED") {
@@ -6263,9 +6274,11 @@ function randomInjury(state, id, context = "game") {
     rehabTarget: picked.rehab,
     returnSeasonYear: nextSeason ? seasonYear + 1 : seasonYear,
     returnDay: nextSeason ? rnd(8, 35) : Math.min(seasonGames, day + days),
+    seasonEnding: nextSeason,
     source: context === "training" ? "훈련 중 발생" : "경기 중 발생"
   };
-  p.rosterStatus = "FARM";
+  if (!p.preInjuryRosterStatus) p.preInjuryRosterStatus = p.rosterStatus || "FARM";
+  p.injuredList = true;
   p.form = Math.max(25, (Number(p.form) || 65) - (days >= 80 ? 22 : days >= 30 ? 15 : 9));
   p.happy = Math.max(25, (Number(p.happy) || 70) - (days >= 60 ? 9 : 4));
   const prefix = context === "training" ? "훈련 중" : "경기 중";
