@@ -240,6 +240,13 @@ function isForeignPlayer(p) {
   return Boolean(p?.foreignPlayer);
 }
 
+function isAsianQuotaPlayer(p) {
+  if (!isForeignPlayer(p)) return false;
+  const marker = `${p.asianQuota || ""} ${p.quota || ""} ${p.contract?.kind || ""} ${p.contract?.note || ""} ${p.contract?.source || ""} ${p.trait || ""}`;
+  if (/asian|asia|아시아|아쿼|아시아쿼터|쿼터|아이아/i.test(marker)) return true;
+  return /^왕/.test(String(p.name || ""));
+}
+
 function isPitcherPos(pos) {
   return ["SP", "RP", "CL"].includes(pos);
 }
@@ -3627,6 +3634,12 @@ function playerIconLevel(p) {
 function playerStatusTags(p) {
   const tags = [];
   const icon = playerIconLevel(p);
+  if (isAsianQuotaPlayer(p)) tags.push("아시아쿼터");
+  else if (isForeignPlayer(p)) tags.push("외국인");
+  if (p.marketStatus === "ASIAN_QUOTA_RENEWED") tags.push("쿼터 재계약");
+  if (p.marketStatus === "FOREIGN_RENEWED") tags.push("외국인 재계약");
+  if (p.marketStatus === "ASIAN_QUOTA_CAP_EXIT") tags.push("쿼터 상한 이탈");
+  if (p.marketStatus === "FOREIGN_LEAGUE_EXIT") tags.push("해외 이탈");
   if (icon >= 6) tags.push("프랜차이즈 스타");
   else if (icon >= 4) tags.push("팬 선호 선수");
   if ((p.ovr || 0) >= 80) tags.push("핵심전력");
@@ -3741,6 +3754,92 @@ function estimatedPlayerWar(p) {
   const sb = Number(stats.sb) || 0;
   const defense = ((Number(p.def) || 60) - 60) * 0.018 + ((Number(p.arm) || 60) - 60) * 0.01;
   return Math.max(0, (ops - 0.67) * 8.5 + (avg - 0.25) * 4 + hr * 0.12 + rbi * 0.035 + runs * 0.03 + sb * 0.04 + pa * 0.002 + defense);
+}
+
+function foreignMarketScore(p) {
+  const stats = p.stats || {};
+  const war = estimatedPlayerWar(p);
+  if (p.type === "PIT") {
+    const era = Number.isFinite(Number(stats.era)) ? Number(stats.era) : 4.5;
+    return war + (Number(stats.win) || 0) * 0.08 + (Number(stats.so) || 0) * 0.006 + Math.max(0, 3.8 - era) * 0.35 + (Number(stats.sv) || 0) * 0.04 + (Number(stats.hold) || 0) * 0.03;
+  }
+  const ops = (Number(stats.obp) || 0) + (Number(stats.slg) || 0);
+  return war + (Number(stats.hr) || 0) * 0.045 + (Number(stats.rbi) || 0) * 0.012 + Math.max(0, ops - 0.82) * 4;
+}
+
+function foreignMarketDemand(p, score, asianQuota = false) {
+  const currentAnnual = Math.max(0.5, Number(p.contract?.annual || p.salary || 1));
+  const baseRaise = asianQuota ? 1.08 : 1.12;
+  const premium = Math.max(0, score - 2) * (asianQuota ? 0.38 : 0.55);
+  return Math.round((currentAnnual * baseRaise + premium) * 10) / 10;
+}
+
+function foreignDepartureChance(p, score) {
+  if (p.type === "PIT") {
+    if (score >= 7.5) return 0.58;
+    if (score >= 6.0) return 0.42;
+    if (score >= 4.7) return 0.24;
+    return score >= 3.8 ? 0.1 : 0;
+  }
+  if (score >= 7.0) return 0.52;
+  if (score >= 5.5) return 0.36;
+  if (score >= 4.4) return 0.2;
+  return score >= 3.6 ? 0.08 : 0;
+}
+
+function markForeignPlayerDeparted(state, p, reason, detail) {
+  p.marketStatus = reason;
+  p.previousRosterStatus = p.rosterStatus;
+  p.rosterStatus = "RELEASED";
+  p.contract = {
+    ...(p.contract || {}),
+    yearsLeft: 0,
+    released: true,
+    departureReason: reason,
+    departureDetail: detail
+  };
+  if (Array.isArray(state.lastLineup?.lineup) && state.lastLineup.lineup.includes(p.id)) state.lastLineup = null;
+}
+
+function handleForeignOffseasonMarket(state) {
+  const asianQuotaCap = 3.0;
+  const foreignSoftCap = 18.0;
+  const departures = [];
+  const renewals = [];
+  for (const p of state.players || []) {
+    if (!isForeignPlayer(p) || p.rosterStatus === "RELEASED" || p.rosterStatus === "DEV") continue;
+    const asianQuota = isAsianQuotaPlayer(p);
+    const score = foreignMarketScore(p);
+    const demand = foreignMarketDemand(p, score, asianQuota);
+    const currentAnnual = Math.max(0.5, Number(p.contract?.annual || p.salary || 1));
+    if (asianQuota && (demand > asianQuotaCap || score >= 5.2)) {
+      markForeignPlayerDeparted(state, p, "ASIAN_QUOTA_CAP_EXIT", `요구액 ${demand.toFixed(1)}억 / 상한 ${asianQuotaCap.toFixed(1)}억`);
+      departures.push(`${p.name} 아시아쿼터 상한 초과`);
+      continue;
+    }
+    const leaveChance = asianQuota ? Math.max(0, foreignDepartureChance(p, score) - 0.12) : foreignDepartureChance(p, score);
+    if (leaveChance > 0 && Math.random() < leaveChance) {
+      const market = p.type === "PIT" ? "해외 구단 선발/불펜 보강 시장" : "해외 구단 타선 보강 시장";
+      markForeignPlayerDeparted(state, p, "FOREIGN_LEAGUE_EXIT", `${market} 평가점수 ${score.toFixed(1)}`);
+      departures.push(`${p.name} 해외 리그 이적 의사`);
+      continue;
+    }
+    const annual = asianQuota ? Math.min(demand, asianQuotaCap) : Math.min(demand, foreignSoftCap);
+    if (!p.contract) p.contract = {};
+    p.contract.yearsLeft = 1;
+    p.contract.annual = annual;
+    p.contract.kind = asianQuota ? "아시아쿼터 단년계약" : "외국인 단년계약";
+    p.contract.source = "오프시즌 외국인 시장 평가";
+    p.salary = annual;
+    p.marketStatus = asianQuota ? "ASIAN_QUOTA_RENEWED" : "FOREIGN_RENEWED";
+    if (annual >= currentAnnual + 0.8 || score >= 4.2) renewals.push(`${p.name} ${annual.toFixed(1)}억`);
+  }
+  if (departures.length) {
+    addNews(state, "외국인 시장 이탈", `${departures.slice(0, 8).join(", ")}. 성적이 높거나 아시아쿼터 상한을 넘긴 선수는 재계약에 실패할 수 있습니다.`, "계약");
+  }
+  if (renewals.length) {
+    addNews(state, "외국인 재계약", `${renewals.slice(0, 8).join(", ")} 재계약. 아시아쿼터는 상한선 안에서만 계약됩니다.`, "계약");
+  }
 }
 
 function playerScoreForMvp(p) {
@@ -4061,6 +4160,7 @@ function startNextSeason(state) {
   }
   const champion = state.teams.find((t) => t.id === state.postseason.championId);
   finalizeSeasonAwards(state);
+  handleForeignOffseasonMarket(state);
   state.seasonYear = Number(state.seasonYear) || 1;
   promoteHighSchoolCohorts(state);
   state.day = 1;
