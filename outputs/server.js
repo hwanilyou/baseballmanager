@@ -9,6 +9,7 @@ const SAVE_PATH = path.join(ROOT, "save.json");
 const USERS_PATH = path.join(ROOT, "users.json");
 const SAVES_DIR = path.join(ROOT, "saves");
 const BOARD_PATH = path.join(ROOT, "board.json");
+const ONLINE_MATCHES_PATH = path.join(ROOT, "online-matches.json");
 const DATA_IMPORT_PATH = path.join(ROOT, "data", "kbo_players.csv");
 const DATA_SOURCE_URL_PATH = path.join(ROOT, "data", "source-url.txt");
 const HAND_DATA_VERSION = "2026-06-26-bats-throws";
@@ -171,6 +172,266 @@ function createBoardPost(user, body) {
   board.posts = board.posts.slice(0, 300);
   writeBoard(board);
   return { post };
+}
+
+function readOnlineMatches() {
+  try {
+    const data = JSON.parse(fs.readFileSync(ONLINE_MATCHES_PATH, "utf8"));
+    data.matches ||= [];
+    return data;
+  } catch {
+    return { matches: [] };
+  }
+}
+
+function writeOnlineMatches(data) {
+  data.matches = (data.matches || []).slice(-120);
+  fs.writeFileSync(ONLINE_MATCHES_PATH, JSON.stringify(data, null, 2), "utf8");
+}
+
+function onlineTeamName(team) {
+  return team ? `${team.city || ""} ${team.name || ""}`.trim() : "-";
+}
+
+function onlinePlayerCard(p) {
+  return {
+    id: p.id,
+    name: p.name,
+    jerseyNumber: p.jerseyNumber,
+    pos: p.pos,
+    type: p.type,
+    role: p.pitcherRole,
+    ovr: p.ovr || 50,
+    pot: p.pot || p.ovr || 50,
+    hit: p.hit || p.ovr || 50,
+    pow: p.pow || p.ovr || 50,
+    spd: p.spd || 50,
+    def: p.def || 50,
+    pit: p.pit || p.ovr || 50,
+    sta: p.sta || 50,
+    condition: p.condition || 70,
+    stamina: p.stamina || 70,
+    batHand: p.batHand || p.hand || "",
+    throwHand: p.throwHand || p.hand || ""
+  };
+}
+
+function onlineRosterFromState(state) {
+  const team = currentTeam(state);
+  const players = (state.players || [])
+    .filter((p) => p.rosterStatus === "ACTIVE" && p.health?.status !== "INJURED")
+    .map(onlinePlayerCard);
+  return {
+    teamId: team?.id,
+    teamName: onlineTeamName(team),
+    primary: team?.primary,
+    secondary: team?.secondary,
+    players
+  };
+}
+
+function defaultOnlineLineup(side) {
+  const players = side?.players || [];
+  const starter = players
+    .filter((p) => p.type === "PIT" && (p.pos === "SP" || p.role === "SP"))
+    .sort((a, b) => (b.condition + b.stamina + b.pit + b.ovr) - (a.condition + a.stamina + a.pit + a.ovr))[0]
+    || players.filter((p) => p.type === "PIT").sort((a, b) => (b.ovr || 0) - (a.ovr || 0))[0];
+  const hitters = players
+    .filter((p) => p.type === "BAT")
+    .sort((a, b) => ((b.hit || 0) + (b.pow || 0) + (b.spd || 0) * 0.25 + (b.condition || 0) * 0.2) - ((a.hit || 0) + (a.pow || 0) + (a.spd || 0) * 0.25 + (a.condition || 0) * 0.2))
+    .slice(0, 9);
+  return {
+    starterId: starter?.id || null,
+    battingOrder: hitters.map((p, index) => ({
+      playerId: p.id,
+      position: ["CF", "RF", "1B", "3B", "LF", "DH", "SS", "2B", "C"][index] || p.pos || "DH"
+    }))
+  };
+}
+
+function onlineLineupPlayers(side, lineup) {
+  const ids = (lineup?.battingOrder || []).map((slot) => Number(slot.playerId)).filter(Boolean);
+  const picked = ids.map((id) => side.players.find((p) => p.id === id)).filter(Boolean);
+  if (picked.length >= 9) return picked.slice(0, 9);
+  return defaultOnlineLineup(side).battingOrder.map((slot) => side.players.find((p) => p.id === slot.playerId)).filter(Boolean);
+}
+
+function onlineStarter(side, lineup) {
+  const id = Number(lineup?.starterId);
+  return side.players.find((p) => p.id === id) || side.players.find((p) => p.id === defaultOnlineLineup(side).starterId) || side.players.find((p) => p.type === "PIT");
+}
+
+function seededRandom(seedText) {
+  let seed = hashText(seedText) || 1;
+  return () => {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 4294967296;
+  };
+}
+
+function onlineStrength(side) {
+  const lineup = side.lineup || defaultOnlineLineup(side);
+  const hitters = onlineLineupPlayers(side, lineup);
+  const starter = onlineStarter(side, lineup);
+  const bullpen = (side.players || [])
+    .filter((p) => p.type === "PIT" && p.id !== starter?.id)
+    .sort((a, b) => ((b.pit || b.ovr || 0) + (b.condition || 0) * 0.25) - ((a.pit || a.ovr || 0) + (a.condition || 0) * 0.25))
+    .slice(0, 4);
+  const avg = (arr, fn, fallback = 60) => arr.length ? arr.reduce((sum, item) => sum + fn(item), 0) / arr.length : fallback;
+  return {
+    offense: avg(hitters, (p) => (p.hit || p.ovr || 50) * 0.54 + (p.pow || p.ovr || 50) * 0.34 + (p.spd || 50) * 0.12),
+    defense: avg(hitters, (p) => (p.def || 50) * 0.7 + (p.throwHand ? 5 : 0)),
+    speed: avg(hitters, (p) => p.spd || 50),
+    starter: (starter?.pit || starter?.ovr || 55) * 0.68 + (starter?.condition || 65) * 0.18 + (starter?.stamina || 65) * 0.14,
+    bullpen: avg(bullpen, (p) => (p.pit || p.ovr || 55) * 0.74 + (p.condition || 65) * 0.26),
+    starterName: starter ? `${starter.name}${starter.jerseyNumber ? ` #${starter.jerseyNumber}` : ""}` : "-",
+    topHitter: hitters.slice().sort((a, b) => ((b.hit || 0) + (b.pow || 0)) - ((a.hit || 0) + (a.pow || 0)))[0]
+  };
+}
+
+function simulateOnlineBattle(match) {
+  const rng = seededRandom(`${match.id}-${match.home?.userId}-${match.away?.userId}-${Date.now()}`);
+  const home = onlineStrength(match.home);
+  const away = onlineStrength(match.away);
+  const calcRuns = (atk, def) => {
+    const quality = 4.25 + (atk.offense - def.starter) * 0.055 + (atk.speed - def.defense) * 0.012 - (def.bullpen - 65) * 0.018;
+    const noise = (rng() + rng() + rng() - 1.5) * 2.2;
+    return Math.max(0, Math.min(14, Math.round(quality + noise)));
+  };
+  let homeRuns = calcRuns(home, away);
+  let awayRuns = calcRuns(away, home) + (rng() < 0.48 ? 0 : 1);
+  let innings = 9;
+  if (homeRuns === awayRuns) {
+    innings = 10 + Math.floor(rng() * 3);
+    if (rng() < 0.52) homeRuns += 1;
+    else awayRuns += 1;
+  }
+  const winner = homeRuns > awayRuns ? match.home : match.away;
+  const loser = homeRuns > awayRuns ? match.away : match.home;
+  const homeTop = home.topHitter ? `${home.topHitter.name}${home.topHitter.jerseyNumber ? ` #${home.topHitter.jerseyNumber}` : ""}` : "중심 타자";
+  const awayTop = away.topHitter ? `${away.topHitter.name}${away.topHitter.jerseyNumber ? ` #${away.topHitter.jerseyNumber}` : ""}` : "중심 타자";
+  match.status = "complete";
+  match.result = {
+    innings,
+    homeRuns,
+    awayRuns,
+    winnerId: winner.userId,
+    winnerName: winner.username,
+    summary: `${winner.teamName} ${Math.max(homeRuns, awayRuns)}-${Math.min(homeRuns, awayRuns)} 승`
+  };
+  match.log = [
+    `${match.home.teamName} 선발 ${home.starterName}, ${match.away.teamName} 선발 ${away.starterName}`,
+    `${homeTop} 중심 타선 압박, ${awayTop}도 장타 코스로 맞불`,
+    `${innings}회까지 불펜 운영 포함 자동 진행`,
+    `${winner.teamName}이 ${loser.teamName}을 상대로 ${Math.max(homeRuns, awayRuns)}-${Math.min(homeRuns, awayRuns)} 승리`
+  ];
+  match.updatedAt = new Date().toISOString();
+  return match;
+}
+
+function publicOnlineMatches(user) {
+  const data = readOnlineMatches();
+  const matches = (data.matches || [])
+    .slice()
+    .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
+    .slice(0, 80)
+    .map((match) => ({
+      id: match.id,
+      status: match.status,
+      createdAt: match.createdAt,
+      updatedAt: match.updatedAt,
+      canJoin: match.status === "waiting" && match.home?.userId !== user.id,
+      canCancel: match.status === "waiting" && match.home?.userId === user.id,
+      canSubmit: match.status === "lineup" && [match.home?.userId, match.away?.userId].includes(user.id),
+      mySide: match.home?.userId === user.id ? "home" : match.away?.userId === user.id ? "away" : null,
+      home: {
+        username: match.home?.username,
+        teamName: match.home?.teamName,
+        lineupSubmitted: Boolean(match.home?.lineup),
+        playerCount: match.home?.players?.length || 0
+      },
+      away: match.away ? {
+        username: match.away.username,
+        teamName: match.away.teamName,
+        lineupSubmitted: Boolean(match.away.lineup),
+        playerCount: match.away.players?.length || 0
+      } : null,
+      result: match.result,
+      log: match.log || []
+    }));
+  return { matches };
+}
+
+function createOnlineMatch(user, state) {
+  const side = { userId: user.id, username: user.username, ...onlineRosterFromState(state), lineup: null };
+  if ((side.players || []).length < 12) return { error: "온라인 대결에는 1군 등록 선수 12명 이상이 필요합니다." };
+  const data = readOnlineMatches();
+  const openMine = (data.matches || []).find((m) => m.status !== "complete" && (m.home?.userId === user.id || m.away?.userId === user.id));
+  if (openMine) return { error: "이미 진행 중인 온라인 대결 방이 있습니다." };
+  const match = {
+    id: `${Date.now().toString(36)}-${crypto.randomBytes(3).toString("hex")}`,
+    status: "waiting",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    home: side,
+    away: null,
+    result: null,
+    log: [`${user.username} 감독이 온라인 대결 방을 만들었습니다.`]
+  };
+  data.matches ||= [];
+  data.matches.push(match);
+  writeOnlineMatches(data);
+  return { match };
+}
+
+function joinOnlineMatch(user, state, matchId) {
+  const data = readOnlineMatches();
+  const match = data.matches.find((m) => m.id === String(matchId));
+  if (!match) return { error: "대결 방을 찾을 수 없습니다." };
+  if (match.status !== "waiting") return { error: "이미 참가가 끝난 방입니다." };
+  if (match.home?.userId === user.id) return { error: "자기 방에는 참가할 수 없습니다." };
+  const openMine = data.matches.find((m) => m.id !== match.id && m.status !== "complete" && (m.home?.userId === user.id || m.away?.userId === user.id));
+  if (openMine) return { error: "이미 진행 중인 온라인 대결 방이 있습니다." };
+  const side = { userId: user.id, username: user.username, ...onlineRosterFromState(state), lineup: null };
+  if ((side.players || []).length < 12) return { error: "온라인 대결에는 1군 등록 선수 12명 이상이 필요합니다." };
+  match.away = side;
+  match.status = "lineup";
+  match.updatedAt = new Date().toISOString();
+  match.log ||= [];
+  match.log.push(`${user.username} 감독이 ${side.teamName}으로 참가했습니다.`);
+  writeOnlineMatches(data);
+  return { match };
+}
+
+function submitOnlineLineup(user, state, matchId, lineup) {
+  const data = readOnlineMatches();
+  const match = data.matches.find((m) => m.id === String(matchId));
+  if (!match) return { error: "대결 방을 찾을 수 없습니다." };
+  if (!["waiting", "lineup"].includes(match.status)) return { error: "이미 종료된 대결입니다." };
+  const sideKey = match.home?.userId === user.id ? "home" : match.away?.userId === user.id ? "away" : null;
+  if (!sideKey) return { error: "이 대결 참가자가 아닙니다." };
+  const latest = onlineRosterFromState(state);
+  match[sideKey].players = latest.players;
+  match[sideKey].teamName = latest.teamName;
+  match[sideKey].lineup = lineup?.starterId || lineup?.battingOrder ? lineup : defaultOnlineLineup(match[sideKey]);
+  match.status = match.away ? "lineup" : "waiting";
+  match.updatedAt = new Date().toISOString();
+  match.log ||= [];
+  match.log.push(`${user.username} 감독이 라인업을 제출했습니다.`);
+  if (match.home?.lineup && match.away?.lineup) simulateOnlineBattle(match);
+  writeOnlineMatches(data);
+  return { match };
+}
+
+function cancelOnlineMatch(user, matchId) {
+  const data = readOnlineMatches();
+  const match = data.matches.find((m) => m.id === String(matchId));
+  if (!match) return { error: "대결 방을 찾을 수 없습니다." };
+  if (match.home?.userId !== user.id) return { error: "방장만 취소할 수 있습니다." };
+  if (match.status !== "waiting") return { error: "이미 참가자가 들어온 방은 취소할 수 없습니다." };
+  data.matches = data.matches.filter((m) => m.id !== match.id);
+  writeOnlineMatches(data);
+  return { ok: true };
 }
 
 function safeUserId(username) {
@@ -6846,6 +7107,11 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (req.method === "GET" && url.pathname === "/api/online/matches") {
+    sendJson(res, 200, { ...publicOnlineMatches(user), onlineCount: touchVisitor(req, user) });
+    return;
+  }
+
   const body = await parseBody(req);
   let state = readState(user);
 
@@ -6856,6 +7122,29 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     sendJson(res, 200, publicBoard());
+    return;
+  }
+
+  if (req.method === "POST" && url.pathname.startsWith("/api/online/")) {
+    if (!state) state = createState(teamTemplates[0].id);
+    let result;
+    if (url.pathname === "/api/online/create") {
+      result = createOnlineMatch(user, state);
+    } else if (url.pathname === "/api/online/join") {
+      result = joinOnlineMatch(user, state, body.id);
+    } else if (url.pathname === "/api/online/lineup") {
+      result = submitOnlineLineup(user, state, body.id, body.lineup);
+    } else if (url.pathname === "/api/online/cancel") {
+      result = cancelOnlineMatch(user, body.id);
+    } else {
+      sendJson(res, 404, { error: "Not found" });
+      return;
+    }
+    if (result.error) {
+      sendJson(res, 400, { error: result.error });
+      return;
+    }
+    sendJson(res, 200, { ...publicOnlineMatches(user), onlineCount: touchVisitor(req, user) });
     return;
   }
 

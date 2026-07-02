@@ -1218,6 +1218,7 @@
           <button data-view="training">↗ 육성</button>
           <button data-view="market">⇄ 이적 시장</button>
           <button data-view="league">☷ 리그</button>
+          <button data-view="online">⇆ 온라인 대결</button>
           <button data-view="board">□ 건의 게시판</button>
           <button data-view="news">◷ 뉴스</button>
         </nav>
@@ -1636,6 +1637,19 @@
           </div>
         </div>
 
+        <div class="view" id="online">
+          <section class="panel">
+            <div class="toolbar">
+              <h2 style="margin-right:auto;">온라인 대결</h2>
+              <button class="secondary" id="refreshOnline">새로고침</button>
+              <button class="primary" id="createOnlineRoom">방 만들기</button>
+            </div>
+            <div class="empty">친구가 같은 주소로 접속해서 참가하면 양쪽 라인업 제출 후 서버가 경기를 자동 진행합니다.</div>
+            <div id="onlineStatus" class="small"></div>
+            <div id="onlineRooms" class="log" style="max-height:620px;"></div>
+          </section>
+        </div>
+
         <div class="view" id="board">
           <section class="panel">
             <div class="toolbar">
@@ -1673,6 +1687,7 @@
     let teams = [];
     let currentUser = null;
     let boardPosts = [];
+    let onlineMatches = [];
     let onlineCount = 1;
 
     const $ = (id) => document.getElementById(id);
@@ -1759,6 +1774,7 @@
       currentUser = data.user || currentUser;
       $("userLabel").textContent = currentUser?.username || "-";
       await loadBoard();
+      await loadOnlineMatches();
       renderTeamSelect();
       if (data.hasSave) {
         state = data.state;
@@ -1790,6 +1806,7 @@
       currentUser = null;
       state = null;
       boardPosts = [];
+      onlineMatches = [];
       $("userLabel").textContent = "-";
       $("teamSelect").classList.remove("active");
       $("authSelect").classList.add("active");
@@ -1800,6 +1817,27 @@
       const data = await api("/api/board");
       boardPosts = data.posts || [];
       renderBoard();
+    }
+
+    async function loadOnlineMatches() {
+      const data = await api("/api/online/matches");
+      onlineMatches = data.matches || [];
+      updateOnlineCount(data.onlineCount);
+      renderOnline();
+    }
+
+    async function onlineAction(path, body = {}) {
+      const status = $("onlineStatus");
+      if (status) status.textContent = "";
+      try {
+        const data = await api(path, body);
+        onlineMatches = data.matches || [];
+        updateOnlineCount(data.onlineCount);
+        renderOnline();
+        showToast("온라인 대결 갱신 완료");
+      } catch (err) {
+        if (status) status.textContent = err.message;
+      }
     }
 
     async function submitBoardPost() {
@@ -2311,6 +2349,7 @@
       renderTraining();
       renderMarket();
       renderLeague();
+      renderOnline();
       renderNews();
       maybeOpenDraftWindow();
       maybeOpenOffseasonWindow();
@@ -3865,9 +3904,59 @@
       }).join("");
     }
 
+    function renderOnline() {
+      const list = $("onlineRooms");
+      if (!list) return;
+      if (!onlineMatches.length) {
+        list.innerHTML = `<div class="empty">아직 열린 온라인 대결 방이 없습니다. 방을 만들고 친구에게 주소를 보내주세요.</div>`;
+        return;
+      }
+      const statusLabel = (status) => ({ waiting: "상대 대기", lineup: "라인업 제출", complete: "경기 종료" }[status] || status);
+      list.innerHTML = onlineMatches.map((match) => {
+        const home = match.home || {};
+        const away = match.away || {};
+        const mySubmitted = match.mySide === "home" ? home.lineupSubmitted : match.mySide === "away" ? away.lineupSubmitted : false;
+        const result = match.result ? `
+          <div class="metric" style="margin-top:8px;">
+            <strong>${escapeHtml(home.teamName || "-")} ${match.result.homeRuns} : ${match.result.awayRuns} ${escapeHtml(away.teamName || "-")}</strong>
+            <span>${escapeHtml(match.result.summary || "")}</span>
+          </div>
+        ` : "";
+        const actions = [
+          match.canJoin ? `<button class="primary" onclick="onlineJoin('${match.id}')">참가</button>` : "",
+          match.mySide && !mySubmitted && match.status !== "complete" ? `<button class="good" onclick="onlineSubmit('${match.id}')">내 기본 라인업 제출</button>` : "",
+          match.canCancel ? `<button class="danger" onclick="onlineCancel('${match.id}')">방 취소</button>` : ""
+        ].filter(Boolean).join("");
+        return `
+          <article class="board-item">
+            <div class="board-title">
+              <span>${escapeHtml(home.teamName || "-")} vs ${escapeHtml(away.teamName || "참가 대기")}</span>
+              <span class="badge">${statusLabel(match.status)}</span>
+            </div>
+            <div class="grid two" style="margin-top:8px;">
+              <div class="metric">
+                <strong>${escapeHtml(home.username || "-")}</strong>
+                <span>${escapeHtml(home.teamName || "-")} · ${home.playerCount || 0}명 · 라인업 ${home.lineupSubmitted ? "제출" : "대기"}</span>
+              </div>
+              <div class="metric">
+                <strong>${escapeHtml(away.username || "대기 중")}</strong>
+                <span>${escapeHtml(away.teamName || "상대 감독 참가 필요")} · ${away.playerCount || 0}명 · 라인업 ${away.lineupSubmitted ? "제출" : "대기"}</span>
+              </div>
+            </div>
+            ${result}
+            ${match.log?.length ? `<div class="small" style="margin-top:8px; white-space:pre-wrap;">${match.log.map(escapeHtml).join("\n")}</div>` : ""}
+            ${actions ? `<div class="offer-actions" style="margin-top:10px;">${actions}</div>` : ""}
+          </article>
+        `;
+      }).join("");
+    }
+
     function openView(view) {
       document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("active", b.dataset.view === view));
       document.querySelectorAll(".view").forEach((v) => v.classList.toggle("active", v.id === view));
+      if (view === "online") loadOnlineMatches().catch((err) => {
+        $("onlineStatus").textContent = err.message;
+      });
       if (view === "board") loadBoard().catch((err) => {
         $("boardStatus").textContent = err.message;
       });
@@ -3928,6 +4017,8 @@
     $("leaderSearch").addEventListener("input", renderLeague);
     $("leaderStatusFilter").addEventListener("change", renderLeague);
     $("leaderTypeFilter").addEventListener("change", renderLeague);
+    $("refreshOnline").addEventListener("click", () => loadOnlineMatches().catch((err) => $("onlineStatus").textContent = err.message));
+    $("createOnlineRoom").addEventListener("click", () => onlineAction("/api/online/create"));
     $("refreshBoard").addEventListener("click", () => loadBoard().catch((err) => $("boardStatus").textContent = err.message));
     $("submitBoard").addEventListener("click", submitBoardPost);
     $("scoutMLB").addEventListener("click", () => mutate("/api/scout", { league: "MLB" }));
@@ -3970,6 +4061,10 @@
     $("createDev").addEventListener("click", createDevelopmentFromForm);
     if ($("syncPlayers")) $("syncPlayers").addEventListener("click", () => mutate("/api/import/sync"));
     $("changeTeam").addEventListener("click", () => $("teamSelect").classList.add("active"));
+
+    window.onlineJoin = (id) => onlineAction("/api/online/join", { id });
+    window.onlineSubmit = (id) => onlineAction("/api/online/lineup", { id });
+    window.onlineCancel = (id) => onlineAction("/api/online/cancel", { id });
 
     init().catch((err) => {
       document.body.innerHTML = `<div class="empty" style="margin:30px;">백엔드 연결 실패: ${err.message}<br>node server.js로 실행해주세요.</div>`;
