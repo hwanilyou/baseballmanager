@@ -768,6 +768,7 @@ function publicOnlineMatches(user) {
         canSubmit: canSubmitLineup,
         canSubmitStarter,
         canSubmitLineup,
+        canForfeit: ["starter", "lineup", "live"].includes(match.status) && Boolean(mySide),
         mySide,
         home: {
           username: match.home?.username,
@@ -895,6 +896,50 @@ function cancelOnlineMatch(user, matchId) {
   data.matches = data.matches.filter((m) => m.id !== match.id);
   writeOnlineMatches(data);
   return { ok: true };
+}
+
+function forfeitOnlineMatch(user, matchId) {
+  const data = readOnlineMatches();
+  const match = data.matches.find((m) => m.id === String(matchId));
+  if (!match) return { error: "온라인 대결 방을 찾을 수 없습니다." };
+  const sideKey = onlineSideKeyForUser(match, user);
+  if (!sideKey) return { error: "이 대결 참가자가 아닙니다." };
+  if (!["starter", "lineup", "live"].includes(match.status)) return { error: "이미 끝났거나 기권할 수 없는 경기입니다." };
+  const winnerKey = sideKey === "home" ? "away" : "home";
+  if (!match[winnerKey]) return { error: "상대가 아직 참가하지 않았습니다. 방 취소를 사용하세요." };
+  const loser = match[sideKey];
+  const winner = match[winnerKey];
+  const now = new Date().toISOString();
+  match.status = "complete";
+  match.result = {
+    winner: winnerKey,
+    loser: sideKey,
+    homeRuns: winnerKey === "home" ? 9 : 0,
+    awayRuns: winnerKey === "away" ? 9 : 0,
+    summary: `${loser.teamName} 패배 선언, ${winner.teamName} 몰수승`
+  };
+  if (match.game) {
+    match.game.complete = true;
+    match.game.score = {
+      home: match.result.homeRuns,
+      away: match.result.awayRuns
+    };
+    match.game.log ||= [];
+    match.game.log.unshift(`${loser.teamName} 감독이 패배를 선언했습니다. ${winner.teamName} 몰수승.`);
+  }
+  match.lastAction = {
+    userId: user.id,
+    username: user.username,
+    side: sideKey,
+    tactic: "forfeit",
+    text: `${loser.teamName} 패배 선언`,
+    at: now
+  };
+  match.log ||= [];
+  match.log.push(`${user.username} 감독이 패배를 선언했습니다. ${winner.teamName} 승리.`);
+  match.updatedAt = now;
+  writeOnlineMatches(data);
+  return { match };
 }
 
 function safeUserId(username) {
@@ -7628,6 +7673,8 @@ const server = http.createServer(async (req, res) => {
       result = submitOnlineLineup(user, state, body.id, body.lineup);
     } else if (url.pathname === "/api/online/play") {
       result = resolveOnlineLivePlayV3(user, body.id, body.tactic);
+    } else if (url.pathname === "/api/online/forfeit") {
+      result = forfeitOnlineMatch(user, body.id);
     } else if (url.pathname === "/api/online/cancel") {
       result = cancelOnlineMatch(user, body.id);
     } else {

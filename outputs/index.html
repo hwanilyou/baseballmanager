@@ -3992,8 +3992,18 @@
     function renderOnline() {
       const list = $("onlineRooms");
       if (!list) return;
+      const activeMatch = onlineMatches.find((match) => match.mySide && ["starter", "lineup", "live"].includes(match.status));
+      const createButton = $("createOnlineRoom");
+      if (createButton) {
+        createButton.disabled = Boolean(activeMatch);
+        createButton.textContent = activeMatch ? "진행 중인 대결 있음" : "방 만들기";
+      }
       if (!onlineMatches.length) {
         list.innerHTML = `<div class="empty">아직 열린 온라인 대결 방이 없습니다. 방을 만들고 친구에게 주소를 보내주세요.</div>`;
+        return;
+      }
+      if (activeMatch) {
+        list.innerHTML = renderOnlineMatchOperation(activeMatch);
         return;
       }
       const statusLabel = (status) => ({ waiting: "상대 대기", starter: "선발 제출", lineup: "야수 라인업 제출", live: "경기 운영", complete: "경기 종료" }[status] || status);
@@ -4029,6 +4039,7 @@
           match.canJoin ? `<button class="primary" onclick="onlineJoin('${match.id}')">참가</button>` : "",
           match.canSubmitStarter ? `<button class="good" onclick="onlineSubmitStarter('${match.id}')">선발 투수 제출</button>` : "",
           match.canSubmitLineup ? `<button class="good" onclick="onlineSubmitLineup('${match.id}')">야수 라인업 제출</button>` : "",
+          match.canForfeit ? `<button class="danger" onclick="onlineForfeit('${match.id}')">패배 선언</button>` : "",
           match.canCancel ? `<button class="danger" onclick="onlineCancel('${match.id}')">방 취소</button>` : ""
         ].filter(Boolean).join("");
         const livePanel = game ? renderOnlineLivePanel(match, game) : "";
@@ -4056,6 +4067,83 @@
           </article>
         `;
       }).join("");
+    }
+
+    function renderOnlineMatchOperation(match) {
+      const game = match.game || {};
+      const liveOrPrep = match.status === "live" && match.game
+        ? renderOnlineLivePanel(match, game)
+        : renderOnlinePreparationPanel(match);
+      const result = match.result ? `
+        <section class="card">
+          <h3>경기 결과</h3>
+          <div class="metric">
+            <strong>${escapeHtml(match.home?.teamName || "-")} ${match.result.homeRuns} : ${match.result.awayRuns} ${escapeHtml(match.away?.teamName || "-")}</strong>
+            <span>${escapeHtml(match.result.summary || "")}</span>
+          </div>
+        </section>
+      ` : "";
+      const forfeitButton = match.canForfeit ? `
+        <button class="danger" onclick="onlineForfeit('${match.id}')">패배 선언</button>
+      ` : "";
+      return `
+        <div class="board-title" style="margin-bottom:10px;">
+          <span>온라인 경기 운영 · ${escapeHtml(match.home?.teamName || "-")} vs ${escapeHtml(match.away?.teamName || "-")}</span>
+          <div class="offer-actions">
+            <button class="secondary" onclick="loadOnlineMatches()">새로고침</button>
+            ${forfeitButton}
+          </div>
+        </div>
+        <div class="grid two" style="align-items:start;">
+          <section>
+            ${liveOrPrep}
+          </section>
+          <section class="card">
+            <h3>상대 입력 / 경기 로그</h3>
+            <div class="empty" style="margin-bottom:10px;">
+              상대가 작전 버튼을 누르면 여기와 경기판의 최근 입력에 자동으로 표시됩니다.
+            </div>
+            <div class="log" style="max-height:520px;">
+              ${(game.log || []).slice(0, 40).map((line) => `<div>${escapeHtml(line)}</div>`).join("") || `<div class="empty">아직 진행 로그가 없습니다.</div>`}
+            </div>
+          </section>
+        </div>
+        ${result}
+      `;
+    }
+
+    function renderOnlinePreparationPanel(match) {
+      const homeReady = match.home?.starter ? "선발 제출 완료" : "선발 대기";
+      const awayReady = match.away?.starter ? "선발 제출 완료" : "선발 대기";
+      const homeLineupReady = match.home?.lineupSubmitted ? "야수 라인업 완료" : "야수 라인업 대기";
+      const awayLineupReady = match.away?.lineupSubmitted ? "야수 라인업 완료" : "야수 라인업 대기";
+      const actions = [
+        match.canSubmitStarter ? `<button class="good" onclick="onlineSubmitStarter('${match.id}')">선발 투수 제출</button>` : "",
+        match.canSubmitLineup ? `<button class="good" onclick="onlineSubmitLineup('${match.id}')">야수 라인업 제출</button>` : ""
+      ].filter(Boolean).join("");
+      return `
+        <section class="live-panel online-live-panel">
+          <div class="live-score online-live-score">
+            <strong>${escapeHtml(match.home?.teamName || "-")}</strong>
+            <span>VS</span>
+            <strong>${escapeHtml(match.away?.teamName || "상대 참가 대기")}</strong>
+          </div>
+          <div class="grid two" style="margin-top:12px;">
+            <div class="mini-card">
+              <strong>${escapeHtml(match.home?.username || "-")}</strong>
+              <span>${escapeHtml(homeReady)} · ${escapeHtml(homeLineupReady)}</span>
+            </div>
+            <div class="mini-card">
+              <strong>${escapeHtml(match.away?.username || "-")}</strong>
+              <span>${escapeHtml(awayReady)} · ${escapeHtml(awayLineupReady)}</span>
+            </div>
+          </div>
+          <div class="empty" style="margin-top:12px;">
+            선발 투수를 먼저 제출하고, 양쪽 선발이 공개되면 야수 라인업을 제출합니다. 양쪽 라인업이 모두 제출되면 이 화면이 경기 운영판으로 전환됩니다.
+          </div>
+          ${actions ? `<div class="offer-actions" style="margin-top:12px;">${actions}</div>` : ""}
+        </section>
+      `;
     }
 
     function onlineRunnerLabel(runner) {
@@ -4266,6 +4354,10 @@
     };
     window.onlineSubmit = (id) => window.onlineSubmitLineup(id);
     window.onlinePlay = (id, tactic) => onlineAction("/api/online/play", { id, tactic });
+    window.onlineForfeit = (id) => {
+      if (!confirm("정말 이 온라인 경기를 패배 선언할까요? 상대 승리로 경기 종료됩니다.")) return;
+      onlineAction("/api/online/forfeit", { id });
+    };
     window.onlineCancel = (id) => onlineAction("/api/online/cancel", { id });
 
     setInterval(() => {
