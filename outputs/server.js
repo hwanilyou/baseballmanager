@@ -805,6 +805,7 @@ function migrateState(state) {
   if (state.day > state.seasonGames && !state.postseason?.active && !state.postseason?.completed) startPostseason(state);
   if (state.seasonAwarded !== true && state.postseason?.completed) finalizeSeasonAwards(state);
   if (!Array.isArray(state.freeAgents)) state.freeAgents = [];
+  state.freeAgents = state.freeAgents.filter((fa) => fa && (fa.realPlayer || fa.sourcePlayerId || fa.fromLeaguePlayer));
   if (!state.offseason || typeof state.offseason !== "object") {
     state.offseason = { active: false, preparedForSeason: 0, contractsResolved: false, contractTasks: [], faPlayerIds: [], nonTendered: [] };
   }
@@ -3894,6 +3895,7 @@ function realFreeAgentEntryFromPlayer(p, originalTeamId, idSeed = 0) {
     sourcePlayerId: p.id,
     realPlayer: true,
     originalTeamId,
+    originalTeamName: p.teamName || teamNameById(originalTeamId),
     name: p.name,
     pos: p.pos,
     type: p.type,
@@ -3907,14 +3909,59 @@ function realFreeAgentEntryFromPlayer(p, originalTeamId, idSeed = 0) {
   };
 }
 
+function teamNameById(teamId) {
+  const team = teamTemplates.find((t) => String(t.id) === String(teamId));
+  return team ? `${team.city} ${team.name}` : String(teamId || "");
+}
+
+function prepareLeagueFreeAgents(state) {
+  ensureLeaguePlayers(state);
+  if (!Array.isArray(state.freeAgents)) state.freeAgents = [];
+  const existing = new Set(state.freeAgents.map((fa) => `${fa.originalTeamId || ""}:${fa.sourcePlayerId || fa.name}`));
+  let added = 0;
+  for (const p of state.leaguePlayers || []) {
+    normalizeContractReality(p);
+    ensureServiceTime(p);
+    if (String(p.teamId) === String(state.selectedTeamId)) continue;
+    if (p.marketStatus === "FREE_AGENT") {
+      if (!existing.has(`${p.teamId}:${p.id}`)) {
+        const entry = realFreeAgentEntryFromPlayer(p, p.teamId, 2000000);
+        entry.fromLeaguePlayer = true;
+        state.freeAgents.push(entry);
+        existing.add(`${p.teamId}:${p.id}`);
+        added += 1;
+      }
+      continue;
+    }
+    if (!isSeasonFaPlayer(p)) continue;
+    const entry = realFreeAgentEntryFromPlayer(p, p.teamId, 2000000);
+    entry.fromLeaguePlayer = true;
+    state.freeAgents.push(entry);
+    existing.add(`${p.teamId}:${p.id}`);
+    p.previousRosterStatus = p.rosterStatus;
+    p.rosterStatus = "RELEASED";
+    p.marketStatus = "FREE_AGENT";
+    p.contract = { ...(p.contract || {}), yearsLeft: 0 };
+    added += 1;
+  }
+  return added;
+}
+
 function prepareOffseasonContracts(state) {
   const seasonYear = Number(state.seasonYear) || 1;
-  if (state.offseason?.preparedForSeason === seasonYear && state.offseason?.active) return state;
-  if (state.offseason?.preparedForSeason === seasonYear && state.offseason?.contractsResolved) return state;
+  if (state.offseason?.preparedForSeason === seasonYear && state.offseason?.active) {
+    prepareLeagueFreeAgents(state);
+    return state;
+  }
+  if (state.offseason?.preparedForSeason === seasonYear && state.offseason?.contractsResolved) {
+    prepareLeagueFreeAgents(state);
+    return state;
+  }
   finalizeSeasonAwards(state);
   if (!state.offseason?.foreignProcessedForSeason || state.offseason.foreignProcessedForSeason !== seasonYear) {
     handleForeignOffseasonMarket(state);
   }
+  prepareLeagueFreeAgents(state);
   const existingFaIds = new Set((state.freeAgents || []).map((fa) => Number(fa.sourcePlayerId || -1)));
   const tasks = [];
   const faPlayerIds = [];
@@ -4722,6 +4769,24 @@ function refreshTradeTargets(state, silent = false) {
     if (!silent) addNews(state, "트레이드 마감", "트레이드 마감일이 지나 상대팀 매물을 더 조회할 수 없다.", "트레이드");
     return state;
   }
+  ensureLeaguePlayers(state);
+  const registeredCards = (state.leaguePlayers || [])
+    .filter((p) => p && String(p.teamId) !== String(state.selectedTeamId))
+    .filter((p) => !["DEV", "RELEASED"].includes(p.rosterStatus) && p.marketStatus !== "FREE_AGENT")
+    .map((p) => {
+      const card = cloneTradeCard(p);
+      card.dataSource = "trade-target-import";
+      card.tradeSource = "leaguePlayers";
+      card.sourcePlayerId = p.id;
+      card.originalLeagueId = p.id;
+      card.teamName = card.teamName || teamNameById(card.teamId);
+      return card;
+    });
+  if (registeredCards.length) {
+    state.tradeTargets = registeredCards.sort((a, b) => String(a.teamId).localeCompare(String(b.teamId)) || (a.rosterStatus === "ACTIVE" ? -1 : 1) || tradeValue(b) - tradeValue(a));
+    if (!silent) addNews(state, "트레이드 명단 갱신", "상대 9개 구단의 실제 등록 선수 명단에서 1군/2군 트레이드 카드를 다시 불러왔습니다.", "트레이드");
+    return state;
+  }
   if (fs.existsSync(DATA_IMPORT_PATH)) {
     const rows = parseCsv(fs.readFileSync(DATA_IMPORT_PATH, "utf8"));
     const headers = rows[0]?.map((h) => h.trim()) || [];
@@ -4802,8 +4867,8 @@ function refreshTradeTargets(state, silent = false) {
 function ensureTradeTargets(state) {
   if (!Array.isArray(state.tradeTargets)) state.tradeTargets = [];
   const ids = new Set(state.tradeTargets.map((p) => Number(p.id)));
-  const usesImportedTargets = state.tradeTargets.length > 0 && state.tradeTargets.every((p) => p.dataSource === "trade-target-import");
-  if (state.day <= tradeDeadlineDay(state) && (state.tradeTargets.length < 200 || ids.size !== state.tradeTargets.length || !usesImportedTargets)) refreshTradeTargets(state, true);
+  const usesRegisteredTargets = state.tradeTargets.length > 0 && state.tradeTargets.every((p) => p.dataSource === "trade-target-import" && p.tradeSource === "leaguePlayers");
+  if (state.day <= tradeDeadlineDay(state) && (state.tradeTargets.length < 200 || ids.size !== state.tradeTargets.length || !usesRegisteredTargets)) refreshTradeTargets(state, true);
   if (state.day > tradeDeadlineDay(state)) state.tradeTargets = [];
   for (const p of state.tradeTargets) normalizeContractReality(p);
   return state;
@@ -4823,6 +4888,27 @@ function registeredTradeTargetPool(state, partnerId = null, needType = null) {
 
 function cloneTradeCard(card) {
   return JSON.parse(JSON.stringify(card));
+}
+
+function removeLeaguePlayersByTradeCards(state, cards = []) {
+  const keys = new Set(cards.map((p) => `${p.teamId}:${p.sourcePlayerId || p.originalLeagueId || p.id}`));
+  state.leaguePlayers = (state.leaguePlayers || []).filter((p) => !keys.has(`${p.teamId}:${p.id}`));
+}
+
+function moveOutgoingPlayersToLeague(state, players = [], teamId, teamName) {
+  if (!Array.isArray(state.leaguePlayers)) state.leaguePlayers = [];
+  let nextId = Math.max(0, ...state.leaguePlayers.map((p) => Number(p.id) || 0)) + 1;
+  players.forEach((player) => {
+    const moved = cloneTradeCard(player);
+    moved.id = nextId++;
+    moved.oldMyPlayerId = player.id;
+    moved.teamId = teamId;
+    moved.teamName = teamName || teamNameById(teamId);
+    moved.rosterStatus = moved.rosterStatus === "DEV" ? "FARM" : moved.rosterStatus;
+    moved.marketStatus = "TRADED";
+    moved.dataSource = "league-rival";
+    state.leaguePlayers.push(moved);
+  });
 }
 
 function proposeTrade(state, outgoingId, targetId, cash) {
@@ -4894,6 +4980,8 @@ function proposeTrade(state, outgoingId, targetId, cash) {
     return state;
   }
 
+  removeLeaguePlayersByTradeCards(state, targetPlayers);
+  moveOutgoingPlayersToLeague(state, outgoingPlayers, targetTeamId, partnerName);
   state.players = state.players.filter((p) => !outgoingIds.includes(p.id));
   const nextId = Math.max(0, ...state.players.map((p) => Number(p.id) || 0)) + 1;
   targetPlayers.forEach((target, index) => {
@@ -5016,6 +5104,8 @@ function acceptTradeOffer(state, id) {
     addNews(state, "트레이드 보류", `현금 보전 ${money(offer.cash)}를 감당할 예산이 부족하다.`, "트레이드");
     return state;
   }
+  removeLeaguePlayersByTradeCards(state, incomingPlayers);
+  moveOutgoingPlayersToLeague(state, outgoingPlayers, offer.fromTeamId, offer.fromTeam);
   state.players = state.players.filter((p) => !outgoingIds.includes(p.id));
   const nextId = Math.max(0, ...state.players.map((p) => Number(p.id) || 0)) + 1;
   incomingPlayers.forEach((incoming, index) => {
@@ -6049,6 +6139,17 @@ function convertDevelopmentPlayer(state, id) {
 }
 
 function generateFreeAgents(state) {
+  if (!Array.isArray(state.freeAgents)) state.freeAgents = [];
+  state.freeAgents = state.freeAgents.filter((fa) => fa && (fa.realPlayer || fa.sourcePlayerId || fa.fromLeaguePlayer));
+  const before = state.freeAgents.length;
+  if (state.postseason?.completed || state.offseason?.active) prepareOffseasonContracts(state);
+  const added = prepareLeagueFreeAgents(state);
+  state.freeAgents = state.freeAgents
+    .filter((fa, index, arr) => arr.findIndex((x) => String(x.originalTeamId || "") === String(fa.originalTeamId || "") && String(x.sourcePlayerId || x.name) === String(fa.sourcePlayerId || fa.name)) === index)
+    .sort((a, b) => (b.ovr || 0) - (a.ovr || 0));
+  const total = state.freeAgents.length;
+  addNews(state, "FA 시장 갱신", `우리팀 FA와 타구단 실제 등록 FA ${total}명을 시장에 반영했습니다. 신규 ${Math.max(0, total - before, added)}명.`, "FA");
+  return state;
   const names = ["권도윤", "서재호", "민태준", "이강률", "정세완", "한주혁", "박태민"];
   state.freeAgents = Array.from({ length: 7 }, (_, i) => {
     const ovr = rnd(62, 84);
@@ -6130,8 +6231,14 @@ function signFreeAgent(state, id, includePlayer) {
   const counts = rosterCounts(state);
   if (counts.registered >= 65 || state.budget < total) return state;
   let p = fa.sourcePlayerId ? state.players.find((x) => x.id === Number(fa.sourcePlayerId)) : null;
+  let fromLeagueFreeAgent = false;
+  if (!p && fa.sourcePlayerId) {
+    p = (state.leaguePlayers || []).find((x) => Number(x.id) === Number(fa.sourcePlayerId) && String(x.teamId) === String(fa.originalTeamId));
+    fromLeagueFreeAgent = Boolean(p);
+  }
   if (p) {
     p.teamId = state.selectedTeamId;
+    p.teamName = teamNameById(state.selectedTeamId);
     p.rosterStatus = counts.active < 28 ? "ACTIVE" : "FARM";
     p.marketStatus = "FA_SIGNED";
     p.contract = {
@@ -6144,6 +6251,11 @@ function signFreeAgent(state, id, includePlayer) {
     p.salary = fa.askAnnual;
     p.faGrade = fa.grade;
     p.foreignPlayer = false;
+    if (fromLeagueFreeAgent) {
+      state.leaguePlayers = (state.leaguePlayers || []).filter((x) => !(Number(x.id) === Number(fa.sourcePlayerId) && String(x.teamId) === String(fa.originalTeamId)));
+      p.id = Math.max(0, ...state.players.map((player) => Number(player.id) || 0)) + 1;
+      state.players.push(p);
+    }
   } else {
     const newId = Math.max(0, ...state.players.map((player) => player.id)) + 1;
     p = makePlayer([fa.name, fa.pos, fa.type, fa.age, fa.ovr, fa.pot, `FA ${fa.grade}등급`], newId - 1);
