@@ -22,17 +22,34 @@ const activeVisitors = new Map();
 fs.mkdirSync(SAVES_DIR, { recursive: true });
 
 const teamTemplates = [
-  { id: "daejeon-orange-eagles", city: "대전", name: "오렌지이글스", short: "오렌지", primary: "#f37321", secondary: "#1f2933", power: 68 },
-  { id: "seoul-twin-stars", city: "서울", name: "트윈스타즈", short: "트윈", primary: "#c9162f", secondary: "#111827", power: 71 },
-  { id: "busan-giant-waves", city: "부산", name: "자이언트웨이브스", short: "자이언트", primary: "#0f3b78", secondary: "#d43d2a", power: 69 },
-  { id: "daegu-blue-lions", city: "대구", name: "블루라이온즈", short: "블루", primary: "#1e62ad", secondary: "#c8a24a", power: 67 },
-  { id: "gwangju-tiger-kings", city: "광주", name: "타이거킹즈", short: "타이거", primary: "#d71920", secondary: "#101820", power: 72 },
-  { id: "incheon-landing", city: "인천", name: "랜더스카이", short: "랜더", primary: "#c8102e", secondary: "#f4c430", power: 70 },
-  { id: "changwon-dino-force", city: "창원", name: "다이노포스", short: "다이노", primary: "#2454a6", secondary: "#b5a36a", power: 66 },
-  { id: "suwon-wizpark", city: "수원", name: "위즈파크", short: "위즈", primary: "#111111", secondary: "#e31b23", power: 65 },
-  { id: "gocheok-heroes", city: "고척", name: "히어로즈나인", short: "히어로", primary: "#6f263d", secondary: "#c5a46d", power: 62 },
-  { id: "jamsil-bears", city: "잠실", name: "베어스클럽", short: "베어스", primary: "#14213d", secondary: "#ffffff", power: 73 }
+  { id: "daejeon-orange-eagles", city: "한화", name: "이글스", short: "한화", primary: "#f37321", secondary: "#1f2933", power: 68 },
+  { id: "seoul-twin-stars", city: "LG", name: "트윈스", short: "LG", primary: "#c9162f", secondary: "#111827", power: 71 },
+  { id: "busan-giant-waves", city: "롯데", name: "자이언츠", short: "롯데", primary: "#0f3b78", secondary: "#d43d2a", power: 69 },
+  { id: "daegu-blue-lions", city: "삼성", name: "라이온즈", short: "삼성", primary: "#1e62ad", secondary: "#c8a24a", power: 67 },
+  { id: "gwangju-tiger-kings", city: "KIA", name: "타이거즈", short: "KIA", primary: "#d71920", secondary: "#101820", power: 72 },
+  { id: "incheon-landing", city: "SSG", name: "랜더스", short: "SSG", primary: "#c8102e", secondary: "#f4c430", power: 70 },
+  { id: "changwon-dino-force", city: "NC", name: "다이노스", short: "NC", primary: "#2454a6", secondary: "#b5a36a", power: 66 },
+  { id: "suwon-wizpark", city: "KT", name: "위즈", short: "KT", primary: "#111111", secondary: "#e31b23", power: 65 },
+  { id: "gocheok-heroes", city: "키움", name: "히어로즈", short: "키움", primary: "#6f263d", secondary: "#c5a46d", power: 62 },
+  { id: "jamsil-bears", city: "두산", name: "베어스", short: "두산", primary: "#14213d", secondary: "#ffffff", power: 73 }
 ];
+
+function teamById(teamId) {
+  return teamTemplates.find((team) => team.id === teamId) || null;
+}
+
+function teamDisplayName(team) {
+  return team ? `${team.city} ${team.name}` : "";
+}
+
+function refreshRealTeamIdentity(state) {
+  if (!state) return;
+  const prior = new Map((state.teams || []).map((team) => [team.id, team]));
+  state.teams = teamTemplates.map((template) => {
+    const old = prior.get(template.id) || {};
+    return { ...old, ...template, w: old.w || 0, l: old.l || 0, t: old.t || 0, teamStats: old.teamStats };
+  });
+}
 
 const playerSeeds = {
   "daejeon-orange-eagles": [
@@ -1037,6 +1054,22 @@ function shouldRebuildPrivateContract(p) {
   return false;
 }
 
+function hasExplicitImportedContract(p) {
+  const dataSource = String(p?.dataSource || "");
+  const source = String(p?.contract?.source || "");
+  const note = String(p?.contract?.note || "");
+  return dataSource.includes("kbo_players.csv")
+    || dataSource.includes("outputs/data")
+    || Boolean(note)
+    || Number.isFinite(Number(p?.contract?.total))
+    || Number.isFinite(Number(p?.contract?.contractYears))
+    || source.includes("FA")
+    || source.includes("공시")
+    || source.includes("실계약")
+    || source.includes("다년계약")
+    || source.includes("서비스타임");
+}
+
 function hasFakeReserveContract(p) {
   const kind = String(p?.contract?.kind || "");
   const source = String(p?.contract?.source || "");
@@ -1060,7 +1093,7 @@ function normalizeContractReality(p) {
       source: p.rosterStatus === "DEV" ? "육성계약" : "추정 연봉 · 서비스타임 반영"
     };
   }
-  if (hasFakeReserveContract(p)) {
+  if (hasFakeReserveContract(p) && !hasExplicitImportedContract(p)) {
     const annual = Number(p.contract.annual || p.salary || 0);
     p.contract.yearsLeft = 1;
     p.contract.annual = annual;
@@ -1072,6 +1105,7 @@ function normalizeContractReality(p) {
 }
 
 function hasPlaceholderContract(p) {
+  if (hasExplicitImportedContract(p)) return false;
   const years = Number(p.contract?.yearsLeft);
   const annual = Number(p.contract?.annual || p.salary);
   return !p.contract || !Number.isFinite(years) || !Number.isFinite(annual) || (years === 1 && annual <= 1.2 && (p.ovr || 0) >= 68) || (years === 1 && annual <= 3.5 && (p.ovr || 0) >= 78);
@@ -1181,6 +1215,7 @@ function enforceActiveRosterLimit(state, limit = 28) {
 
 function migrateState(state) {
   if (!state) return state;
+  refreshRealTeamIdentity(state);
   if (Array.isArray(state.players)) {
     state.players = state.players.filter((p) => p && typeof p === "object");
     for (const [index, p] of state.players.entries()) {
@@ -1189,6 +1224,10 @@ function migrateState(state) {
       if (!p.serviceYears && p.serviceYears !== 0) p.serviceYears = Math.max(0, Math.min(12, (p.age || 24) - 21));
       ensureServiceTime(p);
       if (!p.rosterStatus) p.rosterStatus = index < 10 ? "ACTIVE" : "FARM";
+      if (p.teamId) {
+        const realTeam = teamById(p.teamId);
+        if (realTeam) p.teamName = teamDisplayName(realTeam);
+      }
       if (!p.options && p.options !== 0) p.options = 2;
       if (!p.arm && p.arm !== 0) p.arm = playerArmFallback(p);
       if (!p.durability && p.durability !== 0) p.durability = defaultDurability(p);
@@ -1275,6 +1314,10 @@ function migrateState(state) {
   }
   ensureHighSchoolCohorts(state);
   ensureLeaguePlayers(state);
+  for (const p of [...(state.players || []), ...(state.leaguePlayers || [])]) {
+    const realTeam = teamById(p.teamId);
+    if (realTeam) p.teamName = teamDisplayName(realTeam);
+  }
   ensureTeamStats(state);
   backfillStandingsGames(state);
   ensureTeamStats(state);
@@ -1535,7 +1578,7 @@ function cloneLeaguePlayer(seed, team, index) {
   const p = makePlayer(seed, index);
   p.id = `L-${team.id}-${index + 1}`;
   p.teamId = team.id;
-  p.teamName = `${team.city} ${team.name}`;
+  p.teamName = teamDisplayName(team);
   p.rosterStatus = "ACTIVE";
   p.dataSource = "league-rival";
   return p;
@@ -1557,8 +1600,8 @@ function ensureLeaguePlayers(state) {
     state.leaguePlayers = buildLeaguePlayers(state.selectedTeamId);
   }
   for (const p of state.leaguePlayers) {
-    const team = state.teams?.find((t) => t.id === p.teamId) || teamTemplates.find((t) => t.id === p.teamId);
-    if (team && !p.teamName) p.teamName = `${team.city} ${team.name}`;
+    const team = teamById(p.teamId) || state.teams?.find((t) => t.id === p.teamId);
+    if (team) p.teamName = teamDisplayName(team);
     normalizeContractReality(p);
     if (p.type === "BAT" && !p.stats) p.stats = { hr: 0, rbi: 0, avg: 0, sb: 0, h: 0, r: 0, pa: 0, ab: 0, obp: 0, slg: 0, bb: 0, so: 0, tb: 0, hbp: 0, sf: 0 };
     if (p.type === "PIT" && !p.stats) p.stats = { era: 0, win: 0, loss: 0, so: 0, sv: 0, hold: 0, ip: 0 };
@@ -4388,8 +4431,8 @@ function realFreeAgentEntryFromPlayer(p, originalTeamId, idSeed = 0) {
 }
 
 function teamNameById(teamId) {
-  const team = teamTemplates.find((t) => String(t.id) === String(teamId));
-  return team ? `${team.city} ${team.name}` : String(teamId || "");
+  const team = teamById(teamId);
+  return team ? teamDisplayName(team) : String(teamId || "");
 }
 
 function prepareLeagueFreeAgents(state) {
@@ -5236,7 +5279,7 @@ function makeTradeTarget(team, baseValue, needType) {
   p.rosterStatus = "FARM";
   p.dataSource = "trade-market";
   p.teamId = team.id;
-  p.teamName = `${team.city} ${team.name}`;
+  p.teamName = teamDisplayName(team);
   p.foreignPlayer = false;
   return p;
 }
@@ -5297,7 +5340,7 @@ function refreshTradeTargets(state, silent = false) {
         applyBatsThrows(p, handValue);
         p.id = idBase + cards.length + 1;
         p.teamId = rowTeamId;
-        p.teamName = `${team.city} ${team.name}`;
+        p.teamName = teamNameById(rowTeamId);
         p.rosterStatus = row[idx("rosterStatus")] || "FARM";
         p.pitcherRole = type === "PIT" ? (row[idx("pitcherRole")] || (pos === "SP" ? "SP" : pos === "CL" ? "CL" : "MR")) : null;
         const estimated = estimateContractForPlayer(p, cards.length);
@@ -7117,8 +7160,8 @@ function importPlayersFromCsv(state, csv, source) {
     applyBatsThrows(p, handValue);
     p.id = isTargetTeam ? nextId++ : nextLeagueId++;
     p.teamId = rowTeamId || targetTeamId;
-    const importedTeam = teamTemplates.find((t) => t.id === p.teamId);
-    p.teamName = importedTeam ? `${importedTeam.city} ${importedTeam.name}` : "";
+    const importedTeam = teamById(p.teamId);
+    p.teamName = teamDisplayName(importedTeam);
     p.rosterStatus = row[idx("rosterStatus")] || "FARM";
     p.pitcherRole = type === "PIT" ? (row[idx("pitcherRole")] || (pos === "SP" ? "SP" : pos === "CL" ? "CL" : "MR")) : null;
     const estimated = estimateContractForPlayer(p, imported.length + importedLeague.length);
@@ -7164,8 +7207,8 @@ function importPlayersFromCsv(state, csv, source) {
     .filter((p) => p.dataSource === "system-locked" || p.rosterStatus === "DEV")
     .map((p) => {
       p.teamId = p.teamId || targetTeamId;
-      const team = teamTemplates.find((t) => t.id === p.teamId);
-      p.teamName = p.teamName || (team ? `${team.city} ${team.name}` : "");
+      const team = teamById(p.teamId);
+      p.teamName = team ? teamDisplayName(team) : p.teamName || "";
       if (p.controlYears === undefined) {
         p.controlYears = Math.max(0, Math.ceil(((p.age <= 27 ? 9 : 8) * KBO_SERVICE_DAYS_PER_YEAR - (p.serviceDays || 0)) / KBO_SERVICE_DAYS_PER_YEAR));
       }
