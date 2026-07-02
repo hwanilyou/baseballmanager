@@ -3320,11 +3320,12 @@ function resolveOpponentPlateAppearance(state) {
     const fielding = battedBallDefenseDetail(defense, batter, event);
     const battedText = battedBallDescription(event, fielding, batter);
     if (event.bases > 0) {
+      const hadExistingRunner = Array.isArray(game.bases) && game.bases.some(Boolean);
       hardContact = event.bases >= 2 || event.error ? 2 : 1;
       const result = advanceRunners(game, `${opp.short} 타자`, event.bases);
       game.score.opp += result.runs;
       let throwText = "";
-      if (event.bases < 4 && game.outs < 3 && rnd(1, 100) + defense.outfieldArm > 134) {
+      if (hadExistingRunner && event.bases < 4 && game.outs < 3 && rnd(1, 100) + defense.outfieldArm > 134) {
         const thrower = chooseFielder(defense, ["LF", "CF", "RF"])?.player;
         game.outs += 1;
         throwText = `, ${thrower?.name || "외야수"} 송구로 추가 주자 아웃`;

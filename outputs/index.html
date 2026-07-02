@@ -855,6 +855,42 @@
       min-width: 92px;
     }
 
+    .opponent-lineup-list {
+      display: grid;
+      gap: 6px;
+    }
+
+    .opponent-lineup-row {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fbfcff;
+      color: var(--ink);
+    }
+
+    .opponent-lineup-row.is-current {
+      border-color: var(--accent);
+      background: #fff6ed;
+    }
+
+    .opponent-lineup-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 800;
+    }
+
+    .opponent-lineup-meta {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
     .lineup-row input {
       min-width: 0;
       min-height: 36px;
@@ -1369,6 +1405,7 @@
             <section class="panel">
               <h2>불펜 / 작전 로그</h2>
               <div id="bullpenBox" class="log" style="max-height:190px; margin-bottom:10px;"></div>
+              <div id="opponentLineupBox" style="margin-bottom:10px;"></div>
               <div id="gameLog" class="log"></div>
             </section>
           </div>
@@ -1973,6 +2010,28 @@
     function opponentName(p) {
       if (!p) return "-";
       return `${p.name || "상대 선수"}${p.jerseyNumber ? ` #${p.jerseyNumber}` : ""}`;
+    }
+
+    function renderOpponentLineupPanel(active) {
+      const lineup = Array.isArray(active?.opponentLineup) ? active.opponentLineup : [];
+      if (!lineup.length) return `<div class="empty">경기 시작 후 상대 라인업이 표시됩니다.</div>`;
+      const currentIndex = Number.isFinite(active?.opponentLineupIndex) ? active.opponentLineupIndex % 9 : -1;
+      const opponentTeam = state.teams.find((t) => t.id === active?.opponentId) || state.opponent;
+      const starter = active?.opponentPitcher;
+      return `
+        <div class="news-item">
+          <div class="news-title">상대 라인업 · ${escapeHtml(teamName(opponentTeam))}</div>
+          <div class="small">선발 ${starter ? `${escapeHtml(pitcherHandLabel(starter))} ${escapeHtml(opponentName(starter))}` : "-"} · 현재 타순은 주황색으로 표시됩니다.</div>
+          <div class="opponent-lineup-list" style="margin-top:8px;">
+            ${lineup.slice(0, 9).map((p, i) => `
+              <div class="opponent-lineup-row ${i === currentIndex ? "is-current" : ""}">
+                <span class="badge">${i + 1}</span>
+                <span class="opponent-lineup-name">${escapeHtml(batterHandLabel(p))} ${escapeHtml(opponentName(p))}</span>
+                <span class="opponent-lineup-meta">${escapeHtml(p.pos || "-")} · 컨택 ${Number(p.contact) || 0} · 파워 ${Number(p.power) || 0}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>`;
     }
 
     function searchText(value) {
@@ -2625,6 +2684,7 @@
         $("manualTactic").textContent = "강공";
         $("gameLog").innerHTML = `<div class="empty">라인업을 제출하면 선수들이 자동으로 플레이합니다. 감독은 작전과 교체 타이밍을 지시합니다.</div>`;
         $("bullpenBox").innerHTML = `<div class="empty">경기가 시작되면 불펜 대기 선수가 표시됩니다.</div>`;
+        $("opponentLineupBox").innerHTML = renderOpponentLineupPanel(null);
       } else {
         $("manualScore").innerHTML = `<div class="score-line"><span>${teamName()}</span><span>${active.score.user}</span></div><div class="score-line"><span>${teamName(state.teams.find((t) => t.id === active.opponentId) || state.opponent)}</span><span>${active.score.opp}</span></div>`;
         $("manualInning").textContent = `${active.inning}회${active.half === "top" ? "초" : "말"}`;
@@ -2657,6 +2717,7 @@
             <div class="small">현재 1군 등록 투수 중 이미 등판하지 않은 투수만 선택됩니다.</div>
           </div>
         `;
+        $("opponentLineupBox").innerHTML = renderOpponentLineupPanel(active);
         document.querySelectorAll(".livePosSelect").forEach((select) => {
           bindSwapSelect(select, ".livePosSelect");
         });
