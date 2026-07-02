@@ -553,6 +553,14 @@ function resolveOnlineLivePlay(user, matchId, tactic = "normal") {
   game.strikes = 0;
   game.lastTactic = tactic;
   game.log.unshift(text);
+  match.lastAction = {
+    userId: user.id,
+    username: user.username,
+    side: offense,
+    tactic,
+    text,
+    at: new Date().toISOString()
+  };
   finishOnlineHalfOrGame(match, game);
   match.updatedAt = new Date().toISOString();
   writeOnlineMatches(data);
@@ -780,6 +788,7 @@ function publicOnlineMatches(user) {
           lineup: match.game?.lineups?.away || null
         } : null,
         game: match.game || null,
+        lastAction: match.lastAction || null,
         result: match.result,
         log: match.log || []
       };
