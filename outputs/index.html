@@ -839,7 +839,8 @@
       font-size: 12px;
     }
 
-    .online-team-card.is-selected {
+    .online-team-card.is-selected,
+    .online-team-card.selected {
       border-color: var(--accent);
       border-left-color: var(--accent);
       background: #fff7ed;
@@ -884,11 +885,28 @@
       margin-top: 12px;
     }
 
-    .online-lineup-builder .lineup-slot {
+    .online-lineup-builder .lineup-slot,
+    .online-lineup-builder .online-lineup-slot {
       display: grid;
-      grid-template-columns: 42px minmax(280px, 1fr) 110px;
+      grid-template-columns: 82px minmax(320px, 1fr) 110px;
       gap: 8px;
       align-items: center;
+    }
+
+    .online-lineup-builder .online-lineup-slot .order-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 38px;
+      border-radius: 7px;
+      background: #eef4fb;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .online-lineup-builder .online-lineup-slot select {
+      width: 100%;
+      min-width: 0;
     }
 
     .news-item {
@@ -1448,8 +1466,10 @@
       .online-operation-shell { grid-template-columns: 1fr; }
       .online-operation-side { position: static; }
       .online-roster-columns { grid-template-columns: 1fr; }
-      .online-lineup-builder .lineup-slot { grid-template-columns: 36px minmax(0, 1fr); }
-      .online-lineup-builder .lineup-slot select:last-child { grid-column: 2; }
+      .online-lineup-builder .lineup-slot,
+      .online-lineup-builder .online-lineup-slot { grid-template-columns: 64px minmax(0, 1fr); }
+      .online-lineup-builder .lineup-slot select:last-child,
+      .online-lineup-builder .online-lineup-slot select:last-child { grid-column: 2; }
     }
 
     @media (max-width: 560px) {
@@ -2161,6 +2181,8 @@
       const selects = [...document.querySelectorAll(".onlineLineupSelect")].filter((select) => select.dataset.match === String(matchId));
       const posSelects = [...document.querySelectorAll(".onlineLineupPos")].filter((select) => select.dataset.match === String(matchId));
       const ids = selects.map((select) => Number(select.value)).filter(Boolean);
+      const positions = posSelects.map((select) => select.value);
+      const requiredPositions = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
       if (ids.length !== 9) {
         showToast("온라인 라인업은 타자 9명을 모두 골라야 합니다.");
         return null;
@@ -2169,10 +2191,22 @@
         showToast("같은 선수는 온라인 라인업에 두 번 넣을 수 없습니다.");
         return null;
       }
+      if (positions.length !== 9) {
+        showToast("수비 위치도 9개를 모두 지정해야 합니다.");
+        return null;
+      }
+      const missingPositions = requiredPositions.filter((position) => !positions.includes(position));
+      const duplicatePositions = requiredPositions.filter((position) => positions.filter((value) => value === position).length > 1);
+      if (missingPositions.length || duplicatePositions.length) {
+        const missingText = missingPositions.length ? `부족: ${missingPositions.join(", ")}` : "";
+        const duplicateText = duplicatePositions.length ? `중복: ${duplicatePositions.join(", ")}` : "";
+        showToast(`수비 위치는 C/1B/2B/3B/SS/LF/CF/RF/DH를 각각 1명씩 지정해야 합니다. ${missingText} ${duplicateText}`.trim());
+        return null;
+      }
       return {
         battingOrder: ids.map((playerId, index) => ({
           playerId,
-          position: posSelects[index]?.value || "DH"
+          position: positions[index]
         }))
       };
     }
@@ -3819,12 +3853,12 @@
       const mySide = onlineMySide(match);
       const opponent = onlineOpponentSide(match);
       return `
-        <div class="empty">내 팀 1군 투수 중 선발투수를 고르세요. 양쪽이 선발을 고르면 서로 선발이 공개되고 야수 라인업 단계로 넘어갑니다.</div>
+        <div class="empty">내 팀 1군 투수 중 오늘 선발투수를 먼저 고릅니다. 양쪽 선발이 확정되면 선발이 공개되고, 그 다음 1~9번 타순과 수비 위치를 직접 짭니다.</div>
         <div class="online-form-row">
           <select id="onlineStarterSelect">
             ${pitchers.map((p) => `<option value="${p.id}">${escapeHtml(onlinePlayerOptionLabel(p))} · 스태미나 ${p.stamina ?? "-"}</option>`).join("")}
           </select>
-          ${match.canSubmitStarter ? `<button onclick="onlineSubmitStarter('${match.id}')">선발 선택 완료</button>` : `<button disabled>선발 선택 완료</button>`}
+          ${match.canSubmitStarter ? `<button onclick="onlineSubmitStarter('${match.id}')">선발투수 확정</button>` : `<button disabled>선발투수 확정</button>`}
         </div>
         <div class="online-count-grid">
           <div><strong>${escapeHtml(mySide?.starterSubmitted ? "제출 완료" : "선택 대기")}</strong><small>내 선발</small></div>
@@ -3839,29 +3873,30 @@
       const hitters = roster.filter((p) => p.rosterStatus === "ACTIVE" && p.type !== "PIT");
       const mySide = onlineMySide(match);
       const opponent = onlineOpponentSide(match);
-      const defaults = mySide?.lineup?.battingOrder || hitters.slice(0, 9).map((p, index) => ({ playerId: p.id, position: POSITIONS[index] || p.pos || "DH" }));
+      const lineupPositions = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
+      const defaults = mySide?.lineup?.battingOrder || hitters.slice(0, 9).map((p, index) => ({ playerId: p.id, position: lineupPositions[index] || p.pos || "DH" }));
       const optionHtml = hitters.map((p) => `<option value="${p.id}">${escapeHtml(onlinePlayerOptionLabel(p))}</option>`).join("");
       const slots = Array.from({ length: 9 }, (_, index) => {
         const row = defaults[index] || {};
-        const pos = row.position || POSITIONS[index] || "DH";
+        const pos = row.position || lineupPositions[index] || "DH";
         return `<div class="online-lineup-slot">
-          <span>${index + 1}</span>
+          <span class="order-badge">${index + 1}번</span>
           <select class="onlineLineupSelect" data-match="${match.id}">
             ${hitters.map((p) => `<option value="${p.id}" ${Number(row.playerId) === Number(p.id) ? "selected" : ""}>${escapeHtml(onlinePlayerOptionLabel(p))}</option>`).join("") || optionHtml}
           </select>
           <select class="onlineLineupPos" data-match="${match.id}">
-            ${POSITIONS.map((position) => `<option value="${position}" ${position === pos ? "selected" : ""}>${position}</option>`).join("")}
+            ${lineupPositions.map((position) => `<option value="${position}" ${position === pos ? "selected" : ""}>${position}</option>`).join("")}
           </select>
         </div>`;
       }).join("");
       return `
-        <div class="empty">상대 선발: ${escapeHtml(onlinePlayerShort(opponent?.starter))}. 이제 야수 9명과 수비 위치를 고르세요.</div>
+        <div class="empty"><strong>상대 선발 공개: ${escapeHtml(onlinePlayerShort(opponent?.starter))}</strong><br>상대 선발을 보고 1번부터 9번까지 타순을 직접 짜고, C/1B/2B/3B/SS/LF/CF/RF/DH가 각각 한 명씩 들어가게 수비 위치를 지정하세요.</div>
         <div class="online-lineup-builder">${slots}</div>
         <div class="online-count-grid">
           <div><strong>${escapeHtml(mySide?.lineupSubmitted ? "제출 완료" : "작성 중")}</strong><small>내 라인업</small></div>
           <div><strong>${escapeHtml(opponent?.lineupSubmitted ? "제출 완료" : "작성 중")}</strong><small>상대 라인업</small></div>
         </div>
-        <button onclick="onlineSubmitLineup('${match.id}')">야수 라인업 제출</button>`;
+        <button onclick="onlineSubmitLineup('${match.id}')">1~9번 라인업 확정</button>`;
     }
 
     function renderOnlineLineup(title, lineup, activeIndex) {

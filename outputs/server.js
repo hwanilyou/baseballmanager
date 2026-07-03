@@ -1066,7 +1066,8 @@ function submitOnlineLineup(user, state, matchId, lineup) {
   const battingOrder = Array.isArray(lineup?.battingOrder) && lineup.battingOrder.length ? lineup.battingOrder : fallback.battingOrder;
   const activeHitters = onlineActivePlayers(match[sideKey]).filter((p) => p.type === "BAT");
   const activeIds = new Set(activeHitters.map((p) => Number(p.id)));
-  const positions = new Set(["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"]);
+  const requiredPositions = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
+  const positions = new Set(requiredPositions);
   const cleaned = battingOrder.slice(0, 9).map((slot) => ({
     playerId: Number(slot.playerId),
     position: positions.has(slot.position) ? slot.position : "DH"
@@ -1074,6 +1075,15 @@ function submitOnlineLineup(user, state, matchId, lineup) {
   if (cleaned.length !== 9) return { error: "야수 라인업은 9명을 모두 선택해야 합니다." };
   if (new Set(cleaned.map((slot) => slot.playerId)).size !== 9) return { error: "같은 선수를 라인업에 두 번 넣을 수 없습니다." };
   if (cleaned.some((slot) => !activeIds.has(slot.playerId))) return { error: "1군 등록 야수만 라인업에 넣을 수 있습니다." };
+  const positionCounts = new Map();
+  cleaned.forEach((slot) => positionCounts.set(slot.position, (positionCounts.get(slot.position) || 0) + 1));
+  const missingPositions = requiredPositions.filter((position) => !positionCounts.has(position));
+  const duplicatePositions = requiredPositions.filter((position) => (positionCounts.get(position) || 0) > 1);
+  if (missingPositions.length || duplicatePositions.length) {
+    const missingText = missingPositions.length ? `부족: ${missingPositions.join(", ")}` : "";
+    const duplicateText = duplicatePositions.length ? `중복: ${duplicatePositions.join(", ")}` : "";
+    return { error: `라인업은 C/1B/2B/3B/SS/LF/CF/RF/DH를 각각 1명씩 지정해야 합니다. ${missingText} ${duplicateText}`.trim() };
+  }
   match[sideKey].lineup = { starterId, battingOrder: cleaned };
   match.updatedAt = new Date().toISOString();
   match.log ||= [];
