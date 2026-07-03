@@ -1692,6 +1692,25 @@
                 </select>
                 <span class="help-tip" tabindex="0" data-tip="?꾨（??踰좎씠?????꾨（ 踰꾪듉?쇰줈 癒쇱? ?湲곗떆?????寃?吏?쒕굹 ?ㅼ쓬 ?뚮젅?대? ?꾨Ⅴ硫??④퍡 ?먯젙?⑸땲?? 寃ъ젣???섎퉬 ??二쇱옄瑜?臾띔굅????? ?뺣쪧濡?寃ъ젣?щ? ?몃━??吏?쒖엯?덈떎.">?</span>
                 <button id="cmdPickoff" class="secondary">寃ъ젣</button>
+                <select id="pitchCallSelect">
+                  <option value="auto">자동 배합</option>
+                  <option value="fourSeam">포심 승부</option>
+                  <option value="slider">슬라이더 유도</option>
+                  <option value="curve">커브 타이밍 흔들기</option>
+                  <option value="changeup">체인지업 완급</option>
+                  <option value="fork">포크/스플리터</option>
+                  <option value="pitchout">피치아웃</option>
+                </select>
+                <select id="defensePlanSelect">
+                  <option value="normal">기본 수비</option>
+                  <option value="attackZone">스트존 공격</option>
+                  <option value="waste">유인구로 승부</option>
+                  <option value="groundball">땅볼 유도</option>
+                  <option value="holdRunner">주자 묶기</option>
+                  <option value="walkAround">강타자 피해가기</option>
+                </select>
+                <span class="help-tip" tabindex="0" data-tip="수비 지시는 상대 공격 때만 적용됩니다. 포심/스트존 공격은 투구수를 줄이고 삼진 가능성을 올리지만 장타 위험이 있고, 유인구/변화구는 헛스윙과 파울을 늘리지만 볼넷과 폭투 위험이 있습니다. 피치아웃과 주자 묶기는 도루를 막는 선택입니다.">?</span>
+                <button id="cmdPitchCall" class="secondary">투구 지시</button>
                 <button id="cmdSkipHalf" class="secondary">?대떇 ?ㅽ궢</button>
                 <button id="cmdSkipGame" class="secondary">寃쎄린 ?ㅽ궢</button>
                 <button id="cmdDefense" class="good">?ㅼ쓬 ?뚮젅??/button>
@@ -2896,7 +2915,7 @@
         $("bullpenBox").innerHTML = `<div class="empty">경기가 시작되면 불펜 대기 선수가 표시됩니다.</div>`;
         if ($("opponentLineupBox")) $("opponentLineupBox").innerHTML = renderOpponentLineupPanel(null);
         ["startManualGame", "startSkipGame"].forEach((id) => { if ($(id)) $(id).disabled = false; });
-        ["resetManualGame", "cmdSwing", "swingTypeSelect", "cmdBunt", "buntTypeSelect", "cmdRunnerTactic", "runnerTacticSelect", "pickoffBaseSelect", "cmdPickoff", "cmdSkipHalf", "cmdSkipGame", "cmdDefense"].forEach((id) => { if ($(id)) $(id).disabled = true; });
+        ["resetManualGame", "cmdSwing", "swingTypeSelect", "cmdBunt", "buntTypeSelect", "cmdRunnerTactic", "runnerTacticSelect", "pickoffBaseSelect", "cmdPickoff", "pitchCallSelect", "defensePlanSelect", "cmdPitchCall", "cmdSkipHalf", "cmdSkipGame", "cmdDefense"].forEach((id) => { if ($(id)) $(id).disabled = true; });
         return;
       }
 
@@ -2974,7 +2993,7 @@
       const canCommand = !active.complete && userBatting;
       ["cmdSwing", "swingTypeSelect", "cmdBunt", "buntTypeSelect", "cmdRunnerTactic", "runnerTacticSelect", "cmdSkipHalf", "cmdSkipGame"].forEach((id) => { if ($(id)) $(id).disabled = !canCommand; });
       const canDefense = !active.complete && opponentBatting;
-      ["pickoffBaseSelect", "cmdPickoff", "cmdDefense"].forEach((id) => { if ($(id)) $(id).disabled = !canDefense; });
+      ["pickoffBaseSelect", "cmdPickoff", "pitchCallSelect", "defensePlanSelect", "cmdPitchCall", "cmdDefense"].forEach((id) => { if ($(id)) $(id).disabled = !canDefense; });
     }
     function renderRoster() {
       const filter = $("rosterFilter").value;
@@ -3908,12 +3927,17 @@
       return `<section class="online-lineup-card"><h3>${escapeHtml(title)}</h3>${rows || `<div class="empty">라인업 없음</div>`}</section>`;
     }
 
+    function onlineDomId(prefix, id) {
+      return `${prefix}-${String(id).replace(/[^a-zA-Z0-9_-]/g, "_")}`;
+    }
+
     function renderOnlineLivePanel(match, game) {
       const offense = game.half === "top" ? "away" : "home";
       const defense = offense === "home" ? "away" : "home";
       const offenseSide = offense === "home" ? match.home : match.away;
       const defenseSide = defense === "home" ? match.home : match.away;
-      const myTurn = match.mySide === offense && match.status === "live" && !game.complete;
+      const myOffenseTurn = match.mySide === offense && match.status === "live" && !game.complete;
+      const myDefenseTurn = match.mySide === defense && match.status === "live" && !game.complete;
       const score = game.score || { home: 0, away: 0 };
       const inningLabel = game.inning ? `${game.inning}회${game.half === "bottom" ? "말" : "초"}` : "대기";
       const offenseIndex = Number(game.battingIndex?.[offense] || 0) % 9;
@@ -3924,7 +3948,11 @@
       const bases = game.bases || [];
       const logs = (game.log || match.log || []).slice(0, 50).map((line) => `<p>${escapeHtml(line)}</p>`).join("");
       const recentInput = match.lastAction ? `${escapeHtml(match.lastAction.username || "상대")} · ${escapeHtml(match.lastAction.text || match.lastAction.tactic || "작전")}` : "아직 작전 입력 없음";
-      const actionPanel = myTurn ? `
+      const pitchSelectId = onlineDomId("onlinePitchCall", match.id);
+      const planSelectId = onlineDomId("onlineDefensePlan", match.id);
+      const pickoffSelectId = onlineDomId("onlinePickoffBase", match.id);
+      const defenseBaseOptions = bases.map((runner, index) => runner ? `<option value="${index}">${index + 1}루 ${escapeHtml(onlineRunnerLabel(runner))}</option>` : "").join("");
+      const actionPanel = myOffenseTurn ? `
         <div class="online-command-bar">
           <button onclick="onlinePlay('${match.id}', 'normal')">강공</button>
           <button onclick="onlinePlay('${match.id}', 'contact')">컨택 스윙</button>
@@ -3934,6 +3962,31 @@
           <button onclick="onlinePlay('${match.id}', 'squeeze')">스퀴즈</button>
           <button onclick="onlinePlay('${match.id}', 'steal')">도루 프리롤</button>
           <button onclick="onlinePlay('${match.id}', 'hit_run')">히트앤런</button>
+          <button class="secondary" onclick="loadOnlineMatches()">새로고침</button>
+        </div>` : myDefenseTurn ? `
+        <div class="online-command-bar">
+          <select id="${pitchSelectId}">
+            <option value="auto">자동 배합</option>
+            <option value="fourSeam">포심 승부</option>
+            <option value="slider">슬라이더 유도</option>
+            <option value="curve">커브</option>
+            <option value="changeup">체인지업</option>
+            <option value="fork">포크/스플리터</option>
+            <option value="pitchout">피치아웃</option>
+          </select>
+          <select id="${planSelectId}">
+            <option value="normal">기본 수비</option>
+            <option value="attackZone">스트존 공격</option>
+            <option value="waste">유인구 승부</option>
+            <option value="groundball">땅볼 유도</option>
+            <option value="holdRunner">주자 묶기</option>
+            <option value="walkAround">강타자 피해가기</option>
+          </select>
+          <select id="${pickoffSelectId}">
+            <option value="">견제 없음</option>
+            ${defenseBaseOptions}
+          </select>
+          <button onclick="onlineDefensePlay('${match.id}')">수비 지시</button>
           <button class="secondary" onclick="loadOnlineMatches()">새로고침</button>
         </div>` : `<div class="empty">상대 지시 대기 중입니다. 상대가 누르면 이 화면이 자동 갱신됩니다.</div>`;
       return `
@@ -4026,6 +4079,10 @@
       $(`stealBtn${baseNo}`).addEventListener("click", () => commandBaseSteal(baseNo));
     });
     $("cmdPickoff").addEventListener("click", commandPickoff);
+    $("cmdPitchCall").addEventListener("click", () => mutate("/api/game/defense-call", {
+      pitchCall: $("pitchCallSelect").value,
+      defensePlan: $("defensePlanSelect").value
+    }));
     $("cmdSkipHalf").addEventListener("click", () => mutate("/api/game/skip-half"));
     $("cmdSkipGame").addEventListener("click", () => mutate("/api/game/skip-game"));
     $("cmdDefense").addEventListener("click", runDefense);
@@ -4111,6 +4168,14 @@
     };
     window.onlineSubmit = (id) => window.onlineSubmitLineup(id);
     window.onlinePlay = (id, tactic) => onlineAction("/api/online/play", { id, tactic });
+    window.onlineDefensePlay = (id) => {
+      const pitchCall = document.getElementById(onlineDomId("onlinePitchCall", id))?.value || "auto";
+      const defensePlan = document.getElementById(onlineDomId("onlineDefensePlan", id))?.value || "normal";
+      const rawPickoff = document.getElementById(onlineDomId("onlinePickoffBase", id))?.value;
+      const payload = { id, pitchCall, defensePlan };
+      if (rawPickoff !== undefined && rawPickoff !== "") payload.pickoffBase = Number(rawPickoff);
+      onlineAction("/api/online/play", payload);
+    };
     window.onlineForfeit = (id) => {
       if (!confirm("정말 온라인 경기를 패배 선언할까요? 상대 승리로 경기가 종료됩니다.")) return;
       onlineAction("/api/online/forfeit", { id });

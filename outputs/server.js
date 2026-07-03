@@ -1,4 +1,4 @@
-const http = require("http");
+﻿const http = require("http");
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
@@ -363,6 +363,54 @@ function onlinePlayerLabel(player) {
   return `${player.batsThrows ? `[${player.batsThrows}] ` : ""}${player.name}${player.jerseyNumber ? ` #${player.jerseyNumber}` : ""}`;
 }
 
+const DEFENSE_PITCH_CALLS = {
+  auto: { label: "자동 배합", pitch: 0, roll: 0, onlineRoll: 0, wild: 0, steal: 0 },
+  fourSeam: { label: "포심 승부", pitch: -1, roll: -1.2, onlineRoll: -0.008, wild: -0.08, steal: 0.2 },
+  slider: { label: "슬라이더 유도", pitch: 1, roll: -0.7, onlineRoll: -0.005, wild: 0.05, steal: 0 },
+  curve: { label: "커브 타이밍 흔들기", pitch: 1, roll: -0.4, onlineRoll: -0.003, wild: 0.08, steal: 0.1 },
+  changeup: { label: "체인지업 완급", pitch: 1, roll: -0.5, onlineRoll: -0.004, wild: 0.04, steal: 0.25 },
+  fork: { label: "포크/스플리터", pitch: 2, roll: -0.9, onlineRoll: -0.006, wild: 0.12, steal: 0.15 },
+  pitchout: { label: "피치아웃", pitch: 0, roll: -1.5, onlineRoll: -0.012, wild: 0.03, steal: -4.0 }
+};
+
+const DEFENSE_PLANS = {
+  normal: { label: "기본 수비", pitch: 0, roll: 0, onlineRoll: 0, wild: 0, steal: 0, pickoff: 0 },
+  attackZone: { label: "스트존 공격", pitch: -1, roll: -1.0, onlineRoll: -0.007, wild: -0.1, steal: 0.1, pickoff: 0 },
+  waste: { label: "유인구 승부", pitch: 2, roll: -0.5, onlineRoll: -0.004, wild: 0.12, steal: 0.1, pickoff: 0 },
+  groundball: { label: "땅볼 유도", pitch: 1, roll: -0.6, onlineRoll: -0.004, wild: 0.02, steal: 0, pickoff: 0 },
+  holdRunner: { label: "주자 묶기", pitch: 1, roll: 0.3, onlineRoll: 0.002, wild: 0.02, steal: -3.5, pickoff: 0.12 },
+  walkAround: { label: "강타자 피해가기", pitch: 2, roll: -0.2, onlineRoll: -0.002, wild: 0.08, steal: 0.3, pickoff: 0 }
+};
+
+function sanitizeDefenseCall(value) {
+  return DEFENSE_PITCH_CALLS[value] ? value : "auto";
+}
+
+function sanitizeDefensePlan(value) {
+  return DEFENSE_PLANS[value] ? value : "normal";
+}
+
+function defenseCallLabel(value) {
+  return DEFENSE_PITCH_CALLS[sanitizeDefenseCall(value)].label;
+}
+
+function defensePlanLabel(value) {
+  return DEFENSE_PLANS[sanitizeDefensePlan(value)].label;
+}
+
+function defensePlanProfile(call, plan) {
+  const c = DEFENSE_PITCH_CALLS[sanitizeDefenseCall(call)];
+  const p = DEFENSE_PLANS[sanitizeDefensePlan(plan)];
+  return {
+    pitch: c.pitch + p.pitch,
+    roll: c.roll + p.roll,
+    onlineRoll: c.onlineRoll + p.onlineRoll,
+    wild: c.wild + p.wild,
+    steal: c.steal + p.steal,
+    pickoff: (c.pickoff || 0) + (p.pickoff || 0)
+  };
+}
+
 function onlineHalfLabel(game) {
   return `${game.inning}회${game.half === "top" ? "초" : "말"}`;
 }
@@ -567,7 +615,8 @@ function finishOnlineHalfOrGame(match, game) {
   }
 }
 
-function resolveOnlineLivePlay(user, matchId, tactic = "normal") {
+function resolveOnlineLivePlayLegacy(user, matchId, payload = "normal") {
+  const input = payload && typeof payload === "object" ? payload : { tactic: payload };
   const data = readOnlineMatches();
   const match = data.matches.find((m) => m.id === String(matchId));
   if (!match) return { error: "대결 방을 찾을 수 없습니다." };
@@ -575,6 +624,17 @@ function resolveOnlineLivePlay(user, matchId, tactic = "normal") {
   if (match.status !== "live" || !match.game) return { error: "아직 경기 운영 상태가 아닙니다." };
   const game = match.game;
   const { offense, defense } = onlineCurrentSides(game);
+  const offenseInput = user.id === match[offense]?.userId;
+  const defenseInput = user.id === match[defense]?.userId;
+  if (!offenseInput && !defenseInput) return { error: "현재 경기 참가자가 아닙니다." };
+  const rawTactic = String(input.tactic || "normal");
+  const tacticMap = { take: "wait", sac_bunt: "bunt", squeeze: "bunt", hit_run: "contact" };
+  const tactic = offenseInput ? (tacticMap[rawTactic] || rawTactic) : "normal";
+  const pitchCall = defenseInput ? sanitizeDefenseCall(input.pitchCall) : "auto";
+  const defensePlan = defenseInput ? sanitizeDefensePlan(input.defensePlan) : "normal";
+  const defenseProfile = defensePlanProfile(pitchCall, defensePlan);
+  const actionUser = user;
+  if (defenseInput) user = { ...user, id: match[offense]?.userId };
   const offenseUser = match[offense]?.userId;
   if (user.id !== offenseUser) return { error: "현재 공격 팀만 타격/주루 지시를 낼 수 있습니다." };
   const lineup = game.lineups[offense] || [];
@@ -647,7 +707,8 @@ function resolveOnlineLivePlay(user, matchId, tactic = "normal") {
   return { match };
 }
 
-function resolveOnlineLivePlayV3(user, matchId, tactic = "normal") {
+function resolveOnlineLivePlayV3(user, matchId, payload = {}) {
+  const input = payload && typeof payload === "object" ? payload : { tactic: payload };
   const data = readOnlineMatches();
   const match = data.matches.find((m) => m.id === String(matchId));
   if (!match) return { error: "대결 방을 찾을 수 없습니다." };
@@ -656,7 +717,15 @@ function resolveOnlineLivePlayV3(user, matchId, tactic = "normal") {
 
   const game = match.game;
   const { offense, defense } = onlineCurrentSides(game);
-  if (user.id !== match[offense]?.userId) return { error: "현재 공격 팀만 타격/주루 지시를 낼 수 있습니다." };
+  const offenseInput = user.id === match[offense]?.userId;
+  const defenseInput = user.id === match[defense]?.userId;
+  if (!offenseInput && !defenseInput) return { error: "현재 경기 참가자가 아닙니다." };
+  const rawTactic = String(input.tactic || "normal");
+  const tacticMap = { take: "wait", sac_bunt: "bunt", squeeze: "bunt", hit_run: "contact" };
+  const tactic = offenseInput ? (tacticMap[rawTactic] || rawTactic) : "normal";
+  const pitchCall = defenseInput ? sanitizeDefenseCall(input.pitchCall) : "auto";
+  const defensePlan = defenseInput ? sanitizeDefensePlan(input.defensePlan) : "normal";
+  const defenseProfile = defensePlanProfile(pitchCall, defensePlan);
 
   const lineup = game.lineups[offense] || [];
   const batterIndex = (game.battingIndex[offense] || 0) % Math.max(1, lineup.length);
@@ -666,7 +735,24 @@ function resolveOnlineLivePlayV3(user, matchId, tactic = "normal") {
 
   const rng = seededRandom(`${match.id}-${Date.now()}-${game.inning}-${game.half}-${batter.id}-${pitcher.id}-${game.pitchCounts[defense] || 0}`);
   const half = onlineHalfLabel(game);
-  const pitchCount = Math.max(3, Math.min(11, 3 + Math.floor(rng() * 5) + (tactic === "wait" ? 2 : 0) + (tactic === "bunt" ? -1 : 0)));
+  const pickoffBase = Number(input.pickoffBase);
+  if (defenseInput && Number.isInteger(pickoffBase) && pickoffBase >= 0 && pickoffBase <= 2 && game.bases[pickoffBase]) {
+    const runner = game.bases[pickoffBase];
+    const pickChance = Math.max(0.015, Math.min(0.18, 0.035 + defenseProfile.pickoff + ((pitcher.pit || 60) - 60) / 950 - ((runner.spd || 60) - 60) / 900));
+    if (rng() < pickChance) {
+      game.bases[pickoffBase] = null;
+      game.outs += 1;
+      const text = `${half} ${onlinePlayerLabel(pitcher)} 견제 성공. ${runner.name} ${pickoffBase + 1}루에서 아웃, ${game.outs}아웃`;
+      game.log.unshift(text);
+      match.lastAction = { userId: user.id, username: user.username, side: defense, tactic: "견제", text, at: new Date().toISOString() };
+      finishOnlineHalfOrGame(match, game);
+      match.updatedAt = new Date().toISOString();
+      writeOnlineMatches(data);
+      return { match };
+    }
+    game.log.unshift(`${half} ${onlinePlayerLabel(pitcher)} 견제. ${runner.name} 귀루`);
+  }
+  const pitchCount = Math.max(3, Math.min(12, 3 + Math.floor(rng() * 5) + (tactic === "wait" ? 2 : 0) + (tactic === "bunt" ? -1 : 0) + Math.round(defenseProfile.pitch)));
   game.pitchCounts[defense] = (game.pitchCounts[defense] || 0) + pitchCount;
   const pitchNote = `${pitchCount}구 승부`;
   const runnerState = () => {
@@ -676,7 +762,7 @@ function resolveOnlineLivePlayV3(user, matchId, tactic = "normal") {
 
   const batterScore = (batter.hit || 50) * 0.52 + (batter.pow || 50) * 0.28 + (batter.spd || 50) * 0.08 + (batter.condition || 65) * 0.12;
   const pitcherScore = (pitcher.pit || 50) * 0.78 + (pitcher.condition || 65) * 0.22 - Math.max(0, (game.pitchCounts[defense] || 0) - 88) * 0.12;
-  let roll = rng() + (batterScore - pitcherScore) / 190;
+  let roll = rng() + (batterScore - pitcherScore) / 190 + defenseProfile.onlineRoll;
   if (tactic === "power") roll += 0.02;
   if (tactic === "contact") roll += 0.012;
   if (tactic === "wait") roll += 0.006;
@@ -746,6 +832,14 @@ function resolveOnlineLivePlayV3(user, matchId, tactic = "normal") {
   game.strikes = 0;
   game.lastTactic = tactic;
   game.log.unshift(text);
+  match.lastAction = {
+    userId: user.id,
+    username: user.username,
+    side: defenseInput ? defense : offense,
+    tactic: defenseInput ? `${defenseCallLabel(pitchCall)} · ${defensePlanLabel(defensePlan)}` : tactic,
+    text,
+    at: new Date().toISOString()
+  };
   finishOnlineHalfOrGame(match, game);
   match.updatedAt = new Date().toISOString();
   writeOnlineMatches(data);
@@ -3967,6 +4061,9 @@ function resolveOpponentPlateAppearance(state) {
   const restPenalty = pitcher ? Math.max(0, Number(pitcher.restDays) || 0) * 3.2 + Math.max(0, 55 - (Number(pitcher.form) || 70)) * 0.25 : 0;
   const pitchPower = pitcher ? pitcher.pit * 0.72 + pitcher.form * 0.2 + pitcher.happy * 0.08 - restPenalty : teamPower(state);
   const attack = opponentBatterPower(opp, game.inning);
+  const pitchCall = sanitizeDefenseCall(game.pitchCall);
+  const defensePlan = sanitizeDefensePlan(game.defensePlan);
+  const defenseProfile = defensePlanProfile(pitchCall, defensePlan);
   const outsBefore = game.outs || 0;
   const runsBefore = Number(game.score?.opp) || 0;
   let strikeoutAdded = 0;
@@ -3976,7 +4073,7 @@ function resolveOpponentPlateAppearance(state) {
   const pitchSummary = () => `${pitcher?.name || "우리 투수"} ${Math.max(1, Number(game.paPitchCount) || 1)}구, ${batter.order}번 ${batter.name}`;
   const wildChance = Math.max(
     0.2,
-    Math.min(2.0, 1.55 - (pitcher?.pit || 60) * 0.014 + game.count.balls * 0.13 + Math.max(0, game.pitchCount - (pitcher?.stamina || 65)) * 0.012)
+    Math.min(2.0, 1.55 + defenseProfile.wild - (pitcher?.pit || 60) * 0.014 + game.count.balls * 0.13 + Math.max(0, game.pitchCount - (pitcher?.stamina || 65)) * 0.012)
   );
   if (game.bases.some(Boolean) && rnd(1, 100) <= wildChance) {
     game.count.balls += 1;
@@ -3998,7 +4095,7 @@ function resolveOpponentPlateAppearance(state) {
     if (finishWalkoffIfNeeded(state)) return state;
     return state;
   }
-  const stealTryChance = Math.max(1.2, Math.min(8.5, 5.0 + (batter.contact || 60) * 0.018 + attack * 0.012 - defense.catcherArm * 0.045 - (pitcher?.pickoff || 55) * 0.022));
+  const stealTryChance = Math.max(1.2, Math.min(8.5, 5.0 + defenseProfile.steal + (batter.contact || 60) * 0.018 + attack * 0.012 - defense.catcherArm * 0.045 - (pitcher?.pickoff || 55) * 0.022));
   if (game.bases[0] && !game.bases[1] && rnd(1, 100) < stealTryChance) {
     const catcher = fielderByPos(defense, "C");
     if (rnd(1, 100) + defense.catcherArm + (pitcher?.pickoff || 55) * 0.18 > 126) {
@@ -4020,7 +4117,7 @@ function resolveOpponentPlateAppearance(state) {
   const fatiguePenalty = Math.max(0, game.pitchCount - (pitcher?.stamina || 65)) * 0.48 + Math.max(0, Number(pitcher?.restDays) || 0) * 1.8;
   const earlyCountDrag = game.paPitchCount <= 1 ? -11 : game.paPitchCount === 2 ? -5 : 0;
   const deepCountFinish = Math.max(0, game.paPitchCount - 5) * 3.5;
-  const pitchRoll = rnd(1, 100) + attack * 0.2 + batter.contact * 0.12 - pitchPower * 0.25 + fatiguePenalty + earlyCountDrag + deepCountFinish;
+  const pitchRoll = rnd(1, 100) + attack * 0.2 + batter.contact * 0.12 - pitchPower * 0.25 + fatiguePenalty + earlyCountDrag + deepCountFinish + defenseProfile.roll;
   let hardContact = 0;
   if (pitchRoll < 27 && game.count.strikes < 2) {
     game.count.strikes += 1;
@@ -4127,6 +4224,15 @@ function setGameTactic(state, tactic) {
   if (isUserBattingHalf(game)) return resolveUserAtBat(state, tactic || "swing");
   game.tactic = tactic || "swing";
   game.log.unshift(`벤치 지시: ${tacticLabel(game.tactic)}`);
+  return state;
+}
+
+function setDefenseCall(state, pitchCall, defensePlan) {
+  const game = state.activeGame;
+  if (!game || game.complete || !isOpponentBattingHalf(game)) return state;
+  game.pitchCall = sanitizeDefenseCall(pitchCall);
+  game.defensePlan = sanitizeDefensePlan(defensePlan);
+  game.log.unshift(`수비 지시: ${defenseCallLabel(game.pitchCall)} · ${defensePlanLabel(game.defensePlan)}`);
   return state;
 }
 
@@ -7884,7 +7990,7 @@ const server = http.createServer(async (req, res) => {
     } else if (url.pathname === "/api/online/lineup") {
       result = submitOnlineLineup(user, state, body.id, body.lineup);
     } else if (url.pathname === "/api/online/play") {
-      result = resolveOnlineLivePlayV3(user, body.id, body.tactic);
+      result = resolveOnlineLivePlayV3(user, body.id, body);
     } else if (url.pathname === "/api/online/forfeit") {
       result = forfeitOnlineMatch(user, body.id);
     } else if (url.pathname === "/api/online/cancel") {
@@ -7927,6 +8033,7 @@ const server = http.createServer(async (req, res) => {
     "/api/game/runner-tactic": () => setRunnerTactic(state, body.tactic || "normal"),
     "/api/game/steal": () => commandSteal(state, body.steal),
     "/api/game/pickoff": () => commandPickoff(state, body.baseIndex),
+    "/api/game/defense-call": () => setDefenseCall(state, body.pitchCall, body.defensePlan),
     "/api/game/change-pitcher": () => changePitcher(state, body.inId),
     "/api/game/at-bat": () => resolveUserAtBat(state, body.tactic || "swing"),
     "/api/game/defense": () => resolveOpponentHalf(state),
@@ -7976,3 +8083,4 @@ const server = http.createServer(async (req, res) => {
 server.listen(PORT, "0.0.0.0", () => {
   console.log(`Diamond Office Manager backend running on port ${PORT}`);
 });
+
