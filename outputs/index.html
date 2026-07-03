@@ -699,6 +699,50 @@
       min-height: 42px;
     }
 
+    .online-command-panel {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fafc;
+      color: var(--ink);
+    }
+
+    .online-command-panel select,
+    .online-command-panel button {
+      width: 100%;
+      min-height: 40px;
+    }
+
+    .online-command-panel label {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 40px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .online-command-panel input {
+      width: auto;
+    }
+
+    .online-lineup-slot {
+      grid-template-columns: 38px minmax(0, 1fr) 86px;
+    }
+    @media (max-width: 900px) {
+      .online-command-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .news-item {
       padding: 10px;
       border: 1px solid var(--line);
@@ -1806,6 +1850,7 @@
     let currentUser = null;
     let boardPosts = [];
     let onlineMatches = [];
+    let onlineTeams = [];
     let onlineCount = 1;
     let activeView = "dashboard";
     let onlinePolling = false;
@@ -1942,6 +1987,7 @@
     async function loadOnlineMatches() {
       const data = await api("/api/online/matches");
       onlineMatches = data.matches || [];
+      onlineTeams = data.teams || onlineTeams || [];
       updateOnlineCount(data.onlineCount);
       renderOnline();
     }
@@ -1952,6 +1998,7 @@
       try {
         const data = await api(path, body);
         onlineMatches = data.matches || [];
+        onlineTeams = data.teams || onlineTeams || [];
         updateOnlineCount(data.onlineCount);
         renderOnline();
         showToast("온라인 대결 갱신 완료");
@@ -1961,6 +2008,46 @@
     }
 
     function onlineLineupPayload() {
+      const onlineSelects = [...document.querySelectorAll(".onlineLineupSelect")];
+      if (onlineSelects.length) {
+        const rawLineup = onlineSelects.map((select) => Number(select.value));
+        const positions = [...document.querySelectorAll(".onlinePositionSelect")].map((select) => select.value);
+        const seen = new Set();
+        for (const playerId of rawLineup) {
+          if (!playerId) {
+            showToast("1번부터 9번까지 선수를 모두 선택하세요.");
+            return null;
+          }
+          if (seen.has(playerId)) {
+            showToast("같은 선수는 라인업에 두 번 넣을 수 없습니다.");
+            return null;
+          }
+          seen.add(playerId);
+        }
+        const required = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF"];
+        for (const pos of required) {
+          if (!positions.includes(pos)) {
+            showToast(`${pos} 수비 포지션이 비어 있습니다.`);
+            return null;
+          }
+        }
+        const starterId = Number($("onlineStarterSelect")?.value || 0);
+        if (!starterId) {
+          showToast("선발 투수를 먼저 선택하세요.");
+          return null;
+        }
+        const bullpen = [...document.querySelectorAll(".onlineBullpenSelect")]
+          .map((select) => Number(select.value))
+          .filter(Boolean);
+        return {
+          starterId,
+          bullpen,
+          battingOrder: rawLineup.slice(0, 9).map((playerId, index) => ({
+            playerId,
+            position: positions[index]
+          }))
+        };
+      }
       const rawLineup = [...document.querySelectorAll(".lineupSelect")].map((select) => Number(select.value));
       const positions = selectedLineupPositions();
       const lineupError = validateManualLineup(rawLineup, positions);
@@ -4073,7 +4160,7 @@
     function renderOnline() {
       const list = $("onlineRooms");
       if (!list) return;
-      const activeMatch = onlineMatches.find((match) => match.mySide && ["starter", "lineup", "live"].includes(match.status));
+      const activeMatch = onlineMatches.find((match) => match.mySide && ["team_select", "roster_prep", "starter", "lineup", "live"].includes(match.status));
       const onlineView = $("online");
       if (onlineView) onlineView.classList.toggle("online-wide", Boolean(activeMatch));
       list.classList.toggle("online-operation-list", Boolean(activeMatch));
@@ -4090,7 +4177,15 @@
         list.innerHTML = renderOnlineMatchOperation(activeMatch);
         return;
       }
-      const statusLabel = (status) => ({ waiting: "상대 대기", starter: "선발 제출", lineup: "야수 라인업 제출", live: "경기 운영", complete: "경기 종료" }[status] || status);
+      const statusLabel = (status) => ({
+        waiting: "상대 대기",
+        team_select: "팀 선택",
+        roster_prep: "1군/2군 정리",
+        starter: "선발 제출",
+        lineup: "야수 라인업 제출",
+        live: "경기 운영",
+        complete: "경기 종료"
+      }[status] || status);
       const starterText = (starter, hiddenText = "비공개") => {
         if (!starter) return hiddenText;
         return `${starter.batsThrows || "-"} ${starter.name || "-"}${starter.jerseyNumber ? ` #${starter.jerseyNumber}` : ""} · ${starter.pos || "SP"} · 현재 ${starter.current || 0}`;
@@ -4197,14 +4292,74 @@
     }
 
     function renderOnlinePreparationPanel(match) {
-      const homeReady = match.home?.starter ? "선발 제출 완료" : "선발 대기";
-      const awayReady = match.away?.starter ? "선발 제출 완료" : "선발 대기";
-      const homeLineupReady = match.home?.lineupSubmitted ? "야수 라인업 완료" : "야수 라인업 대기";
-      const awayLineupReady = match.away?.lineupSubmitted ? "야수 라인업 완료" : "야수 라인업 대기";
-      const actions = [
-        match.canSubmitStarter ? `<button class="good" onclick="onlineSubmitStarter('${match.id}')">선발 투수 제출</button>` : "",
-        match.canSubmitLineup ? `<button class="good" onclick="onlineSubmitLineup('${match.id}')">야수 라인업 제출</button>` : ""
-      ].filter(Boolean).join("");
+      const mySide = match.mySide === "away" ? match.away : match.home;
+      const roster = mySide?.roster || [];
+      const active = roster.filter((p) => p.rosterStatus !== "FARM");
+      const farm = roster.filter((p) => p.rosterStatus === "FARM");
+      const pitchers = active.filter((p) => p.type === "PIT");
+      const hitters = active.filter((p) => p.type !== "PIT");
+      const posOptions = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
+      const teamButtons = (onlineTeams || []).map((team) => `
+        <button class="${mySide?.teamId === team.id ? "primary" : "secondary"}" onclick="onlineChooseTeam('${match.id}', '${team.id}')">
+          ${escapeHtml(team.name)}
+        </button>
+      `).join("");
+      const rosterRows = (players, target) => players.map((p) => `
+        <div class="mini-card" style="display:flex; justify-content:space-between; gap:8px; align-items:center;">
+          <span>${escapeHtml(onlinePlayerNameLabel(p))} · ${escapeHtml(p.pos || "-")} · 현재 ${p.current || 0}</span>
+          ${match.canRosterMove ? `<button class="secondary" onclick="onlineMoveRoster('${match.id}', ${p.id}, '${target}')">${target === "ACTIVE" ? "1군 등록" : "2군 이동"}</button>` : ""}
+        </div>
+      `).join("");
+      const starterSelect = match.canSubmitStarter ? `
+        <div class="mini-card">
+          <strong>선발 투수 선택</strong>
+          <select id="onlineStarterSelect" style="margin-top:8px;">
+            ${pitchers.map((p) => `<option value="${p.id}">${escapeHtml(onlinePlayerNameLabel(p))} · ${escapeHtml(p.pos || "P")} · 현재 ${p.current || 0} · 컨디션 ${p.condition || 0}</option>`).join("")}
+          </select>
+          <button class="good" style="margin-top:8px;" onclick="onlineSubmitStarter('${match.id}')">선발 제출</button>
+        </div>
+      ` : "";
+      const hitterOptions = hitters.map((p) => `<option value="${p.id}">${escapeHtml(onlinePlayerNameLabel(p))} · ${escapeHtml(p.pos || "-")} · 현재 ${p.current || 0}/${p.potential || 0}</option>`).join("");
+      const lineupRows = match.canSubmitLineup ? Array.from({ length: 9 }, (_, i) => {
+        const defaultPlayer = hitters[i] || hitters[0];
+        const defaultPos = posOptions[i] || "DH";
+        return `
+          <div class="lineup-slot online-lineup-slot">
+            <span class="badge">${i + 1}</span>
+            <select class="onlineLineupSelect">${hitterOptions}</select>
+            <select class="onlinePositionSelect">
+              ${posOptions.map((pos) => `<option value="${pos}" ${pos === defaultPos ? "selected" : ""}>${pos}</option>`).join("")}
+            </select>
+          </div>
+        `;
+      }).join("") : "";
+      const bullpenOptions = pitchers.map((p) => `<option value="${p.id}">${escapeHtml(onlinePlayerNameLabel(p))} · ${escapeHtml(p.pos || "P")} · 컨디션 ${p.condition || 0}</option>`).join("");
+      const lineupBuilder = match.canSubmitLineup ? `
+        <div class="mini-card">
+          <strong>1번부터 9번까지 새 라인업 구성</strong>
+          <div class="lineup-grid" style="margin-top:10px;">${lineupRows}</div>
+          <strong style="display:block; margin-top:12px;">불펜 순서</strong>
+          <div class="grid two" style="margin-top:8px;">
+            ${Array.from({ length: Math.min(6, Math.max(1, pitchers.length)) }, (_, i) => `<select class="onlineBullpenSelect"><option value="">${i + 1}순위 미지정</option>${bullpenOptions}</select>`).join("")}
+          </div>
+          <button class="good" style="margin-top:10px;" onclick="onlineSubmitLineup('${match.id}')">라인업 제출</button>
+        </div>
+      ` : "";
+      const homeReady = match.home?.teamName ? `${match.home.teamName} · ${match.home.rosterReady ? "로스터 완료" : "로스터 대기"} · ${match.home.starterSubmitted ? "선발 완료" : "선발 대기"} · ${match.home.lineupSubmitted ? "라인업 완료" : "라인업 대기"}` : "홈 감독 팀 선택 대기";
+      const awayReady = match.away?.teamName ? `${match.away.teamName} · ${match.away.rosterReady ? "로스터 완료" : "로스터 대기"} · ${match.away.starterSubmitted ? "선발 완료" : "선발 대기"} · ${match.away.lineupSubmitted ? "라인업 완료" : "라인업 대기"}` : "상대 참가 대기";
+      const rosterPanel = match.canRosterMove ? `
+        <div class="grid two" style="margin-top:12px;">
+          <div>
+            <strong>1군 ${active.length}명</strong>
+            <div class="log" style="max-height:220px; margin-top:8px;">${rosterRows(active, "FARM") || `<div class="empty">1군 선수가 없습니다.</div>`}</div>
+          </div>
+          <div>
+            <strong>2군 ${farm.length}명</strong>
+            <div class="log" style="max-height:220px; margin-top:8px;">${rosterRows(farm, "ACTIVE") || `<div class="empty">2군 선수가 없습니다.</div>`}</div>
+          </div>
+        </div>
+        <button class="good" style="margin-top:10px;" onclick="onlineReadyRoster('${match.id}')">1군/2군 정리 완료</button>
+      ` : "";
       return `
         <section class="live-panel online-live-panel">
           <div class="live-score online-live-score">
@@ -4215,17 +4370,18 @@
           <div class="grid two" style="margin-top:12px;">
             <div class="mini-card">
               <strong>${escapeHtml(match.home?.username || "-")}</strong>
-              <span>${escapeHtml(homeReady)} · ${escapeHtml(homeLineupReady)}</span>
+              <span>${escapeHtml(homeReady)}</span>
             </div>
             <div class="mini-card">
               <strong>${escapeHtml(match.away?.username || "-")}</strong>
-              <span>${escapeHtml(awayReady)} · ${escapeHtml(awayLineupReady)}</span>
+              <span>${escapeHtml(awayReady)}</span>
             </div>
           </div>
-          <div class="empty" style="margin-top:12px;">
-            선발 투수를 먼저 제출하고, 양쪽 선발이 공개되면 야수 라인업을 제출합니다. 양쪽 라인업이 모두 제출되면 이 화면이 경기 운영판으로 전환됩니다.
-          </div>
-          ${actions ? `<div class="offer-actions" style="margin-top:12px;">${actions}</div>` : ""}
+          ${match.canChooseTeam ? `<div class="mini-card" style="margin-top:12px;"><strong>구단 선택</strong><div class="offer-actions" style="margin-top:10px;">${teamButtons}</div></div>` : ""}
+          ${rosterPanel}
+          ${starterSelect}
+          ${lineupBuilder}
+          ${!match.canChooseTeam && !match.canRosterMove && !match.canSubmitStarter && !match.canSubmitLineup ? `<div class="empty" style="margin-top:12px;">상대 제출을 기다리는 중입니다. 상대가 누르면 자동 갱신됩니다.</div>` : ""}
         </section>
       `;
     }
@@ -4276,25 +4432,77 @@
       const offenseSide = offense === "home" ? match.home : match.away;
       const defenseSide = defense === "home" ? match.home : match.away;
       const offenseTeam = offenseSide?.teamName || "-";
-      const myTurn = match.mySide === offense && match.status === "live";
+      const isMyOffense = match.mySide === offense && match.status === "live";
+      const isMyDefense = match.mySide === defense && match.status === "live";
       const currentIndex = (game.battingIndex?.[offense] || 0) % 9;
       const batter = game.lineups?.[offense]?.[currentIndex];
       const pitcher = game.pitchers?.[defense];
-      const tacticLabels = { normal: "다음 플레이", contact: "컨택 지시", power: "강공 지시", wait: "기다리기", bunt: "번트 지시", steal: "도루/주루 압박" };
+      const tacticLabels = { normal: "일반 타격", contact: "컨택 스윙", power: "장타 스윙", wait: "기다리기", bunt: "번트", steal: "도루/주루" };
       const lastAction = match.lastAction;
       const statusText = match.status === "complete"
         ? "경기 종료"
-        : myTurn
-          ? "내 공격 차례입니다. 타격/주루 지시를 고르면 바로 진행됩니다."
-          : "상대 지시 대기 중입니다. 상대가 누르면 이 화면이 자동 갱신됩니다.";
-      const playButtons = myTurn ? `
-        <div class="offer-actions" style="margin-top:12px;">
-          <button class="primary" onclick="onlinePlay('${match.id}', 'normal')">다음 플레이</button>
-          <button class="secondary" onclick="onlinePlay('${match.id}', 'contact')">컨택 지시</button>
-          <button class="secondary" onclick="onlinePlay('${match.id}', 'power')">강공 지시</button>
-          <button class="secondary" onclick="onlinePlay('${match.id}', 'wait')">기다리기</button>
-          <button class="secondary" onclick="onlinePlay('${match.id}', 'bunt')">번트 지시</button>
-          <button class="secondary" onclick="onlinePlay('${match.id}', 'steal')">도루/주루 압박</button>
+        : isMyOffense
+          ? "내 공격입니다. 타격, 번트, 주루, 도루 지시를 제출하세요."
+          : isMyDefense
+            ? "내 수비입니다. 투수 구종, 수비 방향, 견제를 제출하세요."
+            : "상대 지시 대기 중입니다. 상대가 누르면 이 화면이 자동 갱신됩니다.";
+      const hasRunner = (baseIndex) => Boolean(game.bases?.[baseIndex]);
+      const pitchOptions = [
+        `<option value="auto">포수 리드에 맡김</option>`,
+        ...(pitcher?.pitchArsenal || []).map((pitch) => {
+          const name = String(pitch.name || "");
+          let value = "fourSeam";
+          if (name.includes("슬라이더")) value = "slider";
+          else if (name.includes("커브")) value = "curve";
+          else if (name.includes("체인지")) value = "changeup";
+          else if (name.includes("포크") || name.includes("스플리터")) value = "fork";
+          return `<option value="${value}">${escapeHtml(name)} · 구사율 ${pitch.usage || 0}%</option>`;
+        }),
+        `<option value="pitchout">피치아웃</option>`
+      ].join("");
+      const playControls = isMyOffense ? `
+        <div class="online-command-panel">
+          <select id="onlineBattingCommand">
+            <option value="normal">강공 - 일반 타격</option>
+            <option value="contact">컨택 스윙 - 맞히기 우선</option>
+            <option value="power">장타 스윙 - 큰 타구 노림</option>
+            <option value="wait">대기 - 공 오래 보기</option>
+            <option value="bunt">번트</option>
+          </select>
+          <select id="onlineBuntType">
+            <option value="sacrifice">희생번트 - 주자 진루</option>
+            <option value="drag">기습번트 - 타자 생존도 노림</option>
+            <option value="squeeze">스퀴즈 - 3루 주자 홈 쇄도</option>
+          </select>
+          <select id="onlineRunnerPlan">
+            <option value="normal">기본 주루 - 사인 없으면 대기</option>
+            <option value="greenLight">그린라이트 - 빠른 주자 자율 도루</option>
+            <option value="aggressive">적극 주루 - 한 베이스 더 노림</option>
+            <option value="conservative">보수 주루 - 무리 금지</option>
+          </select>
+          <label><input class="onlineStealBase" type="checkbox" value="1" ${hasRunner(0) ? "" : "disabled"}> 1루 주자 도루</label>
+          <label><input class="onlineStealBase" type="checkbox" value="2" ${hasRunner(1) ? "" : "disabled"}> 2루 주자 도루</label>
+          <label><input class="onlineStealBase" type="checkbox" value="3" ${hasRunner(2) ? "" : "disabled"}> 홈스틸</label>
+          <button class="primary" onclick="onlinePlay('${match.id}')">공격 지시 제출</button>
+        </div>
+      ` : isMyDefense ? `
+        <div class="online-command-panel">
+          <select id="onlinePitchCall">${pitchOptions}</select>
+          <select id="onlineDefensePlan">
+            <option value="normal">기본 수비</option>
+            <option value="attackZone">스트존 공격</option>
+            <option value="waste">유인구 승부</option>
+            <option value="groundball">땅볼 유도</option>
+            <option value="holdRunner">주자 묶기</option>
+            <option value="walkAround">강타자 피해가기</option>
+          </select>
+          <select id="onlinePickoffBase">
+            <option value="0">견제 안 함</option>
+            <option value="1" ${hasRunner(0) ? "" : "disabled"}>1루 견제</option>
+            <option value="2" ${hasRunner(1) ? "" : "disabled"}>2루 견제</option>
+            <option value="3" ${hasRunner(2) ? "" : "disabled"}>3루 견제</option>
+          </select>
+          <button class="primary" onclick="onlinePlay('${match.id}')">수비 지시 제출</button>
         </div>
       ` : `<div class="empty" style="margin-top:12px;">${statusText}</div>`;
       return `
@@ -4303,7 +4511,7 @@
             <div>
               <div style="font-size:13px; color:#cbd5e1;">${game.inning}회${game.half === "top" ? "초" : "말"} · ${escapeHtml(offenseTeam)} 공격</div>
               <strong style="font-size:24px;">${escapeHtml(match.home?.teamName || "-")} ${game.score?.home || 0} : ${game.score?.away || 0} ${escapeHtml(match.away?.teamName || "-")}</strong>
-              <div style="margin-top:6px; color:${myTurn ? "#bbf7d0" : "#fde68a"};">${statusText}</div>
+              <div style="margin-top:6px; color:${isMyOffense || isMyDefense ? "#bbf7d0" : "#fde68a"};">${statusText}</div>
             </div>
             <div style="text-align:right; color:#cbd5e1;">
               <strong style="color:#fff;">최근 입력</strong><br>
@@ -4321,7 +4529,7 @@
             <div></div><div class="metric"><strong>홈</strong><span>${escapeHtml(defenseSide?.teamName || "-")} 수비</span></div><div></div>
           </div>
         </section>
-        ${playButtons}
+        ${playControls}
         <div class="grid two" style="margin-top:10px;">
           ${renderOnlineLineup(match.home?.teamName || "홈 라인업", game.lineups?.home, game.half === "bottom" ? (game.battingIndex?.home || 0) % 9 : -1)}
           ${renderOnlineLineup(match.away?.teamName || "원정 라인업", game.lineups?.away, game.half === "top" ? (game.battingIndex?.away || 0) % 9 : -1)}
@@ -4442,9 +4650,137 @@
     if ($("syncPlayers")) $("syncPlayers").addEventListener("click", () => mutate("/api/import/sync"));
     $("changeTeam").addEventListener("click", () => $("teamSelect").classList.add("active"));
 
+    function renderOnlineLivePanel(match, game) {
+      const offense = game.half === "top" ? "away" : "home";
+      const defense = offense === "home" ? "away" : "home";
+      const offenseSide = offense === "home" ? match.home : match.away;
+      const defenseSide = defense === "home" ? match.home : match.away;
+      const offenseTeam = offenseSide?.teamName || "-";
+      const isMyOffense = match.mySide === offense && match.status === "live";
+      const isMyDefense = match.mySide === defense && match.status === "live";
+      const opponentSideKey = match.mySide === "home" ? "away" : "home";
+      const mySubmitted = Boolean(game.pendingInputs?.[match.mySide]);
+      const opponentSubmitted = Boolean(game.pendingInputs?.[opponentSideKey]);
+      const currentIndex = (game.battingIndex?.[offense] || 0) % 9;
+      const batter = game.lineups?.[offense]?.[currentIndex];
+      const pitcher = game.pitchers?.[defense];
+      const tacticLabels = {
+        normal: "일반 타격",
+        contact: "컨택 스윙",
+        power: "장타 스윙",
+        wait: "기다리기",
+        bunt: "번트",
+        steal: "도루/주루"
+      };
+      const lastAction = match.lastAction;
+      const statusText = match.status === "complete"
+        ? "경기 종료"
+        : isMyOffense
+          ? "내 공격입니다. 타격, 번트, 주루, 도루 지시를 제출하세요."
+          : isMyDefense
+            ? "내 수비입니다. 투수 구종, 수비 방향, 견제를 제출하세요."
+            : "상대 지시 대기 중입니다. 상대가 누르면 이 화면이 자동 갱신됩니다.";
+      const inputStatus = `내 입력 ${mySubmitted ? "완료" : "대기"} · 상대 입력 ${opponentSubmitted ? "완료" : "대기"}`;
+      const hasRunner = (baseIndex) => Boolean(game.bases?.[baseIndex]);
+      const pitchOptions = [
+        `<option value="auto">포수 리드에 맡김</option>`,
+        ...(pitcher?.pitchArsenal || []).map((pitch) => {
+          const name = String(pitch.name || "");
+          let value = "fourSeam";
+          if (name.includes("슬라이더")) value = "slider";
+          else if (name.includes("커브")) value = "curve";
+          else if (name.includes("체인지")) value = "changeup";
+          else if (name.includes("포크") || name.includes("스플리터")) value = "fork";
+          return `<option value="${value}">${escapeHtml(name)} · 구사율 ${pitch.usage || 0}%</option>`;
+        }),
+        `<option value="pitchout">피치아웃</option>`
+      ].join("");
+      const playControls = isMyOffense ? `
+        <div class="online-command-panel">
+          <select id="onlineBattingCommand">
+            <option value="normal">강공 - 일반 타격</option>
+            <option value="contact">컨택 스윙 - 맞히기 우선</option>
+            <option value="power">장타 스윙 - 큰 타구 노림</option>
+            <option value="wait">기다리기 - 공 오래 보기</option>
+            <option value="bunt">번트</option>
+          </select>
+          <select id="onlineBuntType">
+            <option value="sacrifice">희생번트 - 주자 진루</option>
+            <option value="drag">기습번트 - 타자 생존도 노림</option>
+            <option value="squeeze">스퀴즈 - 3루 주자 홈 쇄도</option>
+          </select>
+          <select id="onlineRunnerPlan">
+            <option value="normal">기본 주루 - 사인 없으면 대기</option>
+            <option value="greenLight">그린라이트 - 빠른 주자 자율 도루</option>
+            <option value="aggressive">적극 주루 - 한 베이스 더 노림</option>
+            <option value="conservative">보수 주루 - 무리 금지</option>
+          </select>
+          <label><input class="onlineStealBase" type="checkbox" value="1" ${hasRunner(0) ? "" : "disabled"}> 1루 주자 도루</label>
+          <label><input class="onlineStealBase" type="checkbox" value="2" ${hasRunner(1) ? "" : "disabled"}> 2루 주자 도루</label>
+          <label><input class="onlineStealBase" type="checkbox" value="3" ${hasRunner(2) ? "" : "disabled"}> 홈스틸</label>
+          <button class="primary" onclick="onlinePlay('${match.id}')">공격 지시 제출</button>
+        </div>
+      ` : isMyDefense ? `
+        <div class="online-command-panel">
+          <select id="onlinePitchCall">${pitchOptions}</select>
+          <select id="onlineDefensePlan">
+            <option value="normal">기본 수비</option>
+            <option value="attackZone">스트존 공격</option>
+            <option value="waste">유인구 승부</option>
+            <option value="groundball">땅볼 유도</option>
+            <option value="holdRunner">주자 묶기</option>
+            <option value="walkAround">강타자 피해가기</option>
+          </select>
+          <select id="onlinePickoffBase">
+            <option value="0">견제 안 함</option>
+            <option value="1" ${hasRunner(0) ? "" : "disabled"}>1루 견제</option>
+            <option value="2" ${hasRunner(1) ? "" : "disabled"}>2루 견제</option>
+            <option value="3" ${hasRunner(2) ? "" : "disabled"}>3루 견제</option>
+          </select>
+          <button class="primary" onclick="onlinePlay('${match.id}')">수비 지시 제출</button>
+        </div>
+      ` : `<div class="empty" style="margin-top:12px;">${statusText}</div>`;
+      return `
+        <section class="online-live-board" style="margin-top:12px; padding:16px; border-radius:8px; background:#111827; color:#fff;">
+          <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start;">
+            <div>
+              <div style="font-size:13px; color:#cbd5e1;">${game.inning}회${game.half === "top" ? "초" : "말"} · ${escapeHtml(offenseTeam)} 공격</div>
+              <strong style="font-size:24px;">${escapeHtml(match.home?.teamName || "-")} ${game.score?.home || 0} : ${game.score?.away || 0} ${escapeHtml(match.away?.teamName || "-")}</strong>
+              <div style="margin-top:6px; color:${isMyOffense || isMyDefense ? "#bbf7d0" : "#fde68a"};">${statusText}</div>
+              <div style="margin-top:4px; color:#cbd5e1;">${inputStatus}</div>
+            </div>
+            <div style="text-align:right; color:#cbd5e1;">
+              <strong style="color:#fff;">최근 입력</strong><br>
+              ${lastAction ? `${escapeHtml(lastAction.username || "-")} · ${escapeHtml(tacticLabels[lastAction.tactic] || lastAction.tactic || "작전")}<br>${escapeHtml(lastAction.text || "")}` : "아직 작전 입력 없음"}
+            </div>
+          </div>
+          <div class="grid three" style="margin-top:14px;">
+            <div class="metric"><strong>${game.outs || 0}</strong><span>아웃</span></div>
+            <div class="metric"><strong>${batter ? `${escapeHtml(batter.batsThrows || "-")} ${escapeHtml(batter.name)}${batter.jerseyNumber ? ` #${batter.jerseyNumber}` : ""}` : "-"}</strong><span>현재 타자</span></div>
+            <div class="metric"><strong>${pitcher ? `${escapeHtml(pitcher.batsThrows || "-")} ${escapeHtml(pitcher.name)}${pitcher.jerseyNumber ? ` #${pitcher.jerseyNumber}` : ""}` : "-"}</strong><span>상대 투수 · 투구수 ${game.pitchCounts?.[defense] || 0}</span></div>
+          </div>
+          <div class="online-base-diamond">
+            <div></div><div class="metric"><strong>2루</strong><span>${game.bases?.[1] ? escapeHtml(game.bases[1].name) : "-"}</span></div><div></div>
+            <div class="metric"><strong>3루</strong><span>${game.bases?.[2] ? escapeHtml(game.bases[2].name) : "-"}</span></div>
+            <div></div>
+            <div class="metric"><strong>1루</strong><span>${game.bases?.[0] ? escapeHtml(game.bases[0].name) : "-"}</span></div>
+            <div></div><div class="metric"><strong>홈</strong><span>${escapeHtml(defenseSide?.teamName || "-")} 수비</span></div><div></div>
+          </div>
+        </section>
+        ${playControls}
+        <div class="grid two" style="margin-top:10px;">
+          ${renderOnlineLineup(match.home?.teamName || "홈 라인업", game.lineups?.home, game.half === "bottom" ? (game.battingIndex?.home || 0) % 9 : -1)}
+          ${renderOnlineLineup(match.away?.teamName || "원정 라인업", game.lineups?.away, game.half === "top" ? (game.battingIndex?.away || 0) % 9 : -1)}
+        </div>
+      `;
+    }
+
     window.onlineJoin = (id) => onlineAction("/api/online/join", { id });
+    window.onlineChooseTeam = (id, teamId) => onlineAction("/api/online/team", { id, teamId });
+    window.onlineMoveRoster = (id, playerId, target) => onlineAction("/api/online/roster", { id, playerId, target });
+    window.onlineReadyRoster = (id) => onlineAction("/api/online/ready", { id });
     window.onlineSubmitStarter = (id) => {
-      const starterId = selectedStarter();
+      const starterId = Number($("onlineStarterSelect")?.value || selectedStarter());
       if (!starterId) {
         showToast("선발 투수를 먼저 선택하세요.");
         return;
@@ -4457,7 +4793,22 @@
       onlineAction("/api/online/lineup", { id, lineup });
     };
     window.onlineSubmit = (id) => window.onlineSubmitLineup(id);
-    window.onlinePlay = (id, tactic) => onlineAction("/api/online/play", { id, tactic });
+    window.onlinePlay = (id, tactic) => {
+      const payload = { id };
+      const battingCommand = $("onlineBattingCommand");
+      if (battingCommand || tactic) {
+        payload.tactic = tactic || battingCommand?.value || "normal";
+        payload.buntType = $("onlineBuntType")?.value || "sacrifice";
+        payload.runnerPlan = $("onlineRunnerPlan")?.value || "normal";
+        payload.stealBases = [...document.querySelectorAll(".onlineStealBase:checked")].map((input) => Number(input.value));
+      }
+      if ($("onlinePitchCall")) {
+        payload.pitchCall = $("onlinePitchCall").value || "auto";
+        payload.defensePlan = $("onlineDefensePlan")?.value || "normal";
+        payload.pickoffBase = Number($("onlinePickoffBase")?.value || 0);
+      }
+      onlineAction("/api/online/play", payload);
+    };
     window.onlineForfeit = (id) => {
       if (!confirm("정말 이 온라인 경기를 패배 선언할까요? 상대 승리로 경기 종료됩니다.")) return;
       onlineAction("/api/online/forfeit", { id });
@@ -4465,7 +4816,7 @@
     window.onlineCancel = (id) => onlineAction("/api/online/cancel", { id });
 
     setInterval(() => {
-      const hasActiveOnline = onlineMatches.some((m) => ["starter", "lineup", "live"].includes(m.status));
+      const hasActiveOnline = onlineMatches.some((m) => ["team_select", "roster_prep", "starter", "lineup", "live"].includes(m.status));
       if (!currentUser || onlinePolling || (activeView !== "online" && !hasActiveOnline)) return;
       onlinePolling = true;
       loadOnlineMatches()
