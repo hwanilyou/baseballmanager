@@ -621,6 +621,84 @@
     .stat-card span { display: block; margin-top: 4px; font-size: 12px; color: var(--muted); }
     .log { display: grid; gap: 8px; max-height: 430px; overflow: auto; }
 
+    #online.online-wide {
+      max-width: min(1760px, calc(100vw - 36px));
+    }
+
+    #online.online-wide .panel {
+      padding: 18px;
+    }
+
+    #onlineRooms.online-operation-list {
+      max-height: none !important;
+      overflow: visible;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+    .online-operation-shell {
+      display: grid;
+      grid-template-columns: minmax(720px, 1.45fr) minmax(460px, 0.8fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .online-operation-primary,
+    .online-operation-side {
+      min-width: 0;
+    }
+
+    .online-operation-side {
+      position: sticky;
+      top: 12px;
+    }
+
+    .online-log-card .log {
+      max-height: min(72vh, 760px);
+      overflow: auto;
+    }
+
+    .online-live-board {
+      min-height: 560px;
+    }
+
+    .online-live-board .metric {
+      min-height: 66px;
+    }
+
+    .online-base-diamond {
+      max-width: 460px;
+      margin: 22px auto 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      text-align: center;
+    }
+
+    #online.online-wide .online-base-diamond {
+      max-width: 560px;
+    }
+
+    #online.online-wide .online-base-diamond .metric {
+      min-height: 84px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    #online.online-wide .online-live-board + .offer-actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 3;
+      padding: 12px 0 0;
+      background: linear-gradient(to bottom, rgba(247, 249, 252, 0), rgba(247, 249, 252, 0.98) 38%);
+    }
+
+    #online.online-wide .online-live-board + .offer-actions button {
+      min-height: 42px;
+    }
+
     .news-item {
       padding: 10px;
       border: 1px solid var(--line);
@@ -1174,6 +1252,9 @@
       aside { border-right: 0; border-bottom: 1px solid var(--line); }
       nav { grid-template-columns: repeat(3, 1fr); }
       .grid.two, .grid.three { grid-template-columns: 1fr; }
+      #online.online-wide { max-width: 1320px; }
+      .online-operation-shell { grid-template-columns: 1fr; }
+      .online-operation-side { position: static; }
     }
 
     @media (max-width: 560px) {
@@ -3993,6 +4074,9 @@
       const list = $("onlineRooms");
       if (!list) return;
       const activeMatch = onlineMatches.find((match) => match.mySide && ["starter", "lineup", "live"].includes(match.status));
+      const onlineView = $("online");
+      if (onlineView) onlineView.classList.toggle("online-wide", Boolean(activeMatch));
+      list.classList.toggle("online-operation-list", Boolean(activeMatch));
       const createButton = $("createOnlineRoom");
       if (createButton) {
         createButton.disabled = Boolean(activeMatch);
@@ -4094,16 +4178,16 @@
             ${forfeitButton}
           </div>
         </div>
-        <div class="grid two" style="align-items:start;">
-          <section>
+        <div class="online-operation-shell">
+          <section class="online-operation-primary">
             ${liveOrPrep}
           </section>
-          <section class="card">
+          <section class="card online-operation-side online-log-card">
             <h3>상대 입력 / 경기 로그</h3>
             <div class="empty" style="margin-bottom:10px;">
               상대가 작전 버튼을 누르면 여기와 경기판의 최근 입력에 자동으로 표시됩니다.
             </div>
-            <div class="log" style="max-height:520px;">
+            <div class="log">
               ${(game.log || []).slice(0, 40).map((line) => `<div>${escapeHtml(line)}</div>`).join("") || `<div class="empty">아직 진행 로그가 없습니다.</div>`}
             </div>
           </section>
@@ -4231,7 +4315,7 @@
             <div class="metric"><strong>${batter ? `${escapeHtml(batter.batsThrows || "-")} ${escapeHtml(batter.name)}${batter.jerseyNumber ? ` #${batter.jerseyNumber}` : ""}` : "-"}</strong><span>현재 타자</span></div>
             <div class="metric"><strong>${pitcher ? `${escapeHtml(pitcher.batsThrows || "-")} ${escapeHtml(pitcher.name)}${pitcher.jerseyNumber ? ` #${pitcher.jerseyNumber}` : ""}` : "-"}</strong><span>상대 투수 · 투구수 ${game.pitchCounts?.[defense] || 0}</span></div>
           </div>
-          <div style="max-width:360px; margin:16px auto 4px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; text-align:center;">
+          <div class="online-base-diamond">
             <div></div><div class="metric"><strong>2루</strong><span>${onlineRunnerLabel(game.bases?.[1])}</span></div><div></div>
             <div class="metric"><strong>3루</strong><span>${onlineRunnerLabel(game.bases?.[2])}</span></div><div></div><div class="metric"><strong>1루</strong><span>${onlineRunnerLabel(game.bases?.[0])}</span></div>
             <div></div><div class="metric"><strong>홈</strong><span>${escapeHtml(defenseSide?.teamName || "-")} 수비</span></div><div></div>
