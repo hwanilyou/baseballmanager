@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
@@ -417,7 +417,7 @@
       cursor: pointer;
     }
     .sort-header::after {
-      content: "\2195";
+      content: "↕";
       color: #94a3b8;
       font-size: 11px;
       line-height: 1;
@@ -697,216 +697,6 @@
 
     #online.online-wide .online-live-board + .offer-actions button {
       min-height: 42px;
-    }
-
-    .online-live-expanded {
-      min-height: 640px;
-      padding: 20px;
-      border-radius: 10px;
-      background: #111827;
-      color: #fff;
-      display: grid;
-      gap: 16px;
-    }
-
-    .online-live-scorebar {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(240px, 0.42fr);
-      gap: 14px;
-      align-items: start;
-    }
-
-    .online-live-scorebar span,
-    .online-live-scorebar em,
-    .online-last-action span,
-    .online-last-action em {
-      display: block;
-      color: #cbd5e1;
-      font-style: normal;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .online-live-scorebar strong {
-      display: block;
-      color: #fff;
-      font-size: 28px;
-      line-height: 1.25;
-      margin: 4px 0;
-    }
-
-    .online-last-action {
-      padding: 12px;
-      border: 1px solid rgba(255,255,255,0.18);
-      border-radius: 8px;
-      background: rgba(255,255,255,0.06);
-    }
-
-    .online-count-grid {
-      display: grid;
-      grid-template-columns: 0.5fr 1fr 1fr;
-      gap: 10px;
-    }
-
-    .online-count-grid .metric,
-    .online-live-expanded .base-card {
-      background: rgba(255,255,255,0.08);
-      color: #fff;
-      border-color: rgba(255,255,255,0.25);
-    }
-
-    .online-count-grid .metric span,
-    .online-live-expanded .base-card span {
-      color: #dbeafe;
-    }
-
-    .online-field-board {
-      width: min(640px, 100%);
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 18px;
-      text-align: center;
-      align-items: center;
-    }
-
-    .base-card {
-      min-height: 88px;
-      padding: 14px 10px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      display: grid;
-      align-content: center;
-      gap: 4px;
-    }
-
-    .base-card strong {
-      font-size: 18px;
-    }
-
-    .online-command-bar {
-      position: sticky;
-      bottom: 0;
-      z-index: 4;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      padding-top: 12px;
-      background: linear-gradient(to bottom, rgba(17,24,39,0), #111827 32%);
-    }
-
-    .online-command-bar button {
-      min-height: 42px;
-    }
-
-    .online-wait-box {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.22);
-      color: #e5e7eb;
-    }
-
-    .online-match-title {
-      margin-bottom: 12px;
-      align-items: center;
-    }
-
-    .online-phase-panel {
-      min-height: 560px;
-    }
-
-    .online-team-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .online-team-card {
-      display: grid;
-      gap: 4px;
-      min-height: 78px;
-      padding: 12px;
-      text-align: left;
-      border: 1px solid var(--border);
-      border-left: 6px solid var(--team-primary, var(--accent));
-      border-radius: 8px;
-      background: #fff;
-      color: var(--text);
-    }
-
-    .online-team-card span {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .online-team-card.is-selected,
-    .online-team-card.selected {
-      border-color: var(--accent);
-      border-left-color: var(--accent);
-      background: #fff7ed;
-    }
-
-    .online-roster-columns {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 12px;
-    }
-
-    .online-roster-list {
-      display: grid;
-      gap: 8px;
-      max-height: 430px;
-      overflow: auto;
-      padding-right: 4px;
-    }
-
-    .online-roster-player {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 8px;
-      align-items: center;
-      padding: 10px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: #fff;
-    }
-
-    .online-roster-player span {
-      display: block;
-      margin-top: 3px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .online-lineup-builder {
-      display: grid;
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .online-lineup-builder .lineup-slot,
-    .online-lineup-builder .online-lineup-slot {
-      display: grid;
-      grid-template-columns: 82px minmax(320px, 1fr) 110px;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .online-lineup-builder .online-lineup-slot .order-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 38px;
-      border-radius: 7px;
-      background: #eef4fb;
-      color: var(--ink);
-      font-weight: 800;
-    }
-
-    .online-lineup-builder .online-lineup-slot select {
-      width: 100%;
-      min-width: 0;
     }
 
     .news-item {
@@ -1465,11 +1255,6 @@
       #online.online-wide { max-width: 1320px; }
       .online-operation-shell { grid-template-columns: 1fr; }
       .online-operation-side { position: static; }
-      .online-roster-columns { grid-template-columns: 1fr; }
-      .online-lineup-builder .lineup-slot,
-      .online-lineup-builder .online-lineup-slot { grid-template-columns: 64px minmax(0, 1fr); }
-      .online-lineup-builder .lineup-slot select:last-child,
-      .online-lineup-builder .online-lineup-slot select:last-child { grid-column: 2; }
     }
 
     @media (max-width: 560px) {
@@ -1489,17 +1274,18 @@
 <body>
   <div class="team-select active" id="authSelect">
     <div class="select-inner">
-      <h2>濡쒓렇??/h2>
-      <div class="subtitle">?뚯썝蹂꾨줈 ?쒖쫵 湲곕줉怨??좎닔????μ씠 遺꾨━?⑸땲??</div>
+      <h2>로그인</h2>
+      <div class="subtitle">회원별로 시즌 기록과 선수단 저장이 분리됩니다.</div>
       <div class="auth-panel">
-        <label>?꾩씠??          <input id="authUsername" autocomplete="username" placeholder="2~20?? />
+        <label>아이디
+          <input id="authUsername" autocomplete="username" placeholder="2~20자" />
         </label>
-        <label style="display:block; margin-top:10px;">鍮꾨?踰덊샇
-          <input id="authPassword" type="password" autocomplete="current-password" placeholder="4???댁긽" />
+        <label style="display:block; margin-top:10px;">비밀번호
+          <input id="authPassword" type="password" autocomplete="current-password" placeholder="4자 이상" />
         </label>
         <div class="auth-actions">
-          <button class="primary" id="loginBtn">濡쒓렇??/button>
-          <button class="secondary" id="signupBtn">?뚯썝媛??/button>
+          <button class="primary" id="loginBtn">로그인</button>
+          <button class="secondary" id="signupBtn">회원가입</button>
         </div>
         <div class="auth-error" id="authError"></div>
       </div>
@@ -1508,8 +1294,8 @@
 
   <div class="team-select" id="teamSelect">
     <div class="select-inner">
-      <h2>援щ떒???좏깮?섏꽭??/h2>
-      <div class="subtitle">?꾩떎 由ш렇 媛먯꽦??媛??援щ떒?낅땲?? ?됯낵 ?좎닔 ?대쫫? ?꾩떎媛먯쓣 ?대━???쒕퉬?ㅼ슜?쇰줈 蹂?뺥뻽?듬땲??</div>
+      <h2>구단을 선택하세요</h2>
+      <div class="subtitle">현실 리그 감성의 가상 구단입니다. 색과 선수 이름은 현실감을 살리되 서비스용으로 변형했습니다.</div>
       <div class="team-grid" id="teamGrid"></div>
     </div>
   </div>
@@ -1520,81 +1306,81 @@
     <header>
       <div>
         <h1 id="title">K-Baseball Front Office</h1>
-        <div class="subtitle" id="subtitle">???怨⑤씪 ?쒖쫵???쒖옉?섏꽭??</div>
+        <div class="subtitle" id="subtitle">팀을 골라 시즌을 시작하세요.</div>
       </div>
       <div class="season-strip">
-        <div class="pill user-box">?뫀 <span id="userLabel">-</span><button class="secondary" id="logoutBtn">濡쒓렇?꾩썐</button></div>
-        <div class="pill">?묒냽 <span id="onlineCount">1</span>紐?/div>
-        <div class="pill">?뱟 <span id="dateLabel">-</span></div>
-        <div class="pill">?뮥 <span id="budgetLabel">-</span></div>
-        <div class="pill">?렞 <span id="ownerGoal">紐⑺몴 ?뚮젅?댁삤??/span></div>
+        <div class="pill user-box">👤 <span id="userLabel">-</span><button class="secondary" id="logoutBtn">로그아웃</button></div>
+        <div class="pill">접속 <span id="onlineCount">1</span>명</div>
+        <div class="pill">📅 <span id="dateLabel">-</span></div>
+        <div class="pill">💰 <span id="budgetLabel">-</span></div>
+        <div class="pill">🎯 <span id="ownerGoal">목표 플레이오프</span></div>
       </div>
     </header>
 
     <main>
       <aside>
         <section class="club-card">
-          <h2 class="club-name" id="clubName">援щ떒 誘몄꽑??/h2>
-          <div class="small" id="clubMeta">Korea Baseball League 쨌 媛먮룆 寃??⑥옣</div>
+          <h2 class="club-name" id="clubName">구단 미선택</h2>
+          <div class="small" id="clubMeta">Korea Baseball League · 감독 겸 단장</div>
           <div class="record">
-            <div class="metric"><strong id="wins">0</strong><span>??/span></div>
-            <div class="metric"><strong id="losses">0</strong><span>??/span></div>
-            <div class="metric"><strong id="rank">-</strong><span>?쒖쐞</span></div>
+            <div class="metric"><strong id="wins">0</strong><span>승</span></div>
+            <div class="metric"><strong id="losses">0</strong><span>패</span></div>
+            <div class="metric"><strong id="rank">-</strong><span>순위</span></div>
           </div>
         </section>
         <nav id="tabs">
-          <button class="active" data-view="dashboard">????쒕낫??/button>
-          <button data-view="game">??寃쎄린 ?댁쁺</button>
-          <button data-view="roster">???좎닔??/button>
-          <button data-view="training">???≪꽦</button>
-          <button data-view="market">???댁쟻 ?쒖옣</button>
-          <button data-view="league">??由ш렇</button>
-          <button data-view="online">???⑤씪???寃?/button>
-          <button data-view="board">??嫄댁쓽 寃뚯떆??/button>
-          <button data-view="news">???댁뒪</button>
+          <button class="active" data-view="dashboard">⌂ 대시보드</button>
+          <button data-view="game">◇ 경기 운영</button>
+          <button data-view="roster">▦ 선수단</button>
+          <button data-view="training">↗ 육성</button>
+          <button data-view="market">⇄ 이적 시장</button>
+          <button data-view="league">☷ 리그</button>
+          <button data-view="online">⇆ 온라인 대결</button>
+          <button data-view="board">□ 건의 게시판</button>
+          <button data-view="news">◷ 뉴스</button>
         </nav>
         <div style="height:12px;"></div>
-        <button class="secondary" id="changeTeam" style="width:100%;">??寃뚯엫 / ? ?좏깮</button>
+        <button class="secondary" id="changeTeam" style="width:100%;">새 게임 / 팀 선택</button>
       </aside>
 
       <section class="content">
         <div class="view active" id="dashboard">
           <div class="grid two">
             <section class="panel scoreboard">
-              <h2>?ㅻ뒛??寃쎄린</h2>
+              <h2>오늘의 경기</h2>
               <div id="matchup"></div>
-              <button class="primary" id="playGame">寃쎄린 ?댁쁺 ?닿린</button>
-              <div class="small" style="color: rgba(255,255,255,0.82);">?쇱씤?낆쓣 ?쒖텧?섍퀬 1?뚮????묒쟾??吏?쒗빐 寃쎄린瑜?吏꾪뻾?⑸땲??</div>
+              <button class="primary" id="playGame">경기 운영 열기</button>
+              <div class="small" style="color: rgba(255,255,255,0.82);">라인업을 제출하고 1회부터 작전을 지시해 경기를 진행합니다.</div>
             </section>
             <section class="panel">
-              <h2>?꾨윴???곹솴</h2>
+              <h2>프런트 상황</h2>
               <div class="grid three">
-                <div class="metric"><strong id="morale"></strong><span>? 遺꾩쐞湲?/span></div>
-                <div class="metric"><strong id="fanInterest"></strong><span>??愿?щ룄</span></div>
-                <div class="metric"><strong id="trainingPts"></strong><span>?덈젴 怨쇱젣</span></div>
+                <div class="metric"><strong id="morale"></strong><span>팀 분위기</span></div>
+                <div class="metric"><strong id="fanInterest"></strong><span>팬 관심도</span></div>
+                <div class="metric"><strong id="trainingPts"></strong><span>훈련 과제</span></div>
               </div>
               <div style="height: 12px;"></div>
               <div id="urgentBox" class="empty"></div>
               <div style="height: 12px;"></div>
               <div class="toolbar">
                 <select id="seasonGoalSelect">
-                  <option value="rebuild">由щ퉴?⑷낵 ?좊쭩二??깆옣</option>
-                  <option value="playoff">?ъ뒪?몄떆利?吏꾩텧</option>
-                  <option value="top3">?뺢퇋?쒖쫵 3?꾧텒</option>
-                  <option value="champion">?뺢퇋?쒖쫵 ?곗듅</option>
+                  <option value="rebuild">리빌딩과 유망주 성장</option>
+                  <option value="playoff">포스트시즌 진출</option>
+                  <option value="top3">정규시즌 3위권</option>
+                  <option value="champion">정규시즌 우승</option>
                 </select>
-                <button class="secondary" id="setSeasonGoal">紐⑺몴 ?ㅼ젙</button>
+                <button class="secondary" id="setSeasonGoal">목표 설정</button>
               </div>
             </section>
           </div>
           <div style="height: 14px;"></div>
           <div class="grid two">
             <section class="panel">
-              <h2>理쒓렐 寃쎄린</h2>
+              <h2>최근 경기</h2>
               <div id="recentGames" class="log"></div>
             </section>
             <section class="panel">
-              <h2>二쇱슂 ?댁뒪</h2>
+              <h2>주요 뉴스</h2>
               <div id="topNews" class="log"></div>
             </section>
           </div>
@@ -1604,120 +1390,101 @@
           <div class="grid two">
             <section class="panel">
               <div class="toolbar">
-                <h2 style="margin-right:auto;">?쇱씤??/h2>
-                <button class="secondary" id="resetManualGame">?쇱씤???ㅼ떆 吏쒓린</button>
-                <button class="secondary" id="startSkipGame">?쇱씤???쒖텧 ??寃쎄린 ?ㅽ궢</button>
-                <button class="primary" id="startManualGame">?쇱씤???쒖텧</button>
+                <h2 style="margin-right:auto;">라인업</h2>
+                <button class="secondary" id="resetManualGame">라인업 다시 짜기</button>
+                <button class="secondary" id="startSkipGame">라인업 제출 후 경기 스킵</button>
+                <button class="primary" id="startManualGame">라인업 제출</button>
               </div>
               <div id="opponentStarterBox"></div>
               <div style="height:8px;"></div>
               <div id="starterEditor"></div>
-              <div class="small">媛?????쒕∼?ㅼ슫?먮뒗 ?꾩옱 1援??깅줉 ?쇱닔 ?꾩껜媛 ?쒖떆?⑸땲??</div>
+              <div class="small">각 타순 드롭다운에는 현재 1군 등록 야수 전체가 표시됩니다.</div>
               <div style="height:8px;"></div>
               <div id="lineupEditor" class="lineup-grid"></div>
             </section>
             <section class="panel">
-              <h2>踰ㅼ튂</h2>
+              <h2>벤치</h2>
               <div id="benchBox" class="log"></div>
             </section>
           </div>
           <div style="height:14px;"></div>
           <div class="grid two">
             <section class="panel scoreboard">
-              <h2>?ㅼ떆媛?寃쎄린</h2>
+              <h2>실시간 경기</h2>
               <div id="manualScore"></div>
               <div class="field-visual" id="fieldVisual">
-                <div class="base-node second" id="base2">2猷?/div>
-                <button class="base-steal-btn second" id="stealBtn2" type="button">?꾨（</button>
-                <div class="base-node third" id="base3">3猷?/div>
-                <button class="base-steal-btn third" id="stealBtn3" type="button">?덉뒪??/button>
-                <div class="base-node first" id="base1">1猷?/div>
-                <button class="base-steal-btn first" id="stealBtn1" type="button">?꾨（</button>
-                <div class="base-node home">??/div>
+                <div class="base-node second" id="base2">2루</div>
+                <button class="base-steal-btn second" id="stealBtn2" type="button">도루</button>
+                <div class="base-node third" id="base3">3루</div>
+                <button class="base-steal-btn third" id="stealBtn3" type="button">홈스틸</button>
+                <div class="base-node first" id="base1">1루</div>
+                <button class="base-steal-btn first" id="stealBtn1" type="button">도루</button>
+                <div class="base-node home">홈</div>
               </div>
               <div class="count-strip">
-                <div class="count-box"><strong id="countBalls">0</strong><span>蹂?/span></div>
-                <div class="count-box"><strong id="countStrikes">0</strong><span>?ㅽ듃?쇱씠??/span></div>
-                <div class="count-box"><strong id="countOuts">0</strong><span>?꾩썐</span></div>
+                <div class="count-box"><strong id="countBalls">0</strong><span>볼</span></div>
+                <div class="count-box"><strong id="countStrikes">0</strong><span>스트라이크</span></div>
+                <div class="count-box"><strong id="countOuts">0</strong><span>아웃</span></div>
               </div>
               <div class="diamond-state">
-                <div class="metric"><strong id="manualInning">-</strong><span>?대떇</span></div>
-                <div class="metric"><strong id="manualOuts">-</strong><span>?꾩썐</span></div>
-                <div class="metric"><strong id="manualBases">---</strong><span>二쇱옄</span></div>
-                <div class="metric"><strong id="manualBatter">-</strong><span>???/span></div>
+                <div class="metric"><strong id="manualInning">-</strong><span>이닝</span></div>
+                <div class="metric"><strong id="manualOuts">-</strong><span>아웃</span></div>
+                <div class="metric"><strong id="manualBases">---</strong><span>주자</span></div>
+                <div class="metric"><strong id="manualBatter">-</strong><span>타자</span></div>
               </div>
               <div class="diamond-state">
-                <div class="metric"><strong id="manualCount">0-0</strong><span>蹂??ㅽ듃?쇱씠??/span></div>
-                <div class="metric"><strong id="manualOrder">-</strong><span>?곷? ???/span></div>
-                <div class="metric wide"><strong id="manualOppBatter">-</strong><span>?곷? ???/span></div>
-                <div class="metric wide"><strong id="manualOppProfile">-</strong><span>????좏삎</span></div>
+                <div class="metric"><strong id="manualCount">0-0</strong><span>볼-스트라이크</span></div>
+                <div class="metric"><strong id="manualOrder">-</strong><span>상대 타순</span></div>
+                <div class="metric wide"><strong id="manualOppBatter">-</strong><span>상대 타자</span></div>
+                <div class="metric wide"><strong id="manualOppProfile">-</strong><span>타자 유형</span></div>
               </div>
               <div class="diamond-state">
-                <div class="metric"><strong id="manualPitcher">-</strong><span>?ъ닔</span></div>
-                <div class="metric"><strong id="manualPitchCount">-</strong><span>?ш뎄??/span></div>
-                <div class="metric"><strong id="manualPitchMood">-</strong><span>而⑤뵒??/span></div>
-                <div class="metric"><strong id="manualTactic">媛뺢났</strong><span>?묒쟾</span></div>
+                <div class="metric"><strong id="manualPitcher">-</strong><span>투수</span></div>
+                <div class="metric"><strong id="manualPitchCount">-</strong><span>투구수</span></div>
+                <div class="metric"><strong id="manualPitchMood">-</strong><span>컨디션</span></div>
+                <div class="metric"><strong id="manualTactic">강공</strong><span>작전</span></div>
               </div>
               <div class="offer-actions">
                 <select id="swingTypeSelect">
-                  <option value="swing">媛뺢났 - ?쇰컲 ?寃?/option>
-                  <option value="forceSwing">臾댁“嫄??ㅼ쐷 - 蹂쇱씠?대룄 ?곴레 ?寃?/option>
-                  <option value="take">湲곕떎由ш린 - 怨듭쓣 蹂닿퀬 異쒕（ ?몃┝</option>
-                  <option value="contactSwing">而⑦깮 ?꾩＜ - ?쇱쭊 以꾩씠怨?而ㅽ듃</option>
-                  <option value="powerSwing">?ν? ?몃┝ - ?덈윴/?ν? ????쏆뒪???꾪뿕</option>
+                  <option value="swing">강공 - 일반 타격</option>
+                  <option value="forceSwing">무조건 스윙 - 볼이어도 적극 타격</option>
+                  <option value="take">기다리기 - 공을 보고 출루 노림</option>
+                  <option value="contactSwing">컨택 위주 - 삼진 줄이고 커트</option>
+                  <option value="powerSwing">장타 노림 - 홈런/장타 대신 헛스윙 위험</option>
                 </select>
-                <span class="help-tip" tabindex="0" data-tip="?寃?吏?쒕뒗 ?대쾲 怨??먮뒗 ?대쾲 ????깊뼢??諛붽퓠?덈떎. 臾댁“嫄??ㅼ쐷? 異쒕（蹂대떎 ?명뵆?덉씠瑜??몃━怨? 湲곕떎由ш린??蹂쇰꽬???몃━硫? 而⑦깮? ?쇱쭊??以꾩씠怨? ?ν? ?몃┝? ?덈윴 ?뺣쪧怨??쏆뒪???꾪뿕???④퍡 ?щ씪媛묐땲??">?</span>
-                <button id="cmdSwing" class="primary">?寃?吏??/button>
+                <span class="help-tip" tabindex="0" data-tip="타격 지시는 이번 공 또는 이번 타석 성향을 바꿉니다. 무조건 스윙은 출루보다 인플레이를 노리고, 기다리기는 볼넷을 노리며, 컨택은 삼진을 줄이고, 장타 노림은 홈런 확률과 헛스윙 위험이 함께 올라갑니다.">?</span>
+                <button id="cmdSwing" class="primary">타격 지시</button>
                 <select id="buntTypeSelect">
-                  <option value="sacBunt">?ъ깮踰덊듃 - 二쇱옄 吏꾨（</option>
-                  <option value="safetyBunt">?몄씠?꾪떚 - ????앹〈</option>
-                  <option value="squeezeBunt">?ㅽ댁쫰 - 3猷??ㅽ???/option>
-                  <option value="dragBunt">湲곗뒿踰덊듃 - 鍮좊Ⅸ ???/option>
+                  <option value="sacBunt">희생번트 - 주자 진루</option>
+                  <option value="safetyBunt">세이프티 - 타자 생존</option>
+                  <option value="squeezeBunt">스퀴즈 - 3루 스타트</option>
+                  <option value="dragBunt">기습번트 - 빠른 타자</option>
                 </select>
-                <span class="help-tip" tabindex="0" data-tip="?ъ깮踰덊듃??????꾩썐??媛먯닔?섍퀬 二쇱옄瑜?蹂대궡???묒쟾?낅땲?? ?몄씠?꾪떚 踰덊듃????먮룄 ?대젮怨????踰덊듃, ?ㅽ댁쫰??3猷?二쇱옄瑜??덉쑝濡??ㅼ씠???묒쟾, 湲곗뒿踰덊듃??鍮좊Ⅸ ??먭? ?섎퉬 鍮덊땲???몃━??踰덊듃?낅땲??">?</span>
-                <button id="cmdBunt" class="secondary">踰덊듃 吏??/button>
+                <span class="help-tip" tabindex="0" data-tip="희생번트는 타자 아웃을 감수하고 주자를 보내는 작전입니다. 세이프티 번트는 타자도 살려고 대는 번트, 스퀴즈는 3루 주자를 홈으로 들이는 작전, 기습번트는 빠른 타자가 수비 빈틈을 노리는 번트입니다.">?</span>
+                <button id="cmdBunt" class="secondary">번트 지시</button>
                 <select id="runnerTacticSelect">
-                  <option value="normal">湲곕낯 二쇰（ - ?ъ씤 ?놁쑝硫??湲?/option>
-                  <option value="hold">蹂댁닔??二쇰（ - 臾대━???ㅽ???湲덉?</option>
-                  <option value="greenLight">洹몃┛?쇱씠??- 鍮좊Ⅸ 二쇱옄 ?먯쑉 ?꾨（</option>
-                  <option value="aggressiveRun">?곴레 二쇰（ - 醫뗭? ??대컢 ?곴레 ?ㅽ???/option>
-                  <option value="autoStart">臾댁“嫄??ㅽ???- 媛?ν븳 二쇱옄 ?꾨? 異쒕컻</option>
+                  <option value="normal">기본 주루 - 사인 없으면 대기</option>
+                  <option value="hold">보수적 주루 - 무리한 스타트 금지</option>
+                  <option value="greenLight">그린라이트 - 빠른 주자 자율 도루</option>
+                  <option value="aggressiveRun">적극 주루 - 좋은 타이밍 적극 스타트</option>
+                  <option value="autoStart">무조건 스타트 - 가능한 주자 전부 출발</option>
                 </select>
-                <span class="help-tip" tabindex="0" data-tip="二쇰（ 吏?쒕뒗 二쇱옄?먭쾶 二쇰뒗 ?깊뼢?낅땲?? 洹몃┛?쇱씠?몃뒗 鍮좊Ⅸ 二쇱옄媛 ?곹솴??蹂닿퀬 ?ㅼ뒪濡??곌퀬, ?곴레 二쇰（????怨듦꺽?곸쑝濡??ㅽ??명빀?덈떎. 臾댁“嫄??ㅽ??몃뒗 媛?ν븳 二쇱옄瑜?紐⑤몢 ?곌쾶 ?섎뒗 媛뺥븳 ?묒쟾?낅땲??">?</span>
-                <button id="cmdRunnerTactic" class="secondary">二쇰（ 吏??/button>
+                <span class="help-tip" tabindex="0" data-tip="주루 지시는 주자에게 주는 성향입니다. 그린라이트는 빠른 주자가 상황을 보고 스스로 뛰고, 적극 주루는 더 공격적으로 스타트합니다. 무조건 스타트는 가능한 주자를 모두 뛰게 하는 강한 작전입니다.">?</span>
+                <button id="cmdRunnerTactic" class="secondary">주루 지시</button>
                 <select id="pickoffBaseSelect">
-                  <option value="0">1猷?寃ъ젣</option>
-                  <option value="1">2猷?寃ъ젣</option>
-                  <option value="2">3猷?寃ъ젣</option>
+                  <option value="0">1루 견제</option>
+                  <option value="1">2루 견제</option>
+                  <option value="2">3루 견제</option>
                 </select>
-                <span class="help-tip" tabindex="0" data-tip="?꾨（??踰좎씠?????꾨（ 踰꾪듉?쇰줈 癒쇱? ?湲곗떆?????寃?吏?쒕굹 ?ㅼ쓬 ?뚮젅?대? ?꾨Ⅴ硫??④퍡 ?먯젙?⑸땲?? 寃ъ젣???섎퉬 ??二쇱옄瑜?臾띔굅????? ?뺣쪧濡?寃ъ젣?щ? ?몃━??吏?쒖엯?덈떎.">?</span>
-                <button id="cmdPickoff" class="secondary">寃ъ젣</button>
-                <select id="pitchCallSelect">
-                  <option value="auto">자동 배합</option>
-                  <option value="fourSeam">포심 승부</option>
-                  <option value="slider">슬라이더 유도</option>
-                  <option value="curve">커브 타이밍 흔들기</option>
-                  <option value="changeup">체인지업 완급</option>
-                  <option value="fork">포크/스플리터</option>
-                  <option value="pitchout">피치아웃</option>
-                </select>
-                <select id="defensePlanSelect">
-                  <option value="normal">기본 수비</option>
-                  <option value="attackZone">스트존 공격</option>
-                  <option value="waste">유인구로 승부</option>
-                  <option value="groundball">땅볼 유도</option>
-                  <option value="holdRunner">주자 묶기</option>
-                  <option value="walkAround">강타자 피해가기</option>
-                </select>
-                <span class="help-tip" tabindex="0" data-tip="수비 지시는 상대 공격 때만 적용됩니다. 포심/스트존 공격은 투구수를 줄이고 삼진 가능성을 올리지만 장타 위험이 있고, 유인구/변화구는 헛스윙과 파울을 늘리지만 볼넷과 폭투 위험이 있습니다. 피치아웃과 주자 묶기는 도루를 막는 선택입니다.">?</span>
-                <button id="cmdPitchCall" class="secondary">투구 지시</button>
-                <button id="cmdSkipHalf" class="secondary">?대떇 ?ㅽ궢</button>
-                <button id="cmdSkipGame" class="secondary">寃쎄린 ?ㅽ궢</button>
-                <button id="cmdDefense" class="good">?ㅼ쓬 ?뚮젅??/button>
+                <span class="help-tip" tabindex="0" data-tip="도루는 베이스 옆 도루 버튼으로 먼저 대기시킨 뒤 타격 지시나 다음 플레이를 누르면 함께 판정됩니다. 견제는 수비 때 주자를 묶거나 낮은 확률로 견제사를 노리는 지시입니다.">?</span>
+                <button id="cmdPickoff" class="secondary">견제</button>
+                <button id="cmdSkipHalf" class="secondary">이닝 스킵</button>
+                <button id="cmdSkipGame" class="secondary">경기 스킵</button>
+                <button id="cmdDefense" class="good">다음 플레이</button>
               </div>
             </section>
             <section class="panel">
-              <h2>遺덊렂 / ?묒쟾 濡쒓렇</h2>
+              <h2>불펜 / 작전 로그</h2>
               <div id="bullpenBox" class="log" style="max-height:190px; margin-bottom:10px;"></div>
               <div id="opponentLineupBox" style="margin-bottom:10px;"></div>
               <div id="gameLog" class="log"></div>
@@ -1729,48 +1496,48 @@
           <div class="grid two">
             <section class="panel">
               <div class="toolbar">
-                <h2 style="margin-right:auto;">?좎닔??/h2>
-                <input id="rosterSearch" placeholder="?좎닔 寃?? style="max-width:180px;" />
+                <h2 style="margin-right:auto;">선수단</h2>
+                <input id="rosterSearch" placeholder="선수 검색" style="max-width:180px;" />
                 <select id="rosterFilter">
-                  <option value="all">?꾩껜</option>
-                  <option value="ACTIVE">1援?/option>
-                  <option value="FARM">2援?/option>
-                  <option value="DEV">?≪꽦</option>
-                  <option value="prospect">?좊쭩二?/option>
+                  <option value="all">전체</option>
+                  <option value="ACTIVE">1군</option>
+                  <option value="FARM">2군</option>
+                  <option value="DEV">육성</option>
+                  <option value="prospect">유망주</option>
                 </select>
                 <select id="rosterTypeFilter">
-                  <option value="all">?ъ닔+?쇱닔</option>
-                  <option value="PIT">?ъ닔</option>
-                  <option value="BAT">?쇱닔</option>
+                  <option value="all">투수+야수</option>
+                  <option value="PIT">투수</option>
+                  <option value="BAT">야수</option>
                 </select>
               </div>
               <div style="overflow:auto; max-height: 620px;">
                 <table class="roster-table">
                   <thead><tr>
-                    <th><button class="sort-header" data-sort="name">?좎닔</button></th>
-                    <th><button class="sort-header" data-sort="age">?섏씠</button></th>
-                    <th><button class="sort-header" data-sort="pos">?ъ???/button></th>
-                    <th><button class="sort-header" data-sort="throwHand">?ш뎄??/button></th>
-                    <th><button class="sort-header" data-sort="batHand">?寃⑹넀</button></th>
-                    <th><button class="sort-header" data-sort="ovr">?꾩옱</button></th>
-                    <th><button class="sort-header" data-sort="pot">?좎옱</button></th>
-                    <th><button class="sort-header" data-sort="form">而⑤뵒??/button></th>
-                    <th><button class="sort-header" data-sort="durability">?닿뎄??/button></th>
-                    <th><button class="sort-header" data-sort="status">?뚯냽</button></th>
-                    <th><button class="sort-header" data-sort="contract">怨꾩빟</button></th>
+                    <th><button class="sort-header" data-sort="name">선수</button></th>
+                    <th><button class="sort-header" data-sort="age">나이</button></th>
+                    <th><button class="sort-header" data-sort="pos">포지션</button></th>
+                    <th><button class="sort-header" data-sort="throwHand">투구손</button></th>
+                    <th><button class="sort-header" data-sort="batHand">타격손</button></th>
+                    <th><button class="sort-header" data-sort="ovr">현재</button></th>
+                    <th><button class="sort-header" data-sort="pot">잠재</button></th>
+                    <th><button class="sort-header" data-sort="form">컨디션</button></th>
+                    <th><button class="sort-header" data-sort="durability">내구성</button></th>
+                    <th><button class="sort-header" data-sort="status">소속</button></th>
+                    <th><button class="sort-header" data-sort="contract">계약</button></th>
                   </tr></thead>
                   <tbody id="rosterBody"></tbody>
                 </table>
               </div>
             </section>
             <section class="panel">
-              <h2>?좎닔 由ы룷??/h2>
+              <h2>선수 리포트</h2>
               <div id="playerDetail"></div>
             </section>
           </div>
           <div style="height:14px;"></div>
           <section class="panel">
-            <h2>濡쒖뒪??洹쒖튃</h2>
+            <h2>로스터 규칙</h2>
             <div id="rosterRules" class="grid three"></div>
           </section>
         </div>
@@ -1779,26 +1546,26 @@
           <div class="grid two">
             <section class="panel">
               <div class="toolbar">
-                <h2 style="margin-right:auto;">?≪꽦 ?쇳꽣</h2>
-                <input id="trainingSearch" placeholder="?≪꽦 ?좎닔 寃?? style="max-width:180px;" />
+                <h2 style="margin-right:auto;">육성 센터</h2>
+                <input id="trainingSearch" placeholder="육성 선수 검색" style="max-width:180px;" />
                 <select id="trainingStatusFilter">
-                  <option value="all">?꾩껜</option>
-                  <option value="ACTIVE">1援?/option>
-                  <option value="FARM">2援?/option>
-                  <option value="DEV">?≪꽦</option>
-                  <option value="prospect">?좊쭩二?/option>
+                  <option value="all">전체</option>
+                  <option value="ACTIVE">1군</option>
+                  <option value="FARM">2군</option>
+                  <option value="DEV">육성</option>
+                  <option value="prospect">유망주</option>
                 </select>
                 <select id="trainingTypeFilter">
-                  <option value="all">?ъ닔+?쇱닔</option>
-                  <option value="PIT">?ъ닔</option>
-                  <option value="BAT">?쇱닔</option>
+                  <option value="all">투수+야수</option>
+                  <option value="PIT">투수</option>
+                  <option value="BAT">야수</option>
                 </select>
-                <button class="secondary" id="autoTrain">肄붿튂 異붿쿇 ?덈젴</button>
+                <button class="secondary" id="autoTrain">코치 추천 훈련</button>
               </div>
               <div id="trainingList" class="log"></div>
             </section>
             <section class="panel">
-              <h2>?깆옣 由ы룷??/h2>
+              <h2>성장 리포트</h2>
               <div id="growthReport" class="log"></div>
             </section>
           </div>
@@ -1807,58 +1574,58 @@
         <div class="view" id="market">
           <div class="grid two">
             <section class="panel">
-              <h2>?댁쇅 ?ㅽ띁</h2>
+              <h2>해외 오퍼</h2>
               <div id="offers"></div>
             </section>
             <section class="panel">
               <div class="toolbar">
-                <h2 style="margin-right:auto;">?몃젅?대뱶</h2>
-                <button class="secondary" id="generateTrade">?쒖븞 諛쏄린</button>
-                <button class="secondary" id="refreshTradeTargets">留ㅻЪ 媛깆떊</button>
+                <h2 style="margin-right:auto;">트레이드</h2>
+                <button class="secondary" id="generateTrade">제안 받기</button>
+                <button class="secondary" id="refreshTradeTargets">매물 갱신</button>
               </div>
               <div class="trade-board-ui">
                 <div class="trade-side">
                   <div>
-                    <div class="news-title">?닿? 蹂대궡??移대뱶</div>
-                    <div class="small">移대뱶瑜??대┃?댁꽌 ?щ윭 紐??좏깮</div>
+                    <div class="news-title">내가 보내는 카드</div>
+                    <div class="small">카드를 클릭해서 여러 명 선택</div>
                   </div>
-                  <input id="tradeMySearch" placeholder="???좎닔 寃?? />
+                  <input id="tradeMySearch" placeholder="내 선수 검색" />
                   <select id="tradeMyTypeFilter">
-                    <option value="all">?ъ닔+?쇱닔</option>
-                    <option value="PIT">?ъ닔</option>
-                    <option value="BAT">?쇱닔</option>
+                    <option value="all">투수+야수</option>
+                    <option value="PIT">투수</option>
+                    <option value="BAT">야수</option>
                   </select>
                   <div class="trade-roster-tabs" id="myTradeTabs">
-                    <button type="button" data-roster="ALL" class="active">?꾩껜</button>
-                    <button type="button" data-roster="ACTIVE">1援?/button>
-                    <button type="button" data-roster="FARM">2援?/button>
-                    <button type="button" data-roster="prospect">?좊쭩二?/button>
+                    <button type="button" data-roster="ALL" class="active">전체</button>
+                    <button type="button" data-roster="ACTIVE">1군</button>
+                    <button type="button" data-roster="FARM">2군</button>
+                    <button type="button" data-roster="prospect">유망주</button>
                   </div>
                   <select id="tradePlayerSelect" class="trade-hidden-select" multiple></select>
                   <div id="tradePlayerCards" class="trade-card-list"></div>
                 </div>
                 <div class="trade-balance">
-                  <div class="small">?꾧툑 蹂댁쟾</div>
+                  <div class="small">현금 보전</div>
                   <input id="tradeCash" type="number" min="0" step="0.5" value="0" />
-                  <div id="tradeValuePreview" class="small">媛移?怨꾩궛 ?湲?/div>
-                  <button id="proposeTrade">?몃젅?대뱶 ?쒖븞</button>
+                  <div id="tradeValuePreview" class="small">가치 계산 대기</div>
+                  <button id="proposeTrade">트레이드 제안</button>
                 </div>
                 <div class="trade-side">
                   <div class="trade-field">
-                    <div class="news-title">?곷?媛 蹂대궡??移대뱶</div>
+                    <div class="news-title">상대가 보내는 카드</div>
                     <select id="tradeTeamSelect"></select>
                   </div>
-                  <input id="tradeTheirSearch" placeholder="?곷? ?좎닔 寃?? />
+                  <input id="tradeTheirSearch" placeholder="상대 선수 검색" />
                   <select id="tradeTheirTypeFilter">
-                    <option value="all">?ъ닔+?쇱닔</option>
-                    <option value="PIT">?ъ닔</option>
-                    <option value="BAT">?쇱닔</option>
+                    <option value="all">투수+야수</option>
+                    <option value="PIT">투수</option>
+                    <option value="BAT">야수</option>
                   </select>
                   <div class="trade-roster-tabs" id="theirTradeTabs">
-                    <button type="button" data-roster="ALL" class="active">?꾩껜</button>
-                    <button type="button" data-roster="ACTIVE">1援?/button>
-                    <button type="button" data-roster="FARM">2援?/button>
-                    <button type="button" data-roster="prospect">?좊쭩二?/button>
+                    <button type="button" data-roster="ALL" class="active">전체</button>
+                    <button type="button" data-roster="ACTIVE">1군</button>
+                    <button type="button" data-roster="FARM">2군</button>
+                    <button type="button" data-roster="prospect">유망주</button>
                   </div>
                   <select id="tradeTargetSelect" class="trade-hidden-select" multiple></select>
                   <div id="tradeTargetCards" class="trade-card-list"></div>
@@ -1870,67 +1637,67 @@
           <div style="height:14px;"></div>
           <div class="grid two">
             <section class="panel">
-              <h2>?ㅼ뭅?고똿 蹂대뱶</h2>
+              <h2>스카우팅 보드</h2>
               <div class="toolbar">
-                <button id="scoutMLB">硫붿씠? ?쒖옣 議곗궗</button>
-                <button id="scoutNPB" class="secondary">?쇰낯 ?쒖옣 議곗궗</button>
+                <button id="scoutMLB">메이저 시장 조사</button>
+                <button id="scoutNPB" class="secondary">일본 시장 조사</button>
               </div>
               <div id="scoutBoard" class="log"></div>
             </section>
             <section class="panel">
               <div class="toolbar">
-                <h2 style="margin-right:auto;">?좎씤 ?쒕옒?꾪듃</h2>
-                <button id="generateDraft" class="secondary">?쒕옒?꾪듃 ? ?앹꽦</button>
-                <button id="advanceDraft" class="secondary">???쒕쾲源뚯? 吏꾪뻾</button>
+                <h2 style="margin-right:auto;">신인 드래프트</h2>
+                <button id="generateDraft" class="secondary">드래프트 풀 생성</button>
+                <button id="advanceDraft" class="secondary">내 순번까지 진행</button>
               </div>
               <div id="draftMeta" class="empty"></div>
               <div id="draftBoard" class="log"></div>
             </section>
             <section class="panel">
               <div class="toolbar">
-                <h2 style="margin-right:auto;">FA ?쒖옣</h2>
-                <button class="secondary" id="refreshFA">FA 紐낅떒 媛깆떊</button>
+                <h2 style="margin-right:auto;">FA 시장</h2>
+                <button class="secondary" id="refreshFA">FA 명단 갱신</button>
               </div>
               <div id="offseasonPanel" class="log"></div>
               <div id="faBoard" class="log"></div>
             </section>
             <section class="panel">
-              <h2>?≪꽦?좎닔 ?깅줉</h2>
+              <h2>육성선수 등록</h2>
               <div class="toolbar">
-                <input id="devName" placeholder="?좎닔 ?대쫫" maxlength="12" />
+                <input id="devName" placeholder="선수 이름" maxlength="12" />
                 <select id="devPos">
-                  <option value="SP">?ъ닔</option>
-                  <option value="RP">遺덊렂</option>
-                  <option value="C">?ъ닔</option>
-                  <option value="SS">?댁빞</option>
-                  <option value="CF">?몄빞</option>
+                  <option value="SP">투수</option>
+                  <option value="RP">불펜</option>
+                  <option value="C">포수</option>
+                  <option value="SS">내야</option>
+                  <option value="CF">외야</option>
                 </select>
                 <select id="devBatsThrows">
-                  <option value="?고닾?고?">?고닾?고?</option>
-                  <option value="?고닾醫뚰?">?고닾醫뚰?</option>
-                  <option value="醫뚰닾醫뚰?">醫뚰닾醫뚰?</option>
-                  <option value="醫뚰닾?고?">醫뚰닾?고?</option>
-                  <option value="?고닾?묓?">?고닾?묓?</option>
-                  <option value="?곗뼵?고?">?곗뼵?고?</option>
-                  <option value="?곗뼵醫뚰?">?곗뼵醫뚰?</option>
+                  <option value="우투우타">우투우타</option>
+                  <option value="우투좌타">우투좌타</option>
+                  <option value="좌투좌타">좌투좌타</option>
+                  <option value="좌투우타">좌투우타</option>
+                  <option value="우투양타">우투양타</option>
+                  <option value="우언우타">우언우타</option>
+                  <option value="우언좌타">우언좌타</option>
                 </select>
-                <button id="createDev" class="primary">?≪꽦?좎닔 ?깅줉</button>
+                <button id="createDev" class="primary">육성선수 등록</button>
               </div>
               <div class="small" id="devCreateStatus"></div>
               <div class="lineup-grid dev-stat-grid">
-                <label class="lineup-row"><span class="badge">?섏씠</span><input id="devAge" type="number" min="16" max="45" value="19" /></label>
-                <label class="lineup-row"><span class="badge">?꾩옱 ?λ젰</span><input id="devOvr" type="number" min="35" max="95" value="52" /></label>
-                <label class="lineup-row"><span class="badge">?좎옱??/span><input id="devPot" type="number" min="45" max="95" value="78" /></label>
-                <label class="lineup-row"><span class="badge">而⑦깮</span><input id="devHit" type="number" min="20" max="90" value="50" /></label>
-                <label class="lineup-row"><span class="badge">?뚯썙</span><input id="devPow" type="number" min="20" max="90" value="48" /></label>
-                <label class="lineup-row"><span class="badge">二쇰（</span><input id="devSpd" type="number" min="20" max="90" value="55" /></label>
-                <label class="lineup-row"><span class="badge">?섎퉬</span><input id="devDef" type="number" min="20" max="90" value="52" /></label>
-                <label class="lineup-row"><span class="badge">?↔뎄</span><input id="devArm" type="number" min="20" max="95" value="55" /></label>
-                <label class="lineup-row"><span class="badge">?ш뎄</span><input id="devPit" type="number" min="20" max="90" value="50" /></label>
-                <label class="lineup-row"><span class="badge">泥대젰</span><input id="devSta" type="number" min="20" max="95" value="60" /></label>
-                <label class="lineup-row"><span class="badge">?닿뎄??/span><input id="devDur" type="number" min="20" max="95" value="65" /></label>
+                <label class="lineup-row"><span class="badge">나이</span><input id="devAge" type="number" min="16" max="45" value="19" /></label>
+                <label class="lineup-row"><span class="badge">현재 능력</span><input id="devOvr" type="number" min="35" max="95" value="52" /></label>
+                <label class="lineup-row"><span class="badge">잠재력</span><input id="devPot" type="number" min="45" max="95" value="78" /></label>
+                <label class="lineup-row"><span class="badge">컨택</span><input id="devHit" type="number" min="20" max="90" value="50" /></label>
+                <label class="lineup-row"><span class="badge">파워</span><input id="devPow" type="number" min="20" max="90" value="48" /></label>
+                <label class="lineup-row"><span class="badge">주루</span><input id="devSpd" type="number" min="20" max="90" value="55" /></label>
+                <label class="lineup-row"><span class="badge">수비</span><input id="devDef" type="number" min="20" max="90" value="52" /></label>
+                <label class="lineup-row"><span class="badge">송구</span><input id="devArm" type="number" min="20" max="95" value="55" /></label>
+                <label class="lineup-row"><span class="badge">투구</span><input id="devPit" type="number" min="20" max="90" value="50" /></label>
+                <label class="lineup-row"><span class="badge">체력</span><input id="devSta" type="number" min="20" max="95" value="60" /></label>
+                <label class="lineup-row"><span class="badge">내구성</span><input id="devDur" type="number" min="20" max="95" value="65" /></label>
               </div>
-              <div class="small">?≪꽦?좎닔???뺤떇?좎닔 ?꾪솚 ?꾧퉴吏 1援??깅줉 遺덇?, ?쒕퉬?ㅽ???誘몄궛?낆쑝濡?泥섎━?⑸땲??</div>
+              <div class="small">육성선수는 정식선수 전환 전까지 1군 등록 불가, 서비스타임 미산입으로 처리됩니다.</div>
             </section>
           </div>
         </div>
@@ -1939,28 +1706,28 @@
           <div class="grid two">
             <section class="panel">
               <div class="toolbar">
-                <h2 style="margin-right:auto;">?꾩껜 ?좎닔 寃??/h2>
-                <input id="leaguePlayerSearch" placeholder="?대쫫, ?깅쾲?? ?, ?ъ???寃?? style="min-width:260px;" />
+                <h2 style="margin-right:auto;">전체 선수 검색</h2>
+                <input id="leaguePlayerSearch" placeholder="이름, 등번호, 팀, 포지션 검색" style="min-width:260px;" />
                 <select id="leagueStatusFilter">
-                  <option value="all">?꾩껜</option>
-                  <option value="ACTIVE">1援?/option>
-                  <option value="FARM">2援?/option>
-                  <option value="DEV">?≪꽦</option>
-                  <option value="prospect">?좊쭩二?/option>
+                  <option value="all">전체</option>
+                  <option value="ACTIVE">1군</option>
+                  <option value="FARM">2군</option>
+                  <option value="DEV">육성</option>
+                  <option value="prospect">유망주</option>
                 </select>
                 <select id="leagueTypeFilter">
-                  <option value="all">?ъ닔+?쇱닔</option>
-                  <option value="PIT">?ъ닔</option>
-                  <option value="BAT">?쇱닔</option>
+                  <option value="all">투수+야수</option>
+                  <option value="PIT">투수</option>
+                  <option value="BAT">야수</option>
                 </select>
               </div>
               <div id="leagueSearchResults" class="log" style="max-height:320px;"></div>
             </section>
             <section class="panel">
-              <h2>?쒖쐞??/h2>
+              <h2>순위표</h2>
               <div style="overflow-x:auto;">
                 <table style="min-width:980px;">
-                  <thead><tr><th>?쒖쐞</th><th>?</th><th>??/th><th>??/th><th>臾?/th><th>?밸쪧</th><th>?앹젏</th><th>?ㅼ젏</th><th>?ㅼ콉</th><th>?덈윴</th><th>?덊?</th><th>???/th><th>諛⑹뼱??/th></tr></thead>
+                  <thead><tr><th>순위</th><th>팀</th><th>승</th><th>패</th><th>무</th><th>승률</th><th>득점</th><th>실점</th><th>실책</th><th>홈런</th><th>안타</th><th>타율</th><th>방어율</th></tr></thead>
                   <tbody id="standings"></tbody>
                 </table>
               </div>
@@ -1968,19 +1735,19 @@
             <section class="panel" id="postseasonPanel"></section>
             <section class="panel">
               <div class="toolbar">
-                <h2 style="margin-right:auto;">媛쒖씤 湲곕줉 ?곸쐞</h2>
-                <input id="leaderSearch" placeholder="湲곕줉???좎닔 寃?? style="min-width:220px;" />
+                <h2 style="margin-right:auto;">개인 기록 상위</h2>
+                <input id="leaderSearch" placeholder="기록판 선수 검색" style="min-width:220px;" />
                 <select id="leaderStatusFilter">
-                  <option value="all">?꾩껜</option>
-                  <option value="ACTIVE">1援?/option>
-                  <option value="FARM">2援?/option>
-                  <option value="DEV">?≪꽦</option>
-                  <option value="prospect">?좊쭩二?/option>
+                  <option value="all">전체</option>
+                  <option value="ACTIVE">1군</option>
+                  <option value="FARM">2군</option>
+                  <option value="DEV">육성</option>
+                  <option value="prospect">유망주</option>
                 </select>
                 <select id="leaderTypeFilter">
-                  <option value="all">?ъ닔+?쇱닔</option>
-                  <option value="PIT">?ъ닔</option>
-                  <option value="BAT">?쇱닔</option>
+                  <option value="all">투수+야수</option>
+                  <option value="PIT">투수</option>
+                  <option value="BAT">야수</option>
                 </select>
               </div>
               <div id="leaders"></div>
@@ -1991,11 +1758,11 @@
         <div class="view" id="online">
           <section class="panel">
             <div class="toolbar">
-              <h2 style="margin-right:auto;">?⑤씪???寃?/h2>
-              <button class="secondary" id="refreshOnline">?덈줈怨좎묠</button>
-              <button class="primary" id="createOnlineRoom">諛?留뚮뱾湲?/button>
+              <h2 style="margin-right:auto;">온라인 대결</h2>
+              <button class="secondary" id="refreshOnline">새로고침</button>
+              <button class="primary" id="createOnlineRoom">방 만들기</button>
             </div>
-            <div class="empty">移쒓뎄媛 媛숈? 二쇱냼濡??묒냽?댁꽌 李멸??섎㈃ ?묒そ???쇱씤?낆쓣 ?쒖텧?섍퀬, ?댄썑 寃쎄린 ?댁쁺 ?붾㈃?먯꽌 ????앹뵫 吏곸젒 吏?쒗빀?덈떎.</div>
+            <div class="empty">친구가 같은 주소로 접속해서 참가하면 양쪽이 라인업을 제출하고, 이후 경기 운영 화면에서 한 타석씩 직접 지시합니다.</div>
             <div id="onlineStatus" class="small"></div>
             <div id="onlineRooms" class="log" style="max-height:620px;"></div>
           </section>
@@ -2004,19 +1771,19 @@
         <div class="view" id="board">
           <section class="panel">
             <div class="toolbar">
-              <h2 style="margin-right:auto;">嫄댁쓽 寃뚯떆??/h2>
-              <button class="secondary" id="refreshBoard">?덈줈怨좎묠</button>
+              <h2 style="margin-right:auto;">건의 게시판</h2>
+              <button class="secondary" id="refreshBoard">새로고침</button>
             </div>
             <div class="board-form">
               <select id="boardCategory">
-                <option value="suggestion">嫄댁쓽?ы빆</option>
-                <option value="bug">踰꾧렇?쒕낫</option>
-                <option value="balance">諛몃윴??/option>
-                <option value="free">?먯쑀</option>
+                <option value="suggestion">건의사항</option>
+                <option value="bug">버그제보</option>
+                <option value="balance">밸런스</option>
+                <option value="free">자유</option>
               </select>
-              <input id="boardTitle" maxlength="60" placeholder="?쒕ぉ" />
-              <button class="primary" id="submitBoard">?깅줉</button>
-              <textarea id="boardBody" maxlength="1200" placeholder="?댁슜???곸뼱以? 寃뚯엫 諛몃윴?? ?좎닔 ?곗씠?? 踰꾧렇 ?쒕낫 ??媛??"></textarea>
+              <input id="boardTitle" maxlength="60" placeholder="제목" />
+              <button class="primary" id="submitBoard">등록</button>
+              <textarea id="boardBody" maxlength="1200" placeholder="내용을 적어줘. 게임 밸런스, 선수 데이터, 버그 제보 다 가능."></textarea>
             </div>
             <div id="boardStatus" class="small"></div>
             <div id="boardList" class="log" style="max-height:620px;"></div>
@@ -2025,7 +1792,7 @@
 
         <div class="view" id="news">
           <section class="panel">
-            <h2>由ш렇 ?댁뒪猷?/h2>
+            <h2>리그 뉴스룸</h2>
             <div id="newsLog" class="log"></div>
           </section>
         </div>
@@ -2039,27 +1806,20 @@
     let currentUser = null;
     let boardPosts = [];
     let onlineMatches = [];
-    let onlineTeams = [];
     let onlineCount = 1;
     let activeView = "dashboard";
     let onlinePolling = false;
 
     const $ = (id) => document.getElementById(id);
     const pct = (v) => `${Math.max(0, Math.min(100, Math.round(v)))}%`;
-    const money = (v) => `${Number(v || 0).toFixed(1)}억`;
+    const money = (v) => `${Number(v).toFixed(1)}억`;
     const escapeHtml = (value) => String(value ?? "")
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
-    const boardCategoryLabel = (value) => ({ suggestion: "건의사항", bug: "오류 제보", balance: "밸런스", free: "자유" }[value] || "건의사항");
-    const controlText = (p) => {
-      if (p.foreignPlayer) return "외국인 보류 제외";
-      if (p.rosterStatus === "DEV") return "육성 보류";
-      const years = Number(p.controlYears ?? Math.ceil(Math.max(0, ((p.age <= 27 ? 9 : 8) * 145 - (p.serviceDays || 0)) / 145)));
-      return years <= 0 ? "FA 권리 발생" : `${p.controlKind || "구단 보류권"} ${years}시즌`;
-    };
+    const boardCategoryLabel = (value) => ({ suggestion: "건의사항", bug: "버그제보", balance: "밸런스", free: "자유" }[value] || "건의사항");
     const contractText = (p) => {
       const contract = p.contract || {};
       const kind = contract.kind || (p.rosterStatus === "DEV" ? "육성계약" : "연봉계약");
@@ -2067,21 +1827,27 @@
       const bonus = p.signingBonus ? ` · 계약금 ${money(p.signingBonus)}` : "";
       const source = contract.source ? ` · ${contract.source}` : "";
       const total = contract.total ? ` · 총액 ${money(contract.total)}` : "";
-      const term = contract.contractYears ? ` · 계약 ${contract.contractYears}년` : "";
+      const term = contract.contractYears ? ` · 원계약 ${contract.contractYears}년` : "";
       const period = contract.startYear || contract.endYear ? ` · ${contract.startYear || "?"}-${contract.endYear || "?"}` : "";
       const note = contract.note ? ` · ${contract.note}` : "";
-      const isRealTerm = kind.includes("FA") || kind.includes("장기계약") || kind.includes("다년계약");
+      const isRealTerm = kind.includes("실계약") || kind.includes("장기계약") || kind.includes("다년계약");
       if (p.foreignPlayer || kind.includes("외국인")) return `외국인 단년계약 · 올해연봉 ${money(annual)}${total}${bonus}${source}${note}`;
       if (isRealTerm) return `${kind}${term}${total}${period} · 잔여 ${contract.yearsLeft || p.years || 1}년 · 올해연봉 ${money(annual)}${bonus}${source}${note}`;
       return `${kind}${term}${total}${period} · 올해연봉 ${money(annual)} · ${controlText(p)}${bonus}${source}${note}`;
     };
     const faTimeText = (p) => {
       if (p.foreignPlayer) return "외국인 FA 제외";
-      if (p.rosterStatus === "DEV") return "육성 서비스타임 미산입";
+      if (p.rosterStatus === "DEV") return "육성 서비스 미산입";
       const days = Number(p.serviceDays || 0);
       const need = (p.age <= 27 ? 9 : 8) * 145;
       const left = Math.max(0, need - days);
       return left <= 0 ? `FA 자격 충족 · 등록 ${days}일` : `FA ${left}일 남음 · 등록 ${days}/${need}일`;
+    };
+    const controlText = (p) => {
+      if (p.foreignPlayer) return "외국인 보류 제외";
+      if (p.rosterStatus === "DEV") return "육성 보류";
+      const years = Number(p.controlYears ?? Math.ceil(Math.max(0, ((p.age <= 27 ? 9 : 8) * 145 - (p.serviceDays || 0)) / 145)));
+      return years <= 0 ? "FA 권리 발생" : `${p.controlKind || "구단 보류권"} ${years}시즌`;
     };
     const api = async (path, body) => {
       const res = await fetch(path, body ? {
@@ -2149,7 +1915,7 @@
         $("userLabel").textContent = currentUser.username;
         $("authSelect").classList.remove("active");
         await init();
-        showToast(mode === "signup" ? "?뚯썝媛???꾨즺" : "濡쒓렇???꾨즺");
+        showToast(mode === "signup" ? "회원가입 완료" : "로그인 완료");
       } catch (err) {
         $("authError").textContent = err.message;
       }
@@ -2164,7 +1930,7 @@
       $("userLabel").textContent = "-";
       $("teamSelect").classList.remove("active");
       $("authSelect").classList.add("active");
-      showToast("濡쒓렇?꾩썐 ?꾨즺");
+      showToast("로그아웃 완료");
     }
 
     async function loadBoard() {
@@ -2176,7 +1942,6 @@
     async function loadOnlineMatches() {
       const data = await api("/api/online/matches");
       onlineMatches = data.matches || [];
-      onlineTeams = data.teams || onlineTeams || [];
       updateOnlineCount(data.onlineCount);
       renderOnline();
     }
@@ -2187,7 +1952,6 @@
       try {
         const data = await api(path, body);
         onlineMatches = data.matches || [];
-        onlineTeams = data.teams || onlineTeams || [];
         updateOnlineCount(data.onlineCount);
         renderOnline();
         showToast("온라인 대결 갱신 완료");
@@ -2196,39 +1960,28 @@
       }
     }
 
-    function onlineLineupPayload(matchId) {
-      const selects = [...document.querySelectorAll(".onlineLineupSelect")].filter((select) => select.dataset.match === String(matchId));
-      const posSelects = [...document.querySelectorAll(".onlineLineupPos")].filter((select) => select.dataset.match === String(matchId));
-      const ids = selects.map((select) => Number(select.value)).filter(Boolean);
-      const positions = posSelects.map((select) => select.value);
-      const requiredPositions = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
-      if (ids.length !== 9) {
-        showToast("온라인 라인업은 타자 9명을 모두 골라야 합니다.");
+    function onlineLineupPayload() {
+      const rawLineup = [...document.querySelectorAll(".lineupSelect")].map((select) => Number(select.value));
+      const positions = selectedLineupPositions();
+      const lineupError = validateManualLineup(rawLineup, positions);
+      if (lineupError) {
+        showToast(lineupError);
         return null;
       }
-      if (new Set(ids).size !== ids.length) {
-        showToast("같은 선수는 온라인 라인업에 두 번 넣을 수 없습니다.");
-        return null;
-      }
-      if (positions.length !== 9) {
-        showToast("수비 위치도 9개를 모두 지정해야 합니다.");
-        return null;
-      }
-      const missingPositions = requiredPositions.filter((position) => !positions.includes(position));
-      const duplicatePositions = requiredPositions.filter((position) => positions.filter((value) => value === position).length > 1);
-      if (missingPositions.length || duplicatePositions.length) {
-        const missingText = missingPositions.length ? `부족: ${missingPositions.join(", ")}` : "";
-        const duplicateText = duplicatePositions.length ? `중복: ${duplicatePositions.join(", ")}` : "";
-        showToast(`수비 위치는 C/1B/2B/3B/SS/LF/CF/RF/DH를 각각 1명씩 지정해야 합니다. ${missingText} ${duplicateText}`.trim());
+      const starterId = selectedStarter();
+      if (!starterId) {
+        showToast("선발 투수를 먼저 선택하세요.");
         return null;
       }
       return {
-        battingOrder: ids.map((playerId, index) => ({
+        starterId,
+        battingOrder: rawLineup.slice(0, 9).map((playerId, index) => ({
           playerId,
           position: positions[index]
         }))
       };
     }
+
     async function submitBoardPost() {
       $("boardStatus").textContent = "";
       const title = $("boardTitle").value.trim();
@@ -2239,9 +1992,9 @@
         boardPosts = data.posts || [];
         $("boardTitle").value = "";
         $("boardBody").value = "";
-        $("boardStatus").textContent = "?깅줉?먯뒿?덈떎.";
+        $("boardStatus").textContent = "등록됐습니다.";
         renderBoard();
-        showToast("寃뚯떆湲 ?깅줉 ?꾨즺");
+        showToast("게시글 등록 완료");
       } catch (err) {
         $("boardStatus").textContent = err.message;
       }
@@ -2252,9 +2005,9 @@
         <article class="team-card" style="--team-primary:${t.primary}; --team-secondary:${t.secondary};">
           <div>
             <h3>${t.city} ${t.name}</h3>
-            <div class="small" style="color:rgba(255,255,255,0.82);">?꾨젰 ${t.power} 쨌 ${t.short} ?꾨옖李⑥씠利?/div>
+            <div class="small" style="color:rgba(255,255,255,0.82);">전력 ${t.power} · ${t.short} 프랜차이즈</div>
           </div>
-          <button onclick="newGame('${t.id}')">?좏깮</button>
+          <button onclick="newGame('${t.id}')">선택</button>
         </article>
       `).join("");
     }
@@ -2315,9 +2068,9 @@
       render();
       $("devName").value = "";
       const message = created
-        ? `${playerName(created)} ?≪꽦?좎닔 ?깅줉 ?꾨즺`
-        : "?≪꽦?좎닔 ?깅줉 ?꾨즺";
-      $("devCreateStatus").textContent = `${message}. ?좎닔?⑥쓽 ?≪꽦 ?꾪꽣?먯꽌 ?뺤씤?????덉뒿?덈떎.`;
+        ? `${playerName(created)} 육성선수 등록 완료`
+        : "육성선수 등록 완료";
+      $("devCreateStatus").textContent = `${message}. 선수단의 육성 필터에서 확인할 수 있습니다.`;
       showToast(message);
     }
 
@@ -2356,30 +2109,30 @@
     function playerName(p) {
       if (!p) return "-";
       const base = `${p.name}${p.jerseyNumber ? ` #${p.jerseyNumber}` : ""}`;
-      return p.dataSource === "league-rival" && p.teamName ? `${base} 쨌 ${p.teamName}` : base;
+      return p.dataSource === "league-rival" && p.teamName ? `${base} · ${p.teamName}` : base;
     }
 
     function opponentName(p) {
       if (!p) return "-";
-      return `${p.name || "?곷? ?좎닔"}${p.jerseyNumber ? ` #${p.jerseyNumber}` : ""}`;
+      return `${p.name || "상대 선수"}${p.jerseyNumber ? ` #${p.jerseyNumber}` : ""}`;
     }
 
     function renderOpponentLineupPanel(active) {
       const lineup = Array.isArray(active?.opponentLineup) ? active.opponentLineup : [];
-      if (!lineup.length) return `<div class="empty">寃쎄린 ?쒖옉 ???곷? ?쇱씤?낆씠 ?쒖떆?⑸땲??</div>`;
+      if (!lineup.length) return `<div class="empty">경기 시작 후 상대 라인업이 표시됩니다.</div>`;
       const currentIndex = Number.isFinite(active?.opponentLineupIndex) ? active.opponentLineupIndex % 9 : -1;
       const opponentTeam = state.teams.find((t) => t.id === active?.opponentId) || state.opponent;
       const starter = active?.opponentPitcher;
       return `
         <div class="news-item">
-          <div class="news-title">?곷? ?쇱씤??쨌 ${escapeHtml(teamName(opponentTeam))}</div>
-          <div class="small">?좊컻 ${starter ? `${escapeHtml(pitcherHandLabel(starter))} ${escapeHtml(opponentName(starter))}` : "-"} 쨌 ?꾩옱 ??쒖? 二쇳솴?됱쑝濡??쒖떆?⑸땲??</div>
+          <div class="news-title">상대 라인업 · ${escapeHtml(teamName(opponentTeam))}</div>
+          <div class="small">선발 ${starter ? `${escapeHtml(pitcherHandLabel(starter))} ${escapeHtml(opponentName(starter))}` : "-"} · 현재 타순은 주황색으로 표시됩니다.</div>
           <div class="opponent-lineup-list" style="margin-top:8px;">
             ${lineup.slice(0, 9).map((p, i) => `
               <div class="opponent-lineup-row ${i === currentIndex ? "is-current" : ""}">
                 <span class="badge">${i + 1}</span>
                 <span class="opponent-lineup-name">${escapeHtml(batterHandLabel(p))} ${escapeHtml(opponentName(p))}</span>
-                <span class="opponent-lineup-meta">${escapeHtml(p.pos || "-")} 쨌 而⑦깮 ${Number(p.contact) || 0} 쨌 ?뚯썙 ${Number(p.power) || 0}</span>
+                <span class="opponent-lineup-meta">${escapeHtml(p.pos || "-")} · 컨택 ${Number(p.contact) || 0} · 파워 ${Number(p.power) || 0}</span>
               </div>
             `).join("")}
           </div>
@@ -2423,7 +2176,7 @@
       return (Number(p.pot || 0) - Number(p.ovr || 0) >= 12)
         || (Number(p.age || 99) <= 23 && Number(p.pot || 0) >= 75)
         || String(p.trait || "").includes("유망주")
-        || String(p.trait || "").includes("성장");
+        || String(p.trait || "").includes("성장형");
     }
 
     function playerMatchesFilters(p, status = "all", type = "all") {
@@ -2438,7 +2191,7 @@
     const rosterSortState = { key: "default", dir: "asc" };
     const rosterNumericSorts = new Set(["age", "ovr", "pot", "form", "durability"]);
     const rosterPositionOrder = ["SP", "RP", "CP", "C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
-    const rosterHandOrder = { "醫뚯셿": 0, "?곗셿": 1, "?묒넀": 2, "醫뚰?": 0, "?고?": 1, "?묓?": 2, "-": 9 };
+    const rosterHandOrder = { "좌완": 0, "우완": 1, "양손": 2, "좌타": 0, "우타": 1, "양타": 2, "-": 9 };
     const rosterStatusOrder = { ACTIVE: 0, FARM: 1, DEV: 2 };
 
     function rosterDefaultSort(a, b) {
@@ -2490,8 +2243,8 @@
       if (!p) return 0;
       const trait = String(p.trait || "");
       let level = 0;
-      if (["프랜차이즈", "프랜차이즈 주장", "리더", "상징", "에이스", "MVP", "스타"].some((word) => trait.includes(word))) level += 3;
-      if (["유망주", "차세대", "코어", "자석"].some((word) => trait.includes(word)) && (p.pot || 0) >= 82) level += 1.5;
+      if (/프랜차이즈|프렌차이즈|주장|리더|상징|에이스|국대|MVP|스타/.test(trait)) level += 3;
+      if (/유망주|차세대|코어|원석/.test(trait) && (p.pot || 0) >= 82) level += 1.5;
       if ((p.ovr || 0) >= 82) level += 3;
       else if ((p.ovr || 0) >= 78) level += 2;
       else if ((p.ovr || 0) >= 73) level += 1;
@@ -2505,8 +2258,8 @@
       const tags = [];
       const icon = playerIconLevel(p);
       if (icon >= 6) tags.push("프랜차이즈 스타");
-      else if (icon >= 4) tags.push("핵심 전력");
-      if ((p.ovr || 0) >= 80) tags.push("즉시전력");
+      else if (icon >= 4) tags.push("팬 선호 선수");
+      if ((p.ovr || 0) >= 80) tags.push("핵심전력");
       if ((p.pot || 0) - (p.ovr || 0) >= 12) tags.push("대형 유망주");
       if ((p.serviceYears || 0) >= 10) tags.push("장기 근속");
       if ((p.contract?.annual || p.salary || 0) >= 10) tags.push("고연봉");
@@ -2566,8 +2319,8 @@
 
     function handSide(p) {
       const hand = String(p?.hand || p?.batHand || p?.throwHand || "").trim().toUpperCase();
-      if (hand.includes("양") || hand === "S" || hand === "SWITCH") return "switch";
-      if (hand.includes("좌") || hand === "L" || hand === "LEFT") return "left";
+      if (hand.includes("양") || hand === "S") return "switch";
+      if (hand.includes("좌") || hand === "L") return "left";
       return "right";
     }
 
@@ -2582,9 +2335,11 @@
 
     function pitcherHandLabel(p) {
       const raw = String(p?.batsThrows || p?.hand || "").trim();
-      const throwing = p?.throwHand || raw.match(/([좌우])\s*(투|완)/)?.[1] || "";
-      const side = throwing === "좌" ? "left" : "right";
-      return side === "left" ? "좌완" : "우완";
+      const throwing = p?.throwHand || raw.match(/([좌우양])\s*투/)?.[1] || "";
+      const side = throwing === "좌" ? "left" : throwing === "양" ? "switch" : throwing === "우" ? "right" : handSide(p);
+      if (side === "left") return "좌완";
+      if (side === "switch") return "양손";
+      return "우완";
     }
 
     function handTag(label, p) {
@@ -2593,11 +2348,11 @@
     }
 
     function rosterThrowLabel(p) {
-      return p?.type === "PIT" || p?.throwHand || String(p?.batsThrows || "").includes("투") || String(p?.batsThrows || "").includes("완") ? pitcherHandLabel(p) : "-";
+      return p?.type === "PIT" || p?.throwHand || String(p?.batsThrows || "").includes("투") ? pitcherHandLabel(p) : "-";
     }
 
     function rosterBatLabel(p) {
-      return p?.type === "BAT" || p?.batHand || String(p?.batsThrows || "").includes("?") ? batterHandLabel(p) : "-";
+      return p?.type === "BAT" || p?.batHand || String(p?.batsThrows || "").includes("타") ? batterHandLabel(p) : "-";
     }
 
     function rosterHandCell(label) {
@@ -2606,7 +2361,7 @@
 
     function lineupPlayerOptions(hitters, selectedId, selectedIds, slot) {
       return hitters.map((p) => {
-        return `<option value="${p.id}" ${selectedId === p.id ? "selected" : ""}>[${batterHandLabel(p)}] ${playerName(p)} 쨌 ${positionLabelForPlayer(p)} 쨌 ?꾩옱 ${p.ovr} / ?좎옱 ${p.pot}</option>`;
+        return `<option value="${p.id}" ${selectedId === p.id ? "selected" : ""}>[${batterHandLabel(p)}] ${playerName(p)} · ${positionLabelForPlayer(p)} · 현재 ${p.ovr} / 잠재 ${p.pot}</option>`;
       }).join("");
     }
 
@@ -2655,7 +2410,7 @@
         duplicate.value = previous;
         duplicate.dataset.previousValue = previous;
         duplicate.dataset.lastValue = previous;
-        showToast(selector === ".lineupSelect" ? "?좎닔 ?먮━ 援먰솚 ?꾨즺" : "?ъ????먮━ 援먰솚 ?꾨즺");
+        showToast(selector === ".lineupSelect" ? "선수 자리 교환 완료" : "포지션 자리 교환 완료");
       }
       changedSelect.dataset.previousValue = changedSelect.value;
       changedSelect.dataset.lastValue = changedSelect.value;
@@ -2711,11 +2466,11 @@
         </div>
       `).join("");
       const known = new Set(arsenal.map((pitch) => pitch.type));
-      const newPitchButtons = ["포심", "투심", "슬라이더", "커브", "체인지업", "스플리터", "커터", "싱커"]
+      const newPitchButtons = ["포심","투심","슬라이더","커브","체인지업","스플리터","커터","싱커"]
         .filter((type) => !known.has(type))
         .map((type) => `<button class="secondary" onclick="train(${p.id}, 'pitchnew:${type}')">${type} 추가</button>`)
         .join("");
-      return `${current ? `<div class="empty">현재 과제: ${current.mode === "new" ? "새 구종" : "기존 구종"} ${current.type} · 진행률 ${current.progress || 0}% · ${current.days || 0}일차</div>` : ""}${rows}${withButtons && newPitchButtons ? `<div class="small" style="margin-top:8px;">새 구종 추가 훈련</div><div class="offer-actions">${newPitchButtons}</div>` : ""}`;
+      return `${current ? `<div class="empty">현재 과제: ${current.mode === "new" ? "신구종" : "기존 구종"} ${current.type} · 진행률 ${current.progress || 0}% · ${current.days || 0}일차</div>` : ""}${rows}${withButtons && newPitchButtons ? `<div class="small" style="margin-top:8px;">새 구종 추가 훈련</div><div class="offer-actions">${newPitchButtons}</div>` : ""}`;
     }
 
     function setTheme() {
@@ -2786,9 +2541,7 @@
 
     function renderDashboard() {
       const opp = state.opponent;
-      const scheduleText = state.scheduleInfo
-        ? `<div class="small" style="color: rgba(255,255,255,0.82);">${state.scheduleInfo.seriesNo || "-"}번째 3연전 · ${state.scheduleInfo.seriesGame || "-"}/3차전</div>`
-        : "";
+      const scheduleText = state.scheduleInfo ? `<div class="small" style="color: rgba(255,255,255,0.82);">${state.scheduleInfo.seriesNo}번째 3연전 · ${state.scheduleInfo.seriesGame}/3차전</div>` : "";
       const postseasonInfo = state.scheduleInfo?.postseason;
       const offseason = state.offseason || {};
       const offseasonPending = (offseason.contractTasks || []).filter((task) => task.status === "PENDING").length;
@@ -2798,8 +2551,8 @@
       } else if (postseasonInfo?.completed) {
         $("matchup").innerHTML = `<div class="small" style="color: rgba(255,255,255,0.82);">시즌 종료</div><div class="score-line"><span>${postseasonInfo.teamNames?.[0] || "우승팀"}</span><span>우승</span></div><div class="small" style="color: rgba(255,255,255,0.82);">다음 시즌 시작을 누르면 로스터와 일정이 새 시즌으로 넘어갑니다.</div>`;
       } else if (postseasonInfo) {
-        const seriesRows = (postseasonInfo.teamIds || []).map((id, index) => {
-          const name = postseasonInfo.teamNames?.[index] || "-";
+        const seriesRows = postseasonInfo.teamIds.map((id, index) => {
+          const name = postseasonInfo.teamNames[index] || "-";
           const wins = postseasonInfo.wins?.[id] || 0;
           return `<div class="score-line"><span>${name}</span><span>${wins}승</span></div>`;
         }).join("");
@@ -2807,23 +2560,28 @@
       } else {
         $("matchup").innerHTML = state.lastGame
           ? `<div class="score-line"><span>${teamName()}</span><span>${state.lastGame.me}</span></div><div class="score-line"><span>${state.lastGame.opp}</span><span>${state.lastGame.them}</span></div>${scheduleText}`
-          : `<div class="score-line"><span>${teamName()}</span><span>vs</span></div><div class="score-line"><span>${teamName(opp)}</span><span>${opp?.power || "-"}</span></div>${scheduleText}`;
+          : `<div class="score-line"><span>${teamName()}</span><span>vs</span></div><div class="score-line"><span>${teamName(opp)}</span><span>${opp.power}</span></div>${scheduleText}`;
       }
       $("playGame").disabled = state.players.length < 9;
       $("playGame").textContent = state.postseason?.completed ? "다음 시즌 시작" : (state.day > state.seasonGames && state.postseason?.active ? "포스트시즌 운영 열기" : "경기 운영 열기");
-      if (offseasonNeedsWork) $("playGame").textContent = "오프시즌 계약부터 처리";
+      if (offseasonNeedsWork) $("playGame").textContent = "오프시즌 계약센터 열기";
       $("urgentBox").innerHTML = state.offers.length
         ? `<strong>${state.offers.length}건의 해외 오퍼</strong><br><span class="small">이적 시장 탭에서 수락 또는 거절을 결정하세요.</span>`
-        : `<strong>운영 이슈 없음</strong><br><span class="small">육성 센터에서 훈련 과제를 지정하고 일정 진행으로 성장을 확인하세요.</span>`;
+        : `<strong>운영 이슈 없음</strong><br><span class="small">육성 센터에서 선수별 훈련 과제를 지시하고 일정 진행으로 성장을 확인하세요.</span>`;
       if (offseasonNeedsWork) {
-        $("urgentBox").innerHTML = `<strong>계약 처리 필요</strong><br><span class="small">FA 전환 선수와 보류권 계약 대상이 있습니다. 이적 시장의 오프시즌 계약 센터에서 먼저 처리하세요.</span>`;
+        $("urgentBox").innerHTML = `<strong>계약 처리 필요</strong><br><span class="small">FA 전환 선수와 보류권 재계약 대상이 있습니다. 이적 시장의 오프시즌 계약 센터에서 먼저 처리하세요.</span>`;
       }
+      $("ownerGoal").textContent = `목표 ${state.seasonGoal?.label || "포스트시즌 진출"}`;
+      $("seasonGoalSelect").value = state.seasonGoal?.level || "playoff";
+      $("recentGames").innerHTML = state.games.length ? state.games.map((g) => `<div class="news-item"><div class="news-title">Day ${g.day}</div>${g.text}</div>`).join("") : `<div class="empty">아직 진행된 경기가 없습니다.</div>`;
+      $("topNews").innerHTML = visibleNews(state.news).slice(0, 4).map(newsTemplate).join("") || `<div class="empty">뉴스가 쌓이면 여기에 표시됩니다.</div>`;
     }
+
     function renderGame() {
       const hitters = state.players.filter((p) => p.type === "BAT" && p.rosterStatus === "ACTIVE");
       const activePitchers = state.players
         .filter((p) => p.type === "PIT" && p.rosterStatus === "ACTIVE" && p.health?.status !== "INJURED")
-        .sort((a, b) => roleOrder(a.pitcherRole) - roleOrder(b.pitcherRole) || (Number(b.restDays) || 0) - (Number(a.restDays) || 0) || b.ovr - a.ovr);
+        .sort((a, b) => roleOrder(a.pitcherRole) - roleOrder(b.pitcherRole) || (Number(a.restDays) || 0) - (Number(b.restDays) || 0) || b.ovr - a.ovr);
       const active = state.activeGame;
       const liveGame = active && !active.complete;
       const lineup = liveGame && active.lineup?.length ? active.lineup : lineupFromLastGame(hitters);
@@ -2839,45 +2597,46 @@
         ? active?.pitcherId
         : activePitchers.some((p) => p.id === savedStarterId) ? savedStarterId : activePitchers.find((p) => p.pitcherRole === "SP")?.id || activePitchers[0]?.id;
       const probable = liveGame ? active.opponentPitcher : state.opponentProbablePitcher;
-
-      if ($("opponentStarterBox")) {
-        $("opponentStarterBox").innerHTML = probable ? `
-          <div class="news-item">
-            <div class="bio">
-              <div>
-                <div class="news-title">${handTag(pitcherHandLabel(probable), probable)} 상대 예고 선발 · ${opponentName(probable)} #${probable.no || "-"}</div>
-                <div class="small">${pitcherHandLabel(probable)} · ${probable.style || "밸런스형"} · 경기 시작 시 이 투수가 그대로 등판합니다.</div>
-              </div>
-              <span class="badge">${probable.power}</span>
+      $("opponentStarterBox").innerHTML = probable ? `
+        <div class="news-item">
+          <div class="bio">
+            <div>
+              <div class="news-title">${handTag(pitcherHandLabel(probable), probable)} 상대 예고 선발 · ${opponentName(probable)}</div>
+              <div class="small">${pitcherHandLabel(probable)} · ${probable.style || "밸런스형"} · 경기 시작 시 이 투수가 그대로 등판합니다.</div>
             </div>
-            <div class="grid three" style="margin-top:10px;">
-              <div class="metric"><strong>${pitcherHandLabel(probable)}</strong><span>투구 손</span></div>
-              <div class="metric"><strong>${probable.power}</strong><span>구위</span></div>
-              <div class="metric"><strong>${probable.command}</strong><span>제구</span></div>
-              <div class="metric"><strong>${probable.stamina}</strong><span>스태미나</span></div>
-            </div>
-            <div class="small" style="margin-top:8px;">견제 ${probable.pickoff || 60} · 좌우/유형을 보고 타순과 포지션을 조정하세요.</div>
-          </div>` : `<div class="empty">상대 예고 선발 정보가 없습니다.</div>`;
-      }
-
+            <span class="badge">${probable.power}</span>
+          </div>
+          <div class="grid three" style="margin-top:10px;">
+            <div class="metric"><strong>${pitcherHandLabel(probable)}</strong><span>투구 손</span></div>
+            <div class="metric"><strong>${probable.power}</strong><span>구위</span></div>
+            <div class="metric"><strong>${probable.command}</strong><span>제구</span></div>
+            <div class="metric"><strong>${probable.stamina}</strong><span>스태미나</span></div>
+          </div>
+          <div class="small" style="margin-top:8px;">견제 ${probable.pickoff} · 좌우/유형을 보고 타순과 포지션을 조정하세요.</div>
+        </div>
+      ` : `<div class="empty">상대 예고 선발 정보가 없습니다.</div>`;
       $("starterEditor").innerHTML = `
         <label class="lineup-row">
           <span class="badge">SP</span>
           <select id="starterSelect" ${liveGame ? "disabled" : ""}>
-            ${activePitchers.map((p) => `<option value="${p.id}" ${defaultStarterId === p.id ? "selected" : ""}>[${pitcherHandLabel(p)}] ${playerName(p)} · ${pitcherRoleLabel(p.pitcherRole)} · 현재 ${p.ovr} · 컨디션 ${Math.round(p.form)} · 스태미나 ${p.stamina} · ${pitcherRestText(p)}</option>`).join("")}
+            ${activePitchers.map((p) => `<option value="${p.id}" ${defaultStarterId === p.id ? "selected" : ""}>[${pitcherHandLabel(p)}] ${playerName(p)} · ${pitcherRoleLabel(p.pitcherRole)} · ${p.ovr} · 컨디션 ${Math.round(p.form)} · 스태미나 ${p.stamina} · ${pitcherRestText(p)}</option>`).join("")}
           </select>
-        </label>`;
-
+        </label>
+      `;
       $("lineupEditor").innerHTML = Array.from({ length: 9 }, (_, i) => `
         <label class="lineup-row">
           <span class="badge">${i + 1}</span>
           <div class="lineup-assignment">
-            <select class="lineupSelect" data-slot="${i}">${lineupPlayerOptions(lineupChoices, lineup[i], lineup, i)}</select>
-            <select class="lineupPosSelect" data-slot="${i}">${lineupPositionOptions(safeLineupPositions[i] || defaultLineupPosition(i), safeLineupPositions, i)}</select>
+            <select class="lineupSelect" data-slot="${i}">
+              ${lineupPlayerOptions(lineupChoices, lineup[i], lineup, i)}
+            </select>
+            <select class="lineupPosSelect" data-slot="${i}">
+              ${lineupPositionOptions(safeLineupPositions[i] || defaultLineupPosition(i), safeLineupPositions, i)}
+            </select>
           </div>
-        </label>`).join("");
+        </label>
+      `).join("");
       rememberLineupSelections();
-
       if (liveGame) {
         document.querySelectorAll(".lineupSelect").forEach((select) => {
           select.addEventListener("change", () => liveLineupSubstitute(Number(select.dataset.slot), Number(select.value)));
@@ -2887,8 +2646,12 @@
           select.addEventListener("change", () => submitLineupPositionsFromMain());
         });
       } else {
-        document.querySelectorAll(".lineupSelect").forEach((select) => bindSwapSelect(select, ".lineupSelect"));
-        document.querySelectorAll(".lineupPosSelect").forEach((select) => bindSwapSelect(select, ".lineupPosSelect"));
+        document.querySelectorAll(".lineupSelect").forEach((select) => {
+          bindSwapSelect(select, ".lineupSelect");
+        });
+        document.querySelectorAll(".lineupPosSelect").forEach((select) => {
+          bindSwapSelect(select, ".lineupPosSelect");
+        });
         refreshLineupConstraints();
       }
 
@@ -2911,90 +2674,626 @@
         $("manualPitchCount").textContent = "-";
         $("manualPitchMood").textContent = "-";
         $("manualTactic").textContent = "강공";
-        $("gameLog").innerHTML = `<div class="empty">라인업을 제출하면 실시간 경기 운영이 열립니다. 다음 플레이마다 작전과 교체를 직접 지시할 수 있습니다.</div>`;
+        $("gameLog").innerHTML = `<div class="empty">라인업 제출 후 실시간 경기 운영이 열립니다. 다음 플레이마다 작전과 교체를 직접 지시할 수 있습니다.</div>`;
         $("bullpenBox").innerHTML = `<div class="empty">경기가 시작되면 불펜 대기 선수가 표시됩니다.</div>`;
-        if ($("opponentLineupBox")) $("opponentLineupBox").innerHTML = renderOpponentLineupPanel(null);
-        ["startManualGame", "startSkipGame"].forEach((id) => { if ($(id)) $(id).disabled = false; });
-        ["resetManualGame", "cmdSwing", "swingTypeSelect", "cmdBunt", "buntTypeSelect", "cmdRunnerTactic", "runnerTacticSelect", "pickoffBaseSelect", "cmdPickoff", "pitchCallSelect", "defensePlanSelect", "cmdPitchCall", "cmdSkipHalf", "cmdSkipGame", "cmdDefense"].forEach((id) => { if ($(id)) $(id).disabled = true; });
+        $("startManualGame").disabled = false;
+        $("startSkipGame").disabled = false;
+        $("resetManualGame").disabled = true;
+        $("cmdSwing").disabled = true;
+        $("swingTypeSelect").disabled = true;
+        $("cmdBunt").disabled = true;
+        $("buntTypeSelect").disabled = true;
+        $("cmdRunnerTactic").disabled = true;
+        $("runnerTacticSelect").disabled = true;
+        $("pickoffBaseSelect").disabled = true;
+        $("cmdPickoff").disabled = true;
+        $("cmdSkipHalf").disabled = true;
+        $("cmdSkipGame").disabled = true;
+        $("cmdDefense").disabled = true;
         return;
       }
 
-      const userBatting = isUserBatting(active);
-      const opponentBatting = isOpponentBatting(active);
+      const bench = hitters.filter((p) => !lineup.includes(p.id) && p.health?.status !== "INJURED");
       const activeLineupPlayers = lineup.map((id) => state.players.find((p) => p.id === id)).filter(Boolean);
       const currentBatterId = active?.lineup?.[active.lineupIndex % active.lineup.length];
       const currentBatter = state.players.find((p) => p.id === currentBatterId);
       const currentBatterPos = active?.lineupPositions?.[active.lineupIndex % (active.lineupPositions?.length || 9)] || currentBatter?.pos || "-";
       const currentPitcher = state.players.find((p) => p.id === active?.pitcherId);
-      const oppBatter = active?.opponentLineup?.[active.opponentLineupIndex % 9];
+      const userBatting = isUserBatting(active);
+      const opponentBatting = isOpponentBatting(active);
       const displayPitcherName = userBatting
-        ? [active?.opponentPitcher ? `${pitcherHandLabel(active.opponentPitcher)} ${opponentName(active.opponentPitcher)} #${active.opponentPitcher.no || "-"}` : "", active?.opponentPitcher?.role].filter(Boolean).join(" · ")
-        : currentPitcher ? `${pitcherHandLabel(currentPitcher)} ${currentPitcher.name} #${currentPitcher.no || "-"}` : "-";
+        ? [active?.opponentPitcher ? `${pitcherHandLabel(active.opponentPitcher)} ${opponentName(active.opponentPitcher)}` : "", active?.opponentPitcher?.role].filter(Boolean).join(" · ")
+        : currentPitcher ? `${pitcherHandLabel(currentPitcher)} ${currentPitcher.name}` : "";
       const displayPitchCount = userBatting ? active?.opponentPitcher?.pitchCount : active?.pitchCount;
       const displayPitchMood = userBatting ? active?.opponentPitcher?.mood : active?.pitcherMood;
-      const basesText = active.bases.map((b, i) => b ? `${i + 1}` : "-").join("");
-
-      $("manualScore").innerHTML = `<div class="score-line"><span>${teamName()}</span><span>${active.score.user}</span></div><div class="score-line"><span>${teamName(state.teams.find((t) => t.id === active.opponentId) || state.opponent)}</span><span>${active.score.opp}</span></div>`;
-      $("manualInning").textContent = `${active.inning}회${active.half === "top" ? "초" : "말"}`;
-      $("manualOuts").textContent = active.outs;
-      $("manualBases").textContent = basesText || "---";
-      $("manualBatter").textContent = userBatting && currentBatter ? `${batterHandLabel(currentBatter)} ${playerName(currentBatter)} · ${currentBatterPos}` : "상대 공격";
-      $("manualCount").textContent = `${active.count?.balls || 0}-${active.count?.strikes || 0}`;
-      updateFieldBases(active.bases, active.pendingSteal);
-      $("countBalls").textContent = active.count?.balls || 0;
-      $("countStrikes").textContent = active.count?.strikes || 0;
-      $("countOuts").textContent = active.outs || 0;
-      $("manualOrder").textContent = opponentBatting && oppBatter ? `${oppBatter.order}번` : "-";
-      $("manualOppBatter").textContent = opponentBatting && oppBatter ? `${batterHandLabel(oppBatter)} ${opponentName(oppBatter)} #${oppBatter.no || "-"} · ${oppBatter.pos}` : "-";
-      $("manualOppProfile").textContent = opponentBatting && oppBatter ? `${batterHandLabel(oppBatter)} / 컨택 ${oppBatter.contact} / 파워 ${oppBatter.power}` : userBatting && currentBatter ? `${batterHandLabel(currentBatter)} / 컨택 ${currentBatter.contact} / 파워 ${currentBatter.power}` : "-";
-      $("manualPitcher").textContent = displayPitcherName;
-      $("manualPitchCount").textContent = displayPitchCount || 0;
-      $("manualPitchMood").textContent = displayPitchMood || "정상";
-      const runnerModeText = active.runnerTactic && active.runnerTactic !== "normal" ? ` · ${runnerTacticLabel(active.runnerTactic)}` : "";
-      $("manualTactic").textContent = opponentBatting ? "수비" : `${tacticLabel(active.tactic)}${active.pendingSteal ? ` + ${tacticLabel(active.pendingSteal)} 대기` : ""}${runnerModeText}`;
-      $("gameLog").innerHTML = (active.log || []).map((text) => `<div class="news-item">${text}</div>`).join("") || `<div class="empty">아직 경기 로그가 없습니다.</div>`;
-      if ($("opponentLineupBox")) $("opponentLineupBox").innerHTML = renderOpponentLineupPanel(active);
-
-      const bench = hitters.filter((p) => !lineup.includes(p.id) && p.health?.status !== "INJURED" && !usedPositionPlayers.includes(p.id) && !removedPositionPlayers.includes(p.id));
-      const occupiedBases = (active?.bases || []).map((runner, index) => ({ runner, index })).filter((base) => base.runner);
-      const lineupOptions = activeLineupPlayers.map((p, i) => `<option value="${p.id}">${i + 1}번 [${batterHandLabel(p)}] ${playerName(p)} · ${active.lineupPositions?.[i] || p.pos} · 현재 ${p.ovr}</option>`).join("");
-      const benchOptions = bench.map((p) => `<option value="${p.id}">[${batterHandLabel(p)}] ${playerName(p)} · ${p.pos} · 현재 ${p.ovr} · 주루 ${p.spd}</option>`).join("");
-      const benchRunnerOptions = bench.slice().sort((a, b) => b.spd - a.spd || b.ovr - a.ovr).map((p) => `<option value="${p.id}">[${batterHandLabel(p)}] ${playerName(p)} · ${p.pos} · 주루 ${p.spd}</option>`).join("");
-      const defenseRows = activeLineupPlayers.map((p, i) => `
-        <label class="lineup-row live-defense-row">
-          <span class="badge">${i + 1}</span>
-          <span class="live-defense-name">${playerName(p)}</span>
-          <select class="livePosSelect" data-slot="${i}">${lineupPositionOptions(active.lineupPositions?.[i] || p.pos, active.lineupPositions || [], i)}</select>
-        </label>`).join("");
-      const offenseBox = `
-        <div class="news-item"><div class="news-title">대타</div><div class="toolbar"><select id="pinchOutSelect">${lineupOptions}</select><select id="pinchInSelect">${benchOptions}</select><button class="secondary" onclick="pinchHitFromSelect()" ${!bench.length || active.complete ? "disabled" : ""}>대타 투입</button></div></div>
-        <div class="news-item"><div class="news-title">대주자</div><div class="toolbar"><select id="pinchRunBaseSelect">${occupiedBases.map((base) => `<option value="${base.index}">${base.index + 1}루 주자 · ${base.runner}</option>`).join("")}</select><select id="pinchRunnerSelect">${benchRunnerOptions}</select><button class="secondary" onclick="pinchRunFromSelect()" ${!occupiedBases.length || !bench.length || active.complete ? "disabled" : ""}>대주자 투입</button></div></div>`;
-      const defenseBox = `
-        <div class="news-item"><div class="news-title">대수비</div><div class="toolbar"><select id="defenseOutSelect">${lineupOptions}</select><select id="defenseInSelect">${benchOptions}</select><select id="defensePosSelect">${lineupPositionOptions("RF", [], -1)}</select><button class="secondary" onclick="defensiveSubFromSelect()" ${!bench.length || active.complete ? "disabled" : ""}>대수비 투입</button></div></div>
-        <div class="news-item"><div class="news-title">수비 위치 변경</div><div class="lineup-grid live-defense-grid">${defenseRows}</div><button class="secondary" onclick="submitLivePositions()" ${active.complete ? "disabled" : ""}>수비 위치 적용</button><div class="small">변경하면 왼쪽 라인업 타순과 수비 위치에도 바로 반영됩니다.</div></div>`;
-      $("benchBox").innerHTML = userBatting ? offenseBox : defenseBox;
-      document.querySelectorAll(".livePosSelect").forEach((select) => {
-        bindSwapSelect(select, ".livePosSelect");
-        select.addEventListener("change", () => submitLivePositions());
-      });
-
+      const oppBatter = active?.opponentLineup?.[active.opponentLineupIndex % 9];
       const bullpen = state.players
         .filter((p) => p.type === "PIT" && p.rosterStatus === "ACTIVE" && p.id !== active?.pitcherId && !(active?.usedPitchers || []).includes(p.id) && p.health?.status !== "INJURED")
-        .sort((a, b) => roleOrder(a.pitcherRole) - roleOrder(b.pitcherRole) || (Number(b.restDays) || 0) - (Number(a.restDays) || 0) || b.ovr - a.ovr);
-      $("bullpenBox").innerHTML = `
+        .sort((a, b) => roleOrder(a.pitcherRole) - roleOrder(b.pitcherRole) || (Number(a.restDays) || 0) - (Number(b.restDays) || 0) || b.ovr - a.ovr);
+      const availableBench = bench.filter((p) => !usedPositionPlayers.includes(p.id) && !removedPositionPlayers.includes(p.id));
+      const occupiedBases = (active?.bases || []).map((runner, index) => ({ runner, index })).filter((base) => base.runner);
+      const defaultSubOutId = userBatting ? currentBatterId : activeLineupPlayers[0]?.id;
+      const defaultSubOutSlot = Math.max(0, activeLineupPlayers.findIndex((p) => p.id === defaultSubOutId));
+      const activePositions = active?.lineupPositions || safeLineupPositions;
+      const gameComplete = Boolean(active?.complete);
+      const lineupOptions = activeLineupPlayers.map((p, i) => `<option value="${p.id}" ${p.id === defaultSubOutId ? "selected" : ""}>${i + 1}번 [${batterHandLabel(p)}] ${playerName(p)} · ${active.lineupPositions?.[i] || p.pos} · 현재 ${p.ovr}</option>`).join("");
+      const benchOptions = availableBench.map((p) => `<option value="${p.id}">[${batterHandLabel(p)}] ${playerName(p)} · ${p.pos} · 현재 ${p.ovr} · 주루 ${p.spd} · 컨디션 ${Math.round(p.form)}</option>`).join("");
+      const benchRunnerOptions = availableBench.slice().sort((a, b) => b.spd - a.spd || b.ovr - a.ovr).map((p) => `<option value="${p.id}">[${batterHandLabel(p)}] ${playerName(p)} · ${p.pos} · 주루 ${p.spd} · 현재 ${p.ovr}</option>`).join("");
+      const defensiveSubSection = `
         <div class="news-item">
-          <div class="news-title">1군 투수 교체</div>
-          <div class="toolbar"><select id="pitcherChangeSelect">${bullpen.map((p) => `<option value="${p.id}">[${pitcherHandLabel(p)}] ${playerName(p)} #${p.no || "-"} · ${pitcherRoleLabel(p.pitcherRole)} · ${p.ovr} · 컨디션 ${Math.round(p.form)} · ${pitcherRestText(p)}</option>`).join("")}</select><button class="secondary" onclick="changePitcherFromSelect()" ${!bullpen.length || active.complete ? "disabled" : ""}>등판</button></div>
-          <div class="small">현재 1군 등록 투수 중 이미 등판하지 않은 투수만 선택됩니다.</div>
+          <div class="news-title">대수비</div>
+          <div class="toolbar">
+            <select id="defenseOutSelect">${lineupOptions}</select>
+            <select id="defenseInSelect">${benchOptions}</select>
+            <select id="defensePosSelect">${lineupPositionOptions(active?.lineupPositions?.[defaultSubOutSlot] || "RF", [], -1)}</select>
+            <button class="secondary" onclick="defensiveSubFromSelect()" ${!availableBench.length || active.complete ? "disabled" : ""}>대수비 투입</button>
+          </div>
+          <div class="small">선수를 교체하면 왼쪽 라인업 타순과 수비 위치에도 바로 반영됩니다.</div>
+        </div>
+        <div class="news-item">
+          <div class="news-title">수비 위치 변경</div>
+          <div class="lineup-grid live-defense-grid">
+            ${activeLineupPlayers.map((p, i) => `
+              <label class="lineup-row live-defense-row">
+                <span class="badge">${i + 1}</span>
+                <span class="live-defense-name">${playerName(p)}</span>
+                <select class="livePosSelect" data-slot="${i}">
+                  ${lineupPositionOptions(active.lineupPositions?.[i] || p.pos, active.lineupPositions || [], i)}
+                </select>
+              </label>
+            `).join("")}
+          </div>
+          <button class="secondary" onclick="submitLivePositions()" ${active.complete ? "disabled" : ""}>수비 위치 적용</button>
+          <div class="small">왼쪽 라인업 포지션 드롭다운에서도 같은 변경을 할 수 있습니다.</div>
         </div>`;
+      const offenseSubSection = `
+        <div class="news-item">
+          <div class="news-title">대타</div>
+          <div class="toolbar">
+            <select id="pinchOutSelect">${lineupOptions}</select>
+            <select id="pinchInSelect">${benchOptions}</select>
+            <button class="secondary" onclick="pinchHitFromSelect()" ${!availableBench.length || active.complete ? "disabled" : ""}>대타 투입</button>
+          </div>
+          <div class="small">교체 선수는 선택한 타순을 이어받고 이후 수비 위치를 다시 조정할 수 있습니다.</div>
+        </div>
+        <div class="news-item">
+          <div class="news-title">대주자</div>
+          <div class="toolbar">
+            <select id="pinchRunBaseSelect">
+              ${occupiedBases.map((base) => `<option value="${base.index}">${base.index + 1}루 주자 · ${base.runner}</option>`).join("")}
+            </select>
+            <select id="pinchRunnerSelect">${benchRunnerOptions}</select>
+            <button class="secondary" onclick="pinchRunFromSelect()" ${!occupiedBases.length || !availableBench.length || active.complete ? "disabled" : ""}>대주자 투입</button>
+          </div>
+          <div class="small">대주자는 해당 베이스 주자를 대신하고 그 선수의 타순을 이어받습니다.</div>
+        </div>`;
+      $("benchBox").innerHTML = active ? (userBatting ? offenseSubSection : defensiveSubSection) : `<div class="empty">경기가 시작되면 1군 선수단에서 교체 선수를 고를 수 있습니다.</div>`;
 
-      ["startManualGame", "startSkipGame"].forEach((id) => { if ($(id)) $(id).disabled = true; });
-      if ($("resetManualGame")) $("resetManualGame").disabled = false;
-      const canCommand = !active.complete && userBatting;
-      ["cmdSwing", "swingTypeSelect", "cmdBunt", "buntTypeSelect", "cmdRunnerTactic", "runnerTacticSelect", "cmdSkipHalf", "cmdSkipGame"].forEach((id) => { if ($(id)) $(id).disabled = !canCommand; });
-      const canDefense = !active.complete && opponentBatting;
-      ["pickoffBaseSelect", "cmdPickoff", "pitchCallSelect", "defensePlanSelect", "cmdPitchCall", "cmdDefense"].forEach((id) => { if ($(id)) $(id).disabled = !canDefense; });
+      if (!active) {
+        $("manualScore").innerHTML = `<div class="score-line"><span>${teamName()}</span><span>vs</span></div><div class="score-line"><span>${teamName(state.opponent)}</span><span>${state.opponent.power}</span></div>`;
+        $("manualInning").textContent = "대기";
+        $("manualOuts").textContent = "-";
+        $("manualBases").textContent = "---";
+        $("manualBatter").textContent = "-";
+        $("manualCount").textContent = "0-0";
+        updateFieldBases([null, null, null]);
+        $("countBalls").textContent = "0";
+        $("countStrikes").textContent = "0";
+        $("countOuts").textContent = "0";
+        $("manualOrder").textContent = "-";
+        $("manualOppBatter").textContent = "-";
+        $("manualOppProfile").textContent = "-";
+        $("manualPitcher").textContent = "-";
+        $("manualPitchCount").textContent = "-";
+        $("manualPitchMood").textContent = "-";
+        $("manualTactic").textContent = "강공";
+        $("gameLog").innerHTML = `<div class="empty">라인업 제출 후 실시간 경기 운영이 열립니다. 다음 플레이마다 작전과 교체를 직접 지시할 수 있습니다.</div>`;
+        $("bullpenBox").innerHTML = `<div class="empty">경기가 시작되면 불펜 대기 선수가 표시됩니다.</div>`;
+        $("opponentLineupBox").innerHTML = renderOpponentLineupPanel(null);
+      } else {
+        $("manualScore").innerHTML = `<div class="score-line"><span>${teamName()}</span><span>${active.score.user}</span></div><div class="score-line"><span>${teamName(state.teams.find((t) => t.id === active.opponentId) || state.opponent)}</span><span>${active.score.opp}</span></div>`;
+        $("manualInning").textContent = `${active.inning}회${active.half === "top" ? "초" : "말"}`;
+        $("manualOuts").textContent = active.outs;
+        $("manualBases").textContent = active.bases.map((b, i) => b ? `${i + 1}` : "-").join("");
+        $("manualBatter").textContent = userBatting ? `${batterHandLabel(currentBatter)} ${playerName(currentBatter)} · ${currentBatterPos}` : "상대 공격";
+        $("manualCount").textContent = `${active.count?.balls || 0}-${active.count?.strikes || 0}`;
+        updateFieldBases(active.bases, active.pendingSteal);
+        $("countBalls").textContent = active.count?.balls || 0;
+        $("countStrikes").textContent = active.count?.strikes || 0;
+        $("countOuts").textContent = active.outs || 0;
+        $("manualOrder").textContent = opponentBatting && oppBatter ? `${oppBatter.order}번` : "-";
+        $("manualOppBatter").textContent = opponentBatting && oppBatter ? `${batterHandLabel(oppBatter)} ${opponentName(oppBatter)} · ${oppBatter.pos}` : "-";
+        $("manualOppProfile").textContent = opponentBatting && oppBatter ? `${batterHandLabel(oppBatter)} / 컨택 ${oppBatter.contact} / 파워 ${oppBatter.power}` : "-";
+        $("manualPitcher").textContent = displayPitcherName || "-";
+        $("manualPitchCount").textContent = displayPitchCount || 0;
+        $("manualPitchMood").textContent = displayPitchMood || "정상";
+        const runnerModeText = active.runnerTactic && active.runnerTactic !== "normal" ? ` · ${runnerTacticLabel(active.runnerTactic)}` : "";
+        $("manualTactic").textContent = opponentBatting ? "수비" : `${tacticLabel(active.tactic)}${active.pendingSteal ? ` + ${tacticLabel(active.pendingSteal)} 대기` : ""}${runnerModeText}`;
+        $("gameLog").innerHTML = active.log.map((text) => `<div class="news-item">${text}</div>`).join("");
+        $("bullpenBox").innerHTML = `
+          <div class="news-item">
+            <div class="news-title">1군 투수 교체</div>
+            <div class="toolbar">
+              <select id="pitcherInSelect">
+                ${bullpen.map((p) => `<option value="${p.id}">[${pitcherHandLabel(p)}] ${playerName(p)} · ${pitcherRoleLabel(p.pitcherRole)} · ${p.ovr} · 컨디션 ${Math.round(p.form)} · 스태미나 ${p.stamina} · ${pitcherRestText(p)}</option>`).join("")}
+              </select>
+              <button class="secondary" onclick="changePitcherFromSelect()" ${!bullpen.length || active.complete ? "disabled" : ""}>등판</button>
+            </div>
+            <div class="small">현재 1군 등록 투수 중 이미 등판하지 않은 투수만 선택됩니다.</div>
+          </div>
+        `;
+        $("opponentLineupBox").innerHTML = renderOpponentLineupPanel(active);
+        document.querySelectorAll(".livePosSelect").forEach((select) => {
+          bindSwapSelect(select, ".livePosSelect");
+        });
+        const defenseOutSelect = $("defenseOutSelect");
+        const defensePosSelect = $("defensePosSelect");
+        if (defenseOutSelect && defensePosSelect) {
+          defenseOutSelect.addEventListener("change", () => {
+            const slot = (state.activeGame?.lineup || []).indexOf(Number(defenseOutSelect.value));
+            defensePosSelect.value = state.activeGame?.lineupPositions?.[slot] || defensePosSelect.value;
+          });
+        }
+      }
+
+      const canManage = active && !active.complete;
+      $("startManualGame").disabled = active && !active.complete;
+      $("startSkipGame").disabled = active && !active.complete;
+      $("resetManualGame").disabled = !canManage;
+      $("cmdSwing").disabled = !canManage || !isUserBatting(active);
+      $("swingTypeSelect").disabled = !canManage || !isUserBatting(active);
+      $("cmdBunt").disabled = !canManage || !isUserBatting(active);
+      $("buntTypeSelect").disabled = !canManage || !isUserBatting(active);
+      $("cmdRunnerTactic").disabled = !canManage || !isUserBatting(active);
+      $("runnerTacticSelect").disabled = !canManage || !isUserBatting(active);
+      if (active?.runnerTactic) $("runnerTacticSelect").value = active.runnerTactic;
+      updateStealOptions(active);
+      const canPickoff = canManage && !isUserBatting(active) && active.bases?.some(Boolean);
+      $("pickoffBaseSelect").disabled = !canPickoff;
+      $("cmdPickoff").disabled = !canPickoff;
+      $("cmdSkipHalf").disabled = !canManage;
+      $("cmdSkipGame").disabled = !canManage;
+      $("cmdDefense").disabled = !canManage;
     }
+
+    function updateFieldBases(bases, pendingSteal) {
+      const pendingBases = stealCommandToBases(pendingSteal);
+      [1, 2, 3].forEach((baseNo) => {
+        const el = $(`base${baseNo}`);
+        const btn = $(`stealBtn${baseNo}`);
+        const runner = bases?.[baseNo - 1];
+        el.classList.toggle("occupied", Boolean(runner));
+        const stealValue = baseNo === 1 ? "steal1" : baseNo === 2 ? "steal2" : "steal3";
+        const isPending = pendingBases.includes(baseNo - 1);
+        const nextBaseIsLeaving = pendingBases.includes(baseNo);
+        const canRun = runner && (baseNo === 3 || !bases?.[baseNo] || nextBaseIsLeaving);
+        el.classList.toggle("steal-pending", isPending);
+        el.classList.remove("steal-ready");
+        el.dataset.steal = "";
+        el.title = runner ? `${baseNo}루 주자` : "";
+        el.textContent = runner ? `${baseNo}루\n${runner}${isPending ? "\n도루 대기" : ""}` : `${baseNo}루`;
+        if (btn) {
+          btn.dataset.steal = stealValue;
+          btn.disabled = !canRun && !isPending;
+          btn.classList.toggle("pending", isPending);
+          btn.textContent = isPending ? "취소" : (baseNo === 3 ? "홈스틸" : "도루");
+          btn.title = isPending ? "이 주자 도루 지시 취소" : canRun ? `${baseNo}루 주자 도루 지시` : "앞 루 주자가 같이 뛰어야 도루 가능";
+        }
+      });
+    }
+
+    function stealCommandToBases(command) {
+      return ({
+        steal: [0],
+        steal1: [0],
+        steal2: [1],
+        steal3: [2],
+        stealHome: [2],
+        steal12: [0, 1],
+        steal13: [0, 2],
+        steal23: [1, 2],
+        steal123: [0, 1, 2],
+        stealAll: [0, 1, 2]
+      }[command] || []);
+    }
+
+    function updateStealOptions(active) {
+      return active;
+    }
+
+    function canSteal(active) {
+      return Boolean(active?.bases?.[0] || active?.bases?.[1] || active?.bases?.[2]);
+    }
+
+    function roleOrder(role) {
+      return { SP: 1, LR: 2, MR: 3, SU: 4, CL: 5 }[role] || 9;
+    }
+
+    function tacticLabel(tactic) {
+      return {
+        swing: "강공",
+        forceSwing: "무조건 스윙",
+        take: "기다리기",
+        contactSwing: "컨택 스윙",
+        powerSwing: "장타 노림",
+        bunt: "번트",
+        sacBunt: "희생번트",
+        safetyBunt: "세이프티 번트",
+        squeezeBunt: "스퀴즈",
+        dragBunt: "기습번트",
+        steal: "도루",
+        steal1: "도루",
+        steal2: "도루",
+        steal3: "홈스틸",
+        stealHome: "홈스틸",
+        steal12: "더블스틸",
+        steal13: "1·3루 더블스틸",
+        steal23: "더블스틸",
+        steal123: "만루 스타트",
+        stealAll: "만루 스타트"
+      }[tactic] || "강공";
+    }
+
+    function runnerTacticLabel(tactic) {
+      return {
+        normal: "기본 주루",
+        hold: "보수적 주루",
+        greenLight: "그린라이트",
+        aggressiveRun: "적극 주루",
+        autoStart: "무조건 스타트"
+      }[tactic] || "기본 주루";
+    }
+
+    function selectedLineup() {
+      const ids = [...document.querySelectorAll(".lineupSelect")].map((select) => Number(select.value));
+      return [...new Set(ids)].slice(0, 9);
+    }
+
+    function selectedLineupPositions() {
+      return [...document.querySelectorAll(".lineupPosSelect")].map((select) => select.value).slice(0, 9);
+    }
+
+    function selectedStarter() {
+      return Number($("starterSelect")?.value || 0);
+    }
+
+    function validateManualLineup(rawLineup, positions) {
+      if (rawLineup.length !== 9 || rawLineup.some((id) => !Number.isFinite(id) || id <= 0)) {
+        return "타순 9명을 모두 선택해야 합니다.";
+      }
+      const duplicatePlayer = rawLineup.find((id, index) => rawLineup.indexOf(id) !== index);
+      if (duplicatePlayer) {
+        const p = state.players.find((player) => player.id === duplicatePlayer);
+        return `${playerName(p)} 선수가 라인업에 두 번 들어가 있습니다.`;
+      }
+      if (positions.length !== 9 || positions.some((pos) => !fieldPositions.includes(pos))) {
+        return "존재하지 않는 수비 포지션이 포함되어 있습니다.";
+      }
+      const missing = fieldPositions.filter((pos) => !positions.includes(pos));
+      const duplicatePosition = positions.find((pos, index) => positions.indexOf(pos) !== index);
+      if (missing.length || duplicatePosition) {
+        return `수비 포지션은 C, 1B, 2B, 3B, SS, LF, CF, RF, DH를 각각 한 번씩 써야 합니다. 빠진 포지션: ${missing.join(", ") || "없음"}`;
+      }
+      return "";
+    }
+
+    async function startManualGame() {
+      const rawLineup = [...document.querySelectorAll(".lineupSelect")].map((select) => Number(select.value));
+      const positions = selectedLineupPositions();
+      const lineupError = validateManualLineup(rawLineup, positions);
+      if (lineupError) {
+        showToast(lineupError);
+        return;
+      }
+      const lineup = selectedLineup();
+      await mutate("/api/game/start", { lineup, lineupPositions: positions, starterId: selectedStarter() });
+    }
+
+    async function startAndSkipGame() {
+      const rawLineup = [...document.querySelectorAll(".lineupSelect")].map((select) => Number(select.value));
+      const positions = selectedLineupPositions();
+      const lineupError = validateManualLineup(rawLineup, positions);
+      if (lineupError) {
+        showToast(lineupError);
+        return;
+      }
+      const lineup = selectedLineup();
+      await mutate("/api/game/start", { lineup, lineupPositions: positions, starterId: selectedStarter() });
+      await mutate("/api/game/skip-game");
+    }
+
+    async function startNextSeason() {
+      const beforeYear = Number(state?.seasonYear) || 1;
+      const nextState = await mutate("/api/season/next");
+      const afterYear = Number(nextState?.seasonYear) || beforeYear;
+      if (nextState?.offseason?.active || (nextState?.postseason?.completed && !nextState?.offseason?.contractsResolved)) {
+        showToast("오프시즌 계약 정리를 먼저 끝내야 합니다.");
+        openView("market");
+        return;
+      }
+      if (afterYear > beforeYear || ((Number(nextState?.day) || 1) === 1 && !nextState?.postseason?.active && !nextState?.postseason?.completed)) {
+        showToast("다음 시즌이 시작됐습니다.");
+        openView("dashboard");
+        return;
+      }
+      showToast("포스트시즌을 먼저 마무리해야 다음 시즌을 시작할 수 있습니다.");
+      openView("league");
+    }
+
+    async function commandAtBat(tactic) {
+      await mutate("/api/game/at-bat", { tactic });
+    }
+
+    async function commandSteal(steal) {
+      if (!steal || steal === "none") return;
+      await mutate("/api/game/steal", { steal });
+    }
+
+    async function commandBaseSteal(baseNo) {
+      const btn = $(`stealBtn${baseNo}`);
+      if (!btn || btn.disabled) return;
+      await commandSteal(btn.dataset.steal);
+    }
+
+    async function commandRunnerTactic() {
+      await mutate("/api/game/runner-tactic", { tactic: $("runnerTacticSelect").value || "normal" });
+    }
+
+    async function commandPickoff() {
+      await mutate("/api/game/pickoff", { baseIndex: Number($("pickoffBaseSelect").value || 0) });
+    }
+
+    async function runDefense() {
+      await mutate("/api/game/next");
+    }
+
+    async function changePitcher(inId) {
+      await mutate("/api/game/change-pitcher", { inId });
+    }
+
+    async function changePitcherFromSelect() {
+      const select = $("pitcherInSelect");
+      if (!select?.value) return;
+      await changePitcher(Number(select.value));
+    }
+
+    async function pinchHit(outId, inId) {
+      await mutate("/api/game/substitute", { outId, inId });
+    }
+
+    async function pinchHitFromSelect() {
+      const outSelect = $("pinchOutSelect");
+      const inSelect = $("pinchInSelect");
+      if (!outSelect?.value || !inSelect?.value) return;
+      await pinchHit(Number(outSelect.value), Number(inSelect.value));
+    }
+
+    async function substituteWithPosition(outId, inId, position) {
+      await mutate("/api/game/substitute", { outId, inId, position });
+    }
+
+    async function liveLineupSubstitute(slot, inId) {
+      const game = state.activeGame;
+      if (!game || game.complete) return;
+      const outId = Number(game.lineup?.[slot] || 0);
+      if (!outId || outId === inId) return;
+      if ((game.lineup || []).includes(inId)) {
+        showToast("경기 중에는 타순 교환 대신 수비 위치 변경만 가능합니다.");
+        renderGame();
+        return;
+      }
+      const position = document.querySelector(`.lineupPosSelect[data-slot="${slot}"]`)?.value || game.lineupPositions?.[slot];
+      await substituteWithPosition(outId, inId, position);
+    }
+
+    async function submitLineupPositionsFromMain() {
+      const positions = selectedLineupPositions();
+      const missing = fieldPositions.filter((pos) => !positions.includes(pos));
+      const duplicatePosition = positions.find((pos, index) => positions.indexOf(pos) !== index);
+      if (positions.length !== 9 || missing.length || duplicatePosition) {
+        showToast(`수비 포지션은 C, 1B, 2B, 3B, SS, LF, CF, RF, DH를 각각 한 번씩 써야 합니다. 빠진 포지션: ${missing.join(", ") || "없음"}`);
+        renderGame();
+        return;
+      }
+      await mutate("/api/game/positions", { positions });
+    }
+
+    async function defensiveSubFromSelect() {
+      const outSelect = $("defenseOutSelect");
+      const inSelect = $("defenseInSelect");
+      const posSelect = $("defensePosSelect");
+      if (!outSelect?.value || !inSelect?.value) return;
+      await substituteWithPosition(Number(outSelect.value), Number(inSelect.value), posSelect?.value || null);
+    }
+
+    async function pinchRunFromSelect() {
+      const baseSelect = $("pinchRunBaseSelect");
+      const runnerSelect = $("pinchRunnerSelect");
+      if (!baseSelect?.value || !runnerSelect?.value) return;
+      await mutate("/api/game/pinch-run", {
+        baseIndex: Number(baseSelect.value),
+        inId: Number(runnerSelect.value)
+      });
+    }
+
+    async function submitLivePositions() {
+      const positions = [...document.querySelectorAll(".livePosSelect")].map((select) => select.value).slice(0, 9);
+      const missing = fieldPositions.filter((pos) => !positions.includes(pos));
+      const duplicatePosition = positions.find((pos, index) => positions.indexOf(pos) !== index);
+      if (positions.length !== 9 || missing.length || duplicatePosition) {
+        showToast(`수비 포지션은 C, 1B, 2B, 3B, SS, LF, CF, RF, DH를 각각 한 번씩 써야 합니다. 빠진 포지션: ${missing.join(", ") || "없음"}`);
+        return;
+      }
+      await mutate("/api/game/positions", { positions });
+    }
+
+    function formatRate(value) {
+      return Number(value || 0).toFixed(3);
+    }
+
+    function safeDivide(numerator, denominator) {
+      return denominator ? numerator / denominator : 0;
+    }
+
+    function clampMetric(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function hitterAdvancedStats(p) {
+      const s = p.stats || {};
+      const pa = Number(s.pa || 0);
+      const ab = Number(s.ab || 0);
+      const h = Number(s.h || 0);
+      const bb = Number(s.bb || 0);
+      const so = Number(s.so || 0);
+      const tb = Number(s.tb || 0);
+      const hr = Number(s.hr || 0);
+      const sb = Number(s.sb || 0);
+      const hbp = Number(s.hbp || 0);
+      const sf = Number(s.sf || 0);
+      const avg = Number(s.avg || 0) || safeDivide(h, ab);
+      const obp = Number(s.obp || 0) || safeDivide(h + bb + hbp, ab + bb + hbp + sf);
+      const slg = Number(s.slg || 0) || safeDivide(tb, ab);
+      const ops = obp + slg;
+      const iso = Math.max(0, slg - avg);
+      const bbPct = safeDivide(bb, pa) * 100;
+      const kPct = safeDivide(so, pa) * 100;
+      const opsPlus = Math.round(clampMetric(safeDivide(ops, 0.720) * 100 + ((p.ovr || 65) - 65) * 0.35, 20, 230));
+      const warRaw = (ops - 0.650) * 8.4 + ((p.def || 55) - 55) / 38 + ((p.spd || 55) - 55) / 48 + hr * 0.055 + sb * 0.018 + pa * 0.002;
+      return {
+        war: Math.round(clampMetric(warRaw, -1.5, 10.5) * 10) / 10,
+        ops,
+        iso,
+        bbPct,
+        kPct,
+        opsPlus
+      };
+    }
+
+    function pitcherAdvancedStats(p) {
+      const s = p.stats || {};
+      const ip = Number(s.ip || 0);
+      const era = Number.isFinite(Number(s.era)) ? Number(s.era) : 4.50;
+      const so = Number(s.so || 0);
+      const wins = Number(s.win || 0);
+      const losses = Number(s.loss || 0);
+      const k9 = safeDivide(so * 9, ip);
+      const whip = clampMetric(1.42 - ((p.pit || 60) - 60) / 115 + Math.max(0, era - 3.8) / 18 - k9 / 80, 0.75, 2.25);
+      const eraPlus = Math.round(clampMetric(safeDivide(4.35, Math.max(1.2, era || 4.35)) * 100 + ((p.ovr || 65) - 65) * 0.25, 30, 240));
+      const fip = clampMetric((era || 4.50) + 0.50 - (k9 - 7.2) * 0.15 - ((p.pit || 60) - 60) * 0.012, 1.50, 7.80);
+      const leverage = Number(s.sv || 0) * 0.22 + Number(s.hold || 0) * 0.12;
+      const warRaw = safeDivide(ip, 55) * safeDivide(4.65 - Math.min(era || 4.65, 7.5), 1.7) + safeDivide(so, 82) + leverage + ((p.ovr || 65) - 65) / 85;
+      return {
+        war: Math.round(clampMetric(warRaw, -1.5, 9.5) * 10) / 10,
+        whip,
+        k9,
+        eraPlus,
+        fip,
+        winPct: safeDivide(wins, wins + losses)
+      };
+    }
+
+    function statGrid(items) {
+      return `<div class="stat-grid">${items.map(([label, value]) => `<div class="stat-card"><strong>${value}</strong><span>${label}</span></div>`).join("")}</div>`;
+    }
+
+    function playerStatsSummary(p) {
+      const s = p.stats || {};
+      if (p.type === "PIT") return `ERA ${Number(s.era || 0).toFixed(2)} · ${s.win || 0}승 ${s.loss || 0}패 · ${s.so || 0}K`;
+      return `타율 ${formatRate(s.avg)} · 출루율 ${formatRate(s.obp)} · ${s.hr || 0}홈런 · ${s.rbi || 0}타점`;
+    }
+
+    function playerStatCards(p) {
+      const s = p.stats || {};
+      if (p.type === "PIT") {
+        const wins = Number(s.win) || 0;
+        const losses = Number(s.loss) || 0;
+        const winRate = wins + losses ? formatRate(wins / (wins + losses)) : "0.000";
+        return statGrid([
+          ["평균자책", Number(s.era || 0).toFixed(2)],
+          ["승-패", `${wins}-${losses}`],
+          ["승률", winRate],
+          ["이닝", Number(s.ip || 0).toFixed(1)],
+          ["탈삼진", s.so || 0],
+          ["세이브", s.sv || 0],
+          ["홀드", s.hold || 0],
+          ["최근 투구수", p.lastPitchCount || 0]
+        ]);
+      }
+      const ops = Number(s.obp || 0) + Number(s.slg || 0);
+      return statGrid([
+        ["타율", formatRate(s.avg)],
+        ["출루율", formatRate(s.obp)],
+        ["장타율", formatRate(s.slg)],
+        ["OPS", formatRate(ops)],
+        ["타석", s.pa || 0],
+        ["타수", s.ab || Math.max(0, (s.pa || 0) - (s.bb || 0))],
+        ["안타", s.h || 0],
+        ["홈런", s.hr || 0],
+        ["타점", s.rbi || 0],
+        ["득점", s.r || 0],
+        ["도루", s.sb || 0],
+        ["볼넷", s.bb || 0],
+        ["삼진", s.so || 0]
+      ]);
+    }
+
+    function playerStatsSummary(p) {
+      const s = p.stats || {};
+      if (p.type === "PIT") {
+        const adv = pitcherAdvancedStats(p);
+        return `WAR ${adv.war.toFixed(1)} · ERA ${Number(s.era || 0).toFixed(2)} · WHIP ${adv.whip.toFixed(2)} · ${s.win || 0}승 ${s.loss || 0}패 · ${s.so || 0}K`;
+      }
+      const adv = hitterAdvancedStats(p);
+      return `WAR ${adv.war.toFixed(1)} · AVG ${formatRate(s.avg)} · OPS ${formatRate(adv.ops)} · ${s.hr || 0}홈런 · ${s.rbi || 0}타점`;
+    }
+
+    function playerStatCards(p) {
+      const s = p.stats || {};
+      if (p.type === "PIT") {
+        const wins = Number(s.win) || 0;
+        const losses = Number(s.loss) || 0;
+        const winRate = wins + losses ? formatRate(wins / (wins + losses)) : "0.000";
+        const adv = pitcherAdvancedStats(p);
+        return statGrid([
+          ["추정 WAR", adv.war.toFixed(1)],
+          ["평균자책", Number(s.era || 0).toFixed(2)],
+          ["WHIP", adv.whip.toFixed(2)],
+          ["K/9", adv.k9.toFixed(1)],
+          ["ERA+", adv.eraPlus],
+          ["FIP", adv.fip.toFixed(2)],
+          ["승-패", `${wins}-${losses}`],
+          ["승률", winRate],
+          ["이닝", Number(s.ip || 0).toFixed(1)],
+          ["탈삼진", s.so || 0],
+          ["세이브", s.sv || 0],
+          ["홀드", s.hold || 0],
+          ["최근 투구수", p.lastPitchCount || 0]
+        ]);
+      }
+      const adv = hitterAdvancedStats(p);
+      return statGrid([
+        ["추정 WAR", adv.war.toFixed(1)],
+        ["타율", formatRate(s.avg)],
+        ["출루율", formatRate(s.obp)],
+        ["장타율", formatRate(s.slg)],
+        ["OPS", formatRate(adv.ops)],
+        ["OPS+", adv.opsPlus],
+        ["ISO", formatRate(adv.iso)],
+        ["BB%", `${adv.bbPct.toFixed(1)}%`],
+        ["K%", `${adv.kPct.toFixed(1)}%`],
+        ["타석", s.pa || 0],
+        ["타수", s.ab || Math.max(0, (s.pa || 0) - (s.bb || 0))],
+        ["안타", s.h || 0],
+        ["홈런", s.hr || 0],
+        ["타점", s.rbi || 0],
+        ["득점", s.r || 0],
+        ["도루", s.sb || 0],
+        ["볼넷", s.bb || 0],
+        ["삼진", s.so || 0]
+      ]);
+    }
+
     function renderRoster() {
       const filter = $("rosterFilter").value;
       const typeFilter = $("rosterTypeFilter")?.value || "all";
@@ -3002,27 +3301,26 @@
       const players = state.players.filter((p) =>
         p.rosterStatus !== "RELEASED"
         && String(p.teamId) === String(state.selectedTeamId)
-        && playerMatchesFilters(p, filter, typeFilter)
+        &&
+        playerMatchesFilters(p, filter, typeFilter)
         && playerMatchesSearch(p, query)
       ).sort(rosterSort);
       updateRosterSortHeaders();
-      $("rosterBody").innerHTML = players.map((p) => {
-        const healthText = p.health?.status === "INJURED" ? " · 부상" : p.health?.status === "REHAB" ? " · 재활" : "";
-        return `
-          <tr class="${p.id === state.selectedId ? "selected" : ""}" data-player="${p.id}">
-            <td><div class="name-cell"><strong>${playerName(p)}</strong><span class="small">${p.type === "PIT" ? pitcherHandLabel(p) : batterHandLabel(p)}${p.trait ? ` · ${p.trait}` : ""}</span></div></td>
-            <td>${p.age}</td>
-            <td><span class="badge">${p.pos}</span></td>
-            <td>${rosterHandCell(rosterThrowLabel(p))}</td>
-            <td>${rosterHandCell(rosterBatLabel(p))}</td>
-            <td>${p.ovr}</td>
-            <td>${p.pot}</td>
-            <td><div class="bar" title="${Math.round(p.form)}"><i style="--w:${pct(p.form)}"></i></div></td>
-            <td title="${injuryTendencyLabel(p)}">${Math.round(p.durability || 65)}</td>
-            <td>${statusLabel(p.rosterStatus)}${healthText}</td>
-            <td>${contractText(p)}</td>
-          </tr>`;
-      }).join("");
+      $("rosterBody").innerHTML = players.map((p) => `
+        <tr class="${p.id === state.selectedId ? "selected" : ""}" data-player="${p.id}">
+          <td><div class="name-cell"><strong>${playerName(p)}</strong><span class="small">${p.type === "PIT" ? pitcherHandLabel(p) : batterHandLabel(p)}${p.trait ? ` · ${p.trait}` : ""}</span></div></td>
+          <td>${p.age}</td>
+          <td><span class="badge">${p.pos}</span></td>
+          <td>${rosterHandCell(rosterThrowLabel(p))}</td>
+          <td>${rosterHandCell(rosterBatLabel(p))}</td>
+          <td>${p.ovr}</td>
+          <td>${p.pot}</td>
+          <td><div class="bar" title="${Math.round(p.form)}"><i style="--w:${pct(p.form)}"></i></div></td>
+          <td title="${injuryTendencyLabel(p)}">${Math.round(p.durability || 65)}</td>
+          <td>${statusLabel(p.rosterStatus)}${p.health?.status === "INJURED" ? " · 부상" : p.health?.status === "REHAB" ? " · 재활" : ""}</td>
+          <td>${contractText(p)}</td>
+        </tr>
+      `).join("");
       document.querySelectorAll("[data-player]").forEach((row) => {
         row.addEventListener("click", () => {
           state.selectedId = Number(row.dataset.player);
@@ -3032,57 +3330,31 @@
       const p = players.find((x) => x.id === state.selectedId) || players[0];
       if (p && state.selectedId !== p.id) state.selectedId = p.id;
       if (!p) {
-        $("playerDetail").innerHTML = `<div class="empty">조건에 맞는 선수가 없습니다.</div>`;
+        $("playerDetail").innerHTML = `<div class="empty">선수가 없습니다.</div>`;
         return;
       }
       const stats = playerStatsSummary(p);
-      const trainingBlock = p.type === "BAT" ? `
-        <div>
-          <div class="small">포지션 훈련 지시 · 적응도만 상승 · 능력치 변화 없음</div>
-          <div class="offer-actions">${positionTrainingButtons(p)}</div>
-        </div>` : "";
-      const pitchingBlock = p.type === "PIT" ? `
-        <div>
-          <div class="small">투수 보직</div>
-          <div class="offer-actions">
-            ${["SP","LR","MR","SU","CL"].map((role) => `<button class="${p.pitcherRole === role ? "primary" : "secondary"}" onclick="mutate('/api/player/pitcher-role', { id: ${p.id}, role: '${role}' })">${pitcherRoleLabel(role)}</button>`).join("")}
-          </div>
-        </div>
-        <div>
-          <div class="small">구종 / 결정구</div>
-          <div class="log" style="max-height:none;">${pitchArsenalHtml(p, true)}</div>
-        </div>` : "";
       $("playerDetail").innerHTML = `
         <div class="player-detail">
           <div class="bio">
-            <div><h3>${playerName(p)}</h3><div class="small">${p.age}세 · ${positionLabelForPlayer(p)} · ${stats}</div></div>
+          <div><h3>${playerName(p)}</h3><div class="small">${p.age}세 · ${positionLabelForPlayer(p)} · ${stats}</div></div>
             <span class="badge">${p.ovr}/${p.pot}</span>
           </div>
-          <div class="traits">
-            ${playerStatusTags(p).map((tag) => `<span class="trait">${tag}</span>`).join("")}
-            ${p.trait ? `<span class="trait">${p.trait}</span>` : ""}
-            ${p.foreignPlayer ? `<span class="trait">외국인 · FA/트레이드 제한</span>` : ""}
-            <span class="trait">${statusLabel(p.rosterStatus)}</span>
-            ${p.type === "PIT" ? `${handTag(pitcherHandLabel(p), p)}<span class="trait">${pitcherRoleLabel(p.pitcherRole)}</span><span class="trait">스태미나 ${p.stamina}</span><span class="trait">${pitcherRestText(p)}</span>` : `${handTag(batterHandLabel(p), p)}<span class="trait">${positionLabelForPlayer(p)}</span>`}
-            <span class="trait">${healthLabel(p.health)}</span>
-            <span class="trait">부상성향 ${injuryTendencyLabel(p)}</span>
-            <span class="trait">FA ${p.faGrade}등급</span>
-            <span class="trait">${faTimeText(p)}</span>
-            <span class="trait">${controlText(p)}</span>
-            <span class="trait">${contractText(p)}</span>
-            <span class="trait">옵션 ${p.options}</span>
-            <span class="trait">행복도 ${pct(p.happy)}</span>
-            <span class="trait">컨디션 ${pct(p.form)}</span>
-          </div>
+          <div class="traits">${playerStatusTags(p).map((tag) => `<span class="trait">${tag}</span>`).join("")}${p.trait ? `<span class="trait">${p.trait}</span>` : ""}${p.foreignPlayer ? `<span class="trait">외국인 · FA/트레이드 불가</span>` : ""}<span class="trait">${statusLabel(p.rosterStatus)}</span>${p.type === "PIT" ? `${handTag(pitcherHandLabel(p), p)}<span class="trait">${pitcherRoleLabel(p.pitcherRole)}</span><span class="trait">스태미나 ${p.stamina}</span><span class="trait">${pitcherRestText(p)}</span>` : `${handTag(batterHandLabel(p), p)}<span class="trait">${positionLabelForPlayer(p)}</span>`}<span class="trait">${healthLabel(p.health)}</span><span class="trait">부상성향 ${injuryTendencyLabel(p)}</span><span class="trait">FA ${p.faGrade}등급</span><span class="trait">${faTimeText(p)}</span><span class="trait">${controlText(p)}</span><span class="trait">${contractText(p)}</span><span class="trait">옵션 ${p.options}</span><span class="trait">행복도 ${pct(p.happy)}</span><span class="trait">컨디션 ${pct(p.form)}</span></div>
           <div>
             <div class="small">시즌 개인 기록</div>
             ${playerStatCards(p)}
           </div>
           ${skillBar("컨택", p.hit)}${skillBar("파워", p.pow)}${skillBar("주루", p.spd)}${skillBar("수비", p.def)}${skillBar("송구", p.arm || 55)}${skillBar("투구", p.pit)}${skillBar("내구성", p.durability || 65)}
-          ${trainingBlock}
+          ${p.type === "BAT" ? `
+            <div>
+              <div class="small">포지션 훈련 지시 · 적응도만 상승 · 능력치 변화 없음</div>
+              <div class="offer-actions">${positionTrainingButtons(p)}</div>
+            </div>
+          ` : ""}
           <div class="news-item">
             <div class="news-title">선수 심리</div>
-            <div>${p.complaint?.topic || "안정"} · ${p.complaint?.text || "현재 특별한 불만은 없습니다."}</div>
+            <div>${p.complaint?.topic || "안정"} · ${p.complaint?.text || "특별한 불만은 없습니다."}</div>
           </div>
           <div>
             <div class="small">계약 / 팬 반응</div>
@@ -3091,10 +3363,21 @@
               <button class="secondary" onclick="adjustContract(${p.id}, 'cut')">연봉 삭감 제안</button>
             </div>
           </div>
-          ${pitchingBlock}
+          ${p.type === "PIT" ? `
+            <div>
+              <div class="small">투수 보직</div>
+              <div class="offer-actions">
+                ${["SP","LR","MR","SU","CL"].map((role) => `<button class="${p.pitcherRole === role ? "primary" : "secondary"}" onclick="mutate('/api/player/pitcher-role', { id: ${p.id}, role: '${role}' })">${pitcherRoleLabel(role)}</button>`).join("")}
+              </div>
+            </div>
+            <div>
+              <div class="small">구종 / 결정구</div>
+              <div class="log" style="max-height:none;">${pitchArsenalHtml(p, true)}</div>
+            </div>
+          ` : ""}
           <div class="offer-actions">
-            <button onclick="train(${p.id}, '${p.type === "PIT" ? "pit" : "hit"}')">주요 능력 훈련</button>
-            <button class="secondary" onclick="train(${p.id}, 'arm')">송구 훈련</button>
+            <button onclick="train(${p.id}, '${p.type === "PIT" ? "pit" : "hit"}')">훈련 과제 지정</button>
+            <button class="secondary" onclick="train(${p.id}, 'arm')">송구 과제</button>
             <button class="secondary" onclick="mutate('/api/offer', { id: ${p.id} })">시장 반응 확인</button>
             <button class="secondary" onclick="mutate('/api/player/rehab', { id: ${p.id} })" ${p.health?.status === "OK" ? "disabled" : ""}>재활 진행</button>
             <button class="secondary" onclick="mutate('/api/player/clear-rehab', { id: ${p.id} })" ${p.health?.status === "OK" ? "disabled" : ""}>즉시 복귀</button>
@@ -3106,21 +3389,163 @@
           <div>
             <div class="small">1:1 면담</div>
             <div class="offer-actions">
-              <button class="secondary" onclick="talk(${p.id}, 'listen')">경청</button>
-              <button class="secondary" onclick="talk(${p.id}, 'role')">현실 설명</button>
-              <button class="secondary" onclick="talk(${p.id}, 'promise')">기회 약속</button>
-              <button class="secondary" onclick="talk(${p.id}, 'discipline')">원칙 강조</button>
+              <button class="secondary" onclick="mutate('/api/player/talk', { id: ${p.id}, tone: 'listen' })">경청</button>
+              <button class="secondary" onclick="mutate('/api/player/talk', { id: ${p.id}, tone: 'honest' })">현실 설명</button>
+              <button class="secondary" onclick="mutate('/api/player/talk', { id: ${p.id}, tone: 'promise' })">기회 약속</button>
+              <button class="secondary" onclick="mutate('/api/player/talk', { id: ${p.id}, tone: 'strict' })">원칙 강조</button>
             </div>
           </div>
-        </div>`;
+        </div>
+      `;
+      $("rosterRules").innerHTML = `
+        <div class="metric"><strong>${state.rosterCounts.active}/28</strong><span>1군 엔트리</span></div>
+        <div class="metric"><strong>${state.rosterCounts.farm}</strong><span>2군 선수</span></div>
+        <div class="metric"><strong>${state.rosterCounts.development}</strong><span>육성선수</span></div>
+        <div class="metric"><strong>${state.rosterCounts.registered}/65</strong><span>정식 등록선수</span></div>
+        <div class="metric"><strong>FA 보상</strong><span>${state.rules?.compensation || "등급제 적용"} · 등록일수 145일=1시즌</span></div>
+        <div class="metric"><strong>육성 규칙</strong><span>정식 전환 전 1군 등록 불가</span></div>
+      `;
     }
+
+    function setRosterSort(key) {
+      if (!key) return;
+      if (rosterSortState.key === key) {
+        rosterSortState.dir = rosterSortState.dir === "asc" ? "desc" : "asc";
+      } else {
+        rosterSortState.key = key;
+        rosterSortState.dir = rosterNumericSorts.has(key) || key === "contract" ? "desc" : "asc";
+      }
+      renderRoster();
+    }
+
+    function updateRosterSortHeaders() {
+      document.querySelectorAll("#roster .sort-header").forEach((button) => {
+        const active = button.dataset.sort === rosterSortState.key;
+        button.classList.toggle("active", active);
+        button.dataset.arrow = rosterSortState.dir === "asc" ? "▲" : "▼";
+      });
+    }
+
+    function stopPlayerDetailPropagation() {
+      document.querySelectorAll("#playerDetail button, #playerDetail select, #playerDetail input").forEach((el) => {
+        el.addEventListener("click", (event) => event.stopPropagation());
+      });
+    }
+
+    function statusLabel(status) {
+      return { ACTIVE: "1군", FARM: "2군", DEV: "육성", RELEASED: "방출" }[status] || status || "미정";
+    }
+
+    async function releaseSelectedPlayer(id) {
+      if (!confirm("이 선수를 방출할까요? 방출하면 선수단, 라인업, 트레이드 후보에서 제외됩니다.")) return;
+      await mutate("/api/player/release", { id });
+    }
+
+    function pitcherRoleLabel(role) {
+      return { SP: "선발", LR: "롱릴리프", MR: "중간", SU: "셋업", CL: "마무리" }[role] || role || "미정";
+    }
+
+    function pitcherRestText(p) {
+      const restDays = Math.max(0, Number(p?.restDays) || 0);
+      const lastPitchCount = Math.max(0, Number(p?.lastPitchCount) || 0);
+      const restText = restDays > 0 ? `휴식 ${restDays}일 필요` : "등판 가능";
+      return lastPitchCount > 0 ? `${restText} · 직전 ${lastPitchCount}구` : restText;
+    }
+
+    function healthLabel(health) {
+      if (!health || health.status === "OK") return "건강";
+      const schedule = health.returnSeasonYear ? ` · ${health.returnSeasonYear}시즌 Day ${health.returnDay || "?"} 복귀예정` : "";
+      const source = health.source ? ` · ${health.source}` : "";
+      if (health.status === "INJURED") return `${health.injury || "부상"} · 치료 ${health.days || 0}일 남음${schedule}${source}`;
+      if (health.status === "REHAB") return `재활 ${health.rehab || 0}% · 복귀 승인 대기${schedule}${source}`;
+      return health.status;
+    }
+
+    function injuryTendencyLabel(p) {
+      const value = Number(p?.durability) || 65;
+      if (value >= 82) return "튼튼함";
+      if (value >= 68) return "보통";
+      if (value >= 52) return "주의";
+      return "부상 잦음";
+    }
+
+    function selectedValues(selectId) {
+      return [...($(selectId)?.selectedOptions || [])].map((option) => Number(option.value)).filter(Boolean);
+    }
+
+    function clientTradeValue(p) {
+      if (!p) return 0;
+      return (p.ovr || 50) * 1.35 + (p.pot || p.ovr || 50) * 0.55 - Math.max(0, (p.age || 25) - 29) * 1.8 + (p.type === "PIT" ? 4 : 0);
+    }
+
+    const tradeRosterFilter = { my: "ALL", their: "ALL" };
+
+    function rosterStatusLabel(status) {
+      return status === "ACTIVE" ? "1군" : status === "FARM" ? "2군" : status || "-";
+    }
+
+    function setTradeFilter(side, status) {
+      tradeRosterFilter[side] = status;
+      document.querySelectorAll(side === "my" ? "#myTradeTabs button" : "#theirTradeTabs button").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.roster === status);
+      });
+      renderMarket();
+    }
+
+    function renderTradeCards(containerId, selectId, players, side) {
+      const selected = new Set(selectedValues(selectId));
+      const filter = tradeRosterFilter[side];
+      const query = side === "my" ? $("tradeMySearch")?.value || "" : $("tradeTheirSearch")?.value || "";
+      const typeFilter = side === "my" ? $("tradeMyTypeFilter")?.value || "all" : $("tradeTheirTypeFilter")?.value || "all";
+      const visible = players.filter((p) => playerMatchesFilters(p, filter, typeFilter) && playerMatchesSearch(p, query));
+      $(containerId).innerHTML = visible.length ? visible.map((p) => `
+        <button type="button" class="trade-player-card ${selected.has(Number(p.id)) ? "selected" : ""}" data-select="${selectId}" data-id="${p.id}">
+          <span>
+            <strong>${playerName(p)}</strong>
+            <div class="meta">${rosterStatusLabel(p.rosterStatus)} · ${p.pos} · ${p.age}세 · 현재 ${p.ovr} / 잠재 ${p.pot}</div>
+            <div class="meta">컨택 ${p.hit} · 파워 ${p.pow} · 주루 ${p.spd} · 수비 ${p.def} · 송구 ${p.arm}</div>
+          </span>
+          <span class="value">${Math.round(clientTradeValue(p))}</span>
+        </button>
+      `).join("") : `<div class="empty">${filter === "ALL" ? "표시할 선수 없음" : `${rosterStatusLabel(filter)} 선수가 없습니다.`}</div>`;
+    }
+
+    function syncTradeSelect(selectId, players, currentSelected) {
+      const keep = new Set(currentSelected.map(Number));
+      $(selectId).innerHTML = players.map((p) => `<option value="${p.id}">${playerName(p)} | ${rosterStatusLabel(p.rosterStatus)} | ${p.pos} | 현재 ${p.ovr} / 잠재 ${p.pot}</option>`).join("");
+      [...$(selectId).options].forEach((option) => { option.selected = keep.has(Number(option.value)); });
+    }
+
+    function toggleTradeCard(selectId, id) {
+      const option = [...$(selectId).options].find((opt) => Number(opt.value) === Number(id));
+      if (!option) return;
+      option.selected = !option.selected;
+      renderMarket();
+    }
+
+    function updateTradePreview() {
+      const outgoing = selectedValues("tradePlayerSelect").map((id) => state.players.find((p) => p.id === id)).filter(Boolean);
+      const incoming = selectedValues("tradeTargetSelect").map((id) => (state.tradeTargets || []).find((p) => p.id === id)).filter(Boolean);
+      const cash = Number($("tradeCash")?.value || 0);
+      const myValue = outgoing.reduce((sum, p) => sum + clientTradeValue(p), 0) + cash * 7.5;
+      const theirValue = incoming.reduce((sum, p) => sum + clientTradeValue(p), 0);
+      const gap = myValue - theirValue;
+      $("tradeValuePreview").innerHTML = outgoing.length && incoming.length
+        ? `<strong>${gap >= 0 ? "+" : ""}${Math.round(gap)}</strong><br>${gap >= -2 ? "성사권" : gap >= -18 ? "역제안 가능" : "거절 위험"}`
+        : "양쪽 카드를 선택하세요";
+    }
+
+    function skillBar(label, value) {
+      return `<div><div class="small">${label} ${Math.round(value)}</div><div class="bar"><i style="--w:${pct(value)}"></i></div></div>`;
+    }
+
     function renderTraining() {
       const focusName = (focus) => ({
         hit: "컨택",
-        pow: "파워",
+        pow: "장타",
         def: "수비",
         arm: "송구",
-        pit: "구위/제구",
+        pit: "투구 밸런스"
       })[focus] || "개별";
       const trainingStatus = (p) => {
         const items = [];
@@ -3144,7 +3569,7 @@
             </div>
             ${trainingStatus(p)}
             <div class="offer-actions" style="margin-top:8px;">
-              ${p.type === "PIT" ? `<button onclick="train(${p.id}, 'pit')">구위/제구 과제</button>` : `<button onclick="train(${p.id}, 'hit')">컨택 과제</button><button onclick="train(${p.id}, 'pow')" class="secondary">파워 과제</button>`}
+              ${p.type === "PIT" ? `<button onclick="train(${p.id}, 'pit')">투구 밸런스</button>` : `<button onclick="train(${p.id}, 'hit')">컨택 과제</button><button onclick="train(${p.id}, 'pow')" class="secondary">장타 과제</button>`}
               <button onclick="train(${p.id}, 'def')" class="secondary">수비 과제</button>
               <button onclick="train(${p.id}, 'arm')" class="secondary">송구 과제</button>
             </div>
@@ -3174,15 +3599,15 @@
         if (!p) return "";
         return `
           <div class="panel offer-card" style="box-shadow:none; margin-bottom:10px;">
-            <div><h3>${o.club}</h3><div class="small">${o.league} 쨌 ???${p.name}(${p.pos})</div></div>
-            <div>怨꾩빟 ?쒖븞 ${o.years}??${money(o.salary)} 쨌 援щ떒 蹂댁긽湲?${money(o.fee)}</div>
+            <div><h3>${o.club}</h3><div class="small">${o.league} · 대상 ${p.name}(${p.pos})</div></div>
+            <div>계약 제안 ${o.years}년 ${money(o.salary)} · 구단 보상금 ${money(o.fee)}</div>
             <div class="offer-actions">
-              <button class="good" onclick="mutate('/api/accept-offer', { id: ${o.id} })">?섎씫</button>
-              <button class="danger" onclick="mutate('/api/reject-offer', { id: ${o.id} })">嫄곗젅</button>
+              <button class="good" onclick="mutate('/api/accept-offer', { id: ${o.id} })">수락</button>
+              <button class="danger" onclick="mutate('/api/reject-offer', { id: ${o.id} })">거절</button>
             </div>
           </div>
         `;
-      }).join("") : `<div class="empty">?꾩옱 ?꾩갑???댁쇅 ?ㅽ띁媛 ?놁뒿?덈떎. 寃쎄린瑜?吏꾪뻾?섍굅???쒖옣 諛섏쓳???뺤씤?대낫?몄슂.</div>`;
+      }).join("") : `<div class="empty">현재 도착한 해외 오퍼가 없습니다. 경기를 진행하거나 시장 반응을 확인해보세요.</div>`;
       const tradeable = state.players.filter((p) => p.rosterStatus !== "DEV" && p.rosterStatus !== "RELEASED" && !p.foreignPlayer && p.health?.status !== "INJURED").sort((a, b) => b.ovr - a.ovr);
       const currentOutgoing = selectedValues("tradePlayerSelect");
       syncTradeSelect("tradePlayerSelect", tradeable, currentOutgoing);
@@ -3209,7 +3634,7 @@
         return `
           <div class="news-item trade-response">
             <div class="news-title">${o.counter ? "상대 역제안" : "상대 제안"} · ${o.fromTeam}</div>
-            <div><strong>내가 보내는 카드</strong><br>${outPlayers.map((p) => `${playerName(p)} ${p.pos} ${p.ovr}/${p.pot}`).join("<br>") || "선수 없음"}</div>
+            <div><strong>내가 보내는 카드</strong><br>${outPlayers.map((p) => `${playerName(p)} ${p.pos} ${p.ovr}/${p.pot}`).join("<br>") || "내 선수"}</div>
             <div style="margin-top:8px;"><strong>받는 카드</strong><br>${incoming.map((p) => `${p.name} ${p.pos} ${p.ovr}/${p.pot}`).join("<br>")}</div>
             <div class="empty" style="margin-top:8px;">${o.note || "상대 구단 내부 검토 결과"}<br>현금 보전 ${money(o.cash)} · 마감 Day ${o.deadlineDay}</div>
             <div class="offer-actions" style="margin-top:8px;">
@@ -3218,21 +3643,21 @@
             </div>
           </div>
         `;
-      }).join("") : `<div class="empty">트레이드 마감 전까지 1군/2군 정식선수를 카드로 제안하거나 받을 수 있습니다.</div>`;
+      }).join("") : `<div class="empty">트레이드 마감 전까지 1군/2군 정식선수를 카드로 제안을 받아볼 수 있습니다.</div>`;
       $("scoutBoard").innerHTML = state.scout.length ? state.scout.map((s, i) => `
         <div class="news-item">
           <div class="bio">
-            <div><div class="news-title">${s.name} 쨌 ${s.pos}</div><div class="small">${s.league} 쨌 ${s.age}??쨌 ?꾩옱 ${s.ovr} 쨌 ?좎옱 ${s.pot}</div></div>
+            <div><div class="news-title">${s.name} · ${s.pos}</div><div class="small">${s.league} · ${s.age}세 · 현재 ${s.ovr} · 잠재 ${s.pot}</div></div>
             <button class="secondary" onclick="mutate('/api/sign', { index: ${i} })" ${state.budget < s.price ? "disabled" : ""}>${money(s.price)}</button>
           </div>
         </div>
-      `).join("") : `<div class="empty">?ㅼ뭅?고똿???뚮━硫??몃? ?곸엯 ?꾨낫媛 ?섑??⑸땲??</div>`;
+      `).join("") : `<div class="empty">스카우팅을 돌리면 외부 영입 후보가 나타납니다.</div>`;
       const hsStatLine = (p) => (p.hsStats || []).map((s) => {
-        if (p.type === "PIT") return `${s.year}: ${s.g}G ${s.ip}?대떇 ERA ${s.era} ${s.so}K/${s.bb}BB ${s.velo}km`;
-        return `${s.year}: ${s.g}G ${s.pa}???AVG ${Number(s.avg || 0).toFixed(3)} OPS ${Number(s.ops || 0).toFixed(3)} ${s.hr}HR ${s.sb}SB`;
+        if (p.type === "PIT") return `${s.year}: ${s.g}G ${s.ip}이닝 ERA ${s.era} ${s.so}K/${s.bb}BB ${s.velo}km`;
+        return `${s.year}: ${s.g}G ${s.pa}타석 AVG ${Number(s.avg || 0).toFixed(3)} OPS ${Number(s.ops || 0).toFixed(3)} ${s.hr}HR ${s.sb}SB`;
       }).join("<br>");
       const prospectLine = (p) => p.developmentDraft
-        ? `육성 후보 리포트: ${p.report}<br>능력치 · 컨택 ${p.hit} · 파워 ${p.pow} · 주루 ${p.spd} · 수비 ${p.def} · 송구 ${p.arm}${p.type === "PIT" ? ` · 구위 ${p.pit}` : ""}`
+        ? `육성 후보 리포트: ${p.report}<br>툴: 컨택 ${p.hit} · 파워 ${p.pow} · 주루 ${p.spd} · 수비 ${p.def} · 송구 ${p.arm}${p.type === "PIT" ? ` · 투구 ${p.pit}` : ""}`
         : hsStatLine(p);
       const draftOrder = state.draftOrder || [];
       const currentDraftTeamId = draftOrder.length ? draftOrder[(state.draftPick || 0) % draftOrder.length] : null;
@@ -3248,7 +3673,7 @@
       $("advanceDraft").disabled = !draftOpen || !state.draftClass?.length;
       $("draftMeta").innerHTML = state.draftClass?.length
         ? `<strong>${state.seasonYear || state.draftCycle || 1}시즌 신인 드래프트 · ${state.draftRound || 1}라운드 ${(state.draftPick || 0) + 1}번째 지명</strong><br><span class="small">참가 대상: 고교 3학년만 · 현재 순번: ${currentDraftTeam ? teamName(currentDraftTeam) : "종료"} · 지명 순서 ${draftOrder.map((id) => teamName(state.teams.find((t) => t.id === id) || { name: id })).join(" → ")}</span>`
-        : `<strong>드래프트 대기 · ${draftCountdown}</strong><br><span class="small">현재 Day ${currentDay}. 드래프트 날짜가 오면 자동으로 창이 열립니다. 올해는 고교 3학년만 참가하고, 다음 시즌에는 현재 2학년이 3학년 후보로 올라옵니다.</span>`;
+        : `<strong>드래프트 대기 · ${draftCountdown}</strong><br><span class="small">현재 Day ${currentDay}. 드래프트 날짜가 오면 자동으로 이 창이 열립니다. 올해는 고교 3학년만 참가하고, 다음 시즌에는 현재 2학년이 3학년 후보로 올라옵니다.</span>`;
       $("draftBoard").innerHTML = state.draftClass?.length ? state.draftClass.map((p) => `
         <div class="news-item">
           <div class="bio">
@@ -3274,7 +3699,7 @@
       const riskRows = (protect.exposedRiskA || []).slice(0, 5).map((p) => `<span class="trait">${p.name} ${p.pos} ${p.score}</span>`).join("");
       const protectPanel = `
         <div class="news-item">
-          <div class="bio"><div><div class="news-title">FA 보상 보호 추천</div><div class="small">A등급 FA 보상선수 포함 계약 기준 20인 보호 우선순위입니다.</div></div><span class="badge">20인</span></div>
+          <div class="bio"><div><div class="news-title">FA 보상 보호 추천</div><div class="small">A급 FA 보상선수 포함 계약 기준 20인 보호 우선순위입니다.</div></div><span class="badge">20인</span></div>
           <div class="log" style="margin-top:8px; max-height:260px;">${protectRows || `<div class="empty">보호 추천을 계산할 선수가 없습니다.</div>`}</div>
           <div class="small" style="margin-top:8px;">20인 밖 위험 후보</div>
           <div class="traits">${riskRows || `<span class="trait">위험 후보 없음</span>`}</div>
@@ -3327,18 +3752,18 @@
           <div class="news-item">
             <div class="bio">
               <div>
-                <div class="news-title">${fa.name} 쨌 ${fa.pos} 쨌 ${fa.grade}?깃툒</div>
-                <div class="small">${fa.age}??쨌 ?꾩옱 ${fa.ovr} 쨌 ?붽뎄 ${fa.askYears}??${money(fa.askAnnual)} 쨌 ?꾨뀈???곕큺 ${money(fa.previousSalary)}</div>
+                <div class="news-title">${fa.name} · ${fa.pos} · ${fa.grade}등급</div>
+                <div class="small">${fa.age}세 · 현재 ${fa.ovr} · 요구 ${fa.askYears}년 ${money(fa.askAnnual)} · 전년도 연봉 ${money(fa.previousSalary)}</div>
               </div>
               <span class="badge">${fa.ovr}</span>
             </div>
             <div class="offer-actions" style="margin-top:8px;">
-              <button onclick="mutate('/api/fa/sign', { id: ${fa.id}, includePlayer: false })">?꾧툑 蹂댁긽 ${money(cashOnly)}</button>
-              ${withPlayer ? `<button class="secondary" onclick="mutate('/api/fa/sign', { id: ${fa.id}, includePlayer: true })">蹂댁긽?좎닔 ?ы븿 ${money(withPlayer)}</button>` : ""}
+              <button onclick="mutate('/api/fa/sign', { id: ${fa.id}, includePlayer: false })">현금 보상 ${money(cashOnly)}</button>
+              ${withPlayer ? `<button class="secondary" onclick="mutate('/api/fa/sign', { id: ${fa.id}, includePlayer: true })">보상선수 포함 ${money(withPlayer)}</button>` : ""}
             </div>
           </div>
         `;
-      }).join("") : `<div class="empty">FA 紐낅떒??媛깆떊?섎㈃ ?깃툒蹂?蹂댁긽 洹쒖튃???곸슜???꾨낫媛 ?섑??⑸땲??</div>`);
+      }).join("") : `<div class="empty">FA 명단을 갱신하면 등급별 보상 규칙이 적용된 후보가 나타납니다.</div>`);
     }
 
     function playoffTeamNameById(id, fallback = "-") {
@@ -3374,10 +3799,10 @@
 
     function playoffProjectedRounds(seeds) {
       return [
-        { name: "와일드카드 결정전", text: `${playoffSeedName(seeds, 4)} vs ${playoffSeedName(seeds, 5)}`, note: "4위는 1승 어드밴티지, 5위는 2연승 필요" },
-        { name: "준플레이오프", text: `${playoffSeedName(seeds, 3)} vs 와일드카드 승자`, note: "3승제" },
-        { name: "플레이오프", text: `${playoffSeedName(seeds, 2)} vs 준플레이오프 승자`, note: "3승제" },
-        { name: "한국시리즈", text: `${playoffSeedName(seeds, 1)} vs 플레이오프 승자`, note: "4승제로 최종 우승 결정" }
+        { name: "와일드카드 결정전", text: `${playoffSeedName(seeds, 4)} vs ${playoffSeedName(seeds, 5)}`, note: "4위 팀 1승 어드밴티지, 5위는 2연승 필요" },
+        { name: "준플레이오프", text: `${playoffSeedName(seeds, 3)} vs 와일드카드 승자`, note: "3선승제" },
+        { name: "플레이오프", text: `${playoffSeedName(seeds, 2)} vs 준플레이오프 승자`, note: "3선승제" },
+        { name: "한국시리즈", text: `${playoffSeedName(seeds, 1)} vs 플레이오프 승자`, note: "4선승제, 최종 우승 결정" }
       ];
     }
 
@@ -3407,7 +3832,7 @@
         ? (postseason?.championId === series.winnerId && index === (postseason.series?.length || 1) - 1
           ? `${winnerName} 한국시리즈 우승`
           : `${winnerName} 다음 라운드 진출`)
-        : (isCurrent ? "현재 라운드 진행 중" : "이전 라운드 승자 대기");
+        : (isCurrent ? "현재 라운드 진행 중" : "앞 라운드 승자 대기");
       return `
         <article class="series-card">
           <div class="series-title">
@@ -3464,12 +3889,12 @@
       const title = postseason?.completed
         ? "포스트시즌 결과"
         : postseason?.active
-          ? "포스트시즌 진행"
-          : "포스트시즌 예상";
+          ? "포스트시즌 진행표"
+          : "포스트시즌 예상표";
       const subtitle = postseason?.completed
         ? `${playoffTeamNameById(postseason.championId, "우승팀")} 우승`
         : postseason?.active
-          ? "와일드카드부터 한국시리즈까지 승자가 다음 라운드로 올라갑니다."
+          ? "와일드카드부터 한국시리즈까지 승자가 다음 라운드로 올라옵니다."
           : "현재 순위 기준 예상 대진입니다. 정규시즌이 끝나면 실제 대진으로 확정됩니다.";
       const nextSeasonButton = postseason?.completed
         ? `<button class="primary" id="startNextSeason">다음 시즌 시작</button>`
@@ -3527,32 +3952,32 @@
           const stats = p.type === "PIT"
             ? (() => {
               const adv = pitcherAdvancedStats(p);
-              return `WAR ${adv.war.toFixed(1)} 쨌 ERA ${(p.stats?.era || 0).toFixed(2)} 쨌 WHIP ${adv.whip.toFixed(2)} 쨌 ${p.stats?.win || 0}??${p.stats?.loss || 0}??쨌 ${p.stats?.so || 0}K`;
+              return `WAR ${adv.war.toFixed(1)} · ERA ${(p.stats?.era || 0).toFixed(2)} · WHIP ${adv.whip.toFixed(2)} · ${p.stats?.win || 0}승 ${p.stats?.loss || 0}패 · ${p.stats?.so || 0}K`;
             })()
             : (() => {
               const adv = hitterAdvancedStats(p);
-              return `WAR ${adv.war.toFixed(1)} 쨌 AVG ${(p.stats?.avg || 0).toFixed(3)} 쨌 OPS ${adv.ops.toFixed(3)} 쨌 ${p.stats?.hr || 0}HR 쨌 ${p.stats?.sb || 0}SB`;
+              return `WAR ${adv.war.toFixed(1)} · AVG ${(p.stats?.avg || 0).toFixed(3)} · OPS ${adv.ops.toFixed(3)} · ${p.stats?.hr || 0}HR · ${p.stats?.sb || 0}SB`;
             })();
           return `<div class="news-item">
             <div class="bio">
               <div>
-                <div class="news-title">${playerName(p)} 쨌 ${positionLabelForPlayer(p)}</div>
-                <div class="small">${playerTeamLabel(p) || "?뚯냽 誘몄긽"} 쨌 ${p.age}??쨌 ?꾩옱 ${p.ovr} 쨌 ?좎옱 ${p.pot} 쨌 ${stats}</div>
+                <div class="news-title">${playerName(p)} · ${positionLabelForPlayer(p)}</div>
+                <div class="small">${playerTeamLabel(p) || "소속 미상"} · ${p.age}세 · 현재 ${p.ovr} · 잠재 ${p.pot} · ${stats}</div>
               </div>
               <span class="badge">${statusLabel(p.rosterStatus)}</span>
             </div>
           </div>`;
-        }).join("") || `<div class="empty">寃??寃곌낵媛 ?놁뒿?덈떎.</div>`
-        : `<div class="empty">?대쫫 ????湲?? ?깅쾲?? ?紐? ?ъ??섏쑝濡??꾩껜 ?좎닔?⑥쓣 寃?됲븷 ???덉뒿?덈떎.</div>`;
+        }).join("") || `<div class="empty">검색 결과가 없습니다.</div>`
+        : `<div class="empty">이름 앞 두 글자, 등번호, 팀명, 포지션으로 전체 선수단을 검색할 수 있습니다.</div>`;
       const leaderPool = recordPlayers.filter((p) => playerMatchesFilters(p, leaderStatus, leaderType) && playerMatchesSearch(p, leaderQuery));
       const leaderRows = (players, valueFn) => players.length ? players.map((p, index) => `
         <tr>
           <td>${index + 1}</td>
-          <td><div class="leader-player"><strong>${playerName(p)}</strong><div class="small">${playerTeamLabel(p) || "?뚯냽 誘몄긽"}</div></div></td>
+          <td><div class="leader-player"><strong>${playerName(p)}</strong><div class="small">${playerTeamLabel(p) || "소속 미상"}</div></div></td>
           <td>${valueFn(p)}</td>
         </tr>
-      `).join("") : `<tr><td colspan="3" class="small">?꾨낫 ?좎닔 ?놁쓬</td></tr>`;
-      const emptyLeaderRows = (text = "?꾨낫 ?좎닔 ?놁쓬") => `<tr><td colspan="3" class="small">${text}</td></tr>`;
+      `).join("") : `<tr><td colspan="3" class="small">후보 선수 없음</td></tr>`;
+      const emptyLeaderRows = (text = "후보 선수 없음") => `<tr><td colspan="3" class="small">${text}</td></tr>`;
       const asLeaderRows = (players, valueFn, text) => players.length ? leaderRows(players, valueFn) : emptyLeaderRows(text);
       const playedGamesForLeaders = Math.max(1, (Number(state.day) || 1) - 1);
       const minTitlePa = Math.max(12, Math.floor(playedGamesForLeaders * 2.7));
@@ -3603,7 +4028,7 @@
         <h3 style="margin-top:14px;">투수 추정 WAR</h3><table><tbody>${leaderRows(pitcherWarLeaders, (p) => pitcherAdvancedStats(p).war.toFixed(1))}</tbody></table>
         <h3 style="margin-top:14px;">WHIP</h3><table><tbody>${leaderRows(whipLeaders, (p) => pitcherAdvancedStats(p).whip.toFixed(2))}</tbody></table>
         <h3 style="margin-top:14px;">K/9</h3><table><tbody>${leaderRows(k9Leaders, (p) => pitcherAdvancedStats(p).k9.toFixed(1))}</tbody></table>
-        <h3 style="margin-top:20px;">시즌 시상</h3>${state.awards?.length ? `<table><tbody>${state.awards.map((a) => `<tr><td>${a.title}</td><td>${a.name}</td><td>${a.detail}</td></tr>`).join("")}</tbody></table>` : `<div class="empty">시즌 종료 후 MVP, 신인왕, 타격왕, 홈런왕, 도루왕, 다승왕, 승률왕, 평균자책점왕, 세이브왕, 홀드왕, 골든글러브가 발표됩니다.</div>`}
+        <h3 style="margin-top:20px;">시즌 시상</h3>${state.awards?.length ? `<table><tbody>${state.awards.map((a) => `<tr><td>${a.title}</td><td>${a.name}</td><td>${a.detail}</td></tr>`).join("")}</tbody></table>` : `<div class="empty">시즌 종료 후 MVP, 신인상, 타격왕, 홈런왕, 도루왕, 다승왕, 승률왕, 평균자책점왕, 세이브왕, 홀드왕, 골든글러브가 발표됩니다.</div>`}
       `;
     }
 
@@ -3615,18 +4040,18 @@
     }
 
     function renderNews() {
-      $("newsLog").innerHTML = visibleNews(state.news).map(newsTemplate).join("") || `<div class="empty">?꾩쭅 ?댁뒪媛 ?놁뒿?덈떎.</div>`;
+      $("newsLog").innerHTML = visibleNews(state.news).map(newsTemplate).join("") || `<div class="empty">아직 뉴스가 없습니다.</div>`;
     }
 
     function newsTemplate(n) {
-      return `<div class="news-item"><div class="news-title">Day ${n.day} 쨌 ${n.title}</div><div class="small">${n.kind}</div><div>${n.body}</div></div>`;
+      return `<div class="news-item"><div class="news-title">Day ${n.day} · ${n.title}</div><div class="small">${n.kind}</div><div>${n.body}</div></div>`;
     }
 
     function renderBoard() {
       const list = $("boardList");
       if (!list) return;
       if (!boardPosts.length) {
-        list.innerHTML = `<div class="empty">?꾩쭅 湲???놁뒿?덈떎. 泥?嫄댁쓽?ы빆???④꺼二쇱꽭??</div>`;
+        list.innerHTML = `<div class="empty">아직 글이 없습니다. 첫 건의사항을 남겨주세요.</div>`;
         return;
       }
       list.innerHTML = boardPosts.map((post) => {
@@ -3638,297 +4063,211 @@
               <span>${escapeHtml(post.title)}</span>
               <span class="badge">${boardCategoryLabel(post.category)}</span>
             </div>
-            <div class="small">${escapeHtml(post.author || "?듬챸")} 쨌 ${when}</div>
+            <div class="small">${escapeHtml(post.author || "익명")} · ${when}</div>
             <div style="white-space:pre-wrap; margin-top:8px;">${escapeHtml(post.body)}</div>
           </article>
         `;
       }).join("");
     }
 
-    function onlineRunnerLabel(runner) {
-      if (!runner) return "-";
-      const number = runner.jerseyNumber || runner.no || "";
-      return `${escapeHtml(runner.name || "-")}${number ? ` #${number}` : ""}`;
-    }
-
-    function onlineHandLabel(player) {
-      if (!player) return "";
-      const raw = String(player.batsThrows || "").trim();
-      if (raw && raw !== "-") return raw;
-      const throwHand = String(player.throwHand || "").trim();
-      const batHand = String(player.batHand || "").trim();
-      if (player.type === "PIT") return throwHand || "";
-      if (throwHand && batHand) return `${throwHand}/${batHand}`;
-      return batHand || throwHand || "";
-    }
-
-    function onlinePlayerNameLabel(player) {
-      if (!player) return "-";
-      const number = player.jerseyNumber || player.no || "";
-      const hand = onlineHandLabel(player);
-      const name = `${player.name || "이름 없음"}${number ? ` #${number}` : ""}`;
-      return hand ? `[${hand}] ${name}` : name;
-    }
-
-    function onlineMySide(match) {
-      return match?.mySide ? match[match.mySide] : null;
-    }
-
-    function onlineOpponentSide(match) {
-      if (!match?.mySide) return null;
-      return match.mySide === "home" ? match.away : match.home;
-    }
-
-    function onlineMyRoster(match) {
-      return onlineMySide(match)?.roster || [];
-    }
-
-    function onlineRating(player) {
-      return Number(player?.ovr || player?.current || player?.now || 0);
-    }
-
-    function onlinePotential(player) {
-      return Number(player?.pot || player?.potential || 0);
-    }
-
-    function onlinePlayerOptionLabel(player) {
-      const role = player?.type === "PIT" ? (player.role || player.pos || "P") : (player.pos || "BAT");
-      return `${onlinePlayerNameLabel(player)} · ${role} · 현재 ${onlineRating(player)} / 잠재 ${onlinePotential(player)}`;
-    }
-
-    function onlinePlayerShort(player) {
-      if (!player) return "-";
-      const role = player.type === "PIT" ? (player.role || player.pos || "P") : (player.pos || "BAT");
-      return `${onlinePlayerNameLabel(player)} · ${role} · 현재 ${onlineRating(player)}`;
-    }
-
-    function onlineStatusLabel(status) {
-      return ({
-        waiting: "상대 대기",
-        team_select: "팀 선택",
-        roster_prep: "1군/2군 정리",
-        starter: "선발 선택",
-        lineup: "야수 라인업",
-        live: "실시간 경기",
-        complete: "경기 종료",
-        cancelled: "취소"
-      })[status] || status || "대기";
-    }
-
-    function onlineSideSummary(side) {
-      if (!side?.teamName) return "팀 미선택";
-      const counts = side.rosterCounts || {};
-      const ready = side.rosterReady ? "정리 완료" : "정리 중";
-      return `${side.teamName} · 1군 ${counts.active || 0}명 · 2군 ${counts.farm || 0}명 · ${ready}`;
-    }
-
     function renderOnline() {
       const list = $("onlineRooms");
       if (!list) return;
-      const activeStatuses = ["team_select", "roster_prep", "starter", "lineup", "live"];
-      const activeMatch = onlineMatches.find((match) => match.mySide && activeStatuses.includes(match.status));
+      const activeMatch = onlineMatches.find((match) => match.mySide && ["starter", "lineup", "live"].includes(match.status));
       const onlineView = $("online");
-      onlineView?.classList.toggle("online-wide", Boolean(activeMatch));
+      if (onlineView) onlineView.classList.toggle("online-wide", Boolean(activeMatch));
       list.classList.toggle("online-operation-list", Boolean(activeMatch));
-
+      const createButton = $("createOnlineRoom");
+      if (createButton) {
+        createButton.disabled = Boolean(activeMatch);
+        createButton.textContent = activeMatch ? "진행 중인 대결 있음" : "방 만들기";
+      }
+      if (!onlineMatches.length) {
+        list.innerHTML = `<div class="empty">아직 열린 온라인 대결 방이 없습니다. 방을 만들고 친구에게 주소를 보내주세요.</div>`;
+        return;
+      }
       if (activeMatch) {
         list.innerHTML = renderOnlineMatchOperation(activeMatch);
         return;
       }
-
-      const rooms = onlineMatches.map((match) => {
-        const mySide = onlineMySide(match);
-        const opponent = onlineOpponentSide(match);
-        const title = match.home?.teamName && match.away?.teamName
-          ? `${match.home.teamName} vs ${match.away.teamName}`
-          : match.home?.teamName || "팀 선택 대기";
-        const joinButton = !match.mySide && match.status === "waiting"
-          ? `<button onclick="onlineJoin('${match.id}')">참가</button>`
-          : "";
-        const cancelButton = match.mySide === "home" && ["waiting", "team_select", "roster_prep", "starter"].includes(match.status)
-          ? `<button class="secondary" onclick="onlineCancel('${match.id}')">방 취소</button>`
-          : "";
-        const result = match.status === "complete" && match.result
-          ? `<strong>${escapeHtml(match.result.summary || "경기 종료")}</strong>`
-          : `<strong>${escapeHtml(onlineStatusLabel(match.status))}</strong>`;
+      const statusLabel = (status) => ({ waiting: "상대 대기", starter: "선발 제출", lineup: "야수 라인업 제출", live: "경기 운영", complete: "경기 종료" }[status] || status);
+      const starterText = (starter, hiddenText = "비공개") => {
+        if (!starter) return hiddenText;
+        return `${starter.batsThrows || "-"} ${starter.name || "-"}${starter.jerseyNumber ? ` #${starter.jerseyNumber}` : ""} · ${starter.pos || "SP"} · 현재 ${starter.current || 0}`;
+      };
+      list.innerHTML = onlineMatches.map((match) => {
+        const home = match.home || {};
+        const away = match.away || {};
+        const game = match.game || null;
+        const homeStarterVisible = home.starterSubmitted && (home.starter || match.status !== "starter");
+        const awayStarterVisible = away.starterSubmitted && (away.starter || match.status !== "starter");
+        const result = match.result ? `
+          <div class="metric" style="margin-top:8px;">
+            <strong>${escapeHtml(home.teamName || "-")} ${match.result.homeRuns} : ${match.result.awayRuns} ${escapeHtml(away.teamName || "-")}</strong>
+            <span>${escapeHtml(match.result.summary || "")}</span>
+          </div>
+        ` : "";
+        const starterMatchup = (home.starterSubmitted || away.starterSubmitted) ? `
+          <div class="grid two" style="margin-top:8px;">
+            <div class="metric">
+              <strong>홈 선발</strong>
+              <span>${escapeHtml(starterText(home.starter, home.starterSubmitted ? "제출 완료 · 상대 제출 전 비공개" : "대기"))}</span>
+            </div>
+            <div class="metric">
+              <strong>원정 선발</strong>
+              <span>${escapeHtml(starterText(away.starter, away.starterSubmitted ? "제출 완료 · 상대 제출 전 비공개" : "대기"))}</span>
+            </div>
+          </div>
+        ` : "";
+        const actions = [
+          match.canJoin ? `<button class="primary" onclick="onlineJoin('${match.id}')">참가</button>` : "",
+          match.canSubmitStarter ? `<button class="good" onclick="onlineSubmitStarter('${match.id}')">선발 투수 제출</button>` : "",
+          match.canSubmitLineup ? `<button class="good" onclick="onlineSubmitLineup('${match.id}')">야수 라인업 제출</button>` : "",
+          match.canForfeit ? `<button class="danger" onclick="onlineForfeit('${match.id}')">패배 선언</button>` : "",
+          match.canCancel ? `<button class="danger" onclick="onlineCancel('${match.id}')">방 취소</button>` : ""
+        ].filter(Boolean).join("");
+        const livePanel = game ? renderOnlineLivePanel(match, game) : "";
         return `
-          <div class="online-room-card">
-            <div>
-              <h3>${escapeHtml(title)}</h3>
-              <small>${escapeHtml(onlineSideSummary(match.home))} / ${escapeHtml(onlineSideSummary(match.away))}</small>
+          <article class="board-item">
+            <div class="board-title">
+              <span>${escapeHtml(home.teamName || "-")} vs ${escapeHtml(away.teamName || "참가 대기")}</span>
+              <span class="badge">${statusLabel(match.status)}</span>
             </div>
-            <div class="online-room-actions">
-              ${joinButton}${cancelButton}
+            <div class="grid two" style="margin-top:8px;">
+              <div class="metric">
+                <strong>${escapeHtml(home.username || "-")}</strong>
+                <span>${escapeHtml(home.teamName || "-")} · ${home.playerCount || 0}명 · 선발 ${home.starterSubmitted ? "제출" : "대기"} · 라인업 ${home.lineupSubmitted ? "제출" : "대기"}</span>
+              </div>
+              <div class="metric">
+                <strong>${escapeHtml(away.username || "대기 중")}</strong>
+                <span>${escapeHtml(away.teamName || "상대 감독 참가 필요")} · ${away.playerCount || 0}명 · 선발 ${away.starterSubmitted ? "제출" : "대기"} · 라인업 ${away.lineupSubmitted ? "제출" : "대기"}</span>
+              </div>
             </div>
-            <p>${result}</p>
-            ${mySide ? `<small>내 팀: ${escapeHtml(mySide.teamName || "미선택")} · 상대: ${escapeHtml(opponent?.teamName || "대기")}</small>` : ""}
-          </div>`;
+            ${starterMatchup}
+            ${result}
+            ${livePanel}
+            ${match.log?.length ? `<div class="small" style="margin-top:8px; white-space:pre-wrap;">${match.log.map(escapeHtml).join("\n")}</div>` : ""}
+            ${actions ? `<div class="offer-actions" style="margin-top:10px;">${actions}</div>` : ""}
+          </article>
+        `;
       }).join("");
-
-      list.innerHTML = `
-        <div class="online-room-toolbar">
-          <button class="secondary" onclick="loadOnlineMatches()">새로고침</button>
-          <button onclick="onlineCreate()">방 만들기</button>
-        </div>
-        <div class="empty">온라인 대결은 팀을 새로 고르고, 1군/2군을 정리한 뒤 선발과 야수 라인업을 제출하면 실시간 경기 운영 화면으로 넘어갑니다.</div>
-        ${rooms || `<div class="empty">열린 방이 없습니다. 방을 만들거나 새로고침하세요.</div>`}`;
     }
 
     function renderOnlineMatchOperation(match) {
-      if (match.status === "live") {
-        return renderOnlineLivePanel(match, match.game || {});
-      }
-      return renderOnlinePreparationPanel(match);
+      const game = match.game || {};
+      const liveOrPrep = match.status === "live" && match.game
+        ? renderOnlineLivePanel(match, game)
+        : renderOnlinePreparationPanel(match);
+      const result = match.result ? `
+        <section class="card">
+          <h3>경기 결과</h3>
+          <div class="metric">
+            <strong>${escapeHtml(match.home?.teamName || "-")} ${match.result.homeRuns} : ${match.result.awayRuns} ${escapeHtml(match.away?.teamName || "-")}</strong>
+            <span>${escapeHtml(match.result.summary || "")}</span>
+          </div>
+        </section>
+      ` : "";
+      const forfeitButton = match.canForfeit ? `
+        <button class="danger" onclick="onlineForfeit('${match.id}')">패배 선언</button>
+      ` : "";
+      return `
+        <div class="board-title" style="margin-bottom:10px;">
+          <span>온라인 경기 운영 · ${escapeHtml(match.home?.teamName || "-")} vs ${escapeHtml(match.away?.teamName || "-")}</span>
+          <div class="offer-actions">
+            <button class="secondary" onclick="loadOnlineMatches()">새로고침</button>
+            ${forfeitButton}
+          </div>
+        </div>
+        <div class="online-operation-shell">
+          <section class="online-operation-primary">
+            ${liveOrPrep}
+          </section>
+          <section class="card online-operation-side online-log-card">
+            <h3>상대 입력 / 경기 로그</h3>
+            <div class="empty" style="margin-bottom:10px;">
+              상대가 작전 버튼을 누르면 여기와 경기판의 최근 입력에 자동으로 표시됩니다.
+            </div>
+            <div class="log">
+              ${(game.log || []).slice(0, 40).map((line) => `<div>${escapeHtml(line)}</div>`).join("") || `<div class="empty">아직 진행 로그가 없습니다.</div>`}
+            </div>
+          </section>
+        </div>
+        ${result}
+      `;
     }
 
     function renderOnlinePreparationPanel(match) {
-      const status = onlineStatusLabel(match.status);
-      let body = "";
-      if (match.status === "team_select" || match.status === "waiting") {
-        body = renderOnlineTeamSelect(match);
-      } else if (match.status === "roster_prep") {
-        body = renderOnlineRosterPrep(match);
-      } else if (match.status === "starter") {
-        body = renderOnlineStarterPick(match);
-      } else if (match.status === "lineup") {
-        body = renderOnlineLineupPick(match);
-      } else if (match.status === "complete") {
-        body = `<div class="empty"><strong>${escapeHtml(match.result?.summary || "경기 종료")}</strong></div>`;
-      }
+      const homeReady = match.home?.starter ? "선발 제출 완료" : "선발 대기";
+      const awayReady = match.away?.starter ? "선발 제출 완료" : "선발 대기";
+      const homeLineupReady = match.home?.lineupSubmitted ? "야수 라인업 완료" : "야수 라인업 대기";
+      const awayLineupReady = match.away?.lineupSubmitted ? "야수 라인업 완료" : "야수 라인업 대기";
+      const actions = [
+        match.canSubmitStarter ? `<button class="good" onclick="onlineSubmitStarter('${match.id}')">선발 투수 제출</button>` : "",
+        match.canSubmitLineup ? `<button class="good" onclick="onlineSubmitLineup('${match.id}')">야수 라인업 제출</button>` : ""
+      ].filter(Boolean).join("");
       return `
-        <div class="online-operation-shell">
-          <section class="online-operation-side online-main-panel">
-            <div class="section-heading">
-              <div>
-                <h2>온라인 대결 준비</h2>
-                <small>${escapeHtml(status)} · ${escapeHtml(match.home?.teamName || "홈 미선택")} vs ${escapeHtml(match.away?.teamName || "원정 미선택")}</small>
-              </div>
-              <div class="inline-actions">
-                <button class="secondary" onclick="loadOnlineMatches()">새로고침</button>
-                ${match.canForfeit ? `<button class="danger" onclick="onlineForfeit('${match.id}')">패배 선언</button>` : ""}
-              </div>
+        <section class="live-panel online-live-panel">
+          <div class="live-score online-live-score">
+            <strong>${escapeHtml(match.home?.teamName || "-")}</strong>
+            <span>VS</span>
+            <strong>${escapeHtml(match.away?.teamName || "상대 참가 대기")}</strong>
+          </div>
+          <div class="grid two" style="margin-top:12px;">
+            <div class="mini-card">
+              <strong>${escapeHtml(match.home?.username || "-")}</strong>
+              <span>${escapeHtml(homeReady)} · ${escapeHtml(homeLineupReady)}</span>
             </div>
-            ${body}
-          </section>
-          <aside class="online-operation-side online-log-panel">
-            <h3>진행 상황</h3>
-            <div class="empty">상대가 단계별 버튼을 누르면 여기와 현재 화면이 자동 갱신됩니다.</div>
-            ${(match.log || []).slice(-12).reverse().map((line) => `<p>${escapeHtml(line)}</p>`).join("")}
-          </aside>
-        </div>`;
+            <div class="mini-card">
+              <strong>${escapeHtml(match.away?.username || "-")}</strong>
+              <span>${escapeHtml(awayReady)} · ${escapeHtml(awayLineupReady)}</span>
+            </div>
+          </div>
+          <div class="empty" style="margin-top:12px;">
+            선발 투수를 먼저 제출하고, 양쪽 선발이 공개되면 야수 라인업을 제출합니다. 양쪽 라인업이 모두 제출되면 이 화면이 경기 운영판으로 전환됩니다.
+          </div>
+          ${actions ? `<div class="offer-actions" style="margin-top:12px;">${actions}</div>` : ""}
+        </section>
+      `;
     }
 
-    function renderOnlineTeamSelect(match) {
-      const mySide = onlineMySide(match);
-      const selected = mySide?.teamId;
-      return `
-        <div class="empty">먼저 10개 구단 중 하나를 고릅니다. 양쪽 모두 선택하면 1군/2군 정리 단계로 넘어갑니다.</div>
-        <div class="online-team-grid">
-          ${(onlineTeams || []).map((team) => {
-            const name = team.teamName || team.name || team.id;
-            const active = selected === team.id;
-            return `<button class="online-team-card ${active ? "selected" : ""}" style="--team-primary:${team.primary || "#f97316"}; --team-secondary:${team.secondary || "#111827"};" onclick="onlineChooseTeam('${match.id}', '${team.id}')">
-              <strong>${escapeHtml(name)}</strong>
-              <span>${active ? "선택됨" : "선택"}</span>
-            </button>`;
-          }).join("")}
-        </div>`;
+    function onlineRunnerLabel(runner) {
+      return runner ? `${escapeHtml(runner.name)}${runner.jerseyNumber ? ` #${runner.jerseyNumber}` : ""}` : "-";
     }
 
-    function renderOnlineRosterCard(player, match, target) {
-      const moveTarget = target === "active" ? "farm" : "active";
-      const moveLabel = target === "active" ? "2군" : "1군";
-      return `<div class="online-roster-player">
-        <div>
-          <strong>${escapeHtml(onlinePlayerNameLabel(player))}</strong>
-          <small>${escapeHtml(player.type === "PIT" ? (player.role || "투수") : (player.pos || "야수"))} · 현재 ${onlineRating(player)} · 컨디션 ${player.condition ?? "-"}</small>
-        </div>
-        ${match.canRosterMove ? `<button class="secondary" onclick="onlineRosterMove('${match.id}', ${player.id}, '${moveTarget}')">${moveLabel}로</button>` : ""}
-      </div>`;
+    function onlineHandLabel(p) {
+      if (!p) return "";
+      const raw = String(p.batsThrows || "").trim();
+      if (raw && raw !== "-") return raw;
+      const throwing = String(p.throwHand || "").trim();
+      const batting = String(p.batHand || "").trim();
+      if (p.type === "PIT") return throwing ? `${throwing}투` : "";
+      if (throwing && batting) return `${throwing}투${batting}타`;
+      if (batting) return `${batting}타`;
+      if (throwing) return `${throwing}투`;
+      return "";
     }
 
-    function renderOnlineRosterPrep(match) {
-      const roster = onlineMyRoster(match);
-      const active = roster.filter((p) => p.rosterStatus === "ACTIVE");
-      const farm = roster.filter((p) => p.rosterStatus !== "ACTIVE");
-      const opponent = onlineOpponentSide(match);
-      return `
-        <div class="empty">온라인 대결용 선수단을 정리하세요. 1군 등록 선수만 선발투수와 라인업에 들어갈 수 있습니다.</div>
-        <div class="online-roster-summary">
-          <strong>내 선수단</strong> ${active.length}명 1군 / ${farm.length}명 2군
-          <span>상대: ${escapeHtml(opponent?.rosterReady ? "정리 완료" : "정리 중")}</span>
-        </div>
-        <div class="online-roster-columns">
-          <section><h3>1군</h3><div class="online-roster-list">${active.map((p) => renderOnlineRosterCard(p, match, "active")).join("") || `<div class="empty">1군 선수가 없습니다.</div>`}</div></section>
-          <section><h3>2군</h3><div class="online-roster-list">${farm.map((p) => renderOnlineRosterCard(p, match, "farm")).join("") || `<div class="empty">2군 선수가 없습니다.</div>`}</div></section>
-        </div>
-        <div class="online-room-actions">
-          ${match.canReadyRoster ? `<button onclick="onlineRosterReady('${match.id}')">1군/2군 정리 완료</button>` : `<button disabled>정리 완료 대기</button>`}
-        </div>`;
-    }
-
-    function renderOnlineStarterPick(match) {
-      const pitchers = onlineMyRoster(match).filter((p) => p.rosterStatus === "ACTIVE" && p.type === "PIT");
-      const mySide = onlineMySide(match);
-      const opponent = onlineOpponentSide(match);
-      return `
-        <div class="empty">내 팀 1군 투수 중 오늘 선발투수를 먼저 고릅니다. 양쪽 선발이 확정되면 선발이 공개되고, 그 다음 1~9번 타순과 수비 위치를 직접 짭니다.</div>
-        <div class="online-form-row">
-          <select id="onlineStarterSelect">
-            ${pitchers.map((p) => `<option value="${p.id}">${escapeHtml(onlinePlayerOptionLabel(p))} · 스태미나 ${p.stamina ?? "-"}</option>`).join("")}
-          </select>
-          ${match.canSubmitStarter ? `<button onclick="onlineSubmitStarter('${match.id}')">선발투수 확정</button>` : `<button disabled>선발투수 확정</button>`}
-        </div>
-        <div class="online-count-grid">
-          <div><strong>${escapeHtml(mySide?.starterSubmitted ? "제출 완료" : "선택 대기")}</strong><small>내 선발</small></div>
-          <div><strong>${escapeHtml(opponent?.starterSubmitted ? "제출 완료" : "선택 대기")}</strong><small>상대 선발</small></div>
-          <div><strong>${escapeHtml(mySide?.teamName || "-")}</strong><small>내 팀</small></div>
-          <div><strong>${escapeHtml(opponent?.teamName || "-")}</strong><small>상대 팀</small></div>
-        </div>`;
-    }
-
-    function renderOnlineLineupPick(match) {
-      const roster = onlineMyRoster(match);
-      const hitters = roster.filter((p) => p.rosterStatus === "ACTIVE" && p.type !== "PIT");
-      const mySide = onlineMySide(match);
-      const opponent = onlineOpponentSide(match);
-      const lineupPositions = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
-      const defaults = mySide?.lineup?.battingOrder || hitters.slice(0, 9).map((p, index) => ({ playerId: p.id, position: lineupPositions[index] || p.pos || "DH" }));
-      const optionHtml = hitters.map((p) => `<option value="${p.id}">${escapeHtml(onlinePlayerOptionLabel(p))}</option>`).join("");
-      const slots = Array.from({ length: 9 }, (_, index) => {
-        const row = defaults[index] || {};
-        const pos = row.position || lineupPositions[index] || "DH";
-        return `<div class="online-lineup-slot">
-          <span class="order-badge">${index + 1}번</span>
-          <select class="onlineLineupSelect" data-match="${match.id}">
-            ${hitters.map((p) => `<option value="${p.id}" ${Number(row.playerId) === Number(p.id) ? "selected" : ""}>${escapeHtml(onlinePlayerOptionLabel(p))}</option>`).join("") || optionHtml}
-          </select>
-          <select class="onlineLineupPos" data-match="${match.id}">
-            ${lineupPositions.map((position) => `<option value="${position}" ${position === pos ? "selected" : ""}>${position}</option>`).join("")}
-          </select>
-        </div>`;
-      }).join("");
-      return `
-        <div class="empty"><strong>상대 선발 공개: ${escapeHtml(onlinePlayerShort(opponent?.starter))}</strong><br>상대 선발을 보고 1번부터 9번까지 타순을 직접 짜고, C/1B/2B/3B/SS/LF/CF/RF/DH가 각각 한 명씩 들어가게 수비 위치를 지정하세요.</div>
-        <div class="online-lineup-builder">${slots}</div>
-        <div class="online-count-grid">
-          <div><strong>${escapeHtml(mySide?.lineupSubmitted ? "제출 완료" : "작성 중")}</strong><small>내 라인업</small></div>
-          <div><strong>${escapeHtml(opponent?.lineupSubmitted ? "제출 완료" : "작성 중")}</strong><small>상대 라인업</small></div>
-        </div>
-        <button onclick="onlineSubmitLineup('${match.id}')">1~9번 라인업 확정</button>`;
+    function onlinePlayerNameLabel(p) {
+      if (!p) return "-";
+      const hand = onlineHandLabel(p);
+      const name = `${p.name || "이름 미상"}${p.jerseyNumber ? ` #${p.jerseyNumber}` : ""}`;
+      return hand ? `[${hand}] ${name}` : name;
     }
 
     function renderOnlineLineup(title, lineup, activeIndex) {
-      const rows = (lineup || []).map((player, index) => `<div class="online-lineup-row ${index === activeIndex ? "active" : ""}">
-        <span>${index + 1}</span>
-        <strong>${escapeHtml(onlinePlayerNameLabel(player))}</strong>
-        <small>${escapeHtml(player.position || player.pos || "-")} · 컨택 ${player.contact ?? "-"}</small>
-      </div>`).join("");
-      return `<section class="online-lineup-card"><h3>${escapeHtml(title)}</h3>${rows || `<div class="empty">라인업 없음</div>`}</section>`;
-    }
-
-    function onlineDomId(prefix, id) {
-      return `${prefix}-${String(id).replace(/[^a-zA-Z0-9_-]/g, "_")}`;
+      const rows = (lineup || []).slice(0, 9).map((p, i) => `
+        <div class="opponent-lineup-row ${i === activeIndex ? "is-current" : ""}">
+          <span class="badge">${i + 1}</span>
+          <span class="opponent-lineup-name">${escapeHtml(onlinePlayerNameLabel(p))}</span>
+          <span class="opponent-lineup-meta">${escapeHtml(p.pos || "-")} · 컨택 ${p.hit || 0} · 파워 ${p.pow || 0}</span>
+        </div>
+      `).join("");
+      return `
+        <div class="opponent-lineup-card">
+          <strong>${title}</strong>
+          <div class="opponent-lineup-list" style="margin-top:8px;">${rows || `<div class="empty">라인업 없음</div>`}</div>
+        </div>
+      `;
     }
 
     function renderOnlineLivePanel(match, game) {
@@ -3936,102 +4275,61 @@
       const defense = offense === "home" ? "away" : "home";
       const offenseSide = offense === "home" ? match.home : match.away;
       const defenseSide = defense === "home" ? match.home : match.away;
-      const myOffenseTurn = match.mySide === offense && match.status === "live" && !game.complete;
-      const myDefenseTurn = match.mySide === defense && match.status === "live" && !game.complete;
-      const score = game.score || { home: 0, away: 0 };
-      const inningLabel = game.inning ? `${game.inning}회${game.half === "bottom" ? "말" : "초"}` : "대기";
-      const offenseIndex = Number(game.battingIndex?.[offense] || 0) % 9;
-      const defenseIndex = Number(game.battingIndex?.[defense] || 0) % 9;
-      const batter = game.lineups?.[offense]?.[offenseIndex];
+      const offenseTeam = offenseSide?.teamName || "-";
+      const myTurn = match.mySide === offense && match.status === "live";
+      const currentIndex = (game.battingIndex?.[offense] || 0) % 9;
+      const batter = game.lineups?.[offense]?.[currentIndex];
       const pitcher = game.pitchers?.[defense];
-      const pitchCount = game.pitchCounts?.[defense] || pitcher?.pitchCount || 0;
-      const bases = game.bases || [];
-      const logs = (game.log || match.log || []).slice(0, 50).map((line) => `<p>${escapeHtml(line)}</p>`).join("");
-      const recentInput = match.lastAction ? `${escapeHtml(match.lastAction.username || "상대")} · ${escapeHtml(match.lastAction.text || match.lastAction.tactic || "작전")}` : "아직 작전 입력 없음";
-      const pitchSelectId = onlineDomId("onlinePitchCall", match.id);
-      const planSelectId = onlineDomId("onlineDefensePlan", match.id);
-      const pickoffSelectId = onlineDomId("onlinePickoffBase", match.id);
-      const defenseBaseOptions = bases.map((runner, index) => runner ? `<option value="${index}">${index + 1}루 ${escapeHtml(onlineRunnerLabel(runner))}</option>` : "").join("");
-      const actionPanel = myOffenseTurn ? `
-        <div class="online-command-bar">
-          <button onclick="onlinePlay('${match.id}', 'normal')">강공</button>
-          <button onclick="onlinePlay('${match.id}', 'contact')">컨택 스윙</button>
-          <button onclick="onlinePlay('${match.id}', 'power')">홈런 스윙</button>
-          <button onclick="onlinePlay('${match.id}', 'take')">기다리기</button>
-          <button onclick="onlinePlay('${match.id}', 'sac_bunt')">희생번트</button>
-          <button onclick="onlinePlay('${match.id}', 'squeeze')">스퀴즈</button>
-          <button onclick="onlinePlay('${match.id}', 'steal')">도루 프리롤</button>
-          <button onclick="onlinePlay('${match.id}', 'hit_run')">히트앤런</button>
-          <button class="secondary" onclick="loadOnlineMatches()">새로고침</button>
-        </div>` : myDefenseTurn ? `
-        <div class="online-command-bar">
-          <select id="${pitchSelectId}">
-            <option value="auto">자동 배합</option>
-            <option value="fourSeam">포심 승부</option>
-            <option value="slider">슬라이더 유도</option>
-            <option value="curve">커브</option>
-            <option value="changeup">체인지업</option>
-            <option value="fork">포크/스플리터</option>
-            <option value="pitchout">피치아웃</option>
-          </select>
-          <select id="${planSelectId}">
-            <option value="normal">기본 수비</option>
-            <option value="attackZone">스트존 공격</option>
-            <option value="waste">유인구 승부</option>
-            <option value="groundball">땅볼 유도</option>
-            <option value="holdRunner">주자 묶기</option>
-            <option value="walkAround">강타자 피해가기</option>
-          </select>
-          <select id="${pickoffSelectId}">
-            <option value="">견제 없음</option>
-            ${defenseBaseOptions}
-          </select>
-          <button onclick="onlineDefensePlay('${match.id}')">수비 지시</button>
-          <button class="secondary" onclick="loadOnlineMatches()">새로고침</button>
-        </div>` : `<div class="empty">상대 지시 대기 중입니다. 상대가 누르면 이 화면이 자동 갱신됩니다.</div>`;
+      const tacticLabels = { normal: "다음 플레이", contact: "컨택 지시", power: "강공 지시", wait: "기다리기", bunt: "번트 지시", steal: "도루/주루 압박" };
+      const lastAction = match.lastAction;
+      const statusText = match.status === "complete"
+        ? "경기 종료"
+        : myTurn
+          ? "내 공격 차례입니다. 타격/주루 지시를 고르면 바로 진행됩니다."
+          : "상대 지시 대기 중입니다. 상대가 누르면 이 화면이 자동 갱신됩니다.";
+      const playButtons = myTurn ? `
+        <div class="offer-actions" style="margin-top:12px;">
+          <button class="primary" onclick="onlinePlay('${match.id}', 'normal')">다음 플레이</button>
+          <button class="secondary" onclick="onlinePlay('${match.id}', 'contact')">컨택 지시</button>
+          <button class="secondary" onclick="onlinePlay('${match.id}', 'power')">강공 지시</button>
+          <button class="secondary" onclick="onlinePlay('${match.id}', 'wait')">기다리기</button>
+          <button class="secondary" onclick="onlinePlay('${match.id}', 'bunt')">번트 지시</button>
+          <button class="secondary" onclick="onlinePlay('${match.id}', 'steal')">도루/주루 압박</button>
+        </div>
+      ` : `<div class="empty" style="margin-top:12px;">${statusText}</div>`;
       return `
-        <div class="online-operation-shell online-live-layout">
-          <section class="online-operation-side online-live-expanded">
-            <div class="section-heading">
-              <div>
-                <h2>온라인 경기 운영</h2>
-                <small>${escapeHtml(inningLabel)} · ${escapeHtml(offenseSide?.teamName || "-")} 공격</small>
-              </div>
-              <div class="inline-actions">
-                <button class="secondary" onclick="loadOnlineMatches()">새로고침</button>
-                ${match.canForfeit ? `<button class="danger" onclick="onlineForfeit('${match.id}')">패배 선언</button>` : ""}
-              </div>
+        <section class="online-live-board" style="margin-top:12px; padding:16px; border-radius:8px; background:#111827; color:#fff;">
+          <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start;">
+            <div>
+              <div style="font-size:13px; color:#cbd5e1;">${game.inning}회${game.half === "top" ? "초" : "말"} · ${escapeHtml(offenseTeam)} 공격</div>
+              <strong style="font-size:24px;">${escapeHtml(match.home?.teamName || "-")} ${game.score?.home || 0} : ${game.score?.away || 0} ${escapeHtml(match.away?.teamName || "-")}</strong>
+              <div style="margin-top:6px; color:${myTurn ? "#bbf7d0" : "#fde68a"};">${statusText}</div>
             </div>
-            <div class="online-live-scorebar">
-              <strong>${escapeHtml(match.away?.teamName || "원정")} ${score.away ?? 0}</strong>
-              <span>:</span>
-              <strong>${score.home ?? 0} ${escapeHtml(match.home?.teamName || "홈")}</strong>
+            <div style="text-align:right; color:#cbd5e1;">
+              <strong style="color:#fff;">최근 입력</strong><br>
+              ${lastAction ? `${escapeHtml(lastAction.username || "-")} · ${escapeHtml(tacticLabels[lastAction.tactic] || "작전")}<br>${escapeHtml(lastAction.text || "")}` : "아직 작전 입력 없음"}
             </div>
-            <div class="online-count-grid">
-              <div><strong>${game.outs ?? 0}</strong><small>아웃</small></div>
-              <div><strong>${game.balls ?? 0}-${game.strikes ?? 0}</strong><small>볼-스트라이크</small></div>
-              <div><strong>${escapeHtml(onlinePlayerNameLabel(batter))}</strong><small>타자</small></div>
-              <div><strong>${escapeHtml(onlinePlayerNameLabel(pitcher))}</strong><small>투수 · ${pitchCount}구</small></div>
-            </div>
-            <div class="online-field-board">
-              <div class="base-card second"><strong>2루</strong><span>${onlineRunnerLabel(bases[1])}</span></div>
-              <div class="base-card third"><strong>3루</strong><span>${onlineRunnerLabel(bases[2])}</span></div>
-              <div class="base-card first"><strong>1루</strong><span>${onlineRunnerLabel(bases[0])}</span></div>
-              <div class="base-card home"><strong>홈</strong><span>${escapeHtml(defenseSide?.teamName || "수비")}</span></div>
-            </div>
-            ${actionPanel}
-            <div class="online-duel-lineups">
-              ${renderOnlineLineup(match.away?.teamName || "원정 라인업", game.lineups?.away || [], offense === "away" ? offenseIndex : defenseIndex)}
-              ${renderOnlineLineup(match.home?.teamName || "홈 라인업", game.lineups?.home || [], offense === "home" ? offenseIndex : defenseIndex)}
-            </div>
-          </section>
-          <aside class="online-operation-side online-log-panel">
-            <h3>상대 입력 / 경기 로그</h3>
-            <div class="empty"><strong>최근 입력</strong><br>${recentInput}</div>
-            <div class="online-log-stream">${logs || `<p>경기가 시작되었습니다.</p>`}</div>
-          </aside>
-        </div>`;
+          </div>
+          <div class="grid three" style="margin-top:14px;">
+            <div class="metric"><strong>${game.outs || 0}</strong><span>아웃</span></div>
+            <div class="metric"><strong>${batter ? `${escapeHtml(batter.batsThrows || "-")} ${escapeHtml(batter.name)}${batter.jerseyNumber ? ` #${batter.jerseyNumber}` : ""}` : "-"}</strong><span>현재 타자</span></div>
+            <div class="metric"><strong>${pitcher ? `${escapeHtml(pitcher.batsThrows || "-")} ${escapeHtml(pitcher.name)}${pitcher.jerseyNumber ? ` #${pitcher.jerseyNumber}` : ""}` : "-"}</strong><span>상대 투수 · 투구수 ${game.pitchCounts?.[defense] || 0}</span></div>
+          </div>
+          <div class="online-base-diamond">
+            <div></div><div class="metric"><strong>2루</strong><span>${onlineRunnerLabel(game.bases?.[1])}</span></div><div></div>
+            <div class="metric"><strong>3루</strong><span>${onlineRunnerLabel(game.bases?.[2])}</span></div><div></div><div class="metric"><strong>1루</strong><span>${onlineRunnerLabel(game.bases?.[0])}</span></div>
+            <div></div><div class="metric"><strong>홈</strong><span>${escapeHtml(defenseSide?.teamName || "-")} 수비</span></div><div></div>
+          </div>
+        </section>
+        ${playButtons}
+        <div class="grid two" style="margin-top:10px;">
+          ${renderOnlineLineup(match.home?.teamName || "홈 라인업", game.lineups?.home, game.half === "bottom" ? (game.battingIndex?.home || 0) % 9 : -1)}
+          ${renderOnlineLineup(match.away?.teamName || "원정 라인업", game.lineups?.away, game.half === "top" ? (game.battingIndex?.away || 0) % 9 : -1)}
+        </div>
+        ${game.log?.length ? `<div class="log" style="max-height:180px; margin-top:10px;">${game.log.slice(0, 12).map((line) => `<div>${escapeHtml(line)}</div>`).join("")}</div>` : ""}
+      `;
     }
+
     function openView(view) {
       activeView = view;
       document.querySelectorAll("#tabs button").forEach((b) => b.classList.toggle("active", b.dataset.view === view));
@@ -4079,10 +4377,6 @@
       $(`stealBtn${baseNo}`).addEventListener("click", () => commandBaseSteal(baseNo));
     });
     $("cmdPickoff").addEventListener("click", commandPickoff);
-    $("cmdPitchCall").addEventListener("click", () => mutate("/api/game/defense-call", {
-      pitchCall: $("pitchCallSelect").value,
-      defensePlan: $("defensePlanSelect").value
-    }));
     $("cmdSkipHalf").addEventListener("click", () => mutate("/api/game/skip-half"));
     $("cmdSkipGame").addEventListener("click", () => mutate("/api/game/skip-game"));
     $("cmdDefense").addEventListener("click", runDefense);
@@ -4149,41 +4443,29 @@
     $("changeTeam").addEventListener("click", () => $("teamSelect").classList.add("active"));
 
     window.onlineJoin = (id) => onlineAction("/api/online/join", { id });
-    window.onlineChooseTeam = (id, teamId) => onlineAction("/api/online/team", { id, teamId });
-    window.onlineRosterMove = (id, playerId, target) => onlineAction("/api/online/roster", { id, playerId, target });
-    window.onlineRosterReady = (id) => onlineAction("/api/online/ready", { id });
     window.onlineSubmitStarter = (id) => {
-      const select = document.querySelector(`[data-online-starter="${id}"]`);
-      const starterId = Number(select?.value);
+      const starterId = selectedStarter();
       if (!starterId) {
-        showToast("온라인 선발 투수를 먼저 선택하세요.");
+        showToast("선발 투수를 먼저 선택하세요.");
         return;
       }
       onlineAction("/api/online/starter", { id, starterId });
     };
     window.onlineSubmitLineup = (id) => {
-      const lineup = onlineLineupPayload(id);
+      const lineup = onlineLineupPayload();
       if (!lineup) return;
       onlineAction("/api/online/lineup", { id, lineup });
     };
     window.onlineSubmit = (id) => window.onlineSubmitLineup(id);
     window.onlinePlay = (id, tactic) => onlineAction("/api/online/play", { id, tactic });
-    window.onlineDefensePlay = (id) => {
-      const pitchCall = document.getElementById(onlineDomId("onlinePitchCall", id))?.value || "auto";
-      const defensePlan = document.getElementById(onlineDomId("onlineDefensePlan", id))?.value || "normal";
-      const rawPickoff = document.getElementById(onlineDomId("onlinePickoffBase", id))?.value;
-      const payload = { id, pitchCall, defensePlan };
-      if (rawPickoff !== undefined && rawPickoff !== "") payload.pickoffBase = Number(rawPickoff);
-      onlineAction("/api/online/play", payload);
-    };
     window.onlineForfeit = (id) => {
-      if (!confirm("정말 온라인 경기를 패배 선언할까요? 상대 승리로 경기가 종료됩니다.")) return;
+      if (!confirm("정말 이 온라인 경기를 패배 선언할까요? 상대 승리로 경기 종료됩니다.")) return;
       onlineAction("/api/online/forfeit", { id });
     };
     window.onlineCancel = (id) => onlineAction("/api/online/cancel", { id });
 
     setInterval(() => {
-      const hasActiveOnline = onlineMatches.some((m) => ["team_select", "roster_prep", "starter", "lineup", "live"].includes(m.status));
+      const hasActiveOnline = onlineMatches.some((m) => ["starter", "lineup", "live"].includes(m.status));
       if (!currentUser || onlinePolling || (activeView !== "online" && !hasActiveOnline)) return;
       onlinePolling = true;
       loadOnlineMatches()
@@ -4197,7 +4479,7 @@
     }, 2000);
 
     init().catch((err) => {
-      document.body.innerHTML = `<div class="empty" style="margin:30px;">諛깆뿏???곌껐 ?ㅽ뙣: ${err.message}<br>node server.js濡??ㅽ뻾?댁＜?몄슂.</div>`;
+      document.body.innerHTML = `<div class="empty" style="margin:30px;">백엔드 연결 실패: ${err.message}<br>node server.js로 실행해주세요.</div>`;
     });
   </script>
 </body>
