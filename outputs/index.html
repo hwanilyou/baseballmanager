@@ -4291,6 +4291,14 @@
       `;
     }
 
+    function onlineTeamKey(team) {
+      return String(team?.id ?? team?.teamId ?? "");
+    }
+
+    function onlineTeamLabel(team) {
+      return team?.teamName || team?.name || team?.displayName || team?.fullName || team?.id || "구단";
+    }
+
     function renderOnlinePreparationPanel(match) {
       const mySide = match.mySide === "away" ? match.away : match.home;
       const roster = mySide?.roster || [];
@@ -4299,11 +4307,23 @@
       const pitchers = active.filter((p) => p.type === "PIT");
       const hitters = active.filter((p) => p.type !== "PIT");
       const posOptions = ["C", "1B", "2B", "3B", "SS", "LF", "CF", "RF", "DH"];
-      const teamButtons = (onlineTeams || []).map((team) => `
-        <button class="${mySide?.teamId === team.id ? "primary" : "secondary"}" onclick="onlineChooseTeam('${match.id}', '${team.id}')">
-          ${escapeHtml(team.name)}
-        </button>
-      `).join("");
+      const teamsForSelect = (onlineTeams && onlineTeams.length ? onlineTeams : state?.teams || []).filter(Boolean);
+      const teamButtons = teamsForSelect.length ? teamsForSelect.map((team) => {
+        const teamId = onlineTeamKey(team);
+        const label = onlineTeamLabel(team);
+        const selected = String(mySide?.teamId || "") === teamId;
+        const primary = team.primary || team.color || "#f97316";
+        const secondary = team.secondary || "#ffffff";
+        return `
+          <button
+            class="${selected ? "primary" : "secondary"}"
+            style="min-width:132px; min-height:42px; padding:8px 12px; border-top:4px solid ${primary}; color:${selected ? "#fff" : "#16202b"}; background:${selected ? primary : secondary};"
+            onclick="onlineChooseTeam('${match.id}', '${teamId.replace(/'/g, "\\'")}')"
+          >
+            ${escapeHtml(label)}
+          </button>
+        `;
+      }).join("") : `<div class="empty">구단 목록을 불러오는 중입니다. 새로고침을 눌러주세요.</div>`;
       const rosterRows = (players, target) => players.map((p) => `
         <div class="mini-card" style="display:flex; justify-content:space-between; gap:8px; align-items:center;">
           <span>${escapeHtml(onlinePlayerNameLabel(p))} · ${escapeHtml(p.pos || "-")} · 현재 ${p.current || 0}</span>

@@ -256,6 +256,7 @@ function onlinePlayerCard(p) {
 function onlineTeamOptions() {
   return teamTemplates.map((team) => ({
     id: team.id,
+    name: onlineTeamName(team),
     teamName: onlineTeamName(team),
     primary: team.primary,
     secondary: team.secondary
