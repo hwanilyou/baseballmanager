@@ -2015,6 +2015,51 @@
       if (!holdRender) renderOnline();
     }
 
+    const onlineRosterFilter = { status: "ALL", type: "all", query: "" };
+
+    function captureOnlineScrolls() {
+      const positions = {};
+      document.querySelectorAll("[data-online-scroll]").forEach((el) => {
+        const key = el.dataset.onlineScroll;
+        if (key) positions[key] = el.scrollTop;
+      });
+      return positions;
+    }
+
+    function restoreOnlineScrolls(positions = {}) {
+      requestAnimationFrame(() => {
+        document.querySelectorAll("[data-online-scroll]").forEach((el) => {
+          const key = el.dataset.onlineScroll;
+          if (key && positions[key] != null) el.scrollTop = positions[key];
+        });
+      });
+    }
+
+    function applyOnlineRosterFilters() {
+      const search = $("onlineRosterSearch");
+      if (search) onlineRosterFilter.query = search.value || "";
+      const query = normalizeSearchText(onlineRosterFilter.query);
+      document.querySelectorAll("[data-online-roster-filter]").forEach((button) => {
+        const kind = button.dataset.filterKind;
+        const value = button.dataset.filterValue;
+        button.classList.toggle("active", onlineRosterFilter[kind] === value);
+      });
+      document.querySelectorAll(".onlineRosterCard").forEach((card) => {
+        const status = card.dataset.status || "";
+        const type = card.dataset.type || "";
+        const text = normalizeSearchText(card.dataset.search || card.textContent || "");
+        const statusOk = onlineRosterFilter.status === "ALL" || status === onlineRosterFilter.status;
+        const typeOk = onlineRosterFilter.type === "all" || type === onlineRosterFilter.type;
+        const queryOk = !query || text.includes(query);
+        card.style.display = statusOk && typeOk && queryOk ? "" : "none";
+      });
+    }
+
+    window.setOnlineRosterFilter = (kind, value) => {
+      onlineRosterFilter[kind] = value;
+      applyOnlineRosterFilters();
+    };
+
     async function onlineAction(path, body = {}) {
       const status = $("onlineStatus");
       if (status) status.textContent = "";
@@ -4183,6 +4228,7 @@
     function renderOnline() {
       const list = $("onlineRooms");
       if (!list) return;
+      const scrollPositions = captureOnlineScrolls();
       const activeMatch = onlineMatches.find((match) => match.mySide && ["team_select", "roster_prep", "starter", "lineup", "live"].includes(match.status));
       const onlineView = $("online");
       if (onlineView) onlineView.classList.toggle("online-wide", Boolean(activeMatch));
@@ -4198,6 +4244,8 @@
       }
       if (activeMatch) {
         list.innerHTML = renderOnlineMatchOperation(activeMatch);
+        restoreOnlineScrolls(scrollPositions);
+        applyOnlineRosterFilters();
         return;
       }
       const statusLabel = (status) => ({
@@ -4351,8 +4399,10 @@
       }).join("") : `<div class="empty">구단 목록을 불러오는 중입니다. 새로고침을 눌러주세요.</div>`;
       const rosterRows = (players, target) => players.map((p) => {
         const searchText = escapeHtml(`${onlinePlayerNameLabel(p)} ${p.pos || ""} ${p.type || ""} ${p.rosterStatus || ""} ${p.current || 0} ${p.potential || 0}`);
+        const rosterStatus = p.rosterStatus === "FARM" ? "FARM" : "ACTIVE";
+        const playerType = p.type === "PIT" ? "PIT" : "BAT";
         return `
-        <div class="mini-card onlineRosterCard" data-search="${searchText}" style="display:flex; justify-content:space-between; gap:8px; align-items:center;">
+        <div class="mini-card onlineRosterCard" data-search="${searchText}" data-status="${rosterStatus}" data-type="${playerType}" style="display:flex; justify-content:space-between; gap:8px; align-items:center;">
           <span>${escapeHtml(onlinePlayerNameLabel(p))} · ${escapeHtml(p.pos || "-")} · 현재 ${p.current || 0}</span>
           ${match.canRosterMove ? `<button class="secondary" onclick="onlineMoveRoster('${match.id}', ${p.id}, '${target}')">${target === "ACTIVE" ? "1군 등록" : "2군 이동"}</button>` : ""}
         </div>
@@ -4399,15 +4449,25 @@
       const homeReady = match.home?.teamName ? `${match.home.teamName} · ${match.home.rosterReady ? "로스터 완료" : "로스터 대기"} · ${match.home.starterSubmitted ? "선발 완료" : "선발 대기"} · ${match.home.lineupSubmitted ? "라인업 완료" : "라인업 대기"}` : "홈 감독 팀 선택 대기";
       const awayReady = match.away?.teamName ? `${match.away.teamName} · ${match.away.rosterReady ? "로스터 완료" : "로스터 대기"} · ${match.away.starterSubmitted ? "선발 완료" : "선발 대기"} · ${match.away.lineupSubmitted ? "라인업 완료" : "라인업 대기"}` : "상대 참가 대기";
       const rosterPanel = match.canRosterMove ? `
-        <input class="search-input" placeholder="1군/2군 선수 검색" style="margin-top:12px;" oninput="filterOnlineCards('onlineRosterCard', this.value)">
+        <input id="onlineRosterSearch" class="search-input" placeholder="1군/2군 선수 검색" value="${escapeHtml(onlineRosterFilter.query)}" style="margin-top:12px;" oninput="applyOnlineRosterFilters()">
+        <div class="trade-roster-tabs" style="margin-top:10px;">
+          <button type="button" data-online-roster-filter data-filter-kind="status" data-filter-value="ALL" onclick="setOnlineRosterFilter('status', 'ALL')">전체</button>
+          <button type="button" data-online-roster-filter data-filter-kind="status" data-filter-value="ACTIVE" onclick="setOnlineRosterFilter('status', 'ACTIVE')">1군</button>
+          <button type="button" data-online-roster-filter data-filter-kind="status" data-filter-value="FARM" onclick="setOnlineRosterFilter('status', 'FARM')">2군</button>
+        </div>
+        <div class="trade-roster-tabs" style="margin-top:8px;">
+          <button type="button" data-online-roster-filter data-filter-kind="type" data-filter-value="all" onclick="setOnlineRosterFilter('type', 'all')">투수+야수</button>
+          <button type="button" data-online-roster-filter data-filter-kind="type" data-filter-value="PIT" onclick="setOnlineRosterFilter('type', 'PIT')">투수</button>
+          <button type="button" data-online-roster-filter data-filter-kind="type" data-filter-value="BAT" onclick="setOnlineRosterFilter('type', 'BAT')">야수</button>
+        </div>
         <div class="grid two" style="margin-top:12px;">
           <div>
             <strong>1군 ${active.length}명</strong>
-            <div class="log" style="max-height:220px; margin-top:8px;">${rosterRows(active, "FARM") || `<div class="empty">1군 선수가 없습니다.</div>`}</div>
+            <div class="log online-roster-scroll" data-online-scroll="online-active-roster" style="max-height:220px; margin-top:8px; overflow:auto;">${rosterRows(active, "FARM") || `<div class="empty">1군 선수가 없습니다.</div>`}</div>
           </div>
           <div>
             <strong>2군 ${farm.length}명</strong>
-            <div class="log" style="max-height:220px; margin-top:8px;">${rosterRows(farm, "ACTIVE") || `<div class="empty">2군 선수가 없습니다.</div>`}</div>
+            <div class="log online-roster-scroll" data-online-scroll="online-farm-roster" style="max-height:220px; margin-top:8px; overflow:auto;">${rosterRows(farm, "ACTIVE") || `<div class="empty">2군 선수가 없습니다.</div>`}</div>
           </div>
         </div>
         <button class="good" style="margin-top:10px;" onclick="onlineReadyRoster('${match.id}')">1군/2군 정리 완료</button>
