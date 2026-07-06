@@ -1868,7 +1868,7 @@
     function onlineFormIsActive() {
       const active = document.activeElement;
       if (!active || !active.closest) return false;
-      if (!active.closest(".online-live-panel")) return false;
+      if (!active.closest(".online-live-panel, .online-command-panel")) return false;
       return ["SELECT", "INPUT", "TEXTAREA"].includes(active.tagName);
     }
     window.filterOnlineSelectOptions = (selector, query) => {
@@ -4516,6 +4516,31 @@
       return hand ? `[${hand}] ${name}` : name;
     }
 
+    function onlinePitchName(pitch) {
+      return String(pitch?.type || pitch?.name || pitch?.label || "").trim() || "구종 미등록";
+    }
+
+    function onlinePitchCallValue(pitch) {
+      const name = onlinePitchName(pitch);
+      if (name.includes("슬라이더")) return "slider";
+      if (name.includes("커브")) return "curve";
+      if (name.includes("체인지")) return "changeup";
+      if (name.includes("포크") || name.includes("스플리터")) return "fork";
+      return "fourSeam";
+    }
+
+    function onlinePitchOptionLabel(pitch) {
+      const usage = Number(pitch?.usage ?? pitch?.rate ?? 0) || 0;
+      const velo = Number(pitch?.velo || 0);
+      const grade = Number(pitch?.grade || 0);
+      return [
+        onlinePitchName(pitch),
+        `구사율 ${usage}%`,
+        velo ? `평균 ${velo}km/h` : "",
+        grade ? `숙련도 ${grade}` : ""
+      ].filter(Boolean).join(" · ");
+    }
+
     function renderOnlineLineup(title, lineup, activeIndex) {
       const rows = (lineup || []).slice(0, 9).map((p, i) => `
         <div class="opponent-lineup-row ${i === activeIndex ? "is-current" : ""}">
@@ -4556,13 +4581,8 @@
       const pitchOptions = [
         `<option value="auto">포수 리드에 맡김</option>`,
         ...(pitcher?.pitchArsenal || []).map((pitch) => {
-          const name = String(pitch.name || "");
-          let value = "fourSeam";
-          if (name.includes("슬라이더")) value = "slider";
-          else if (name.includes("커브")) value = "curve";
-          else if (name.includes("체인지")) value = "changeup";
-          else if (name.includes("포크") || name.includes("스플리터")) value = "fork";
-          return `<option value="${value}">${escapeHtml(name)} · 구사율 ${pitch.usage || 0}%</option>`;
+          const value = onlinePitchCallValue(pitch);
+          return `<option value="${value}">${escapeHtml(onlinePitchOptionLabel(pitch))}</option>`;
         }),
         `<option value="pitchout">피치아웃</option>`
       ].join("");
@@ -4612,7 +4632,7 @@
         </div>
       ` : `<div class="empty" style="margin-top:12px;">${statusText}</div>`;
       return `
-        <section class="online-live-board" style="margin-top:12px; padding:16px; border-radius:8px; background:#111827; color:#fff;">
+        <section class="online-live-panel online-live-board" style="margin-top:12px; padding:16px; border-radius:8px; background:#111827; color:#fff;">
           <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start;">
             <div>
               <div style="font-size:13px; color:#cbd5e1;">${game.inning}회${game.half === "top" ? "초" : "말"} · ${escapeHtml(offenseTeam)} 공격</div>
@@ -4791,13 +4811,8 @@
       const pitchOptions = [
         `<option value="auto">포수 리드에 맡김</option>`,
         ...(pitcher?.pitchArsenal || []).map((pitch) => {
-          const name = String(pitch.name || "");
-          let value = "fourSeam";
-          if (name.includes("슬라이더")) value = "slider";
-          else if (name.includes("커브")) value = "curve";
-          else if (name.includes("체인지")) value = "changeup";
-          else if (name.includes("포크") || name.includes("스플리터")) value = "fork";
-          return `<option value="${value}">${escapeHtml(name)} · 구사율 ${pitch.usage || 0}%</option>`;
+          const value = onlinePitchCallValue(pitch);
+          return `<option value="${value}">${escapeHtml(onlinePitchOptionLabel(pitch))}</option>`;
         }),
         `<option value="pitchout">피치아웃</option>`
       ].join("");
@@ -4847,7 +4862,7 @@
         </div>
       ` : `<div class="empty" style="margin-top:12px;">${statusText}</div>`;
       return `
-        <section class="online-live-board" style="margin-top:12px; padding:16px; border-radius:8px; background:#111827; color:#fff;">
+        <section class="online-live-panel online-live-board" style="margin-top:12px; padding:16px; border-radius:8px; background:#111827; color:#fff;">
           <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start;">
             <div>
               <div style="font-size:13px; color:#cbd5e1;">${game.inning}회${game.half === "top" ? "초" : "말"} · ${escapeHtml(offenseTeam)} 공격</div>
