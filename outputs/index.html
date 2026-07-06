@@ -4337,10 +4337,12 @@
         const selected = String(mySide?.teamId || "") === teamId;
         const primary = team.primary || team.color || "#f97316";
         const secondary = team.secondary || "#ffffff";
+        const buttonBg = selected ? primary : secondary;
+        const buttonText = readableTextColor(buttonBg);
         return `
           <button
             class="${selected ? "primary" : "secondary"}"
-            style="min-width:132px; min-height:42px; padding:8px 12px; border-top:4px solid ${primary}; color:${selected ? "#fff" : "#16202b"}; background:${selected ? primary : secondary};"
+            style="min-width:132px; min-height:42px; padding:8px 12px; border-top:4px solid ${primary}; color:${buttonText}; background:${buttonBg};"
             onclick="onlineChooseTeam('${match.id}', '${teamId.replace(/'/g, "\\'")}')"
           >
             ${escapeHtml(label)}
