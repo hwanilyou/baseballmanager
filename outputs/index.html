@@ -1864,6 +1864,28 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
+    const normalizeSearchText = (value) => String(value ?? "").toLowerCase().replace(/\s+/g, "");
+    function onlineFormIsActive() {
+      const active = document.activeElement;
+      if (!active || !active.closest) return false;
+      if (!active.closest(".online-live-panel")) return false;
+      return ["SELECT", "INPUT", "TEXTAREA"].includes(active.tagName);
+    }
+    window.filterOnlineSelectOptions = (selector, query) => {
+      const needle = normalizeSearchText(query);
+      document.querySelectorAll(selector).forEach((select) => {
+        Array.from(select.options).forEach((option) => {
+          if (!option.value) return;
+          option.hidden = Boolean(needle) && !normalizeSearchText(option.textContent).includes(needle);
+        });
+      });
+    };
+    window.filterOnlineCards = (className, query) => {
+      const needle = normalizeSearchText(query);
+      document.querySelectorAll(`.${className}`).forEach((card) => {
+        card.style.display = !needle || normalizeSearchText(card.dataset.search || card.textContent).includes(needle) ? "flex" : "none";
+      });
+    };
     const boardCategoryLabel = (value) => ({ suggestion: "건의사항", bug: "버그제보", balance: "밸런스", free: "자유" }[value] || "건의사항");
     const contractText = (p) => {
       const contract = p.contract || {};
@@ -1986,10 +2008,11 @@
 
     async function loadOnlineMatches() {
       const data = await api("/api/online/matches");
+      const holdRender = onlineFormIsActive();
       onlineMatches = data.matches || [];
       onlineTeams = data.teams || onlineTeams || [];
       updateOnlineCount(data.onlineCount);
-      renderOnline();
+      if (!holdRender) renderOnline();
     }
 
     async function onlineAction(path, body = {}) {
@@ -4324,29 +4347,33 @@
           </button>
         `;
       }).join("") : `<div class="empty">구단 목록을 불러오는 중입니다. 새로고침을 눌러주세요.</div>`;
-      const rosterRows = (players, target) => players.map((p) => `
-        <div class="mini-card" style="display:flex; justify-content:space-between; gap:8px; align-items:center;">
+      const rosterRows = (players, target) => players.map((p) => {
+        const searchText = escapeHtml(`${onlinePlayerNameLabel(p)} ${p.pos || ""} ${p.type || ""} ${p.rosterStatus || ""} ${p.current || 0} ${p.potential || 0}`);
+        return `
+        <div class="mini-card onlineRosterCard" data-search="${searchText}" style="display:flex; justify-content:space-between; gap:8px; align-items:center;">
           <span>${escapeHtml(onlinePlayerNameLabel(p))} · ${escapeHtml(p.pos || "-")} · 현재 ${p.current || 0}</span>
           ${match.canRosterMove ? `<button class="secondary" onclick="onlineMoveRoster('${match.id}', ${p.id}, '${target}')">${target === "ACTIVE" ? "1군 등록" : "2군 이동"}</button>` : ""}
         </div>
-      `).join("");
+      `;
+      }).join("");
       const starterSelect = match.canSubmitStarter ? `
         <div class="mini-card">
           <strong>선발 투수 선택</strong>
+          <input class="search-input" placeholder="선발투수 검색" style="margin-top:8px;" oninput="filterOnlineSelectOptions('#onlineStarterSelect', this.value)">
           <select id="onlineStarterSelect" style="margin-top:8px;">
             ${pitchers.map((p) => `<option value="${p.id}">${escapeHtml(onlinePlayerNameLabel(p))} · ${escapeHtml(p.pos || "P")} · 현재 ${p.current || 0} · 컨디션 ${p.condition || 0}</option>`).join("")}
           </select>
           <button class="good" style="margin-top:8px;" onclick="onlineSubmitStarter('${match.id}')">선발 제출</button>
         </div>
       ` : "";
-      const hitterOptions = hitters.map((p) => `<option value="${p.id}">${escapeHtml(onlinePlayerNameLabel(p))} · ${escapeHtml(p.pos || "-")} · 현재 ${p.current || 0}/${p.potential || 0}</option>`).join("");
+      const hitterOptions = (selectedIndex = 0) => hitters.map((p, idx) => `<option value="${p.id}" ${idx === selectedIndex ? "selected" : ""}>${escapeHtml(onlinePlayerNameLabel(p))} · ${escapeHtml(p.pos || "-")} · 현재 ${p.current || 0}/${p.potential || 0}</option>`).join("");
       const lineupRows = match.canSubmitLineup ? Array.from({ length: 9 }, (_, i) => {
         const defaultPlayer = hitters[i] || hitters[0];
         const defaultPos = posOptions[i] || "DH";
         return `
           <div class="lineup-slot online-lineup-slot">
             <span class="badge">${i + 1}</span>
-            <select class="onlineLineupSelect">${hitterOptions}</select>
+            <select class="onlineLineupSelect">${hitterOptions(i)}</select>
             <select class="onlinePositionSelect">
               ${posOptions.map((pos) => `<option value="${pos}" ${pos === defaultPos ? "selected" : ""}>${pos}</option>`).join("")}
             </select>
@@ -4357,8 +4384,10 @@
       const lineupBuilder = match.canSubmitLineup ? `
         <div class="mini-card">
           <strong>1번부터 9번까지 새 라인업 구성</strong>
+          <input class="search-input" placeholder="라인업 선수 검색" style="margin-top:8px;" oninput="filterOnlineSelectOptions('.onlineLineupSelect', this.value)">
           <div class="lineup-grid" style="margin-top:10px;">${lineupRows}</div>
           <strong style="display:block; margin-top:12px;">불펜 순서</strong>
+          <input class="search-input" placeholder="불펜 검색" style="margin-top:8px;" oninput="filterOnlineSelectOptions('.onlineBullpenSelect', this.value)">
           <div class="grid two" style="margin-top:8px;">
             ${Array.from({ length: Math.min(6, Math.max(1, pitchers.length)) }, (_, i) => `<select class="onlineBullpenSelect"><option value="">${i + 1}순위 미지정</option>${bullpenOptions}</select>`).join("")}
           </div>
@@ -4368,6 +4397,7 @@
       const homeReady = match.home?.teamName ? `${match.home.teamName} · ${match.home.rosterReady ? "로스터 완료" : "로스터 대기"} · ${match.home.starterSubmitted ? "선발 완료" : "선발 대기"} · ${match.home.lineupSubmitted ? "라인업 완료" : "라인업 대기"}` : "홈 감독 팀 선택 대기";
       const awayReady = match.away?.teamName ? `${match.away.teamName} · ${match.away.rosterReady ? "로스터 완료" : "로스터 대기"} · ${match.away.starterSubmitted ? "선발 완료" : "선발 대기"} · ${match.away.lineupSubmitted ? "라인업 완료" : "라인업 대기"}` : "상대 참가 대기";
       const rosterPanel = match.canRosterMove ? `
+        <input class="search-input" placeholder="1군/2군 선수 검색" style="margin-top:12px;" oninput="filterOnlineCards('onlineRosterCard', this.value)">
         <div class="grid two" style="margin-top:12px;">
           <div>
             <strong>1군 ${active.length}명</strong>
