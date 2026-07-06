@@ -2099,16 +2099,10 @@
             return null;
           }
         }
-        const starterId = Number($("onlineStarterSelect")?.value || 0);
-        if (!starterId) {
-          showToast("선발 투수를 먼저 선택하세요.");
-          return null;
-        }
         const bullpen = [...document.querySelectorAll(".onlineBullpenSelect")]
           .map((select) => Number(select.value))
           .filter(Boolean);
         return {
-          starterId,
           bullpen,
           battingOrder: rawLineup.slice(0, 9).map((playerId, index) => ({
             playerId,
